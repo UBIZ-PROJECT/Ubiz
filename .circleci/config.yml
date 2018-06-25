@@ -6,3 +6,12 @@ jobs:
     steps:
       - checkout
       - run: echo "A first hello"
+deployment:
+   master:
+    branch: master
+    commands:
+     - sh script/deploy_master.sh $CIRCLE_BUILD_NUM
+   development:
+     branch: ubiz-dev
+     commands:
+      - sh script/deploy_development.sh $CIRCLE_BRANCH
