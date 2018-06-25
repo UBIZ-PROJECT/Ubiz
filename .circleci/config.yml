@@ -3,14 +3,14 @@ jobs:
   build:
     docker: # See https://docs.docker.com/get-started/#docker-concepts if you are new to Docker.
       - image: circleci/php:7.1.5-browsers
-    deploy:
-      machine:
-        enabled: true
-      steps:
-        - run:
-            name: Deploy Over SSH
-            command: |
-              ssh $SSH_USER@$SSH_HOST "<remote deploy command>"
+  deploy:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          name: Deploy Over SSH
+          command: |
+            ssh $SSH_USER@$SSH_HOST "<remote deploy command>"
 
 workflows:
   version: 2
