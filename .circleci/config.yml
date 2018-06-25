@@ -3,15 +3,23 @@ jobs:
   build:
     docker: # See https://docs.docker.com/get-started/#docker-concepts if you are new to Docker.
       - image: circleci/php:7.1.5-browsers
-    steps:
-      - checkout
-      #- run: echo "A first hello"
-deployment:
-   master:
-    branch: master
-    commands:
-     - sh script/deploy_master.sh $CIRCLE_BUILD_NUM
-   development:
-     branch: ubiz-dev
-     commands:
-      - sh script/deploy_development.sh $CIRCLE_BRANCH
+    deploy:
+      machine:
+        enabled: true
+      steps:
+        - run:
+            name: Deploy Over SSH
+            command: |
+              ssh $SSH_USER@$SSH_HOST "<remote deploy command>"
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
