@@ -48,7 +48,7 @@ class CreateUbizTable extends Migration
 
         Schema::create('customer', function (Blueprint $table) {
             $table->increments('cus_id');
-            $table->string('cus_type', 100);
+            $table->string('cus_name', 100);
             $table->char('cus_type', 2);
             $table->char('cus_phone', 15);
             $table->char('cus_fax', 20);
