@@ -1,0 +1,54 @@
+// Fonts
+@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500");
+// Variables
+@import "variables";
+// Bootstrap
+@import "~bootstrap-sass/assets/stylesheets/bootstrap";
+
+html {
+  box-sizing: border-box;
+  -webkit-text-size-adjust: none;
+  -ms-text-size-adjust: none;
+  text-size-adjust: none
+}
+
+body {
+  font-family: Roboto;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+  background: #fff;
+}
+
+.margin-bottom-15 {
+  margin-bottom: 15px;
+}
+
+.margin-bottom-20 {
+  margin-bottom: 20px;
+}
+
+.margin-bottom-25 {
+  margin-bottom: 25px;
+}
+
+.margin-bottom-30 {
+  margin-bottom: 30px;
+}
+
+.font-size-1-5em {
+  font-size: 1.5em;
+}
+
+.font-size-1-5em > input{
+  font-size: 1.5em;
+}
+
+.font-size-1em > span{
+  font-size: 1em;
+}
+
+.ubiz-btn > span{
+  font-size: 2em;
+  text-transform: none;
+}
