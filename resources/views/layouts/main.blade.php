@@ -10,11 +10,15 @@
 
     <!-- Styles -->
     @yield('style')
+    <!-- Javascript -->
+    <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery.nicescroll.min.js') }}"></script>
+    @yield('top-javascript')
 </head>
 <body>
 @yield('sidebar')
 @yield('content')
 <!-- Javascript -->
-@yield('javascript')
+@yield('end-javascript')
 </body>
 </html>

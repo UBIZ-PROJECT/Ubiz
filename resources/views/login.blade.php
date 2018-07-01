@@ -7,6 +7,6 @@
 @section('content')
     <div id="login-page"></div>
 @endsection
-@section('javascript')
-    <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
+@section('end-javascript')
+    <script type="text/javascript" src="{{ asset('js/login.js') }}"></script>
 @endsection
