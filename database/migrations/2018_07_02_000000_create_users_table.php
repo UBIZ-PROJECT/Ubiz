@@ -27,9 +27,9 @@ class CreateUsersTable extends Migration
             $table->char('bhyt', 1);
             $table->integer('dep_id');
             $table->char('delete_flg', 1)->default('0');
-            $table->timestamps('inp_date');
+            $table->timestamp('inp_date');
             $table->integer('inp_user');
-            $table->timestamps('upd_date');
+            $table->timestamp('upd_date')->useCurrent();
             $table->integer('upd_user');
         });
     }
