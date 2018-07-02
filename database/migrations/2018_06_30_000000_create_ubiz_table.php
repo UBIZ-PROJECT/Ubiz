@@ -71,7 +71,7 @@ class CreateUbizTable extends Migration
             $table->integer('upd_user');
         });
 
-        Schema::create('currency', function (Blueprint $table) {
+        Schema::create('m_currency', function (Blueprint $table) {
             $table->increments('cur_id');
             $table->char('symbol', 3);
             $table->string('cur_name', 50);
