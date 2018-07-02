@@ -18,9 +18,9 @@ class CreateCustomerAddressTable extends Migration
             $table->integer('cus_id');
             $table->string('cad_address', 250);
             $table->char('delete_flg', 1)->default('0');
-            $table->timestamps('inp_date');
+            $table->timestamp('inp_date');
             $table->integer('inp_user');
-            $table->timestamps('upd_date');
+            $table->timestamp('upd_date')->useCurrent();
             $table->integer('upd_user');
         });
     }
