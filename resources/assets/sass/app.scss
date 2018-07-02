@@ -61,7 +61,8 @@ body {
 
 .tooltipster-sidetip.tooltipster-ubiz{
   font-size: 11px;
-  height: 30px;
+  height: 30px !important;
+  top: 45px !important;
 }
 
 .tooltipster-sidetip.tooltipster-ubiz .tooltipster-box {

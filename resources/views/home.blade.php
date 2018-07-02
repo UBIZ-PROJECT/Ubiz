@@ -115,6 +115,13 @@
                         <div class="aqL">
                             <div class="GtF">
                                 <div class="GNi">
+                                    <div class="ax7 poK utooltip" title="Chọn">
+                                        <div class="asA">
+                                            <div class="asC"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="GNi">
                                     <div class="ax7 utooltip" title="Làm mới">
                                         <div class="asA">
                                             <div class="asF"></div>
@@ -136,11 +143,11 @@
                                     <div class="amH" style="user-select: none">
                                         <span class="Dj"><span><span class="ts">1</span>–<span class="ts">50</span></span> trong số <span class="ts">229</span></span>
                                     </div>
-                                    <div class="amD">
+                                    <div class="amD utooltip" title="Cũ hơn">
                                         <span class="amF">&nbsp;</span>
                                         <img class="amI" src="http://ubiz.local/images/cleardot.gif" alt="">
                                     </div>
-                                    <div class="amD">
+                                    <div class="amD utooltip" title="Mới hơn">
                                         <span class="amF">&nbsp;</span>
                                         <img class="amJ" src="http://ubiz.local/images/cleardot.gif" alt="">
                                     </div>
@@ -840,8 +847,7 @@
                 side: 'top',
                 theme: 'tooltipster-ubiz',
                 animation: 'swing',
-                delay: 100,
-                timer: 100000,
+                delay: 100
             });
         });
     </script>
