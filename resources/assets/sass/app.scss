@@ -18,6 +18,12 @@ body {
   line-height: 1.5;
   margin: 0;
   background: #fff;
+  -webkit-font-smoothing: antialiased;
+  overflow-y: hidden;
+  position: relative;
+  width: 100%;
+  min-width: 1100px;
+  height: 100vh;
 }
 
 .margin-bottom-15 {
@@ -51,4 +57,88 @@ body {
 .ubiz-btn > span{
   font-size: 2em;
   text-transform: none;
+}
+
+.tooltipster-sidetip.tooltipster-ubiz{
+  font-size: 11px;
+  height: 30px !important;
+  top: 45px !important;
+}
+
+.tooltipster-sidetip.tooltipster-ubiz .tooltipster-box {
+  border-radius: 3px;
+  border: 1px solid #000;
+  background: #000;
+}
+
+.tooltipster-sidetip.tooltipster-ubiz .tooltipster-content {
+  color: #fff;
+  padding: 0 7px;
+  line-height: 20px;
+}
+
+.tooltipster-sidetip.tooltipster-ubiz .tooltipster-arrow {
+  height: 9px;
+  margin-left: -9px;
+  width: 18px
+}
+
+.tooltipster-sidetip.tooltipster-ubiz.tooltipster-left .tooltipster-arrow,
+.tooltipster-sidetip.tooltipster-ubiz.tooltipster-right .tooltipster-arrow {
+  height: 18px;
+  margin-left: 0;
+  margin-top: -9px;
+  width: 9px
+}
+
+.tooltipster-sidetip.tooltipster-ubiz .tooltipster-arrow-background {
+  border: 9px solid transparent
+}
+
+.tooltipster-sidetip.tooltipster-ubiz.tooltipster-bottom .tooltipster-arrow-background {
+  border-bottom-color: #000;
+  top: 1px
+}
+
+.tooltipster-sidetip.tooltipster-ubiz.tooltipster-left .tooltipster-arrow-background {
+  border-left-color: #000;
+  left: -1px
+}
+
+.tooltipster-sidetip.tooltipster-ubiz.tooltipster-right .tooltipster-arrow-background {
+  border-right-color: #000;
+  left: 1px
+}
+
+.tooltipster-sidetip.tooltipster-ubiz.tooltipster-top .tooltipster-arrow-background {
+  border-top-color: #000;
+  top: -1px
+}
+
+.tooltipster-sidetip.tooltipster-ubiz .tooltipster-arrow-border {
+  border: 9px solid transparent
+}
+
+.tooltipster-sidetip.tooltipster-ubiz.tooltipster-bottom .tooltipster-arrow-border {
+  border-bottom-color: #000
+}
+
+.tooltipster-sidetip.tooltipster-ubiz.tooltipster-left .tooltipster-arrow-border {
+  border-left-color: #000
+}
+
+.tooltipster-sidetip.tooltipster-ubiz.tooltipster-right .tooltipster-arrow-border {
+  border-right-color: #000
+}
+
+.tooltipster-sidetip.tooltipster-ubiz.tooltipster-top .tooltipster-arrow-border {
+  border-top-color: #000
+}
+
+.tooltipster-sidetip.tooltipster-ubiz.tooltipster-bottom .tooltipster-arrow-uncropped {
+  top: -9px
+}
+
+.tooltipster-sidetip.tooltipster-ubiz.tooltipster-right .tooltipster-arrow-uncropped {
+  left: -9px
 }
