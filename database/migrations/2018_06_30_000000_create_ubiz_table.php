@@ -91,6 +91,6 @@ class CreateUbizTable extends Migration
         Schema::dropIfExists('m_permission');
         Schema::dropIfExists('customer');
         Schema::dropIfExists('customer_address');
-        Schema::dropIfExists('currency');
+        Schema::dropIfExists('m_currency');
     }
 }
