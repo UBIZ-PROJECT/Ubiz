@@ -12,7 +12,14 @@
     @yield('style')
     <!-- Javascript -->
     <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/jquery.nicescroll.min.js') }}"></script>
+
+    <!-- Nicescroll -->
+    <script type="text/javascript" src="{{ asset('dist/nicescroll/jquery.nicescroll.min.js') }}"></script>
+
+    <!-- Tooltipster -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('dist/tooltipster/tooltipster.bundle.css') }}">
+    <script type="text/javascript" src="{{ asset('dist/tooltipster/tooltipster.bundle.js') }}"></script>
+
     @yield('top-javascript')
 </head>
 <body>

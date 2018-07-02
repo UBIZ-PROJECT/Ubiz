@@ -17,6 +17,6 @@ mix.react('resources/assets/js/app.js', 'public/js');
 mix.react('resources/assets/js/es6/login.js', 'public/js');
 mix.sass('resources/assets/sass/app.scss', 'public/css');
 mix.copyDirectory('resources/assets/css', 'public/css');
-mix.copyDirectory('resources/assets/js/dist', 'public/js');
+mix.copyDirectory('resources/assets/dist', 'public/dist');
 mix.copyDirectory('resources/assets/js/es5', 'public/js');
 mix.copyDirectory('resources/assets/images', 'public/images');

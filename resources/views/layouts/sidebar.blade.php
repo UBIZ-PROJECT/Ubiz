@@ -59,8 +59,8 @@
                         <div class="gb_8d">
                             <div class="gb_da gb_bd gb_R gb_Ff">
                                 <div class="gb_Sc">
-                                    <a class="gb_b" aria-label="Ubiz apps" aria-expanded="false" role="button" tabindex="0">
-                                        <svg class="gb_he" focusable="false" viewBox="0 0 24 24">
+                                    <a class="gb_b" role="button" tabindex="0">
+                                        <svg class="gb_he utooltip" title="Ứng dụng" focusable="false" viewBox="0 0 24 24">
                                             <path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"></path>
                                         </svg>
                                     </a>
@@ -73,7 +73,7 @@
                                     <a class="gb_b" aria-haspopup="true" role="button" tabindex="0" aria-expanded="false" aria-label="0 Ubiz notifications">
                                         <div class="gb_Ee gb_Uc">
                                             <div class="gb_De">0</div>
-                                            <svg class="gb_ge" focusable="false" viewBox="0 0 24 24">
+                                            <svg class="gb_ge utooltip" title="Thông báo" focusable="false" viewBox="0 0 24 24">
                                                 <path d="M12,2C6.5,2,2,6.5,2,12c0,5.5,4.5,10,10,10s10-4.5,10-10C22,6.5,17.5,2,12,2z M12,18c-0.6,0-1-0.5-1-1h2 C13,17.5,12.5,18,12,18z M17,16H7v-0.6l1.2-1.2v-3c0-1.9,1-3.4,2.8-3.8V6.9C11.1,6.4,11.5,6,12,6s0.9,0.4,0.9,0.9v0.4 c1.8,0.4,2.8,2,2.8,3.8v3l1.2,1.2V16z"></path>
                                             </svg>
                                         </div>

@@ -115,7 +115,7 @@
                         <div class="aqL">
                             <div class="GtF">
                                 <div class="GNi">
-                                    <div class="ax7">
+                                    <div class="ax7 utooltip" title="Làm mới">
                                         <div class="asA">
                                             <div class="asF"></div>
                                         </div>
@@ -835,6 +835,13 @@
                 cursorborderradius: 5,
                 cursoropacitymin: 0.4,
                 autohidemode: 'leave'
+            });
+            $('.utooltip').tooltipster({
+                side: 'top',
+                theme: 'tooltipster-ubiz',
+                animation: 'swing',
+                delay: 100,
+                timer: 100000,
             });
         });
     </script>
