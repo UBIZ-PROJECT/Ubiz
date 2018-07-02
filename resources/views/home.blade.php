@@ -129,6 +129,13 @@
                                     </div>
                                 </div>
                                 <div class="GNi">
+                                    <div class="ax7 utooltip" title="Xóa">
+                                        <div class="asA">
+                                            <div class="asX"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="GNi">
                                     <div class="ax7">
                                         <div class="asA">
                                             <div class="asY"></div>

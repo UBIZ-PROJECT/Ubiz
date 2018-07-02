@@ -675,6 +675,23 @@
     background: no-repeat url(../images/general_black.png) 0 -26px;
 }
 
+.main-content .r-content .asX {
+    display: inline-block;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+    -webkit-transition: opacity .15s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transition: opacity .15s cubic-bezier(0.4, 0.0, 0.2, 1);
+    width: 20px;
+    opacity: .54;
+    vertical-align: middle;
+    background-image: url(../images/delete_black.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 20px;
+    background: no-repeat url(../images/general_black.png) 0 -417px;;
+}
+
 .main-content .r-content .asC {
     display: inline-block;
     height: 20px;
