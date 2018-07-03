@@ -15,5 +15,6 @@ Route::middleware(['api', 'cors'])->group(function () {
     Route::middleware(['jwt'])->group(function () {
         Route::get('login', ['as' => 'login', 'uses' => 'Web\HomeController@login']);
         Route::get('/', ['as' => '/', 'uses' => 'Web\HomeController@home']);
+		Route::get('customer', ['as' => 'customer', 'uses' => 'Web\CustomerController@customer']);
     });
 });
