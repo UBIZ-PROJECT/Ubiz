@@ -109,43 +109,44 @@
         </div>
         <div class="m-content"></div>
         <div class="r-content">
-            <div class="bkK">
-                <div class="aeH">
-                    <div class="aqK">
-                        <div class="aqL">
-                            <div class="GtF">
-                                <div class="GNi">
-                                    <div class="ax7 poK utooltip" title="Chọn">
-                                        <div class="asA">
-                                            <div class="asC"></div>
+            <div class="jAQ" id="o-put">
+                <div class="bkK">
+                    <div class="aeH">
+                        <div class="aqK">
+                            <div class="aqL">
+                                <div class="GtF">
+                                    <div class="GNi">
+                                        <div class="ax7 poK utooltip" title="Chọn">
+                                            <div class="asA">
+                                                <div class="asC"></div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="GNi">
-                                    <div class="ax7 utooltip" title="Làm mới">
-                                        <div class="asA">
-                                            <div class="asF"></div>
+                                    <div class="GNi">
+                                        <div class="ax7 utooltip" title="Làm mới">
+                                            <div class="asA">
+                                                <div class="asF"></div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="GNi">
-                                    <div class="ax7 utooltip" title="Xóa">
-                                        <div class="asA">
-                                            <div class="asX"></div>
+                                    <div class="GNi">
+                                        <div class="ax7 utooltip" title="Xóa">
+                                            <div class="asA">
+                                                <div class="asX"></div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="GNi">
-                                    <div class="ax7">
-                                        <div class="asA">
-                                            <div class="asY"></div>
+                                    <div class="GNi">
+                                        <div class="ax7">
+                                            <div class="asA">
+                                                <div class="asY"></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="aqJ">
-                            <div class="ar5">
+                            <div class="aqJ">
+                                <div class="ar5">
                                 <span class="Di">
                                     <div class="amH" style="user-select: none">
                                         <span class="Dj"><span><span class="ts">1</span>–<span class="ts">50</span></span> trong số <span class="ts">229</span></span>
@@ -158,106 +159,169 @@
                                         <span class="amF">&nbsp;</span>
                                         <img class="amJ" src="http://ubiz.local/images/cleardot.gif" alt="">
                                     </div>
+                                    <div class="amD utooltip" title="Cài đặt">
+                                        <span class="amF">&nbsp;</span>
+                                        <img class="amG" src="http://ubiz.local/images/cleardot.gif" alt="">
+                                    </div>
                                 </span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="atD" role="presentation">
-                    <div class="atX" role="presentation">
-                        <div class="tcB" role="presentation"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="jAQ">
-                <div class="aqH" role="presentation">
-                    <div class="yTP" role="presentation">
-                        <div class="clG">
-                            <div class="col-1" role="presentation"></div>
-                            <div class="col-2" role="presentation"></div>
-                            <div class="col-3" role="presentation"></div>
-                            <div class="col-4" role="presentation"></div>
-                        </div>
-                        <div class="hdG">
-                            <div class="dcB col-1" role="presentation">
-                                <div class="dWB" role="button">
-                                    <div class="dvJ">
-                                        <div class="tDv">Mã</div>
-                                        <div class="mhH">
-                                            <div class="acD">
-                                                <div class="huK">
-                                                    <svg class="faH" x="0px" y="0px" width="18px" height="18px"
-                                                         viewBox="0 0 48 48" focusable="false" fill="#000000">
-                                                        <path fill="none" d="M0 0h48v48H0V0z"></path>
-                                                        <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
-                                                    </svg>
+                <div class="jAQ">
+                    <div class="aqH" role="presentation">
+                        <div class="yTP" role="presentation">
+                            <div class="clG">
+                                <div class="col-1" role="presentation"></div>
+                                <div class="col-2" role="presentation"></div>
+                                <div class="col-3" role="presentation"></div>
+                                <div class="col-4" role="presentation"></div>
+                            </div>
+                            <div class="hdG">
+                                <div class="dcB col-1" role="presentation">
+                                    <div class="dWB" role="button">
+                                        <div class="dvJ">
+                                            <div class="tDv">Mã</div>
+                                            <div class="mhH">
+                                                <div class="acD">
+                                                    <div class="huK">
+                                                        <svg class="faH" x="0px" y="0px" width="18px" height="18px"
+                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                        </svg>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="dcB col-2" role="presentation">
-                                <div class="dWB" role="button">
-                                    <div class="dvJ">
-                                        <div class="tDv">Tên</div>
+                                <div class="dcB col-2" role="presentation">
+                                    <div class="dWB" role="button">
+                                        <div class="dvJ">
+                                            <div class="tDv">Tên</div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="dcB col-3" role="presentation">
-                                <div class="dWB" role="button">
-                                    <div class="dvJ">
-                                        <div class="tDv">Chức vụ</div>
+                                <div class="dcB col-3" role="presentation">
+                                    <div class="dWB" role="button">
+                                        <div class="dvJ">
+                                            <div class="tDv">Chức vụ</div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="dcB col-4" role="presentation">
-                                <div class="dWB" role="button">
-                                    <div class="dvJ">
-                                        <div class="tDv">Phòng ban</div>
+                                <div class="dcB col-4" role="presentation">
+                                    <div class="dWB" role="button">
+                                        <div class="dvJ">
+                                            <div class="tDv">Phòng ban</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="aqB" id="nicescroll-grid">
+                        <div class="yTP">
+                            <div class="jFr">
+                                @foreach($data as $user)
+                                    <div class="jvD">
+                                        <div class="tcB col-1">
+                                            <div class="cbo">
+                                                <div class="asC"></div>
+                                                <div class="nCj">
+                                                    <span>{{$user->id}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tcB col-2">
+                                            <div class="cbo">
+                                                <div class="nCj">
+                                                    <span>{{$user->name}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tcB col-3">
+                                            <div class="cbo">
+                                                <div class="nCj">
+                                                    <span>{{$user->email}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tcB col-4">
+                                            <div class="cbo">
+                                                <div class="nCj">
+                                                    <span>D</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="aqB" id="nicescroll-grid">
-                    <div class="yTP">
-                        <div class="jFr">
-                            @foreach($data as $user)
-                                <div class="jvD">
-                                    <div class="tcB col-1">
-                                        <div class="cbo">
-                                            <div class="asC"></div>
-                                            <div class="nCj">
-                                                <span>{{$user->id}}</span>
+            </div>
+            <div class="jAQ" id="i-put" style="display: none">
+                <div class="bkK">
+                    <div class="aeH">
+                        <div class="aqK">
+                            <div class="aqL">
+                                <div class="GtF">
+                                    <div class="GNi">
+                                        <div class="ax7 poK utooltip" title="Quay lại">
+                                            <div class="asA">
+                                                <div class="arB"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="tcB col-2">
-                                        <div class="cbo">
-                                            <div class="nCj">
-                                                <span>{{$user->name}}</span>
+                                    <div class="GNi">
+                                        <div class="ax7 poK utooltip" title="Lưu trữ">
+                                            <div class="asA">
+                                                <div class="arS"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="tcB col-3">
-                                        <div class="cbo">
-                                            <div class="nCj">
-                                                <span>{{$user->email}}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="tcB col-4">
-                                        <div class="cbo">
-                                            <div class="nCj">
-                                                <span>D</span>
+                                    <div class="GNi">
+                                        <div class="ax7 utooltip" title="Xóa">
+                                            <div class="asA">
+                                                <div class="asX"></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            @endforeach
+                            </div>
+                            <div class="aqJ">
+                                <div class="ar5">
+                                <span class="Di">
+                                    <div class="amD utooltip" title="Cũ hơn">
+                                        <span class="amF">&nbsp;</span>
+                                        <img class="amI" src="http://ubiz.local/images/cleardot.gif" alt="">
+                                    </div>
+                                    <div class="amD utooltip" title="Mới hơn">
+                                        <span class="amF">&nbsp;</span>
+                                        <img class="amJ" src="http://ubiz.local/images/cleardot.gif" alt="">
+                                    </div>
+                                    <div class="amD utooltip" title="Cài đặt">
+                                        <span class="amF">&nbsp;</span>
+                                        <img class="amG" src="http://ubiz.local/images/cleardot.gif" alt="">
+                                    </div>
+                                </span>
+                                </div>
+                            </div>
                         </div>
+                    </div>
+                </div>
+                <div class="jAQ">
+                    <div class="aqI" id="nicescroll-iput">
+                        <div style="height: 200px;">a</div>
+                        <div style="height: 200px;">a</div>
+                        <div style="height: 200px;">a</div>
+                        <div style="height: 200px;">a</div>
+                        <div style="height: 200px;">a</div>
+                        <div style="height: 200px;">a</div>
+                        <div style="height: 200px;">a</div>
+                        <div style="height: 200px;">a</div>
                     </div>
                 </div>
             </div>
@@ -276,6 +340,14 @@
                 autohidemode: 'leave'
             });
             jQuery('#nicescroll-grid').niceScroll({
+                cursorcolor: "#9fa8b0",
+                cursorwidth: "5px",
+                cursorborder: "none",
+                cursorborderradius: 5,
+                cursoropacitymin: 0.4,
+                autohidemode: 'leave'
+            });
+            jQuery('#nicescroll-iput').niceScroll({
                 cursorcolor: "#9fa8b0",
                 cursorwidth: "5px",
                 cursorborder: "none",
