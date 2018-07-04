@@ -797,7 +797,12 @@ module.exports = Cancel;
 /* 33 */,
 /* 34 */,
 /* 35 */,
-/* 36 */,
+/* 36 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(51);
+
+/***/ }),
 /* 37 */,
 /* 38 */,
 /* 39 */,
@@ -811,12 +816,7 @@ module.exports = Cancel;
 /* 47 */,
 /* 48 */,
 /* 49 */,
-/* 50 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(51);
-
-/***/ }),
+/* 50 */,
 /* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1962,6 +1962,7 @@ module.exports = __webpack_require__(130);
  */
 
 __webpack_require__(125);
+window.axios = __webpack_require__(36);
 
 /**
  * Next, we will create a fresh React component instance and attach it to
@@ -1994,7 +1995,7 @@ try {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = __webpack_require__(50);
+window.axios = __webpack_require__(36);
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 

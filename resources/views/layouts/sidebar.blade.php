@@ -1,22 +1,4 @@
 <div class="nH w-asV aiw">
-    <div class="nH oy8Mbf" style="display: none"></div>
-    <div class="nH oy8Mbf">
-        <div class="a3I">
-            <br>
-            <a href="" target="_top" class="J-Ke">Skip to content</a>
-            <br>
-            <a href="" target="_top" class="J-Ke" aria-expanded="false" aria-controls=":g">Using GMO Brights Consulting Inc. Mail with screen readers</a>
-            <br>
-            <div style="display:none">
-                <a href="" target="_top" class="J-Ke" id=":c">Keyboard shortcuts</a>
-                <br>
-                <a href="https://support.google.com/mail/answer/90559?hl=en&amp;authuser=1" target="_top" class="J-Ke" id=":d">
-                    GMO Brights Consulting Inc. Mail (standard view) guide
-                </a>
-            </div>
-        </div>
-    </div>
-    <div class="nH" style="display: none;"></div>
     <div class="nH oy8Mbf qp" role="banner">
         <header class="gb_Xa gb_tb gb_sc" id="gb" role="banner" style="background-color:rgba(0,0,0,0)">
             <div class="gb_ke">
@@ -38,12 +20,9 @@
                     <div class="gb_cc">
                         <div class="gb_dc gb_Ae">
                             <div class="gb_Sc">
-                                <a class="gb_b" aria-label="Ubiz apps" aria-expanded="false" role="button" tabindex="0">
-                                    <svg class="gb_he" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-                                        <path d="M0 0h24v24H0z" fill="none"/>
-                                    </svg>
-                                    <span class="title">Trang chủ</span>
+                                <a class="gb_b" role="button" tabindex="0">
+                                    @yield('headbar-icon')
+                                    <span class="title">@yield('headbar-title')</span>
                                 </a>
                                 <div class="gb_wb"></div>
                                 <div class="gb_vb"></div>
