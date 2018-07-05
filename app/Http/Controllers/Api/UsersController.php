@@ -9,10 +9,15 @@ use App\User;
 
 class UsersController extends Controller
 {
-    public function getAllUsers(Request $request)
+    public function pagingUsers(Request $request)
     {
+        $page = 0;
+        if ($request->has('page')) {
+            $page = $request->page;
+        }
+
         $user = new User();
-        $data = $user->getAllUsers();
+        $data = $user->getUsers($page);
         echo json_encode($data);
     }
 }

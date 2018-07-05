@@ -18,6 +18,6 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
     Route::post('auth/register', 'Api\AuthController@register');
     Route::middleware(['jwt'])->group(function () {
         Route::get('auth/logout', 'Api\AuthController@logout');
-        Route::get('users', ['as' => 'api-users', 'uses' => 'Api\UsersController@getAllUsers']);
+        Route::get('users', ['as' => 'api-users', 'uses' => 'Api\UsersController@pagingUsers']);
     });
 });

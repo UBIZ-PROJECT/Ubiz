@@ -79,10 +79,10 @@
                         <div class="aqK">
                             <div class="aqL">
                                 <div class="GtF">
-                                    <div class="GNi">
+                                    <div class="GNi" onclick="chkFClick(this)">
                                         <div class="ax7 poK utooltip" title="Chọn">
                                             <div class="asA">
-                                                <div class="asC"></div>
+                                                <div class="asU ckb-f"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -202,48 +202,51 @@
                     </div>
                     <div class="aqB" id="nicescroll-oput">
                         <div class="yTP">
-                            <div class="jFr">
+                            <div id="table-content" class="jFr">
                                 @foreach($data as $user)
-                                    <div class="jvD" ondblclick="goToInputPage(this)">
+                                    <div class="jvD" ondblclick="goToInputPage({{$user->id}},this,)">
                                         <div class="tcB col-1">
                                             <div class="cbo">
-                                                <div class="asC"></div>
-                                                <div class="nCj">
+                                                <div class="jgQ" onclick="chkCClick(this)">
+                                                    <input type="checkbox" class="ckb-i" value="{{$user->id}}" style="display: none"/>
+                                                    <div class="asU ckb-c"></div>
+                                                </div>
+                                                <div class="nCj" title="{{$user->code}}">
                                                     <span>{{$user->code}}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="tcB col-2">
                                             <div class="cbo">
-                                                <div class="nCj">
+                                                <div class="nCj" title="{{$user->name}}">
                                                     <span>{{$user->name}}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="tcB col-3">
                                             <div class="cbo">
-                                                <div class="nCj">
+                                                <div class="nCj" title="{{$user->email}}">
                                                     <span>{{$user->email}}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="tcB col-4">
                                             <div class="cbo">
-                                                <div class="nCj">
+                                                <div class="nCj" title="{{$user->phone}}">
                                                     <span>{{$user->phone}}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="tcB col-5">
                                             <div class="cbo">
-                                                <div class="nCj">
-                                                    <span>{{$user->dep_id}}</span>
+                                                <div class="nCj" title="{{$user->dep_name}}">
+                                                    <span>{{$user->dep_name}}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="tcB col-6">
                                             <div class="cbo">
-                                                <div class="nCj">
+                                                <div class="nCj" title="{{$user->address}}">
                                                     <span>{{$user->address}}</span>
                                                 </div>
                                             </div>
