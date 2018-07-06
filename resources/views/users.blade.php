@@ -211,7 +211,7 @@
                                                     <input type="checkbox" class="ckb-i" value="{{$user->id}}" style="display: none"/>
                                                     <div class="asU ckb-c"></div>
                                                 </div>
-                                                <div class="nCj" title="{{$user->code}}">
+                                                <div class="nCT" title="{{$user->code}}">
                                                     <span>{{$user->code}}</span>
                                                 </div>
                                             </div>

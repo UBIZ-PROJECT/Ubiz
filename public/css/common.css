@@ -909,8 +909,21 @@
     box-sizing: border-box;
     overflow: hidden;
     text-overflow: ellipsis;
-    display: table-cell;
     max-width: 100%;
+    vertical-align: top;
+    white-space: nowrap;
+    padding-left: 2px;
+}
+
+
+.main-content .r-content .nCT {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc( 100% - 30px );
+    position: absolute;
+    left: 25px;
     vertical-align: top;
     white-space: nowrap;
     padding-left: 2px;
@@ -1002,7 +1015,8 @@
 .main-content .r-content .jgQ {
     height: 100%;
     width: 25px;
-    display: table-cell;
+    position: absolute;
+    left: 0px;
 }
 
 .main-content .r-content .jgQ .asC,
