@@ -9,7 +9,7 @@ use App\User;
 
 class UsersController extends Controller
 {
-    public function pagingUsers(Request $request)
+    public function getUsers(Request $request)
     {
         $page = 0;
         if ($request->has('page')) {
