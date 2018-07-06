@@ -51,7 +51,26 @@ class User extends Authenticatable implements JWTSubject
 
     public function getAllUsers()
     {
-        $users = DB::table('users')->get();
+        $users = DB::table('users')
+            ->select('users.*', 'm_department.dep_id', 'm_department.dep_name', 'm_department.dep_type', 'm_department.per_id')
+            ->leftJoin('m_department', 'users.dep_id', '=', 'm_department.dep_id')
+            ->where('users.delete_flg', '=', '0')
+            ->orderBy('id', 'asc')
+            ->get();
+        return $users;
+    }
+
+    public function getUsers($page = 0)
+    {
+        $rows_per_page = env('ROWS_PER_PAGE', 10);
+        $users = DB::table('users')
+            ->select('users.*', 'm_department.dep_id', 'm_department.dep_name', 'm_department.dep_type', 'm_department.per_id')
+            ->leftJoin('m_department', 'users.dep_id', '=', 'm_department.dep_id')
+            ->where('users.delete_flg', '=', '0')
+            ->orderBy('id', 'asc')
+            ->offset($page * $rows_per_page)
+            ->limit($rows_per_page)
+            ->get();
         return $users;
     }
 }
