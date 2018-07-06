@@ -17,7 +17,9 @@ class UsersController extends Controller
         }
 
         $user = new User();
-        $data = $user->getUsers($page);
-        echo json_encode($data);
+        $users = $user->getUsers($page);
+        $paging = $user->paging();
+        $paging['page'] = $page;
+        echo json_encode(['users' => $users, 'paging' => $paging]);
     }
 }

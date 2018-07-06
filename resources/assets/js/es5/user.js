@@ -30,91 +30,39 @@ function goBackToOutputPage(self) {
     });
 }
 
-function chkFClick(self) {
-    var o_put = jQuery("#o-put");
-    if (jQuery(self).find('div.ckb-f').hasClass('asU')) {
-        o_put.find('.ckb-f').removeClass('asU');
-        o_put.find('.ckb-f').removeClass('asP');
-        o_put.find('.ckb-f').addClass('asC');
-        o_put.find('.ckb-c').removeClass('asU');
-        o_put.find('.ckb-c').addClass('asC');
-        o_put.find('.ckb-i').prop('checked', true);
-    } else {
-        o_put.find('.ckb-f').removeClass('asC');
-        o_put.find('.ckb-f').removeClass('asP');
-        o_put.find('.ckb-f').addClass('asU');
-        o_put.find('.ckb-c').removeClass('asC');
-        o_put.find('.ckb-c').addClass('asU');
-        o_put.find('.ckb-i').prop('checked', false);
-    }
-}
-
-function chkCClick(self) {
-    if (jQuery(self).find('.ckb-c').hasClass('asU')) {
-        jQuery(self).find('.ckb-c').removeClass('asU');
-        jQuery(self).find('.ckb-c').addClass('asC');
-        jQuery(self).find('.ckb-i').prop('checked', true);
-    } else {
-        jQuery(self).find('.ckb-c').removeClass('asC');
-        jQuery(self).find('.ckb-c').addClass('asU');
-        jQuery(self).find('.ckb-i').prop('checked', false);
-    }
-    chkFReCheckStatus();
-}
-
-function chkFReCheckStatus(){
-    var o_put = jQuery("#o-put");
-    var row_length = o_put.find('.jvD').length;
-    var checked_row_length = o_put.find('.ckb-i:checked').length;
-    if(row_length == checked_row_length){
-        o_put.find('.ckb-f').removeClass('asU');
-        o_put.find('.ckb-f').removeClass('asP');
-        o_put.find('.ckb-f').addClass('asC');
-    }else{
-        if(checked_row_length == 0){
-            o_put.find('.ckb-f').removeClass('asC');
-            o_put.find('.ckb-f').removeClass('asP');
-            o_put.find('.ckb-f').addClass('asU');
-        }else{
-            o_put.find('.ckb-f').removeClass('asC');
-            o_put.find('.ckb-f').removeClass('asU');
-            o_put.find('.ckb-f').addClass('asP');
-        }
-    }
-}
-
 function refreshOutputPage(self) {
     ubizapis('v1', '/users', 'get', null, {'page': 0}, renderDataToOutPut);
 }
 
-function getOlderData(){
-    ubizapis('v1', '/users', 'get', null, {'page': 0}, renderDataToOutPut);
+function getOlderData(page){
+    ubizapis('v1', '/users', 'get', null, {'page': page}, renderDataToOutPut);
 }
 
-function getNewerData(){
-    ubizapis('v1', '/users', 'get', null, {'page': 0}, renderDataToOutPut);
+function getNewerData(page){
+    ubizapis('v1', '/users', 'get', null, {'page': page}, renderDataToOutPut);
 }
 
 function renderDataToOutPut(response) {
     var table_html = "";
-    var data = response.data;
-    if (data.length > 0) {
+    var users = response.data.users;
+    if (users.length > 0) {
         var rows = [];
-        for (let i = 0; i < data.length; i++) {
+        for (let i = 0; i < users.length; i++) {
             var cols = [];
-            cols.push(renderColHtml(data[i].id, data[i].code, 1));
-            cols.push(renderColHtml(data[i].id, data[i].name, 2));
-            cols.push(renderColHtml(data[i].id, data[i].email, 3));
-            cols.push(renderColHtml(data[i].id, data[i].phone, 4));
-            cols.push(renderColHtml(data[i].id, data[i].dep_name, 5));
-            cols.push(renderColHtml(data[i].id, data[i].address, 6));
-            rows.push(renderRowHtml(data[i].id, cols));
+            cols.push(renderColHtml(users[i].id, users[i].code, 1));
+            cols.push(renderColHtml(users[i].id, users[i].name, 2));
+            cols.push(renderColHtml(users[i].id, users[i].email, 3));
+            cols.push(renderColHtml(users[i].id, users[i].phone, 4));
+            cols.push(renderColHtml(users[i].id, users[i].dep_name, 5));
+            cols.push(renderColHtml(users[i].id, users[i].address, 6));
+            rows.push(renderRowHtml(users[i].id, cols));
         }
         table_html += rows.join("");
     }
     jQuery("#table-content").empty();
     jQuery("#table-content").append(table_html);
     chkFReCheckStatus();
+    paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
 }
 
 function renderRowHtml(id, cols) {
