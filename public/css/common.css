@@ -249,7 +249,7 @@
 }
 
 .main-content .l-content .tA {
-    padding-right: 24px;
+    padding-right: 10px;
     -webkit-box-flex: 0 1 auto;
     -webkit-flex: 0 1 auto;
     flex: 0 1 auto;
@@ -727,6 +727,38 @@
     background-size: 20px;
 }
 
+.main-content .r-content .asP {
+    display: inline-block;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+    -webkit-transition: opacity .15s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transition: opacity .15s cubic-bezier(0.4, 0.0, 0.2, 1);
+    width: 20px;
+    opacity: .54;
+    vertical-align: middle;
+    background-image: url(../images/check_box_partial.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 20px;
+}
+
+.main-content .r-content .asU {
+    display: inline-block;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+    -webkit-transition: opacity .15s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transition: opacity .15s cubic-bezier(0.4, 0.0, 0.2, 1);
+    width: 20px;
+    opacity: .54;
+    vertical-align: middle;
+    background-image: url(../images/check_box_outline.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 20px;
+}
+
 .main-content .r-content .arB {
     display: inline-block;
     height: 20px;
@@ -754,6 +786,22 @@
     opacity: .54;
     vertical-align: middle;
     background-image: url(../images/save_black.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 20px;
+}
+
+.main-content .r-content .arR {
+    display: inline-block;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+    -webkit-transition: opacity .15s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transition: opacity .15s cubic-bezier(0.4, 0.0, 0.2, 1);
+    width: 20px;
+    opacity: .54;
+    vertical-align: middle;
+    background-image: url(../images/refresh.png);
     background-position: center;
     background-repeat: no-repeat;
     background-size: 20px;
@@ -788,7 +836,7 @@
 }
 
 .main-content .r-content .dcB {
-    color: #5f6368;
+    color: #1967d2;
     font-size: 13px;
     font-weight: 500;
     display: table-cell;
@@ -796,22 +844,6 @@
     text-align: left;
     vertical-align: middle;
     text-overflow: ellipsis;
-}
-
-.main-content .r-content .col-1 {
-    width: 100%;
-}
-
-.main-content .r-content .col-2 {
-    width: 300px;
-}
-
-.main-content .r-content .col-3 {
-    width: 200px;
-}
-
-.main-content .r-content .col-4 {
-    width: 250px;
 }
 
 .main-content .r-content .aqB {
@@ -845,7 +877,7 @@
 .main-content .r-content .jvD {
     cursor: default;
     display: table-row;
-    color: rgba(0, 0, 0, .54);
+    color: rgba(0, 0, 0, .7);
     fill: rgba(0, 0, 0, .54);
 }
 
@@ -877,11 +909,35 @@
     box-sizing: border-box;
     overflow: hidden;
     text-overflow: ellipsis;
-    display: inline-block;
     max-width: 100%;
-    padding: 0 6px;
     vertical-align: top;
     white-space: nowrap;
+    padding-left: 2px;
+}
+
+
+.main-content .r-content .nCT {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc( 100% - 30px );
+    position: absolute;
+    left: 25px;
+    vertical-align: top;
+    white-space: nowrap;
+    padding-left: 2px;
+}
+
+.main-content .r-content .dvH {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.5s linear;
+}
+
+.main-content .r-content .dvS {
+    visibility: visible;
+    opacity: 1;
 }
 
 .main-content .r-content .jvC {
@@ -891,7 +947,6 @@
 
 .main-content .r-content .dWB {
     padding-left: 2px;
-    font-weight: bold;
 }
 
 .main-content .r-content .dvJ {
@@ -955,4 +1010,34 @@
 
 .main-content .r-content .faH {
     fill: #5f6368;
+}
+
+.main-content .r-content .jgQ {
+    height: 100%;
+    width: 25px;
+    position: absolute;
+    left: 0px;
+}
+
+.main-content .r-content .jgQ .asC,
+.main-content .r-content .jgQ .asU {
+    margin-bottom: 3px;
+}
+
+.ubiz-progress{
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
+    position: absolute;
+    top: 0;
+    left: calc(100% - 55%);
+    background: #ffcb0794;
+    padding: 0 5px;
+    border-radius: 1px;
+    border: 1px solid rgba(255, 123, 34, 0.94);
+    font-weight: 500;
+    z-index: 99999;
+    margin-top: 5px;
+    cursor: default;
+    box-shadow: 0 2px 2px 0 rgba(255, 123, 34, 0.94), 0 0 3px 0 rgba(255, 123, 34, 0.194);
 }

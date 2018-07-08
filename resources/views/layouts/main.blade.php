@@ -12,6 +12,7 @@
     @yield('style')
     <!-- Javascript -->
     <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/common.js') }}"></script>
 
     <!-- Nicescroll -->
     <script type="text/javascript" src="{{ asset('dist/nicescroll/jquery.nicescroll.min.js') }}"></script>
