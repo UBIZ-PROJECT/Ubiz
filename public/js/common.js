@@ -1,7 +1,7 @@
 function showProgress(){
     var progress = jQuery('.ubiz-progress');
     if(progress.length == 0){
-        var progress_dom = '<div class="ubiz-progress">Loading...</div>';
+        var progress_dom = '<div class="ubiz-progress">Đang xử lý...</div>';
         jQuery('body').append(progress_dom);
         progress = jQuery('.ubiz-progress');
     }
@@ -66,6 +66,16 @@ function chkFReCheckStatus(){
             o_put.find('.ckb-f').addClass('asP');
         }
     }
+}
+
+function getCheckedRows(){
+    var ids = [];
+    var checked_rows = jQuery("#o-put").find('.ckb-i:checked');
+    checked_rows.each(function (idx, ele) {
+        var id = ele.value;
+        ids.push(id);
+    });
+    return ids;
 }
 
 function paging(page, rows_num, rows_per_page) {

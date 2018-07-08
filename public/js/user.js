@@ -1,45 +1,68 @@
 function goToInputPage(id, self) {
     jQuery("#o-put").hide();
     jQuery("#i-put").fadeIn("slow");
-    jQuery('#nicescroll-oput').getNiceScroll().remove();
-    jQuery('#nicescroll-iput').getNiceScroll().remove();
-    jQuery('#nicescroll-iput').niceScroll({
-        cursorcolor: "#9fa8b0",
-        cursorwidth: "5px",
-        cursorborder: "none",
-        cursorborderradius: 5,
-        cursoropacitymin: 0.4,
-        autohidemode: 'leave',
-        horizrailenabled: false
-    });
+    jQuery('#nc-iput').show();
+    jQuery('#nc-oput').hide();
 }
 
 function goBackToOutputPage(self) {
+
     jQuery("#o-put").fadeIn("slow");
     jQuery("#i-put").hide();
-    jQuery('#nicescroll-iput').getNiceScroll().remove();
-    jQuery('#nicescroll-oput').getNiceScroll().remove();
-    jQuery('#nicescroll-oput').niceScroll({
-        cursorcolor: "#9fa8b0",
-        cursorwidth: "5px",
-        cursorborder: "none",
-        cursorborderradius: 5,
-        cursoropacitymin: 0.4,
-        autohidemode: 'leave',
-        horizrailenabled: false
-    });
+    jQuery('#nc-oput').show();
+    jQuery('#nc-iput').hide();
 }
 
 function refreshOutputPage(self) {
     ubizapis('v1', '/users', 'get', null, {'page': 0}, renderDataToOutPut);
 }
 
-function getOlderData(page){
+function getOlderData(page) {
     ubizapis('v1', '/users', 'get', null, {'page': page}, renderDataToOutPut);
 }
 
-function getNewerData(page){
+function getNewerData(page) {
     ubizapis('v1', '/users', 'get', null, {'page': page}, renderDataToOutPut);
+}
+
+function delCheckedData() {
+    var ids = getCheckedRows();
+    if (ids.length == 0)
+        return false;
+
+    swal({
+        title: "Bạn có muốn xóa dữ liệu không?",
+        text: "Một khi xóa, bạn sẽ không có khả năng khôi phục dữ liệu này!",
+        icon: "warning",
+        buttons: true,
+        buttons: {
+            cancel: "Không",
+            catch: {
+                text: "Có",
+                value: "catch",
+            }
+        },
+        dangerMode: true,
+    }).then((value) => {
+        switch (value) {
+            case "catch":
+                ubizapis('v1', '/users/' + ids.join(','), 'delete', null, null, delCheckedDataCallback);
+                break;
+        }
+    });
+}
+
+function delCheckedDataCallback(response) {
+    if (response.data.success == true) {
+        renderDataToOutPut(response);
+        swal(response.data.message, {
+            icon: "success",
+        });
+    } else {
+        swal(response.data.message, {
+            icon: "error",
+        });
+    }
 }
 
 function renderDataToOutPut(response) {
@@ -104,7 +127,8 @@ jQuery(document).ready(function () {
         cursorborder: "none",
         cursorborderradius: 5,
         cursoropacitymin: 0.4,
-        autohidemode: 'leave',
+        scrollbarid: 'nc-sidebar',
+        autohidemode: false,
         horizrailenabled: false
     });
     jQuery('#nicescroll-oput').niceScroll({
@@ -113,7 +137,18 @@ jQuery(document).ready(function () {
         cursorborder: "none",
         cursorborderradius: 5,
         cursoropacitymin: 0.4,
-        autohidemode: 'leave',
+        scrollbarid: 'nc-oput',
+        autohidemode: false,
+        horizrailenabled: false
+    });
+    jQuery('#nicescroll-iput').niceScroll({
+        cursorcolor: "#9fa8b0",
+        cursorwidth: "5px",
+        cursorborder: "none",
+        cursorborderradius: 5,
+        cursoropacitymin: 0.4,
+        scrollbarid: 'nc-input',
+        autohidemode: false,
         horizrailenabled: false
     });
     jQuery('.utooltip').tooltipster({

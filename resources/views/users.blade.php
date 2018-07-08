@@ -25,7 +25,7 @@
             <div class="zY">
                 <div class="yP" onclick="goToInputPage(this)">Thêm mới</div>
             </div>
-            <div id="nicescroll-sidebar" class="zX">
+            <div id="nicescroll-sidebar" class="zX nicescroll">
                 <nav role="navigation">
                     <div class="kL"></div>
                     <div class="sP">
@@ -93,7 +93,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="GNi">
+                                    <div class="GNi" onclick="delCheckedData()">
                                         <div class="ax7 poK utooltip" title="Xóa">
                                             <div class="asA">
                                                 <div class="asX"></div>
@@ -190,10 +190,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="aqB" id="nicescroll-oput">
+                    <div class="aqB nicescroll" id="nicescroll-oput">
                         <div class="yTP">
                             <div id="table-content" class="jFr">
-                                @foreach($data as $user)
+                                @foreach($users as $user)
                                     <div class="jvD" ondblclick="goToInputPage({{$user->id}},this,)">
                                         <div class="tcB col-1">
                                             <div class="cbo">
@@ -311,7 +311,7 @@
                     </div>
                 </div>
                 <div class="jAQ">
-                    <div class="aqI" id="nicescroll-iput">
+                    <div class="aqI nicescroll" id="nicescroll-iput">
                         <div style="height: 200px;">a</div>
                         <div style="height: 200px;">a</div>
                         <div style="height: 200px;">a</div>

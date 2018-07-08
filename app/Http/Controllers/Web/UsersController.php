@@ -10,10 +10,14 @@ class UsersController extends Controller
 {
     public function index(Request $request)
     {
-        $user = new User();
-        $users = $user->getUsers();
-        $paging = $user->paging();
-        $paging['page'] = 0;
-        return view('users', ['data' => $data, 'paging' => $paging]);
+        try {
+            $user = new User();
+            $users = $user->getUsers();
+            $paging = $user->getPagingInfo();
+            $paging['page'] = 0;
+            return view('users', ['users' => $users, 'paging' => $paging]);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
     }
 }
