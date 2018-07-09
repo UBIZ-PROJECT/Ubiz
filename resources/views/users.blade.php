@@ -135,7 +135,7 @@
                             </div>
                             <div class="hdG">
                                 <div class="dcB col-1" role="presentation">
-                                    <div class="dWB" role="button">
+                                    <div class="dWB dWT" role="button" sort-name="code" order-by="asc" onclick="sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Mã</div>
                                             <div class="mhH">
@@ -153,37 +153,92 @@
                                     </div>
                                 </div>
                                 <div class="dcB col-2" role="presentation">
-                                    <div class="dWB" role="button">
+                                    <div class="dWB" role="button" sort-name="name" order-by="asc" onclick="sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Tên</div>
+                                            <div class="mhH">
+                                                <div class="acD">
+                                                    <div class="huK">
+                                                        <svg class="faH" x="0px" y="0px" width="18px" height="18px"
+                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="dcB col-3" role="presentation">
-                                    <div class="dWB" role="button">
+                                    <div class="dWB" role="button" sort-name="email" order-by="asc" onclick="sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">E-mail</div>
+                                            <div class="mhH">
+                                                <div class="acD">
+                                                    <div class="huK">
+                                                        <svg class="faH" x="0px" y="0px" width="18px" height="18px"
+                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="dcB col-4" role="presentation">
-                                    <div class="dWB" role="button">
+                                    <div class="dWB" role="button" sort-name="phone" order-by="asc" onclick="sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Điện thoại</div>
+                                            <div class="mhH">
+                                                <div class="acD">
+                                                    <div class="huK">
+                                                        <svg class="faH" x="0px" y="0px" width="18px" height="18px"
+                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="dcB col-5" role="presentation">
                                     <div class="dWB" role="button">
-                                        <div class="dvJ">
+                                        <div class="dvJ" sort-name="dep_name" order-by="asc" onclick="sort(this)">
                                             <div class="tDv">Phòng ban</div>
+                                            <div class="mhH">
+                                                <div class="acD">
+                                                    <div class="huK">
+                                                        <svg class="faH" x="0px" y="0px" width="18px" height="18px"
+                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="dcB col-6" role="presentation">
-                                    <div class="dWB" role="button">
+                                    <div class="dWB" role="button" sort-name="address" order-by="asc" onclick="sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Địa chỉ</div>
+                                            <div class="mhH">
+                                                <div class="acD">
+                                                    <div class="huK">
+                                                        <svg class="faH" x="0px" y="0px" width="18px" height="18px"
+                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

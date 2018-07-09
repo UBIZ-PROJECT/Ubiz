@@ -954,6 +954,7 @@
 
 .main-content .r-content .dWB {
     padding-left: 2px;
+    cursor: pointer;
 }
 
 .main-content .r-content .dvJ {
@@ -988,6 +989,11 @@
     flex-grow: 1;
     -webkit-align-items: center;
     align-items: center;
+    visibility: hidden;
+}
+
+.main-content .r-content .dWT .mhH {
+    visibility: visible;
 }
 
 .main-content .r-content .acD {

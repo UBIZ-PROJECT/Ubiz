@@ -1,20 +1,60 @@
 function goToInputPage(id, self) {
     jQuery("#o-put").hide();
     jQuery("#i-put").fadeIn("slow");
-    jQuery('#nc-iput').show();
-    jQuery('#nc-oput').hide();
+    jQuery('#nicescroll-oput').getNiceScroll().remove();
+    jQuery('#nicescroll-iput').getNiceScroll().remove();
+    jQuery('#nicescroll-iput').niceScroll({
+        cursorcolor: "#9fa8b0",
+        cursorwidth: "5px",
+        cursorborder: "none",
+        cursorborderradius: 5,
+        cursoropacitymin: 0.4,
+        scrollbarid: 'nc-input',
+        autohidemode: false,
+        horizrailenabled: false
+    });
 }
 
 function goBackToOutputPage(self) {
 
     jQuery("#o-put").fadeIn("slow");
     jQuery("#i-put").hide();
-    jQuery('#nc-oput').show();
-    jQuery('#nc-iput').hide();
+    jQuery('#nicescroll-oput').getNiceScroll().remove();
+    jQuery('#nicescroll-iput').getNiceScroll().remove();
+    jQuery('#nicescroll-oput').niceScroll({
+        cursorcolor: "#9fa8b0",
+        cursorwidth: "5px",
+        cursorborder: "none",
+        cursorborderradius: 5,
+        cursoropacitymin: 0.4,
+        scrollbarid: 'nc-oput',
+        autohidemode: false,
+        horizrailenabled: false
+    });
 }
 
 function refreshOutputPage(self) {
     ubizapis('v1', '/users', 'get', null, {'page': 0}, renderDataToOutPut);
+}
+
+function sort(self){
+
+    var sort_name = jQuery(self).attr('sort-name');
+    var order_by = jQuery(self).attr('order-by') == 'asc' ? 'desc' : 'asc';
+    var sort = sort_name + "_" + order_by;
+
+    jQuery("#o-put").find('div.dWT').removeClass('dWT');
+    jQuery(self).attr('order-by', order_by);
+    jQuery(self).addClass('dWT');
+
+    ubizapis('v1', '/users', 'get', null, {'page': 0, 'sort': sort}, renderDataToOutPut);
+}
+
+function getSortInfo(){
+    var sort_obj = jQuery("#o-put").find('div.dWT');
+    var sort_name = sort_obj.attr('sort-name');
+    var order_by = sort_obj.attr('order-by') == 'asc' ? 'desc' : 'asc';
+    return {'sort_name': sort_name, 'order_by': order_by};
 }
 
 function getOlderData(page) {
@@ -138,16 +178,6 @@ jQuery(document).ready(function () {
         cursorborderradius: 5,
         cursoropacitymin: 0.4,
         scrollbarid: 'nc-oput',
-        autohidemode: false,
-        horizrailenabled: false
-    });
-    jQuery('#nicescroll-iput').niceScroll({
-        cursorcolor: "#9fa8b0",
-        cursorwidth: "5px",
-        cursorborder: "none",
-        cursorborderradius: 5,
-        cursoropacitymin: 0.4,
-        scrollbarid: 'nc-input',
         autohidemode: false,
         horizrailenabled: false
     });
