@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Auth\AuthenticationException;
 
@@ -49,6 +50,16 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        // custom error message
+        if (env('APP_ENV') == 'production' && (
+                $exception instanceof QueryException ||
+                $exception instanceof \ErrorException)
+        ) {
+            if ($request->expectsJson() === true) {
+                return response()->json(['success' => false, 'message' => $exception->getMessage()], 500);
+            }
+            return response()->view('errors.500', [], 500);
+        }
         return parent::render($request, $exception);
     }
 
