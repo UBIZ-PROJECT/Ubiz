@@ -1023,6 +1023,11 @@
 
 .main-content .r-content .faH {
     fill: #5f6368;
+    display: none;
+}
+
+.main-content .r-content .dWT .sVGT{
+    display: block;
 }
 
 .main-content .r-content .jgQ {
@@ -1038,7 +1043,7 @@
 }
 
 .ubiz-progress{
-    width: 80px;
+    width: auto;
     height: 30px;
     line-height: 30px;
     position: absolute;
