@@ -54,4 +54,42 @@ class Supplier implements JWTSubject
         $supplier = DB::table('suppliers')->get();
         return $supplier;
     }
+
+    public function getSupplierPaging($page) {
+        $rows_per_page = env('ROWS_PER_PAGE', 10);
+        $supplier = DB::table('suppliers')
+            ->select('sup_id','sup_name','sup_phone','sup_fax','sup_mail','sup_website')
+            ->where('delete_flg', '=', '0')
+            ->orderBy('sup_id', 'asc')
+            ->offset($page * $rows_per_page)
+            ->limit($rows_per_page)
+            ->get();
+        return $supplier;
+    }
+
+    public function getSupplierById($id) {
+        $supplier = DB::table('suppliers')
+            ->select('sup_id','sup_name','sup_phone','sup_fax','sup_mail','sup_website')
+            ->where([['delete_flg','=','0'],['sup_id','=',$id]])
+            ->get();
+        return $supplier;
+    }
+
+    public function insertSupplier($param) {
+        $id = DB::table('suppliers')->insertGetId(
+          [
+              'sup_name'=>$param['sup_name'],
+              'sup_phone'=>$param['sup_phone'],
+              'sup_fax'=>$param['sup_fax'],
+              'sup_mail'=>$param['sup_mail'],
+              'sup_website'=>$param['sup_website'],
+              'delete_flg'=>'0',
+              'inp_date'=>'now()',
+              'upd_date'=>'now()',
+              'inp_user'=>'2',
+              'upd_user'=>'2'
+          ]
+        );
+        return $id;
+    }
 }
