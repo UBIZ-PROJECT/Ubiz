@@ -3,10 +3,10 @@
 @section('headbar-title','Trang chủ')
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/sidebar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/common.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/headbar.css') }}">
 @endsection
-@section('sidebar')
+@section('headbar')
 @section('search')
     @include('home_search')
     @section('headbar-icon')
@@ -16,7 +16,7 @@
         </svg>
     @endsection
 @endsection
-@include('layouts/sidebar')
+@include('layouts/headbar')
 @endsection
 @section('content')
     <div class="main-content">

@@ -77,6 +77,9 @@
         w_create:function(){
             jQuery.UbizOIWidget.w_go_to_input_page(0);
         },
+        w_open_searh_form: function (self) {
+            swal('ok');
+        },
         w_go_to_input_page: function (id) {
             jQuery.UbizOIWidget.o_page.hide();
             jQuery.UbizOIWidget.i_page.fadeIn("slow");
