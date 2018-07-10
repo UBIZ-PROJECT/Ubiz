@@ -17,13 +17,13 @@ $get_newer_data_func = '';
 $older_css = 'adS';
 if ($older_page > -1) {
     $older_css = 'aaT';
-    $get_older_data_func = 'onclick="getOlderData(' . $older_page . ')"';
+    $get_older_data_func = 'onclick="jQuery.UbizOIWidget.w_get_older_data(' . $older_page . ')"';
 }
 
 $newer_css = 'adS';
 if ($newer_page < $max_page) {
     $newer_css = 'aaT';
-    $get_newer_data_func = 'onclick="getNewerData(' . $newer_page . ')"';
+    $get_newer_data_func = 'onclick="jQuery.UbizOIWidget.w_get_newer_data(' . $newer_page . ')"';
 }
 ?>
 <div id="paging-label" class="amH" style="user-select: none">

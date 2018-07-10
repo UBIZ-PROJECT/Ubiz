@@ -75,15 +75,25 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
-    public function getUsers($page = 0)
+    public function getUsers($page = 0, $sort = '')
     {
         try {
+
+            $sort_name = 'code';
+            $order_by = 'asc';
+            if ($sort != '') {
+                $sort_info = explode('_', $sort);
+                $order_by = $sort_info[sizeof($sort_info) - 1];
+                unset($sort_info[sizeof($sort_info) - 1]);
+                $sort_name = implode('_', $sort_info);
+            }
+
             $rows_per_page = env('ROWS_PER_PAGE', 10);
             $users = DB::table('users')
                 ->select('users.*', 'm_department.dep_id', 'm_department.dep_name', 'm_department.dep_type', 'm_department.per_id')
                 ->leftJoin('m_department', 'users.dep_id', '=', 'm_department.dep_id')
                 ->where('users.delete_flg', '=', '0')
-                ->orderBy('id', 'asc')
+                ->orderBy($sort_name, $order_by)
                 ->offset($page * $rows_per_page)
                 ->limit($rows_per_page)
                 ->get();
@@ -113,7 +123,7 @@ class User extends Authenticatable implements JWTSubject
         } catch (\Throwable $e) {
             throw $e;
         }
-        
+
         return [
             'rows_num' => $rows_num,
             'rows_per_page' => $rows_per_page

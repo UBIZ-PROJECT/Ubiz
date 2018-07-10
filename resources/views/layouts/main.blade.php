@@ -24,7 +24,7 @@
     @yield('top-javascript')
 </head>
 <body>
-@yield('sidebar')
+@yield('headbar')
 @yield('content')
 <!-- Javascript -->
 @yield('end-javascript')

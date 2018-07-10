@@ -3,11 +3,11 @@
 @section('headbar-title','Nhân viên')
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/sidebar.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/headbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/common.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/user.css') }}">
 @endsection
-@section('sidebar')
+@section('headbar')
     @section('search')
         @include('users_search')
         @section('headbar-icon')
@@ -17,13 +17,13 @@
             </svg>
         @endsection
     @endsection
-    @include('layouts/sidebar')
+    @include('layouts/headbar')
 @endsection
 @section('content')
     <div class="main-content">
         <div class="l-content">
             <div class="zY">
-                <div class="yP" onclick="goToInputPage(this)">Thêm mới</div>
+                <div class="yP" onclick="jQuery.UbizOIWidget.w_create()">Thêm mới</div>
             </div>
             <div id="nicescroll-sidebar" class="zX nicescroll">
                 <nav role="navigation">
@@ -79,21 +79,21 @@
                         <div class="aqK">
                             <div class="aqL">
                                 <div class="GtF">
-                                    <div class="GNi" onclick="chkFClick(this)">
+                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_f_checkbox_click(this)">
                                         <div class="ax7 poK utooltip" title="Chọn">
                                             <div class="asA">
                                                 <div class="asU ckb-f"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="GNi" onclick="refreshOutputPage(this)">
+                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_refresh_output_page(this)">
                                         <div class="ax7 poK utooltip" title="Làm mới">
                                             <div class="asA">
                                                 <div class="asF"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="GNi" onclick="delCheckedData()">
+                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_delete()">
                                         <div class="ax7 poK utooltip" title="Xóa">
                                             <div class="asA">
                                                 <div class="asX"></div>
@@ -135,16 +135,21 @@
                             </div>
                             <div class="hdG">
                                 <div class="dcB col-1" role="presentation">
-                                    <div class="dWB" role="button">
+                                    <div class="dWB dWT" role="button" sort-name="code" order-by="asc" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Mã</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
-                                                        <svg class="faH" x="0px" y="0px" width="18px" height="18px"
+                                                        <svg class="faH asc sVGT" x="0px" y="0px" width="18px" height="18px"
                                                              viewBox="0 0 48 48" focusable="false" fill="#000000">
                                                             <path fill="none" d="M0 0h48v48H0V0z"></path>
                                                             <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                        </svg>
+                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
+                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
                                                         </svg>
                                                     </div>
                                                 </div>
@@ -153,37 +158,117 @@
                                     </div>
                                 </div>
                                 <div class="dcB col-2" role="presentation">
-                                    <div class="dWB" role="button">
+                                    <div class="dWB" role="button" sort-name="name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Tên</div>
+                                            <div class="mhH">
+                                                <div class="acD">
+                                                    <div class="huK">
+                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
+                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                        </svg>
+                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
+                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="dcB col-3" role="presentation">
-                                    <div class="dWB" role="button">
+                                    <div class="dWB" role="button" sort-name="email" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">E-mail</div>
+                                            <div class="mhH">
+                                                <div class="acD">
+                                                    <div class="huK">
+                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
+                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                        </svg>
+                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
+                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="dcB col-4" role="presentation">
-                                    <div class="dWB" role="button">
+                                    <div class="dWB" role="button" sort-name="phone" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Điện thoại</div>
+                                            <div class="mhH">
+                                                <div class="acD">
+                                                    <div class="huK">
+                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
+                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                        </svg>
+                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
+                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="dcB col-5" role="presentation">
                                     <div class="dWB" role="button">
-                                        <div class="dvJ">
+                                        <div class="dvJ" sort-name="dep_name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                             <div class="tDv">Phòng ban</div>
+                                            <div class="mhH">
+                                                <div class="acD">
+                                                    <div class="huK">
+                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
+                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                        </svg>
+                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
+                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="dcB col-6" role="presentation">
-                                    <div class="dWB" role="button">
+                                    <div class="dWB" role="button" sort-name="address" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Địa chỉ</div>
+                                            <div class="mhH">
+                                                <div class="acD">
+                                                    <div class="huK">
+                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
+                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                        </svg>
+                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
+                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -194,10 +279,10 @@
                         <div class="yTP">
                             <div id="table-content" class="jFr">
                                 @foreach($users as $user)
-                                    <div class="jvD" ondblclick="goToInputPage({{$user->id}},this,)">
+                                    <div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{$user->id}})">
                                         <div class="tcB col-1">
                                             <div class="cbo">
-                                                <div class="jgQ" onclick="chkCClick(this)">
+                                                <div class="jgQ" onclick="jQuery.UbizOIWidget.w_c_checkbox_click(this)">
                                                     <input type="checkbox" class="ckb-i" value="{{$user->id}}" style="display: none"/>
                                                     <div class="asU ckb-c"></div>
                                                 </div>
@@ -254,7 +339,7 @@
                         <div class="aqK">
                             <div class="aqL">
                                 <div class="GtF">
-                                    <div class="GNi" onclick="goBackToOutputPage(this)">
+                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_go_back_to_output_page(this)">
                                         <div class="ax7 poK utooltip" title="Quay lại">
                                             <div class="asA">
                                                 <div class="arB"></div>
