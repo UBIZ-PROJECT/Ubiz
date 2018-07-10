@@ -28,13 +28,46 @@
                                 </svg>
                             </a>
                         </div>
+                        <div id="apps-form" class="mvo">
+                            <div class="xvo">
+                                <div class="bvo"></div>
+                            </div>
+                        </div>
+                        <div id="notify-form" class="mvo">
+                            <div class="qvo">
+                                <div class="lvo"></div>
+                            </div>
+                        </div>
+                        <div id="account-form" class="mvo">
+                            <div class="uvo">
+                                <div class="zho">
+                                    <div class="ano">
+                                        <a class="yno">
+                                            <img class="pno" src="{{ asset('images/avatar.jpg') }}">
+                                            <span class="wno">Thay đổi</span>
+                                        </a>
+                                        <div class="rho">
+                                            <div class="iho">ubiz</div>
+                                            <div class="mno">ubiz@gmail.com</div>
+                                            <div class="jno">
+                                                <a href="#">Bảo mật</a>
+                                            </div>
+                                            <button type="button" class="btn btn-primary btn-sm ">Tài khoản</button>
+                                        </div>
+                                    </div>
+                                    <div class="tno">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm ">Đăng xuất</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="wyo">
                         <div class="zyo">
                             <img src="{{ asset('images/logo.png') }}">
                         </div>
                         <div class="vyo">
-                            <a><span><img src="{{ asset('images/avatar.jpg') }}"</span></a>
+                            <a><span><img src="{{ asset('images/avatar.jpg') }}"></span></a>
                         </div>
                     </div>
                 </div>

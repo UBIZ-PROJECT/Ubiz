@@ -4,6 +4,7 @@
         this.sort = {};
         this.o_page = null;
         this.i_page = null;
+        this.search_form = null;
     };
 
     jQuery.UbizOIWidget = new UbizOIWidget();
@@ -11,6 +12,7 @@
         w_init: function () {
             jQuery.UbizOIWidget.o_page = jQuery("#o-put");
             jQuery.UbizOIWidget.i_page = jQuery("#i-put");
+            jQuery.UbizOIWidget.search_form = jQuery("#search-form");
             jQuery('#nicescroll-sidebar').niceScroll({
                 cursorcolor: "#9fa8b0",
                 cursorwidth: "5px",
@@ -77,8 +79,31 @@
         w_create:function(){
             jQuery.UbizOIWidget.w_go_to_input_page(0);
         },
-        w_open_searh_form: function (self) {
-            swal('ok');
+        w_show_searh_form: function () {
+            jQuery.UbizOIWidget.search_form.show(50, function () {
+                jQuery.UbizOIWidget.search_form.find('#code').focus();
+                document.body.addEventListener('click', jQuery.UbizOIWidget.w_hide_searh_form, false);
+            });
+        },
+        w_hide_searh_form: function (e) {
+            var search_form = jQuery(e.target).closest("#search-form");
+            if (search_form.length == 0) {
+                document.body.removeEventListener('click', jQuery.UbizOIWidget.w_hide_searh_form, false);
+                jQuery.UbizOIWidget.search_form.hide();
+            }
+        },
+        w_show_apps_form: function () {
+            jQuery.UbizOIWidget.search_form.show(50, function () {
+                jQuery.UbizOIWidget.search_form.find('#code').focus();
+                document.body.addEventListener('click', jQuery.UbizOIWidget.w_hide_searh_form, false);
+            });
+        },
+        w_hide_apps_form: function (e) {
+            var search_form = jQuery(e.target).closest("#search-form");
+            if (search_form.length == 0) {
+                document.body.removeEventListener('click', jQuery.UbizOIWidget.w_hide_searh_form, false);
+                jQuery.UbizOIWidget.search_form.hide();
+            }
         },
         w_go_to_input_page: function (id) {
             jQuery.UbizOIWidget.o_page.hide();
