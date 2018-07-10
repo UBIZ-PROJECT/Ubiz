@@ -76,20 +76,64 @@ class Supplier implements JWTSubject
     }
 
     public function insertSupplier($param) {
-        $id = DB::table('suppliers')->insertGetId(
-          [
-              'sup_name'=>$param['sup_name'],
-              'sup_phone'=>$param['sup_phone'],
-              'sup_fax'=>$param['sup_fax'],
-              'sup_mail'=>$param['sup_mail'],
-              'sup_website'=>$param['sup_website'],
-              'delete_flg'=>'0',
-              'inp_date'=>'now()',
-              'upd_date'=>'now()',
-              'inp_user'=>'2',
-              'upd_user'=>'2'
-          ]
-        );
-        return $id;
+        DB::beginTransaction();
+        try {
+             DB::table('suppliers')->insertGetId(
+                [
+                    'sup_name'=>$param['sup_name'],
+                    'sup_phone'=>$param['sup_phone'],
+                    'sup_fax'=>$param['sup_fax'],
+                    'sup_mail'=>$param['sup_mail'],
+                    'sup_website'=>$param['sup_website'],
+                    'delete_flg'=>'0',
+                    'inp_date'=>'now()',
+                    'upd_date'=>'now()',
+                    'inp_user'=>'2',
+                    'upd_user'=>'2'
+                ]
+            );\
+            DB::commit();
+        } catch(\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    public function deleteSupplierById($listId) {
+        DB::beginTransaction();
+        try {
+            $listId = json_decode($listId,true);
+            $strListId = implode($listId, ',');
+            DB::table('suppliers')->whereIn('sup_id', $strListId)
+                ->update([
+                    'delete_flg'=>'1',
+                    'upd_date'=>'now()'
+                ]);
+            DB::commit();
+        } catch(\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+
+    }
+
+    public function updateSupplierById($supplier) {
+        DB::beginTransaction();
+        try {
+            $supplier = json_decode($supplier,true);
+            DB::table('suppliers')->where('sup_id','=',$supplier['sup_id'])
+                ->update([
+                   'sup_name'=>$supplier['sup_name'],
+                   'sup_phone'=>$supplier['sup_phone'],
+                   'sup_fax'=>$supplier['sup_fax'],
+                   'sup_mail'=>$supplier['sup_mail'],
+                   'sup_website'=>$supplier['sup_website'],
+                   'upd_date'=>'now()'
+                ]);
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
     }
 }
