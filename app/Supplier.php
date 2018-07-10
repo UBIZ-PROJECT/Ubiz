@@ -21,7 +21,7 @@ class Supplier implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'sup_name', 'sup_website', 'sup_phone', 'sup_fax', 'sup_mail',
+        'sup_id','sup_name', 'sup_website', 'sup_phone', 'sup_fax', 'sup_mail',
     ];
     /**
      * The attributes that should be hidden for arrays.

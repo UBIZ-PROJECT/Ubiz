@@ -1,5 +1,16 @@
-function goToInputPage(id, self) {
-    getSpecificSupplierDetail(id);
+const ACTION_INSERT = 1;
+const ACTION_UPDATE = 2;
+const ACTION_DETAIL = 3;
+
+function goToInputPage(action, id, self) {
+    if (action == ACTION_INSERT) {
+
+    } else if (action == ACTION_UPDATE) {
+
+    } else if (action == ACTION_DETAIL) {
+        getSpecificSupplierDetail(id);
+    }
+    
     jQuery("#o-put").hide();
     jQuery("#i-put").fadeIn("slow");
     jQuery('#nicescroll-oput').getNiceScroll().remove();
@@ -100,7 +111,27 @@ function getSpecificSupplierDetail(id) {
     ubizapis('v1','/suppliers/' + id, 'get', null, {'page': 0},renderDataToInput);
 }
 
+function insertSupplier() {
+    ubizapis('v1','/suppliers/insert', 'get', null, null, backToListSupplier);
+}
+
+function deleteOneSupplierById(id) {
+    ubizapis('v1','/suppliers/delete/'+ id, 'get', null, null,backToListSupplier);
+}
+
+function deleteManySuppliersById(listId) {
+    ubizapis('v1','/suppliers/delete/list', 'get',null, 'listId':JSON.stringtify(listId),backToListSupplier);
+}
+
+function backToListSupplier() {
+    refreshOutputPage(this);
+    goBackToOutputPage(this);
+}
+
 function renderDataToInput(response) {
+    if (response == undefined || response.data == undefined || response.data.length <= 0) {
+        return;
+    }
     data = response.data[0];
     $("#nicescroll-iput .sup_id .control").html(data.sup_id);
     $("#nicescroll-iput .sup_name .control").html(data.sup_name);
@@ -117,13 +148,13 @@ function renderDataToOutPut(response) {
         var rows = [];
         for (let i = 0; i < data.length; i++) {
             var cols = [];
-            cols.push(renderColHtml(data[i].id, data[i].sup_id, 1));
-            cols.push(renderColHtml(data[i].id, data[i].sup_name, 2));
-            cols.push(renderColHtml(data[i].id, data[i].sup_website, 3));
-            cols.push(renderColHtml(data[i].id, data[i].sup_phone, 4));
-            cols.push(renderColHtml(data[i].id, data[i].sup_fax, 5));
-            cols.push(renderColHtml(data[i].id, data[i].sup_mail, 6));
-            rows.push(renderRowHtml(data[i].id, cols));
+            cols.push(renderColHtml(data[i].sup_id, data[i].sup_id, 1));
+            cols.push(renderColHtml(data[i].sup_id, data[i].sup_name, 2));
+            cols.push(renderColHtml(data[i].sup_id, data[i].sup_website, 3));
+            cols.push(renderColHtml(data[i].sup_id, data[i].sup_phone, 4));
+            cols.push(renderColHtml(data[i].sup_id, data[i].sup_fax, 5));
+            cols.push(renderColHtml(data[i].sup_id, data[i].sup_mail, 6));
+            rows.push(renderRowHtml(data[i].sup_id, cols));
         }
         table_html += rows.join("");
     }
