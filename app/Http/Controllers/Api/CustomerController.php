@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-use App\User;
+use App\Customer;
 
 class CustomerController extends Controller
 {
@@ -42,7 +42,7 @@ class CustomerController extends Controller
         try {
             $customer = new Customer();
             $customer->deleteCustomer($ids);
-            $customers = $customer->getUsers(0);
+            $customers = $customer->getCustomers(0);
             $paging = $customer->getPagingInfo();
             $paging['page'] = 0;
 			foreach($customers as $key => $item){

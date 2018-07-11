@@ -78,7 +78,6 @@ class Customer implements JWTSubject
 public function getCustomers($page = 0, $sort = '') 
 	{
 		try {
-
             $sort_name = 'cus_id';
             $order_by = 'asc';
             if ($sort != '') {

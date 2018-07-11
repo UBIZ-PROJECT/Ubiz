@@ -5,7 +5,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/headbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/common.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/user.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/customer.css') }}">
 @endsection
 @section('headbar')
     @section('search')
@@ -135,7 +135,7 @@
                             </div>
                             <div class="hdG">
                                 <div class="dcB col-3" role="presentation">
-                                    <div class="dWB dWT" role="button" sort-name="code" order-by="asc" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                    <div class="dWB dWT" role="button" sort-name="cus_id" order-by="asc" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Mã Khách Hàng</div>
                                             <div class="mhH">
@@ -158,7 +158,7 @@
                                     </div>
                                 </div>
                                 <div class="dcB col-3" role="presentation">
-                                    <div class="dWB" role="button" sort-name="name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                    <div class="dWB" role="button" sort-name="cus_name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Tên Khách Hàng</div>
                                             <div class="mhH">
@@ -181,7 +181,7 @@
                                     </div>
                                 </div>
 								<div class="dcB col-3" role="presentation">
-                                    <div class="dWB" role="button" sort-name="name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                    <div class="dWB" role="button" sort-name="cus_type" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Loại Khách Hàng</div>
                                             <div class="mhH">
@@ -204,7 +204,7 @@
                                     </div>
                                 </div>
                                 <div class="dcB col-3" role="presentation">
-                                    <div class="dWB" role="button" sort-name="email" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                    <div class="dWB" role="button" sort-name="cus_phone" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Số Điện Thoại</div>
                                             <div class="mhH">
@@ -227,7 +227,7 @@
                                     </div>
                                 </div>
                                 <div class="dcB col-3" role="presentation">
-                                    <div class="dWB" role="button" sort-name="phone" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                    <div class="dWB" role="button" sort-name="cus_fax" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Fax</div>
                                             <div class="mhH">
@@ -251,7 +251,7 @@
                                 </div>
                                 <div class="dcB col-3" role="presentation">
                                     <div class="dWB" role="button">
-                                        <div class="dvJ" sort-name="dep_name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                        <div class="dvJ" sort-name="cus_mail" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                             <div class="tDv">Email</div>
                                             <div class="mhH">
                                                 <div class="acD">
@@ -442,5 +442,5 @@
     </div>
 @endsection
 @section('end-javascript')
-    <script type="text/javascript" src="{{ asset('js/user.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/customer.js') }}"></script>
 @endsection
