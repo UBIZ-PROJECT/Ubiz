@@ -489,7 +489,7 @@
 }
 
 .headbar .xvo {
-    width: 320px;
+    width: 400px;
     height: 450px;
     overflow-x: hidden;
     overflow-y: auto;
@@ -657,3 +657,70 @@
     color: #36c;
     text-decoration: none;
 }
+
+.headbar .cto {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    padding: 0;
+    flex-wrap: wrap;
+    list-style: none;
+}
+
+.headbar .who {
+    width: 30%;
+    height: 100px;
+    padding: 2px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    margin-right: 5px;
+}
+
+.headbar .pto {
+    height: 100%;
+    display: block;
+    position: relative;
+    overflow: hidden;
+}
+
+.headbar .pto > img {
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform: translateX(-50%);
+}
+
+.headbar .zro {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 38px;
+    display: flex;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.5);
+    align-items: center;
+}
+
+.headbar .rco {
+    color: #fff;
+    overflow: hidden;
+    flex-grow: 1;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.headbar .kko {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.headbar .ruo {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+
+

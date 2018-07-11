@@ -14,10 +14,9 @@ use Illuminate\Http\Request;
 */
 //
 Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
-    Route::post('auth/login', 'Api\AuthController@login');
-    Route::post('auth/register', 'Api\AuthController@register');
+    Route::post('login', 'Api\AuthController@login');
     Route::middleware(['jwt'])->group(function () {
-        Route::get('auth/logout', 'Api\AuthController@logout');
+        Route::get('logout', ['as' => 'api-logout', 'uses' => 'Api\AuthController@logout']);
         Route::get('users', ['as' => 'api-users', 'uses' => 'Api\UsersController@getUsers']);
         Route::delete('users/{ids}', ['as' => 'delete-users', 'uses' => 'Api\UsersController@deleteUsers']);
     });

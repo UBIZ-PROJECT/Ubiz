@@ -3,7 +3,7 @@
         <div class="cyo">
             <input autocomplete="off" placeholder="Tìm kiếm nhân viên" value="" type="text">
         </div>
-        <button class="dyo" onclick="jQuery.UbizOIWidget.w_show_searh_form()">
+        <button class="dyo" onclick="show_searh_form()">
             <svg focusable="false" height="24px" viewBox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg">
                 <path d="M7 10l5 5 5-5z"></path>
                 <path d="M0 0h24v24H0z" fill="none"></path>

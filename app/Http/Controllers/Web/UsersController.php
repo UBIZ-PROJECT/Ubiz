@@ -20,4 +20,9 @@ class UsersController extends Controller
             throw $e;
         }
     }
+
+    public function login(Request $request)
+    {
+        return view('login');
+    }
 }
