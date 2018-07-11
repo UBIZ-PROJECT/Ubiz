@@ -86,8 +86,8 @@ class Supplier implements JWTSubject
                     'sup_mail'=>$param['sup_mail'],
                     'sup_website'=>$param['sup_website'],
                     'delete_flg'=>'0',
-                    'inp_date'=>'now()',
-                    'upd_date'=>'now()',
+                    'inp_date'=>date('Y-m-d H:i:s'),
+                    'upd_date'=>date('Y-m-d H:i:s'),
                     'inp_user'=>'2',
                     'upd_user'=>'2'
                 ]
@@ -104,17 +104,16 @@ class Supplier implements JWTSubject
         try {
             $listId = json_decode($listId,true);
             $strListId = implode($listId, ',');
-            DB::table('suppliers')->whereIn('sup_id', $strListId)
+            DB::table('suppliers')->whereIn('sup_id', $listId)
                 ->update([
                     'delete_flg'=>'1',
-                    'upd_date'=>'now()'
+                    'upd_date'=>date('Y-m-d H:i:s')
                 ]);
             DB::commit();
         } catch(\Throwable $e) {
             DB::rollback();
             throw $e;
         }
-
     }
 
     public function updateSupplierById($supplier) {
@@ -128,12 +127,38 @@ class Supplier implements JWTSubject
                    'sup_fax'=>$supplier['sup_fax'],
                    'sup_mail'=>$supplier['sup_mail'],
                    'sup_website'=>$supplier['sup_website'],
-                   'upd_date'=>'now()'
+                   'upd_date'=>date('Y-m-d H:i:s')
                 ]);
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollback();
             throw $e;
         }
+    }
+
+    public function getPagingInfo() {
+        try {
+            $rows_per_page = env('ROWS_PER_PAGE', 10);
+            $rows_num = $this->countAllSuppliers();
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        
+        return [
+            'rows_num' => $rows_num,
+            'rows_per_page' => $rows_per_page
+        ];
+    }
+
+    public function countAllSuppliers()
+    {
+        try {
+            $count = DB::table('suppliers')
+                ->where('delete_flg', '=', '0')
+                ->count();
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return $count;
     }
 }

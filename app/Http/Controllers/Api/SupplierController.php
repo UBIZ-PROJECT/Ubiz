@@ -17,20 +17,32 @@ class SupplierController extends Controller
 {
     public function getSuppliers(Request $request)
     {
-        $page = 0;
-        if ($request->has('page')) {
-            $page = $request->page;
-        }
+        try {
+            $page = 0;
+            if ($request->has('page')) {
+                $page = $request->page;
+            }
 
-        $supplier = new Supplier();
-        $data = $supplier->getSupplierPaging($page);
-        echo json_encode($data);
+            $supplier = new Supplier();
+            $data = $supplier->getSupplierPaging($page);
+            $paging = $supplier->getPagingInfo();
+            $paging['page'] = $page;
+        } catch(\Throwable $e) {
+            throw $e;
+        }
+        
+        return response()->json(['supplier' => $data, 'paging' => $paging,'success' => true, 'message' => ''], 200);
     }
 
     public function getSupplierById($id) {
-        $supplier = new Supplier();
-        $data = $supplier->getSupplierById($id);
-        echo json_encode($data);
+        try {
+            $supplier = new Supplier();
+            $data = $supplier->getSupplierById($id);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        
+        return response()->json(['supplier' => $data, 'success' => true, 'message' => ''], 200);
     }
 
     public function insertSupplier(Request $request) {
@@ -41,5 +53,19 @@ class SupplierController extends Controller
         } else {
             echo json_encode(array('insert'=>'true'));
         }
+    }
+
+    public function deleteSuppliersById(Request $request) {
+        try {
+            $supplier = new Supplier();
+            $listId = $request->listId;
+            $supplier->deleteSuppliersById($listId);
+            $data = $supplier->getSupplierPaging(0);
+            $paging = $supplier->getPagingInfo();
+            $paging['page'] = 0;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['supplier' => $data, 'paging' => $paging, 'success' => true, 'message' => 'Xử lý thành công'], 200);
     }
 }

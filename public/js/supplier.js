@@ -115,24 +115,40 @@ function insertSupplier() {
     ubizapis('v1','/suppliers/insert', 'get', null, null, backToListSupplier);
 }
 
-function deleteOneSupplierById(id) {
-    ubizapis('v1','/suppliers/delete/'+ id, 'get', null, null,backToListSupplier);
+function deleteSuppliersById(listId) {
+    if (listId == undefined) return;
+    listId = JSON.stringify(listId);
+    ubizapis('v1','/suppliers/delete', 'get',null, {'listId':listId},backToListSupplier);
 }
 
-function deleteManySuppliersById(listId) {
-    ubizapis('v1','/suppliers/delete/list', 'get',null, 'listId':JSON.stringtify(listId),backToListSupplier);
-}
-
-function backToListSupplier() {
-    refreshOutputPage(this);
+function backToListSupplier(response) {
+    renderDataToOutPut(response);
     goBackToOutputPage(this);
 }
 
+function deleteListSupplier() {
+    var listId = [];
+    var ckb = $("input[type='checkbox'].ckb-i");
+    for(var  i = 0 ; i < ckb.length; i++) {
+        if ($(ckb[i]).prop("checked")) {
+            listId.push($(ckb[i]).val());
+        }
+    }
+    deleteSuppliersById(listId);
+}
+
+function deleteSupplier(id) {
+    var listId = [];
+    listId.push(id);
+    deleteSuppliersById(listId);
+}
+
 function renderDataToInput(response) {
-    if (response == undefined || response.data == undefined || response.data.length <= 0) {
+    if (response == undefined || response.data == undefined || response.data.supplier.length <= 0) {
         return;
     }
-    data = response.data[0];
+    data = response.data.supplier[0];
+    $("#i-put .GtF .delete").attr("onClick","deleteSupplier("+data.sup_id+")");
     $("#nicescroll-iput .sup_id .control").html(data.sup_id);
     $("#nicescroll-iput .sup_name .control").html(data.sup_name);
     $("#nicescroll-iput .sup_website .control").html(data.sup_website);
@@ -143,7 +159,7 @@ function renderDataToInput(response) {
 
 function renderDataToOutPut(response) {
     var table_html = "";
-    var data = response.data;
+    var data = response.data.supplier;
     if (data.length > 0) {
         var rows = [];
         for (let i = 0; i < data.length; i++) {
@@ -166,7 +182,7 @@ function renderDataToOutPut(response) {
 function renderRowHtml(id, cols) {
     var row_html = '';
     if (cols.length > 0) {
-        row_html = '<div class="jvD" ondblclick="goToInputPage(' + id + ',this)">';
+        row_html = '<div class="jvD" ondblclick="goToInputPage(3,' + id + ',this)">';
         row_html += cols.join("");
         row_html += '</div>';
     }

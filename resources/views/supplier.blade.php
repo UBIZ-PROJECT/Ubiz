@@ -78,21 +78,21 @@
                         <div class="aqK">
                             <div class="aqL">
                                 <div class="GtF">
-                                    <div class="GNi" onclick="chkFClick(this)">
+                                    <div class="select" onclick="chkFClick(this)">
                                         <div class="ax7 poK utooltip" title="Chọn">
                                             <div class="asA">
                                                 <div class="asU ckb-f"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="GNi" onclick="refreshOutputPage(this)">
+                                    <div class="refresh" onclick="refreshOutputPage(this)">
                                         <div class="ax7 poK utooltip" title="Làm mới">
                                             <div class="asA">
                                                 <div class="asF"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="GNi">
+                                    <div class="delete" onclick="deleteListSupplier()">
                                         <div class="ax7 poK utooltip" title="Xóa">
                                             <div class="asA">
                                                 <div class="asX"></div>
@@ -203,7 +203,7 @@
                         <div class="yTP">
                             <div id="table-content" class="jFr">
                                 @foreach($data as $sup)
-                                    <div class="jvD" ondblclick="goToInputPage({{$sup->sup_id}},this)">
+                                    <div class="jvD" ondblclick="goToInputPage(3,{{$sup->sup_id}},this)">
                                         <div class="tcB col-1">
                                             <div class="cbo">
                                                 <div class="jgQ" onclick="chkCClick(this)">
@@ -263,28 +263,28 @@
                         <div class="aqK">
                             <div class="aqL">
                                 <div class="GtF">
-                                    <div class="GNi" onclick="goBackToOutputPage(this)">
+                                    <div class="goback" onclick="goBackToOutputPage(this)">
                                         <div class="ax7 poK utooltip" title="Quay lại">
                                             <div class="asA">
                                                 <div class="arB"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="GNi">
+                                    <div class="save">
                                         <div class="ax7 poK utooltip" title="Lưu trữ">
                                             <div class="asA">
                                                 <div class="arS"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="GNi">
+                                    <div class="refresh">
                                         <div class="ax7 poK utooltip" title="Làm mới">
                                             <div class="asA">
                                                 <div class="arR"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="GNi">
+                                    <div class="delete">
                                         <div class="ax7 poK utooltip" title="Xóa">
                                             <div class="asA">
                                                 <div class="asX"></div>
