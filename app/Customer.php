@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-use Illuminate\Support\Facades\DB;
+use Illuminate\support\Facades\DB;
 
 class Customer implements JWTSubject
 {
@@ -50,7 +50,111 @@ class Customer implements JWTSubject
 
     public function getAllCustomers()
     {
-        $customers = DB::table('customer')->get();
+        $customers = DB::table('customer')->where('delete_flg', '0')->get();
         return $customers;
+    }
+
+    public function getCustomerAddress($cus_id)
+    {
+        $customerAddress = DB::table('customer_address')->where('cus_id', $cus_id)->where('delete_flg', '0')->get();
+        return $customerAddress;
+    }
+	
+	public function deleteCustomer($ids = '')
+    {
+        DB::beginTransaction();
+        try {
+
+            DB::table('customer')
+                ->whereIn('cus_id', explode(',', $ids))
+                ->update(['delete_flg' => '1']);
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+public function getCustomers($page = 0, $sort = '') 
+	{
+		try {
+
+            $sort_name = 'cus_id';
+            $order_by = 'asc';
+            if ($sort != '') {
+                $sort_info = explode('_', $sort);
+                $order_by = $sort_info[sizeof($sort_info) - 1];
+                unset($sort_info[sizeof($sort_info) - 1]);
+                $sort_name = implode('_', $sort_info);
+            }
+			
+        $rows_per_page = env('ROWS_PER_PAGE', 10);
+		$customers = DB::table('customer')
+			->where('delete_flg', '0')
+			->orderBy($sort_name, $order_by)
+			->offset($page * $rows_per_page)
+			->limit($rows_per_page)
+			->get();
+		}catch (\Throwable $e) {
+            throw $e;
+        }
+        return $customers;
+    }
+
+    public function countAllCustomers()
+    {
+        try {
+            $count = DB::table('customer')
+                ->where('delete_flg', '0')
+                ->count();
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return $count;
+    }
+
+    public function getPagingInfo()
+    {
+        try {
+            $rows_per_page = env('ROWS_PER_PAGE', 10);
+            $rows_num = $this->countAllCustomers();
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+
+        return [
+            'rows_num' => $rows_num,
+            'rows_per_page' => $rows_per_page
+        ];
+    }
+	
+	public function insertCustomer($param) {
+        $id = DB::table('customer')->insertGetId(
+          [
+              'cus_name'=>$param['cus_name'],
+			  'cus_type'=>$param['cus_type'],
+              'cus_phone'=>$param['cus_phone'],
+              'cus_fax'=>$param['cus_fax'],
+              'cus_mail'=>$param['cus_mail'],
+              'inp_date'=>'now()',
+              'upd_date'=>'now()',
+              'inp_user'=>'1',
+              'upd_user'=>'1'
+          ]
+        );
+        return $id;
+    }
+	
+	public function insertCustomerAddress($param) {
+        DB::table('customer_address')->insert(
+          [
+              'cus_id'=>$param['cus_id'],
+			  'cad_address'=>$param['cad_address'],
+              'inp_date'=>'now()',
+              'upd_date'=>'now()',
+              'inp_user'=>'1',
+              'upd_user'=>'1'
+          ]
+        );
     }
 }
