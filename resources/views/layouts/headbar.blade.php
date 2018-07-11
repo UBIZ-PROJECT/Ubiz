@@ -14,7 +14,7 @@
                 <div class="ryo">
                     <div class="pyo">
                         <div class="nyo">
-                            <a role="button" tabindex="0">
+                            <a role="button" tabindex="0" onclick="jQuery.UbizOIWidget.w_show_apps_form()">
                                 <svg class="utooltip" title="Ứng dụng của Ubiz" focusable="false" viewBox="0 0 24 24">
                                     <path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"></path>
                                 </svg>
@@ -62,7 +62,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="wyo">
+                    <div class="wyo" role="button" onclick="jQuery.UbizOIWidget.w_show_account_form()">
                         <div class="zyo">
                             <img src="{{ asset('images/logo.png') }}">
                         </div>

@@ -5,6 +5,7 @@
         this.o_page = null;
         this.i_page = null;
         this.search_form = null;
+        this.account_form = null;
     };
 
     jQuery.UbizOIWidget = new UbizOIWidget();
@@ -13,6 +14,7 @@
             jQuery.UbizOIWidget.o_page = jQuery("#o-put");
             jQuery.UbizOIWidget.i_page = jQuery("#i-put");
             jQuery.UbizOIWidget.search_form = jQuery("#search-form");
+            jQuery.UbizOIWidget.account_form = jQuery("#account-form");
             jQuery('#nicescroll-sidebar').niceScroll({
                 cursorcolor: "#9fa8b0",
                 cursorwidth: "5px",
@@ -86,6 +88,31 @@
             });
         },
         w_hide_searh_form: function (e) {
+            var search_form = jQuery(e.target).closest("#search-form");
+            if (search_form.length == 0) {
+                document.body.removeEventListener('click', jQuery.UbizOIWidget.w_hide_searh_form, false);
+                jQuery.UbizOIWidget.search_form.hide();
+            }
+        },
+        w_show_account_form: function () {
+            jQuery.UbizOIWidget.account_form.show(50, function () {
+                document.body.addEventListener('click', jQuery.UbizOIWidget.w_hide_account_form, false);
+            });
+        },
+        w_hide_account_form: function (e) {
+            var account_form = jQuery(e.target).closest("#account-form");
+            if (account_form.length == 0) {
+                document.body.removeEventListener('click', jQuery.UbizOIWidget.w_hide_account_form, false);
+                jQuery.UbizOIWidget.account_form.hide();
+            }
+        },
+        w_show_apps_form: function () {
+            jQuery.UbizOIWidget.search_form.show(50, function () {
+                jQuery.UbizOIWidget.search_form.find('#code').focus();
+                document.body.addEventListener('click', jQuery.UbizOIWidget.w_hide_searh_form, false);
+            });
+        },
+        w_hide_apps_form: function (e) {
             var search_form = jQuery(e.target).closest("#search-form");
             if (search_form.length == 0) {
                 document.body.removeEventListener('click', jQuery.UbizOIWidget.w_hide_searh_form, false);
