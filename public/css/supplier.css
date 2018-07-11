@@ -1,9 +1,9 @@
 .main-content .r-content .col-1 {
-    width: 100%;
+    width: 100px;
 }
 
 .main-content .r-content .col-2 {
-    width: 150px;
+    width: 200px;
 }
 
 .main-content .r-content .col-3 {
@@ -20,4 +20,16 @@
 
 .main-content .r-content .col-6 {
     width: 250px;
+}
+
+#nicescroll-iput {
+    margin-top: 15px;
+}
+
+#nicescroll-iput .control {
+    padding: .2em .6em .3em;
+}
+
+#nicescroll-iput .label {
+    color: #605959;
 }

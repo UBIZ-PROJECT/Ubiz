@@ -60,17 +60,73 @@ class User extends Authenticatable implements JWTSubject
         return $users;
     }
 
-    public function getUsers($page = 0)
+    public function deleteUsers($ids = '')
     {
-        $rows_per_page = env('ROWS_PER_PAGE', 10);
-        $users = DB::table('users')
-            ->select('users.*', 'm_department.dep_id', 'm_department.dep_name', 'm_department.dep_type', 'm_department.per_id')
-            ->leftJoin('m_department', 'users.dep_id', '=', 'm_department.dep_id')
-            ->where('users.delete_flg', '=', '0')
-            ->orderBy('id', 'asc')
-            ->offset($page * $rows_per_page)
-            ->limit($rows_per_page)
-            ->get();
+        DB::beginTransaction();
+        try {
+
+            DB::table('users')
+                ->whereIn('id', explode(',', $ids))
+                ->update(['delete_flg' => '1']);
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    public function getUsers($page = 0, $sort = '')
+    {
+        try {
+
+            $sort_name = 'code';
+            $order_by = 'asc';
+            if ($sort != '') {
+                $sort_info = explode('_', $sort);
+                $order_by = $sort_info[sizeof($sort_info) - 1];
+                unset($sort_info[sizeof($sort_info) - 1]);
+                $sort_name = implode('_', $sort_info);
+            }
+
+            $rows_per_page = env('ROWS_PER_PAGE', 10);
+            $users = DB::table('users')
+                ->select('users.*', 'm_department.dep_id', 'm_department.dep_name', 'm_department.dep_type', 'm_department.per_id')
+                ->leftJoin('m_department', 'users.dep_id', '=', 'm_department.dep_id')
+                ->where('users.delete_flg', '=', '0')
+                ->orderBy($sort_name, $order_by)
+                ->offset($page * $rows_per_page)
+                ->limit($rows_per_page)
+                ->get();
+        } catch (\Throwable $e) {
+            throw $e;
+        }
         return $users;
+    }
+
+    public function countAllUsers()
+    {
+        try {
+            $count = DB::table('users')
+                ->where('delete_flg', '=', '0')
+                ->count();
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return $count;
+    }
+
+    public function getPagingInfo()
+    {
+        try {
+            $rows_per_page = env('ROWS_PER_PAGE', 10);
+            $rows_num = $this->countAllUsers();
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+
+        return [
+            'rows_num' => $rows_num,
+            'rows_per_page' => $rows_per_page
+        ];
     }
 }
