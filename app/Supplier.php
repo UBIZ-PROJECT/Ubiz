@@ -99,7 +99,7 @@ class Supplier implements JWTSubject
         }
     }
 
-    public function deleteSupplierById($listId) {
+    public function deleteSuppliersById($listId) {
         DB::beginTransaction();
         try {
             $listId = json_decode($listId,true);

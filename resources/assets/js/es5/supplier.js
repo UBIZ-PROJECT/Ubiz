@@ -115,17 +115,30 @@ function insertSupplier() {
     ubizapis('v1','/suppliers/insert', 'get', null, null, backToListSupplier);
 }
 
-function deleteOneSupplierById(id) {
-    ubizapis('v1','/suppliers/delete/'+ id, 'get', null, null,backToListSupplier);
-}
-
-function deleteManySuppliersById(listId) {
-    ubizapis('v1','/suppliers/delete/list', 'get',null, 'listId':JSON.stringtify(listId),backToListSupplier);
+function deleteSuppliersById(listId) {
+    ubizapis('v1','/suppliers/delete/', 'get',null, 'listId':JSON.stringtify(listId),backToListSupplier);
 }
 
 function backToListSupplier() {
     refreshOutputPage(this);
     goBackToOutputPage(this);
+}
+
+function deleteListSupplier() {
+    var listId = [];
+    var cbk = $("input[type='checkbox'] .ckb-i");
+    for(var  i = 0 ; i < cbk.length; i++) {
+        if ($(cbk[i]).prop("checked")) {
+            listId.push($(cbk[i]).val());
+        }
+    }
+    deleteSuppliersById(listId);
+}
+
+function deleteSupplier(id) {
+    var listId = [];
+    listId.push(id);
+    deleteSuppliersById(listId);
 }
 
 function renderDataToInput(response) {
