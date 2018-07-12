@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-use Illuminate\support\Facades\DB;
+use Illuminate\Support\Facades\DB;
 
 class Customer implements JWTSubject
 {
