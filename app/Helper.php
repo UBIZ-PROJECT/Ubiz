@@ -6,7 +6,7 @@ use App\SimpleImage;
 
 class Helper
 {
-	public static function resizeImage($img, $img_type = '', $target_img, $new_img_width, $new_img_height)
+	public static function resizeImage($img, $target_img, $new_img_width, $new_img_height, $img_type = '')
 	{
 			$image = new SimpleImage();
 			$target_dir = base_path() . '/resources/images/' . $img_type;
@@ -20,7 +20,7 @@ class Helper
 			$image->save($target_file);
 	}
 	
-	public static function resizeImageToHeight($img, $img_type = '', $target_img, $new_img_height)
+	public static function resizeImageToHeight($img, $target_img, $new_img_height, $img_type = '')
 	{
 			$image = new SimpleImage();
 			$target_dir = base_path() . '/resources/images/' . $img_type;
@@ -34,7 +34,7 @@ class Helper
 			$image->save($target_file);
 	}
 	
-	public static function resizeImageToWidth($img, $img_type = '', $target_img, $new_img_width)
+	public static function resizeImageToWidth($img, $target_img, $new_img_width, $img_type = '')
 	{
 			$image = new SimpleImage();
 			$target_dir = base_path() . '/resources/images/' . $img_type;
@@ -48,7 +48,7 @@ class Helper
 			$image->save($target_file);
 	}
 	
-	public static function scaleImage($img, $img_type = '', $scale)
+	public static function scaleImage($img, $scale, $img_type = '')
 	{
 			$image = new SimpleImage();
 			$target_dir = base_path() . '/resources/images/' . $img_type;
