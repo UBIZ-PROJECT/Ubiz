@@ -36,9 +36,6 @@
             });
         },
         w_sort: function (self) {
-            var sort_name = jQuery(self).attr('sort-name');
-            var order_by = jQuery(self).attr('order-by') == '' ? 'asc' : (jQuery(self).attr('order-by') == 'asc' ? 'desc' : 'asc');
-            var sort = sort_name + "_" + order_by;
 
             jQuery.UbizOIWidget.o_page.find('div.dWT').removeClass('dWT');
             jQuery(self).attr('order-by', order_by);
@@ -46,7 +43,17 @@
             jQuery(self).find('svg').removeClass('sVGT');
             jQuery(self).find('svg.' + order_by).addClass('sVGT');
 
-            ubizapis('v1', '/users', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            var params = {};
+            params.page = jQuery.UbizOIWidget.page;
+
+            var search_info = jQuery.UbizOIWidget.w_get_search_info();
+            Object.assign(params, search_info);
+
+            var sort_name = jQuery(self).attr('sort-name');
+            var order_by = jQuery(self).attr('order-by') == '' ? 'asc' : (jQuery(self).attr('order-by') == 'asc' ? 'desc' : 'asc');
+            params.sort = sort_name + "_" + order_by;
+
+            ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_delete: function () {
             var ids = jQuery.UbizOIWidget.w_get_checked_rows();
@@ -78,36 +85,23 @@
             jQuery.UbizOIWidget.w_go_to_input_page(0);
         },
         w_search:function(){
+
             var params = {};
             params.page = '0';
 
-            if (jQuery('#code').val().replace(/\s/g, '') != '') {
-                params.code = jQuery('#code').val();
-            }
+            var search_info = jQuery.UbizOIWidget.w_get_search_info();
+            Object.assign(params, search_info);
 
-            if (jQuery('#name').val().replace(/\s/g, '') != '') {
-                params.name = jQuery('#name').val();
-            }
-
-            if (jQuery('#email').val().replace(/\s/g, '') != '') {
-                params.email = jQuery('#email').val();
-            }
-
-            if (jQuery('#phone').val().replace(/\s/g, '') != '') {
-                params.phone = jQuery('#phone').val();
-            }
-
-            if (jQuery('#dep_name').val().replace(/\s/g, '') != '') {
-                params.dep_name = jQuery('#dep_name').val();
-            }
-
-            if (jQuery('#address').val().replace(/\s/g, '') != '') {
-                params.address = jQuery('#address').val();
+            if (jQuery.isEmptyObject(search_info) === false) {
+                var fuzzy = jQuery.UbizOIWidget.w_convert_search_info_to_fuzzy(search_info);
+                jQuery('#fuzzy').val(fuzzy);
             }
 
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             params.sort = sort_info.sort_name + "_" + sort_info.order_by;
 
+            var event = new CustomEvent("click");
+            document.body.dispatchEvent(event);
             ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_clear_search_form:function(){
@@ -117,19 +111,30 @@
             jQuery('#phone').val("");
             jQuery('#dep_name').val("");
             jQuery('#address').val("");
-            jQuery.UbizOIWidget.page = '0';
-            jQuery.UbizOIWidget.w_search();
+            jQuery('#contain').val("");
+            jQuery('#notcontain').val("");
+            jQuery('#fuzzy').val("");
+        },
+        w_update_search_form:function(search_info){
+            jQuery.each(search_info, function (key, val) {
+                var search_item = jQuery('#' + key);
+                if (search_item.length == 1) {
+                    search_item.val(val);
+                }
+            });
         },
         w_fuzzy_search: function () {
             var params = {};
             params.page = '0';
             jQuery.UbizOIWidget.page = '0';
 
-            var fuzzy_val = jQuery('#fuzzy').val();
+            var fuzzy = jQuery('#fuzzy').val();
+            var search_info = jQuery.UbizOIWidget.w_convert_fuzzy_to_search_info(fuzzy);
+            jQuery.UbizOIWidget.w_update_search_form(search_info);
+            Object.assign(params, search_info);
+
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-
-            params.search = fuzzy_val;
             params.sort = sort;
 
             ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
@@ -182,6 +187,63 @@
             var sort_name = sort_obj.attr('sort-name');
             var order_by = sort_obj.attr('order-by');
             return {'sort_name': sort_name, 'order_by': order_by};
+        },
+        w_get_search_info: function () {
+
+            var search_info = {};
+
+            if (jQuery('#code').val().replace(/\s/g, '') != '') {
+                search_info.code = jQuery('#code').val();
+            }
+
+            if (jQuery('#name').val().replace(/\s/g, '') != '') {
+                search_info.name = jQuery('#name').val();
+            }
+
+            if (jQuery('#email').val().replace(/\s/g, '') != '') {
+                search_info.email = jQuery('#email').val();
+            }
+
+            if (jQuery('#phone').val().replace(/\s/g, '') != '') {
+                search_info.phone = jQuery('#phone').val();
+            }
+
+            if (jQuery('#dep_name').val().replace(/\s/g, '') != '') {
+                search_info.dep_name = jQuery('#dep_name').val();
+            }
+
+            if (jQuery('#address').val().replace(/\s/g, '') != '') {
+                search_info.address = jQuery('#address').val();
+            }
+
+            if (jQuery('#contain').val().replace(/\s/g, '') != '') {
+                search_info.contain = jQuery('#contain').val();
+            }
+
+            if (jQuery('#notcontain').val().replace(/\s/g, '') != '') {
+                search_info.notcontain = jQuery('#notcontain').val();
+            }
+
+            return search_info;
+        },
+        w_convert_search_info_to_fuzzy: function (search_info) {
+            var fuzzy = JSON.stringify(search_info);
+            return fuzzy;
+        },
+        w_convert_fuzzy_to_search_info: function (fuzzy) {
+            var search_info = {};
+            try {
+                search_info = JSON.parse(fuzzy);
+            } catch (e) {
+                var fuzzy_info = fuzzy.split('-');
+                if (fuzzy_info.length == 1) {
+                    search_info.contain = fuzzy;
+                } else {
+                    fuzzy_info.shift();
+                    search_info.notcontain = fuzzy_info.join('-');
+                }
+            }
+            return search_info;
         },
         w_get_older_data: function (page) {
             jQuery.UbizOIWidget.page = page;

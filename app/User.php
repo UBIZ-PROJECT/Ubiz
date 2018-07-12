@@ -114,6 +114,7 @@ class User extends Authenticatable implements JWTSubject
         try {
             list($where_raw,$params) = $this->makeWhereRaw($search);
             $count = DB::table('users')
+                ->leftJoin('m_department', 'users.dep_id', '=', 'm_department.dep_id')
                 ->whereRaw($where_raw, $params)
                 ->count();
         } catch (\Throwable $e) {
