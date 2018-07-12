@@ -75,7 +75,7 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
-    public function getUsers($page = 0, $sort = '')
+    public function getUsers($page = 0, $sort = '', $search = [])
     {
         try {
 
@@ -88,11 +88,64 @@ class User extends Authenticatable implements JWTSubject
                 $sort_name = implode('_', $sort_info);
             }
 
+            $params = [];
+            $where_raw = 'users.delete_flg = ?';
+            $params[] = '0';
+            if (sizeof($search) > 0) {
+                if (isset($search['search'])) {
+                    $search_val = $search['search'];
+                    $where_raw .= " AND (";
+                    $where_raw .= "users.code like '%?%'";
+                    $params[] = $search_val;
+                    $where_raw .= " OR users.name like '%?%'";
+                    $params[] = $search_val;
+                    $where_raw .= " OR users.email like '%?%'";
+                    $params[] = $search_val;
+                    $where_raw .= " OR users.phone like '%?%'";
+                    $params[] = $search_val;
+                    $where_raw .= " OR users.address like '%?%'";
+                    $params[] = $search_val;
+                    $where_raw .= " OR m_department.dep_name like '%?%'";
+                    $params[] = $search_val;
+                    $where_raw .= " ) ";
+                } else {
+
+                    $where_raw_tmp = [];
+                    if (isset($search['code'])) {
+                        $where_raw_tmp[] = "users.code = '%?%'";
+                        $params[] = $search['code'];
+                    }
+                    if (isset($search['name'])) {
+                        $where_raw_tmp[] = "users.name = '%?%'";
+                        $params[] = $search['name'];
+                    }
+                    if (isset($search['email'])) {
+                        $where_raw_tmp[] = "users.email = '%?%'";
+                        $params[] = $search['email'];
+                    }
+                    if (isset($search['phone'])) {
+                        $where_raw_tmp[] = "users.phone = '%?%'";
+                        $params[] = $search['phone'];
+                    }
+                    if (isset($search['address'])) {
+                        $where_raw_tmp[] = "users.address = '%?%'";
+                        $params[] = $search['address'];
+                    }
+                    if (isset($search['dep_name'])) {
+                        $where_raw_tmp[] = "m_department.dep_name = '%?%'";
+                        $params[] = $search['dep_name'];
+                    }
+                    if (sizeof($where_raw_tmp) > 0) {
+                        $where_raw .= " AND ( " . implode(" OR ", $where_raw_tmp) . " )";
+                    }
+                }
+            }
+
             $rows_per_page = env('ROWS_PER_PAGE', 10);
             $users = DB::table('users')
                 ->select('users.*', 'm_department.dep_id', 'm_department.dep_name', 'm_department.dep_type', 'm_department.per_id')
                 ->leftJoin('m_department', 'users.dep_id', '=', 'm_department.dep_id')
-                ->where('users.delete_flg', '=', '0')
+                ->whereRaw($where_raw, $params)
                 ->orderBy($sort_name, $order_by)
                 ->offset($page * $rows_per_page)
                 ->limit($rows_per_page)

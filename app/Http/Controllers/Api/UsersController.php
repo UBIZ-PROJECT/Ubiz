@@ -23,14 +23,37 @@ class UsersController extends Controller
                 $sort = $request->sort;
             }
 
+            $search = [];
+            if ($request->has('search')) {
+                $search['search'] = $request->search;
+            }
+            if ($request->has('code')) {
+                $search['code'] = $request->code;
+            }
+            if ($request->has('name')) {
+                $search['name'] = $request->name;
+            }
+            if ($request->has('phone')) {
+                $search['phone'] = $request->phone;
+            }
+            if ($request->has('email')) {
+                $search['email'] = $request->email;
+            }
+            if ($request->has('dep_name')) {
+                $search['dep_name'] = $request->dep_name;
+            }
+            if ($request->has('address')) {
+                $search['address'] = $request->address;
+            }
+
             $user = new User();
-            $users = $user->getUsers($page, $sort);
+            $users = $user->getUsers($page, $sort, $search);
             $paging = $user->getPagingInfo();
             $paging['page'] = $page;
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['users' => $users, 'paging' => $paging,'success' => true, 'message' => ''], 200);
+        return response()->json(['users' => $users, 'paging' => $paging, 'success' => true, 'message' => ''], 200);
     }
 
     public function deleteUsers($ids, Request $request)

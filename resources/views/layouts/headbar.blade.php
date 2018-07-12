@@ -35,7 +35,7 @@
                                         <li class="who">
                                             <a class="ruo" role="button" href="/users">
                                                 <div class="pto">
-                                                    <img src="{{asset('images/avatar.jpg')}}">
+                                                    <img src="{{asset('images/app_bg.png')}}">
                                                     <div class="zro">
                                                         <div class="rco">
                                                             <div class="kko">Nhân viên</div>
@@ -47,7 +47,7 @@
                                         <li class="who">
                                             <a class="ruo" role="button" href="#">
                                                 <div class="pto">
-                                                    <img src="{{asset('images/avatar.jpg')}}">
+                                                    <img src="{{asset('images/app_bg.png')}}">
                                                     <div class="zro">
                                                         <div class="rco">
                                                             <div class="kko">Khách hàng</div>
@@ -59,7 +59,7 @@
                                         <li class="who">
                                             <a class="ruo" role="button" href="#">
                                                 <div class="pto">
-                                                    <img src="{{asset('images/avatar.jpg')}}">
+                                                    <img src="{{asset('images/app_bg.png')}}">
                                                     <div class="zro">
                                                         <div class="rco">
                                                             <div class="kko">Nhà cung cấp</div>
