@@ -46,7 +46,7 @@
             jQuery(self).find('svg').removeClass('sVGT');
             jQuery(self).find('svg.' + order_by).addClass('sVGT');
 
-            ubizapis('v1', '/users', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/customer', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_delete: function () {
             var ids = jQuery.UbizOIWidget.w_get_checked_rows();
@@ -69,7 +69,7 @@
             }).then((value) => {
                 switch (value) {
                     case "catch":
-                        ubizapis('v1', '/users/' + ids.join(','), 'delete', null, null, jQuery.UbizOIWidget.w_delete_callback);
+                        ubizapis('v1', '/customer/' + ids.join(','), 'delete', null, null, jQuery.UbizOIWidget.w_delete_callback);
                         break;
                 }
             });
@@ -77,68 +77,8 @@
         w_create:function(){
             jQuery.UbizOIWidget.w_go_to_input_page(0);
         },
-        w_search:function(){
-            var params = {};
-            params.page = '0';
-
-            if (jQuery('#code').val().replace(/\s/g, '') != '') {
-                params.code = jQuery('#code').val();
-            }
-
-            if (jQuery('#name').val().replace(/\s/g, '') != '') {
-                params.name = jQuery('#name').val();
-            }
-
-            if (jQuery('#email').val().replace(/\s/g, '') != '') {
-                params.email = jQuery('#email').val();
-            }
-
-            if (jQuery('#phone').val().replace(/\s/g, '') != '') {
-                params.phone = jQuery('#phone').val();
-            }
-
-            if (jQuery('#dep_name').val().replace(/\s/g, '') != '') {
-                params.dep_name = jQuery('#dep_name').val();
-            }
-
-            if (jQuery('#address').val().replace(/\s/g, '') != '') {
-                params.address = jQuery('#address').val();
-            }
-
-            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-            params.sort = sort_info.sort_name + "_" + sort_info.order_by;
-
-            ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
-        },
-        w_clear_search_form:function(){
-            jQuery('#code').val("");
-            jQuery('#name').val("");
-            jQuery('#email').val("");
-            jQuery('#phone').val("");
-            jQuery('#dep_name').val("");
-            jQuery('#address').val("");
-            jQuery.UbizOIWidget.page = '0';
-            jQuery.UbizOIWidget.w_search();
-        },
-        w_fuzzy_search: function () {
-            var params = {};
-            params.page = '0';
-            jQuery.UbizOIWidget.page = '0';
-
-            var fuzzy_val = jQuery('#fuzzy').val();
-            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-            var sort = sort_info.sort_name + "_" + sort_info.order_by;
-
-            params.search = fuzzy_val;
-            params.sort = sort;
-
-            ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
-        },
-        w_fuzzy_search_handle_enter(e) {
-            var keycode = (e.keyCode ? e.keyCode : e.which);
-            if (keycode == '13') {
-                jQuery.UbizOIWidget.w_fuzzy_search();
-            }
+        w_open_searh_form: function (self) {
+            swal('ok');
         },
         w_go_to_input_page: function (id) {
             jQuery.UbizOIWidget.o_page.hide();
@@ -175,7 +115,7 @@
         w_refresh_output_page: function () {
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/users', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/customer', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_sort_info: function () {
             var sort_obj = jQuery.UbizOIWidget.o_page.find('div.dWT');
@@ -188,14 +128,14 @@
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             jQuery.UbizOIWidget.sort = sort_info;
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/users', 'get', null, {'page': page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/customer', 'get', null, {'page': page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_newer_data: function (page) {
             jQuery.UbizOIWidget.page = page;
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             jQuery.UbizOIWidget.sort = sort_info;
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/users', 'get', null, {'page': page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/customer', 'get', null, {'page': page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_delete_callback: function (response) {
             if (response.data.success == true) {
@@ -211,18 +151,19 @@
         },
         w_render_data_to_ouput_page: function (response) {
             var table_html = "";
-            var users = response.data.users;
-            if (users.length > 0) {
+            var customer = response.data.customers;
+            if (customer.length > 0) {
                 var rows = [];
-                for (let i = 0; i < users.length; i++) {
+                for (let i = 0; i < customer.length; i++) {
                     var cols = [];
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(users[i].id, users[i].code, 1));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(users[i].id, users[i].name, 2));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(users[i].id, users[i].email, 3));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(users[i].id, users[i].phone, 4));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(users[i].id, users[i].dep_name, 5));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(users[i].id, users[i].address, 6));
-                    rows.push(jQuery.UbizOIWidget.w_make_row_html(users[i].id, cols));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_id, 3));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_name, 3));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_type, 3));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_phone, 3));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_fax, 3));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_mail, 3));
+					cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].address[0].cad_address, 3));
+                    rows.push(jQuery.UbizOIWidget.w_make_row_html(customer[i].cus_id, cols));
                 }
                 table_html += rows.join("");
             }

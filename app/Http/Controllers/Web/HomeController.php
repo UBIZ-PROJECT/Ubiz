@@ -14,10 +14,4 @@ class HomeController extends Controller
         $data = $user->getAllUsers();
         return view('home', ['data' => $data]);
     }
-
-    public function login(Request $request)
-    {
-        return view('login');
-    }
-
 }

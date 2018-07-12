@@ -14,10 +14,9 @@ use Illuminate\Http\Request;
 */
 //
 Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
-    Route::post('auth/login', 'Api\AuthController@login');
-    Route::post('auth/register', 'Api\AuthController@register');
+    Route::post('login', 'Api\AuthController@login');
     Route::middleware(['jwt'])->group(function () {
-        Route::get('auth/logout', 'Api\AuthController@logout');
+        Route::get('logout', ['as' => 'api-logout', 'uses' => 'Api\AuthController@logout']);
         Route::get('users', ['as' => 'api-users', 'uses' => 'Api\UsersController@getUsers']);
         Route::delete('users/{ids}', ['as' => 'delete-users', 'uses' => 'Api\UsersController@deleteUsers']);
         Route::get('suppliers', ['as' => 'api-suppliers', 'uses' => 'Api\SupplierController@getSuppliers']);
@@ -25,5 +24,7 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::get('suppliers/delete', ['as' => 'suppliers-delete', 'uses' => 'Api\SupplierController@deleteSuppliersById']);
         Route::get('suppliers/update/{id}', ['as' => 'suppliers-update', 'uses' => 'Api\SupplierController@updateSupplierById']);
         Route::get('suppliers/{id}', ['as'=> 'suppliers-detail','uses'=> 'Api\SupplierController@getSupplierById']);
+		Route::get('customer', ['as' => 'api-customer', 'uses' => 'Api\CustomerController@getCustomers']);
+		Route::get('customer/{id}', ['as'=> 'delete-customer','uses'=> 'Api\CustomerController@deleteCustomer']);
     });
 });
