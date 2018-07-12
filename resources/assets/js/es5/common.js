@@ -77,3 +77,19 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
             console.log(error.config);
         });
 }
+
+function showErrorInput(control, error_message) {
+    $(control).html(error_message);
+    $(control).closest('.error_message').removeClass('hidden-content');
+    $(control).closest('.root_textfield').find('.wrapper').addClass('invalid');
+    $(control).closest('.root_textfield').find('.fieldGroup').addClass('invalid');
+}
+
+function removeErrorInput() {
+    $('.root_textfield').each(function() {
+        $(this).find('.error-message-text').html('');
+        $(this).find('.error_message').addClass('hidden-content');
+        $(this).find('.wrapper').removeClass('invalid');
+        $(this).find('.fieldGroup').removeClass('invalid');
+    });
+}

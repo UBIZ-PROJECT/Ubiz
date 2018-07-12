@@ -10,7 +10,7 @@ namespace App\Http\Controllers\Web;
 
 
 use App\Http\Controllers\Controller;
-use App\Supplier;
+use App\Model\Supplier;
 use Illuminate\Http\Request;
 
 class SupplierController extends Controller

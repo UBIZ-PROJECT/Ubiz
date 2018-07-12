@@ -6,7 +6,7 @@
  * Time: 11:56 PM
  */
 
-namespace App;
+namespace App\Model;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
@@ -66,7 +66,7 @@ class Supplier implements JWTSubject
         }
         $rows_per_page = env('ROWS_PER_PAGE', 10);
         $supplier = DB::table('suppliers')
-            ->select('sup_id','sup_name','sup_phone','sup_fax','sup_mail','sup_website')
+            ->select('sup_id','sup_code','sup_avatar','sup_name','sup_phone','sup_fax','sup_mail','sup_website')
             ->where('delete_flg', '=', '0')
             ->orderBy($sort_name, $order_by)
             ->offset($page * $rows_per_page)
@@ -77,17 +77,21 @@ class Supplier implements JWTSubject
 
     public function getSupplierById($id) {
         $supplier = DB::table('suppliers')
-            ->select('sup_id','sup_name','sup_phone','sup_fax','sup_mail','sup_website')
+            ->select('sup_id','sup_code','sup_avatar','sup_name','sup_phone','sup_fax','sup_mail','sup_website')
             ->where([['delete_flg','=','0'],['sup_id','=',$id]])
             ->get();
         return $supplier;
     }
 
     public function insertSupplier($param) {
+        $param = json_decode($param, true);
         DB::beginTransaction();
         try {
+            $code = $this->generateCode();
              DB::table('suppliers')->insertGetId(
                 [
+                    'sup_code'=>$code,
+                    'sup_avatar'=>'',
                     'sup_name'=>$param['sup_name'],
                     'sup_phone'=>$param['sup_phone'],
                     'sup_fax'=>$param['sup_fax'],
@@ -111,7 +115,6 @@ class Supplier implements JWTSubject
         DB::beginTransaction();
         try {
             $listId = json_decode($listId,true);
-            $strListId = implode($listId, ',');
             DB::table('suppliers')->whereIn('sup_id', $listId)
                 ->update([
                     'delete_flg'=>'1',
@@ -127,7 +130,6 @@ class Supplier implements JWTSubject
     public function updateSupplierById($supplier) {
         DB::beginTransaction();
         try {
-            $supplier = json_decode($supplier,true);
             DB::table('suppliers')->where('sup_id','=',$supplier['sup_id'])
                 ->update([
                    'sup_name'=>$supplier['sup_name'],
@@ -168,5 +170,17 @@ class Supplier implements JWTSubject
             throw $e;
         }
         return $count;
+    }
+
+    private function generateCode() {
+        $code = DB::table("suppliers")
+        ->select('sup_code')
+        ->max('sup_code');
+        if (empty($code)) {
+            return '00001';
+        }
+        $code = (int)$code;
+        $code++;
+        return  sprintf("%05d", $code);
     }
 }

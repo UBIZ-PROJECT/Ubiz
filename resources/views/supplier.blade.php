@@ -286,8 +286,8 @@
                                                     <input type="checkbox" class="ckb-i" value="{{$sup->sup_id}}" style="display: none"/>
                                                     <div class="asU ckb-c"></div>
                                                 </div>
-                                                <div class="nCT" title="{{$sup->sup_id}}">
-                                                    <span>{{$sup->sup_id}}</span>
+                                                <div class="nCT" title="{{$sup->sup_code}}">
+                                                    <span>{{$sup->sup_code}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -397,54 +397,12 @@
                 </div>
                 <div class="jAQ">
                     <div class="aqI" id="nicescroll-iput">
-                        <div class="textfield root_textfield rootIsUnderlined">
-                            <div class="wrapper">
-                                <label for="txt_sup_id" class="ms-Label root-56">Mã:</label>
-                                <div class="fieldGroup">
-                                    <input type="text" id="txt_sup_id" value="" class="input_field">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="textfield root_textfield rootIsUnderlined">
-                            <div class="wrapper">
-                                <label for="txt_sup_name" class="ms-Label root-56">Tên nhà cung cấp:</label>
-                                <div class="fieldGroup">
-                                    <input type="text" id="txt_sup_name" value="" class="input_field">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="textfield root_textfield rootIsUnderlined">
-                            <div class="wrapper">
-                                <label for="txt_sup_website" class="ms-Label root-56">Website:</label>
-                                <div class="fieldGroup">
-                                    <input type="text" id="txt_sup_website" value="" class="input_field">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="textfield root_textfield rootIsUnderlined">
-                            <div class="wrapper">
-                                <label for="txt_sup_phone" class="ms-Label root-56">Phone:</label>
-                                <div class="fieldGroup">
-                                    <input type="text" id="txt_sup_phone" value="" class="input_field">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="textfield root_textfield rootIsUnderlined">
-                            <div class="wrapper">
-                                <label for="txt_sup_fax" class="ms-Label root-56">Fax:</label>
-                                <div class="fieldGroup">
-                                    <input type="text" id="txt_sup_fax" value="" class="input_field">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="textfield root_textfield rootIsUnderlined">
-                            <div class="wrapper">
-                                <label for="txt_sup_mail" class="ms-Label root-56">Email:</label>
-                                <div class="fieldGroup">
-                                    <input type="text" id="txt_sup_mail" value="" class="input_field">
-                                </div>
-                            </div>
-                        </div>
+                        @include('layouts/input',['type'=>'disabled', 'control_id'=>'txt_sup_code', 'label'=>'Mã'])
+                        @include('layouts/input',['control_id'=>'txt_sup_name', 'label'=>'Tên nhà cung cấp'])
+                        @include('layouts/input',['control_id'=>'txt_sup_website', 'label'=>'Website'])
+                        @include('layouts/input',['control_id'=>'txt_sup_phone', 'label'=>'Phone'])
+                        @include('layouts/input',['control_id'=>'txt_sup_fax', 'label'=>'Fax'])
+                        @include('layouts/input',['control_id'=>'txt_sup_mail', 'label'=>'Email'])
                     </div>
                 </div>
             </div>

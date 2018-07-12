@@ -1063,3 +1063,167 @@
 .main-content .nicescroll{
     cursor: default !important;
 }
+
+/* START CSS FOR INPUT CONTROL */
+.textfield {
+    margin: 0 0 15px 0;
+    max-width: 300px;
+}
+
+.root_textfield.rootIsUnderlined {
+    border: 0px solid #a6a6a6;
+}
+
+.root_textfield.rootIsUnderlined .wrapper {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: inherit;
+    width: 100%;
+}
+
+.root_textfield.rootIsUnderlined .ms-Label {
+    font-size: 14px;
+    line-height: 22px;
+    height: 32px;
+}
+
+.root-56 {
+    color: rgb(51, 51, 51);
+    box-sizing: border-box;
+    box-shadow: none;
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    display: block;
+    padding-top: 5px;
+    padding-right: 0px;
+    padding-bottom: 5px;
+    padding-left: 0px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.root_textfield.rootIsUnderlined .fieldGroup {
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 0px;
+    flex: 1 1 0px;
+    border-width: 0;
+}
+
+.fieldGroup {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #a6a6a6;
+    background: #ffffff;
+    height: 32px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-align: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch;
+    position: relative;
+}
+
+.input_field {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+    border-radius: 0;
+    border: none;
+    background: none;
+    background-color: transparent;
+    color: #333333;
+    padding: 0 12px 0 12px;
+    width: 100%;
+    min-width: 0;
+    text-overflow: ellipsis;
+    outline: 0;
+}
+
+.root_textfield.rootIsUnderlined.rootIsDisabled {
+    border-color: #f4f4f4;
+}
+
+.root_textfield.rootIsUnderlined.rootIsDisabled .ms-Label {
+    color: #a6a6a6;
+}
+
+.root_textfield.rootIsUnderlined.rootIsDisabled .fieldGroup {
+    background-color: transparent;
+}
+
+.rootIsDisabled .fieldGroup {
+    background-color: #f4f4f4;
+    border-color: #f4f4f4;
+}
+
+.root_textfield.rootIsUnderlined.rootIsDisabled .input_field {
+    background-color: transparent;
+    color: #a6a6a6;
+}
+
+input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabled], textarea[disabled] {
+    color: rgba(0,0,0,.2) !important;
+    cursor: not-allowed !important;
+}
+
+.input_field[disabled] {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.root_textfield.rootIsRequiredLabel .ms-Label::after {
+    content: ' *';
+    color: #a80000;
+}
+
+.root_textfield.rootIsUnderlined .wrapper.invalid {
+    border-bottom: 1px solid #a80000;
+}
+
+.invalid, .invalid:focus, .invalid:hover {
+    border-color: #a80000;
+}
+
+.errorMessage {
+    font-size: 12px;
+    font-weight: 400;
+    color: #a80000;
+    margin: 0;
+    margin-bottom: 0px;
+    padding-top: 5px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+.css-57 {
+    animation-name: css-0, css-13;
+    animation-duration: 0.367s;
+    animation-timing-function: cubic-bezier(0.1, 0.9, 0.2, 1);
+    animation-fill-mode: both;
+}
+
+.hidden-content {
+    display: none;
+}
+/* END CSS INPUT CONTROL */

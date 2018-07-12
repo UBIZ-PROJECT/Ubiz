@@ -1,10 +1,3 @@
-const ACTION_INSERT = 1;
-const ACTION_UPDATE = 2;
-const ACTION_DETAIL = 3;
-
-function insertSupplier() {
-    ubizapis('v1','/suppliers/insert', 'get', null, null, backToListSupplier);
-}
 (function ($) {
     UbizOIWidget = function () {
         this.page = 0;
@@ -86,13 +79,44 @@ function insertSupplier() {
             });
         },
         w_create:function(){
+            jQuery.UbizOIWidget.w_clear_input_page();
             jQuery.UbizOIWidget.w_go_to_input_page(0);
+        },
+        w_save: function(id, paging = '') {
+            if (id == 0) {
+                var data_form = jQuery.UbizOIWidget.w_get_data_input_form();
+                data_form = JSON.stringify(data_form);
+                ubizapis('v1','/suppliers/insert', 'get', null, {"supplier":data_form}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+                jQuery.UbizOIWidget.w_go_back_to_output_page();
+            } else {
+                var data_form = jQuery.UbizOIWidget.w_get_data_input_form();
+                data_form = JSON.stringify(data_form);
+                var callback_function = jQuery.UbizOIWidget.w_render_data_to_ouput_page.bind({});
+                if (paging != '') {
+
+                }
+                ubizapis('v1','/suppliers/update/' + id, 'get', null, {"supplier":data_form}, callback_function);
+                jQuery.UbizOIWidget.w_go_back_to_output_page();
+            }
+        },
+        w_get_data_input_form: function() {
+            var data = {
+                sup_code: $("#i-put #txt_sup_code").val(),
+                sup_name: $("#i-put #txt_sup_name").val(),
+                sup_website: $("#i-put #txt_sup_website").val(),
+                sup_phone: $("#i-put #txt_sup_phone").val(),
+                sup_fax: $("#i-put #txt_sup_fax").val(),
+                sup_mail: $("#i-put #txt_sup_mail").val(),
+            };
+            return data;
         },
         w_open_searh_form: function (self) {
             swal('ok');
         },
         w_go_to_input_page: function (id) {
-            jQuery.UbizOIWidget.w_get_specific_supplier_by_id(id);
+            if (id != 0)
+                jQuery.UbizOIWidget.w_get_specific_supplier_by_id(id);
+            $("#i-put .save").attr("onclick", "jQuery.UbizOIWidget.w_save("+id+")");
             jQuery.UbizOIWidget.o_page.hide();
             jQuery.UbizOIWidget.i_page.fadeIn("slow");
             jQuery('#nicescroll-oput').getNiceScroll().remove();
@@ -170,7 +194,7 @@ function insertSupplier() {
                 var rows = [];
                 for (let i = 0; i < suppliers.length; i++) {
                     var cols = [];
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(suppliers[i].sup_id, suppliers[i].sup_id, 1));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(suppliers[i].sup_id, suppliers[i].sup_code, 1));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(suppliers[i].sup_id, suppliers[i].sup_name, 2));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(suppliers[i].sup_id, suppliers[i].sup_website, 3));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(suppliers[i].sup_id, suppliers[i].sup_phone, 4));
@@ -192,7 +216,7 @@ function insertSupplier() {
             }
             data = response.data.supplier[0];
             $("#i-put .GtF .delete").attr("onclick","jQuery.UbizOIWidget.w_delete("+data.sup_id+")");
-            $("#i-put #nicescroll-iput #txt_sup_id").val(data.sup_id);
+            $("#i-put #nicescroll-iput #txt_sup_code").val(data.sup_code);
             $("#i-put #nicescroll-iput #txt_sup_name").val(data.sup_name);
             $("#i-put #nicescroll-iput #txt_sup_website").val(data.sup_website);
             $("#i-put #nicescroll-iput #txt_sup_phone").val(data.sup_phone);
@@ -200,7 +224,7 @@ function insertSupplier() {
             $("#i-put #nicescroll-iput #txt_sup_mail").val(data.sup_mail);
         },
         w_clear_input_page: function() {
-            $("#i-put #nicescroll-iput #txt_sup_id").val("");
+            $("#i-put #nicescroll-iput #txt_sup_code").val("");
             $("#i-put #nicescroll-iput #txt_sup_name").val("");
             $("#i-put #nicescroll-iput #txt_sup_website").val("");
             $("#i-put #nicescroll-iput #txt_sup_phone").val("");
