@@ -48,7 +48,7 @@ class UsersController extends Controller
 
             $user = new User();
             $users = $user->getUsers($page, $sort, $search);
-            $paging = $user->getPagingInfo();
+            $paging = $user->getPagingInfo($search);
             $paging['page'] = $page;
         } catch (\Throwable $e) {
             throw $e;

@@ -1061,3 +1061,7 @@
 .main-content .nicescroll {
     cursor: default !important;
 }
+
+.lbl-primary {
+    color: #1967d2;
+}
