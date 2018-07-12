@@ -13,38 +13,7 @@ class UsersController extends Controller
     {
         try {
 
-            $page = 0;
-            if ($request->has('page')) {
-                $page = $request->page;
-            }
-
-            $sort = '';
-            if ($request->has('sort')) {
-                $sort = $request->sort;
-            }
-
-            $search = [];
-            if ($request->has('search')) {
-                $search['search'] = $request->search;
-            }
-            if ($request->has('code')) {
-                $search['code'] = $request->code;
-            }
-            if ($request->has('name')) {
-                $search['name'] = $request->name;
-            }
-            if ($request->has('phone')) {
-                $search['phone'] = $request->phone;
-            }
-            if ($request->has('email')) {
-                $search['email'] = $request->email;
-            }
-            if ($request->has('dep_name')) {
-                $search['dep_name'] = $request->dep_name;
-            }
-            if ($request->has('address')) {
-                $search['address'] = $request->address;
-            }
+            list($page, $sort, $search) = $this->getRequestData($request);
 
             $user = new User();
             $users = $user->getUsers($page, $sort, $search);
@@ -68,5 +37,42 @@ class UsersController extends Controller
             throw $e;
         }
         return response()->json(['users' => $users, 'paging' => $paging, 'success' => true, 'message' => 'Xử lý thành công'], 200);
+    }
+
+    public function getRequestData(Request $request)
+    {
+        $page = 0;
+        if ($request->has('page')) {
+            $page = $request->page;
+        }
+
+        $sort = '';
+        if ($request->has('sort')) {
+            $sort = $request->sort;
+        }
+
+        $search = [];
+        if ($request->has('search')) {
+            $search['search'] = $request->search;
+        }
+        if ($request->has('code')) {
+            $search['code'] = $request->code;
+        }
+        if ($request->has('name')) {
+            $search['name'] = $request->name;
+        }
+        if ($request->has('phone')) {
+            $search['phone'] = $request->phone;
+        }
+        if ($request->has('email')) {
+            $search['email'] = $request->email;
+        }
+        if ($request->has('dep_name')) {
+            $search['dep_name'] = $request->dep_name;
+        }
+        if ($request->has('address')) {
+            $search['address'] = $request->address;
+        }
+        return [$page, $sort, $search];
     }
 }
