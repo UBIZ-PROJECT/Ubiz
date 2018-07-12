@@ -81,29 +81,7 @@
             var params = {};
             params.page = '0';
 
-            if (jQuery('#code').val().replace(/\s/g, '') != '') {
-                params.code = jQuery('#code').val();
-            }
 
-            if (jQuery('#name').val().replace(/\s/g, '') != '') {
-                params.name = jQuery('#name').val();
-            }
-
-            if (jQuery('#email').val().replace(/\s/g, '') != '') {
-                params.email = jQuery('#email').val();
-            }
-
-            if (jQuery('#phone').val().replace(/\s/g, '') != '') {
-                params.phone = jQuery('#phone').val();
-            }
-
-            if (jQuery('#dep_name').val().replace(/\s/g, '') != '') {
-                params.dep_name = jQuery('#dep_name').val();
-            }
-
-            if (jQuery('#address').val().replace(/\s/g, '') != '') {
-                params.address = jQuery('#address').val();
-            }
 
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             params.sort = sort_info.sort_name + "_" + sort_info.order_by;
@@ -182,6 +160,32 @@
             var sort_name = sort_obj.attr('sort-name');
             var order_by = sort_obj.attr('order-by');
             return {'sort_name': sort_name, 'order_by': order_by};
+        },
+        w_get_search_info: function () {
+            var search_info = {};
+            if (jQuery('#code').val().replace(/\s/g, '') != '') {
+                search_info.code = jQuery('#code').val();
+            }
+            if (jQuery('#name').val().replace(/\s/g, '') != '') {
+                search_info.name = jQuery('#name').val();
+            }
+
+            if (jQuery('#email').val().replace(/\s/g, '') != '') {
+                search_info.email = jQuery('#email').val();
+            }
+
+            if (jQuery('#phone').val().replace(/\s/g, '') != '') {
+                search_info.phone = jQuery('#phone').val();
+            }
+
+            if (jQuery('#dep_name').val().replace(/\s/g, '') != '') {
+                search_info.dep_name = jQuery('#dep_name').val();
+            }
+
+            if (jQuery('#address').val().replace(/\s/g, '') != '') {
+                search_info.address = jQuery('#address').val();
+            }
+            return search_info;
         },
         w_get_older_data: function (page) {
             jQuery.UbizOIWidget.page = page;
