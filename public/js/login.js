@@ -6302,7 +6302,7 @@ var LoginComponent = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (LoginComponent.__proto__ || Object.getPrototypeOf(LoginComponent)).call(this, props));
 
-        _this.do_login_url = "http://ubiz.local/api/v1/auth/login";
+        _this.do_login_url = "/api/v1/login";
         _this.handleLoginClick = _this.handleLoginClick.bind(_this);
         _this.handleEmailChange = _this.handleEmailChange.bind(_this);
         _this.handlePasswordChange = _this.handlePasswordChange.bind(_this);
@@ -6344,12 +6344,14 @@ var LoginComponent = function (_React$Component) {
             var _this2 = this;
 
             this.setState({ linear_progress_show: true });
-            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.post(this.do_login_url, this.state).then(function (res) {
+            __WEBPACK_IMPORTED_MODULE_2_axios___default.a.post(this.do_login_url, this.state).then(function (response) {
                 _this2.setState({ linear_progress_show: false });
-                if (res.data.success == true) {
+                if (response.data.success == true) {
                     window.location.href = '/';
                 } else {
-                    alert(res.data.message);
+                    swal(response.data.message, {
+                        icon: "error"
+                    });
                 }
             });
         }

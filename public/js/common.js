@@ -1,6 +1,6 @@
-function showProgress(){
+function showProgress() {
     var progress = jQuery('.ubiz-progress');
-    if(progress.length == 0){
+    if (progress.length == 0) {
         var progress_dom = '<div class="ubiz-progress">Đang xử lý...</div>';
         jQuery('body').append(progress_dom);
         progress = jQuery('.ubiz-progress');
@@ -8,11 +8,80 @@ function showProgress(){
     progress.show();
 }
 
-function hideProgress(){
+function hideProgress() {
     var progress = jQuery('.ubiz-progress');
-    if(progress.length == 1){
+    if (progress.length == 1) {
         progress.hide();
     }
+}
+
+function show_searh_form() {
+    jQuery("#search-form").fadeIn('fast', function () {
+        jQuery("search-form").find('#code').focus();
+        document.body.addEventListener('click', hide_searh_form, false);
+    });
+}
+
+function hide_searh_form(e) {
+    var search_form = jQuery(e.target).closest("#search-form");
+    if (search_form.length == 0) {
+        document.body.removeEventListener('click', hide_searh_form, false);
+        jQuery("#search-form").hide('fast');
+    }
+}
+
+function show_account_form() {
+    jQuery("#account-form").fadeIn('fast', function () {
+        document.body.addEventListener('click', hide_account_form, false);
+    });
+}
+
+function hide_account_form(e) {
+    var account_form = jQuery(e.target).closest("#account-form");
+    if (account_form.length == 0) {
+        document.body.removeEventListener('click', hide_account_form, false);
+        jQuery("#account-form").hide('fast');
+    }
+}
+
+function show_notify_form() {
+    jQuery("#notify-form").fadeIn('fast', function () {
+        document.body.addEventListener('click', hide_notify_form, false);
+    });
+}
+
+function hide_notify_form(e) {
+    var notify_form = jQuery(e.target).closest("#notify-form");
+    if (notify_form.length == 0) {
+        document.body.removeEventListener('click', hide_notify_form, false);
+        jQuery("#notify-form").hide('fast');
+    }
+}
+
+function show_apps_form() {
+    jQuery("#apps-form").fadeIn('fast', function () {
+        document.body.addEventListener('click', hide_apps_form, false);
+    });
+}
+
+function hide_apps_form(e) {
+    var apps_form = jQuery(e.target).closest("#apps-form");
+    if (apps_form.length == 0) {
+        document.body.removeEventListener('click', hide_apps_form, false);
+        jQuery("#apps-form").hide('fast');
+    }
+}
+
+function logout() {
+    ubizapis('v1', '/logout', 'get', null, null, function (response) {
+        if (response.data.success == true) {
+            window.location.href = '/login';
+        } else {
+            swal(response.data.message, {
+                icon: "error",
+            });
+        }
+    });
 }
 
 // Add a request interceptor
@@ -25,6 +94,7 @@ axios.interceptors.request.use(function (options) {
     hideProgress();
     console.log(error);
 });
+
 function ubizapis(api_version, api_url, api_method, api_data, api_params, api_callback) {
 
     var protocol = window.location.protocol;
@@ -37,11 +107,11 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
         method: api_method
     };
 
-    if(typeof api_data === 'object'){
+    if (typeof api_data === 'object') {
         options.data = qs.stringify(api_data);
     }
 
-    if(typeof api_params === 'object'){
+    if (typeof api_params === 'object') {
         options.params = api_params;
     }
 

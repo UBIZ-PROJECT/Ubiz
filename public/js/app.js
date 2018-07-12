@@ -15180,7 +15180,6 @@ __webpack_require__(130);
 window.axios = __webpack_require__(36);
 window.qs = __webpack_require__(134);
 __webpack_require__(137);
-// window.PerfectScrollbar  = require('perfect-scrollbar');
 /**
  * Next, we will create a fresh React component instance and attach it to
  * the page. Then, you may begin adding components to this application
