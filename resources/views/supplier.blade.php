@@ -397,7 +397,54 @@
                 </div>
                 <div class="jAQ">
                     <div class="aqI" id="nicescroll-iput">
-                        
+                        <div class="textfield root_textfield rootIsUnderlined">
+                            <div class="wrapper">
+                                <label for="txt_sup_id" class="ms-Label root-56">Mã:</label>
+                                <div class="fieldGroup">
+                                    <input type="text" id="txt_sup_id" value="" class="input_field">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="textfield root_textfield rootIsUnderlined">
+                            <div class="wrapper">
+                                <label for="txt_sup_name" class="ms-Label root-56">Tên nhà cung cấp:</label>
+                                <div class="fieldGroup">
+                                    <input type="text" id="txt_sup_name" value="" class="input_field">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="textfield root_textfield rootIsUnderlined">
+                            <div class="wrapper">
+                                <label for="txt_sup_website" class="ms-Label root-56">Website:</label>
+                                <div class="fieldGroup">
+                                    <input type="text" id="txt_sup_website" value="" class="input_field">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="textfield root_textfield rootIsUnderlined">
+                            <div class="wrapper">
+                                <label for="txt_sup_phone" class="ms-Label root-56">Phone:</label>
+                                <div class="fieldGroup">
+                                    <input type="text" id="txt_sup_phone" value="" class="input_field">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="textfield root_textfield rootIsUnderlined">
+                            <div class="wrapper">
+                                <label for="txt_sup_fax" class="ms-Label root-56">Fax:</label>
+                                <div class="fieldGroup">
+                                    <input type="text" id="txt_sup_fax" value="" class="input_field">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="textfield root_textfield rootIsUnderlined">
+                            <div class="wrapper">
+                                <label for="txt_sup_mail" class="ms-Label root-56">Email:</label>
+                                <div class="fieldGroup">
+                                    <input type="text" id="txt_sup_mail" value="" class="input_field">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

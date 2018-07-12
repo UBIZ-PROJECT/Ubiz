@@ -92,6 +92,7 @@ function insertSupplier() {
             swal('ok');
         },
         w_go_to_input_page: function (id) {
+            jQuery.UbizOIWidget.w_get_specific_supplier_by_id(id);
             jQuery.UbizOIWidget.o_page.hide();
             jQuery.UbizOIWidget.i_page.fadeIn("slow");
             jQuery('#nicescroll-oput').getNiceScroll().remove();
@@ -106,7 +107,6 @@ function insertSupplier() {
                 autohidemode: false,
                 horizrailenabled: false
             });
-            jQuery.UbizOIWidget.w_get_specific_supplier_by_id(id);
         },
         w_go_back_to_output_page: function (self) {
             jQuery.UbizOIWidget.o_page.fadeIn("slow");
@@ -123,6 +123,7 @@ function insertSupplier() {
                 autohidemode: false,
                 horizrailenabled: false
             });
+            jQuery.UbizOIWidget.w_clear_input_page();
         },
         w_refresh_output_page: function () {
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
@@ -185,31 +186,26 @@ function insertSupplier() {
             jQuery.UbizOIWidget.page = response.data.paging.page;
             jQuery.UbizOIWidget.w_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
         },
-        w_render_data_to_input_page: function(response) {
+        w_render_data_to_input_page: function(response, callback) {
             if (response == undefined || response.data == undefined || response.data.supplier.length <= 0) {
                 return;
             }
             data = response.data.supplier[0];
             $("#i-put .GtF .delete").attr("onclick","jQuery.UbizOIWidget.w_delete("+data.sup_id+")");
-            var html = jQuery.UbizOIWidget.w_render_layout_input_page("Mã",'sup_id',data.sup_id);
-            html += jQuery.UbizOIWidget.w_render_layout_input_page("Tên nhà cung cấp",'sup_name',data.sup_name);
-            html += jQuery.UbizOIWidget.w_render_layout_input_page("Website",'sup_website',data.sup_website);
-            html += jQuery.UbizOIWidget.w_render_layout_input_page("Số điện thoại",'sup_phone',data.sup_phone);
-            html += jQuery.UbizOIWidget.w_render_layout_input_page("Fax",'sup_fax',data.sup_fax);
-            html += jQuery.UbizOIWidget.w_render_layout_input_page("Email",'sup_mail',data.sup_mail);
-            $("#i-put #nicescroll-iput").html(html);
+            $("#i-put #nicescroll-iput #txt_sup_id").val(data.sup_id);
+            $("#i-put #nicescroll-iput #txt_sup_name").val(data.sup_name);
+            $("#i-put #nicescroll-iput #txt_sup_website").val(data.sup_website);
+            $("#i-put #nicescroll-iput #txt_sup_phone").val(data.sup_phone);
+            $("#i-put #nicescroll-iput #txt_sup_fax").val(data.sup_fax);
+            $("#i-put #nicescroll-iput #txt_sup_mail").val(data.sup_mail);
         },
-        w_render_layout_input_page: function(label, column, value) {
-            var html = '';
-            html = '<div class="textfield root_textfield rootIsUnderlined">';
-            html +=    '<div class="ms-TextField-wrapper wrapper_c7752763">';
-            html +=        '<label for="txt_'+column+'" class="ms-Label root-56">'+label+':</label>';
-            html +=        '<div class="fieldGroup">';
-            html +=            '<input type="text" id="txt_'+column+'" value="'+value+'" class="input_field x-hidden-focus" aria-invalid="false">';
-            html +=        '</div>';
-            html +=    '</div>';
-            html +='</div>';
-            return html;
+        w_clear_input_page: function() {
+            $("#i-put #nicescroll-iput #txt_sup_id").val("");
+            $("#i-put #nicescroll-iput #txt_sup_name").val("");
+            $("#i-put #nicescroll-iput #txt_sup_website").val("");
+            $("#i-put #nicescroll-iput #txt_sup_phone").val("");
+            $("#i-put #nicescroll-iput #txt_sup_fax").val("");
+            $("#i-put #nicescroll-iput #txt_sup_mail").val("");
         },
         w_get_specific_supplier_by_id(id) {
             ubizapis('v1','/suppliers/' + id, 'get', null, {'page': 0},jQuery.UbizOIWidget.w_render_data_to_input_page);
