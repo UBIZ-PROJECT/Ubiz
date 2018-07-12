@@ -20,6 +20,48 @@ class Helper
 			$image->save($target_file);
 	}
 	
+	public static function resizeImageToHeight($img, $img_type = '', $target_img, $new_img_height)
+	{
+			$image = new SimpleImage();
+			$target_dir = base_path() . '/resources/images/' . $img_type;
+			if($img_type != ''){
+				$target_file = $target_dir . '/' . $target_img);
+			}else{
+				$target_file = $target_dir . $target_img);
+			}
+			$image->load($img);
+			$image->resizeToHeight($new_img_height);
+			$image->save($target_file);
+	}
+	
+	public static function resizeImageToWidth($img, $img_type = '', $target_img, $new_img_width)
+	{
+			$image = new SimpleImage();
+			$target_dir = base_path() . '/resources/images/' . $img_type;
+			if($img_type != ''){
+				$target_file = $target_dir . '/' . $target_img);
+			}else{
+				$target_file = $target_dir . $target_img);
+			}
+			$image->load($img);
+			$image->resizeToWidth($new_img_width);
+			$image->save($target_file);
+	}
+	
+	public static function scaleImage($img, $img_type = '', $scale)
+	{
+			$image = new SimpleImage();
+			$target_dir = base_path() . '/resources/images/' . $img_type;
+			if($img_type != ''){
+				$target_file = $target_dir . '/' . $target_img);
+			}else{
+				$target_file = $target_dir . $target_img);
+			}
+			$image->load($img);
+			$image->scale($scale);
+			$image->save($target_file);
+	}
+	
 	public static function readImage($img, $img_type = '')
 	{
 		if($img_type != ''){
