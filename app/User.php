@@ -75,25 +75,19 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
-    public function getUsers($page = 0, $sort = '')
+    public function getUsers($page = 0, $sort = '', $search = [])
     {
         try {
 
-            $sort_name = 'code';
-            $order_by = 'asc';
-            if ($sort != '') {
-                $sort_info = explode('_', $sort);
-                $order_by = $sort_info[sizeof($sort_info) - 1];
-                unset($sort_info[sizeof($sort_info) - 1]);
-                $sort_name = implode('_', $sort_info);
-            }
+            list($where_raw,$params) = $this->makeWhereRaw($search);
+            list($field_name, $order_by) = $this->makeOrderBy($sort);
 
             $rows_per_page = env('ROWS_PER_PAGE', 10);
             $users = DB::table('users')
                 ->select('users.*', 'm_department.dep_id', 'm_department.dep_name', 'm_department.dep_type', 'm_department.per_id')
                 ->leftJoin('m_department', 'users.dep_id', '=', 'm_department.dep_id')
-                ->where('users.delete_flg', '=', '0')
-                ->orderBy($sort_name, $order_by)
+                ->whereRaw($where_raw, $params)
+                ->orderBy($field_name, $order_by)
                 ->offset($page * $rows_per_page)
                 ->limit($rows_per_page)
                 ->get();
@@ -115,11 +109,24 @@ class User extends Authenticatable implements JWTSubject
         return $count;
     }
 
-    public function getPagingInfo()
+    public function countUsers($search = [])
+    {
+        try {
+            list($where_raw,$params) = $this->makeWhereRaw($search);
+            $count = DB::table('users')
+                ->whereRaw($where_raw, $params)
+                ->count();
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return $count;
+    }
+
+    public function getPagingInfo($search = [])
     {
         try {
             $rows_per_page = env('ROWS_PER_PAGE', 10);
-            $rows_num = $this->countAllUsers();
+            $rows_num = $this->countUsers($search);
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -128,5 +135,74 @@ class User extends Authenticatable implements JWTSubject
             'rows_num' => $rows_num,
             'rows_per_page' => $rows_per_page
         ];
+    }
+
+    public function makeWhereRaw($search = [])
+    {
+        $params = [0];
+        $where_raw = 'users.delete_flg = ?';
+        if (sizeof($search) > 0) {
+            if (isset($search['search'])) {
+                $search_val = "%" . $search['search'] . "%";
+                $where_raw .= " AND (";
+                $where_raw .= "users.code like ?'";
+                $params[] = $search_val;
+                $where_raw .= " OR users.name like ?";
+                $params[] = $search_val;
+                $where_raw .= " OR users.email like ?";
+                $params[] = $search_val;
+                $where_raw .= " OR users.phone like ?";
+                $params[] = $search_val;
+                $where_raw .= " OR users.address like ?";
+                $params[] = $search_val;
+                $where_raw .= " OR m_department.dep_name like ?";
+                $params[] = $search_val;
+                $where_raw .= " ) ";
+            } else {
+
+                $where_raw_tmp = [];
+                if (isset($search['code'])) {
+                    $where_raw_tmp[] = "users.code = ?";
+                    $params[] = $search['code'];
+                }
+                if (isset($search['name'])) {
+                    $where_raw_tmp[] = "users.name = ?";
+                    $params[] = $search['name'];
+                }
+                if (isset($search['email'])) {
+                    $where_raw_tmp[] = "users.email = ?";
+                    $params[] = $search['email'];
+                }
+                if (isset($search['phone'])) {
+                    $where_raw_tmp[] = "users.phone = ?";
+                    $params[] = $search['phone'];
+                }
+                if (isset($search['address'])) {
+                    $where_raw_tmp[] = "users.address = ?";
+                    $params[] = $search['address'];
+                }
+                if (isset($search['dep_name'])) {
+                    $where_raw_tmp[] = "m_department.dep_name = ?";
+                    $params[] = $search['dep_name'];
+                }
+                if (sizeof($where_raw_tmp) > 0) {
+                    $where_raw .= " AND ( " . implode(" OR ", $where_raw_tmp) . " )";
+                }
+            }
+        }
+        return [$where_raw, $params];
+    }
+
+    public function makeOrderBy($sort)
+    {
+        $field_name = 'code';
+        $order_by = 'asc';
+        if ($sort != '') {
+            $sort_info = explode('_', $sort);
+            $order_by = $sort_info[sizeof($sort_info) - 1];
+            unset($sort_info[sizeof($sort_info) - 1]);
+            $field_name = implode('_', $sort_info);
+        }
+        return [$field_name, $order_by];
     }
 }

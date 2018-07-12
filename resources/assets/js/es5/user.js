@@ -77,8 +77,46 @@
         w_create:function(){
             jQuery.UbizOIWidget.w_go_to_input_page(0);
         },
-        w_open_searh_form: function (self) {
-            swal('ok');
+        w_search:function(){
+            var params = {};
+            params.page = '0';
+
+
+
+            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
+            params.sort = sort_info.sort_name + "_" + sort_info.order_by;
+
+            ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+        },
+        w_clear_search_form:function(){
+            jQuery('#code').val("");
+            jQuery('#name').val("");
+            jQuery('#email').val("");
+            jQuery('#phone').val("");
+            jQuery('#dep_name').val("");
+            jQuery('#address').val("");
+            jQuery.UbizOIWidget.page = '0';
+            jQuery.UbizOIWidget.w_search();
+        },
+        w_fuzzy_search: function () {
+            var params = {};
+            params.page = '0';
+            jQuery.UbizOIWidget.page = '0';
+
+            var fuzzy_val = jQuery('#fuzzy').val();
+            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
+            var sort = sort_info.sort_name + "_" + sort_info.order_by;
+
+            params.search = fuzzy_val;
+            params.sort = sort;
+
+            ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+        },
+        w_fuzzy_search_handle_enter(e) {
+            var keycode = (e.keyCode ? e.keyCode : e.which);
+            if (keycode == '13') {
+                jQuery.UbizOIWidget.w_fuzzy_search();
+            }
         },
         w_go_to_input_page: function (id) {
             jQuery.UbizOIWidget.o_page.hide();
@@ -122,6 +160,32 @@
             var sort_name = sort_obj.attr('sort-name');
             var order_by = sort_obj.attr('order-by');
             return {'sort_name': sort_name, 'order_by': order_by};
+        },
+        w_get_search_info: function () {
+            var search_info = {};
+            if (jQuery('#code').val().replace(/\s/g, '') != '') {
+                search_info.code = jQuery('#code').val();
+            }
+            if (jQuery('#name').val().replace(/\s/g, '') != '') {
+                search_info.name = jQuery('#name').val();
+            }
+
+            if (jQuery('#email').val().replace(/\s/g, '') != '') {
+                search_info.email = jQuery('#email').val();
+            }
+
+            if (jQuery('#phone').val().replace(/\s/g, '') != '') {
+                search_info.phone = jQuery('#phone').val();
+            }
+
+            if (jQuery('#dep_name').val().replace(/\s/g, '') != '') {
+                search_info.dep_name = jQuery('#dep_name').val();
+            }
+
+            if (jQuery('#address').val().replace(/\s/g, '') != '') {
+                search_info.address = jQuery('#address').val();
+            }
+            return search_info;
         },
         w_get_older_data: function (page) {
             jQuery.UbizOIWidget.page = page;

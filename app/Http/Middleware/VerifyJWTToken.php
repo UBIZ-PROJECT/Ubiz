@@ -44,6 +44,7 @@ class VerifyJWTToken extends BaseMiddleware
                     $gracePeriod = $this->auth->manager()->getBlacklist()->getGracePeriod();
                     $expiresAt = Carbon::now()->addSeconds($gracePeriod);
                     Cache::put($key, $token, $expiresAt);
+                    return $next($request)->cookie('Authorization', $token);// Response with new token on cookie Authorization.
                 } catch (JWTException $e) {
                     if ($request->ajax()) {
                         return response()->json(['success' => false, 'message' => 'Token has been blacklisted']);
@@ -90,7 +91,6 @@ class VerifyJWTToken extends BaseMiddleware
         if (!$request->ajax() && $request->is('login')) {
             return redirect('/');
         }
-        $response = $next($request);
-        return $response->cookie('Authorization', $token); // Response with new token on cookie Authorization.
+        return $next($request);
     }
 }
