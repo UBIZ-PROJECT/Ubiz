@@ -23,8 +23,13 @@ class SupplierController extends Controller
                 $page = $request->page;
             }
 
+            $sort = '';
+            if ($request->has('sort')) {
+                $sort = $request->sort;
+            }
+
             $supplier = new Supplier();
-            $data = $supplier->getSupplierPaging($page);
+            $data = $supplier->getSupplierPaging($page, $sort);
             $paging = $supplier->getPagingInfo();
             $paging['page'] = $page;
         } catch(\Throwable $e) {
