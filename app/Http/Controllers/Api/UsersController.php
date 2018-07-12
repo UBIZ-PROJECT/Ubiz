@@ -18,8 +18,13 @@ class UsersController extends Controller
                 $page = $request->page;
             }
 
+            $sort = '';
+            if ($request->has('sort')) {
+                $sort = $request->sort;
+            }
+
             $user = new User();
-            $users = $user->getUsers($page);
+            $users = $user->getUsers($page, $sort);
             $paging = $user->getPagingInfo();
             $paging['page'] = $page;
         } catch (\Throwable $e) {
