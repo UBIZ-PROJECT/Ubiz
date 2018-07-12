@@ -10,7 +10,11 @@ class Helper
 	{
 			$image = new SimpleImage();
 			$target_dir = base_path() . '/resources/images/' . $img_type;
-			$target_file = $target_dir . '/' . $target_img);
+			if($img_type != ''){
+				$target_file = $target_dir . '/' . $target_img);
+			}else{
+				$target_file = $target_dir . $target_img);
+			}
 			$image->load($img);
 			$image->resize($new_img_width, $new_img_height);
 			$image->save($target_file);
@@ -18,8 +22,11 @@ class Helper
 	
 	public static function readImage($img, $img_type = '')
 	{
-		$dir   = base_path() . '/resources/images/' . $img_type;
-		$path = $dir. '/' . $img;
+		if($img_type != ''){
+			$path   = base_path() . '/resources/images/' . $img_type . '/' . $img;
+		}else{
+			$path   = base_path() . '/resources/images/' . $img;
+		}
 		$type   = pathinfo($path, PATHINFO_EXTENSION);
 		$data   = file_get_contents($path);
 		$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
