@@ -137,7 +137,7 @@
                                 <div class="dcB col-1" role="presentation">
                                     <div class="dWB dWT" role="button" sort-name="code" order-by="asc" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">Mã</div>
+                                            <div class="tDv">{{ __('Code') }}</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -160,7 +160,7 @@
                                 <div class="dcB col-2" role="presentation">
                                     <div class="dWB" role="button" sort-name="name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">Tên</div>
+                                            <div class="tDv">{{ __('Name') }}</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -183,7 +183,7 @@
                                 <div class="dcB col-3" role="presentation">
                                     <div class="dWB" role="button" sort-name="email" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">E-mail</div>
+                                            <div class="tDv">{{ __('E-mail') }}</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -206,7 +206,7 @@
                                 <div class="dcB col-4" role="presentation">
                                     <div class="dWB" role="button" sort-name="phone" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">Điện thoại</div>
+                                            <div class="tDv">{{ __('Phone') }}</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -229,7 +229,7 @@
                                 <div class="dcB col-5" role="presentation">
                                     <div class="dWB" role="button">
                                         <div class="dvJ" sort-name="dep_name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
-                                            <div class="tDv">Phòng ban</div>
+                                            <div class="tDv">{{ __('Department') }}</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -252,7 +252,7 @@
                                 <div class="dcB col-6" role="presentation">
                                     <div class="dWB" role="button" sort-name="address" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">Địa chỉ</div>
+                                            <div class="tDv">{{ __('Address') }}</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">

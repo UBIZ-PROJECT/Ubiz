@@ -72,8 +72,8 @@ function hide_apps_form(e) {
     }
 }
 
-function logout() {
-    ubizapis('v1', '/logout', 'get', null, null, function (response) {
+function logout(){
+    ubizapis('v1', '/users', 'get', null, null, function (response) {
         if (response.data.success == true) {
             window.location.href = '/login';
         } else {
@@ -81,6 +81,7 @@ function logout() {
                 icon: "error",
             });
         }
+
     });
 }
 
@@ -135,6 +136,16 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
                 console.log(error.response.data);
                 console.log(error.response.status);
                 console.log(error.response.headers);
+                if (error.response.status === 401) {
+                    swal("Xác thực thất bại.\nBạn sẽ được đưa trở lại trang Đăng nhập trong 5 giây.", {
+                        icon: "error",
+                        closeOnClickOutside: false,
+                        closeOnEsc: false,
+                        timer: 5000,
+                    }).then((value) => {
+                        window.location.href = '/login';
+                    });
+                }
             } else if (error.request) {
                 // The request was made but no response was received
                 // `error.request` is an instance of XMLHttpRequest in the browser and an instance of

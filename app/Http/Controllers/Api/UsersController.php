@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -72,6 +73,12 @@ class UsersController extends Controller
         }
         if ($request->has('address')) {
             $search['address'] = $request->address;
+        }
+        if ($request->has('contain')) {
+            $search['contain'] = $request->contain;
+        }
+        if ($request->has('notcontain')) {
+            $search['notcontain'] = $request->notcontain;
         }
         return [$page, $sort, $search];
     }

@@ -143,22 +143,40 @@ class User extends Authenticatable implements JWTSubject
         $params = [0];
         $where_raw = 'users.delete_flg = ?';
         if (sizeof($search) > 0) {
-            if (isset($search['search'])) {
+            if (isset($search['contain']) || isset($search['notcontain'])) {
+
                 $search_val = "%" . $search['search'] . "%";
-                $where_raw .= " AND (";
-                $where_raw .= "users.code like ?'";
-                $params[] = $search_val;
-                $where_raw .= " OR users.name like ?";
-                $params[] = $search_val;
-                $where_raw .= " OR users.email like ?";
-                $params[] = $search_val;
-                $where_raw .= " OR users.phone like ?";
-                $params[] = $search_val;
-                $where_raw .= " OR users.address like ?";
-                $params[] = $search_val;
-                $where_raw .= " OR m_department.dep_name like ?";
-                $params[] = $search_val;
-                $where_raw .= " ) ";
+                if(isset($search['contain'])){
+                    $where_raw .= " AND (";
+                    $where_raw .= "users.code like ?'";
+                    $params[] = $search_val;
+                    $where_raw .= " OR users.name like ?";
+                    $params[] = $search_val;
+                    $where_raw .= " OR users.email like ?";
+                    $params[] = $search_val;
+                    $where_raw .= " OR users.phone like ?";
+                    $params[] = $search_val;
+                    $where_raw .= " OR users.address like ?";
+                    $params[] = $search_val;
+                    $where_raw .= " OR m_department.dep_name like ?";
+                    $params[] = $search_val;
+                    $where_raw .= " ) ";
+                }
+                if(isset($search['notcontain'])){
+                    $where_raw .= " AND users.code not like ?'";
+                    $params[] = $search_val;
+                    $where_raw .= " AND users.name not like ?";
+                    $params[] = $search_val;
+                    $where_raw .= " AND users.email not like ?";
+                    $params[] = $search_val;
+                    $where_raw .= " AND users.phone not like ?";
+                    $params[] = $search_val;
+                    $where_raw .= " AND users.address not like ?";
+                    $params[] = $search_val;
+                    $where_raw .= " AND m_department.dep_name not like ?";
+                    $params[] = $search_val;
+                }
+
             } else {
 
                 $where_raw_tmp = [];
