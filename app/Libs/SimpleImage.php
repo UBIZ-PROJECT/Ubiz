@@ -1,5 +1,5 @@
 <?php 
-namespace App;
+namespace App\Libs;
 
 class SimpleImage {
 
