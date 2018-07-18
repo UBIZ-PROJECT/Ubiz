@@ -1,7 +1,7 @@
 <?php
 
 namespace App;
-use App\SimpleImage;
+use App\Libs\SimpleImage;
 
 
 class Helper

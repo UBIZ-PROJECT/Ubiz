@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Model;
 
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -88,8 +88,18 @@ public function getCustomers($page = 0, $sort = '')
             }
 			
         $rows_per_page = env('ROWS_PER_PAGE', 10);
+		$firstAddress = DB::table('customer_address')
+                   ->select('cus_id as cad_cus_id', DB::raw('min(cad_id) as cad_id'))
+                   ->whereRaw("delete_flg = '0'")
+                   ->groupBy('cus_id')->toSql();
+
 		$customers = DB::table('customer')
-			->where('delete_flg', '0')
+			->join(DB::raw('('.$firstAddress.') customer_adr'),function($join){
+				$join->on('customer_adr.cad_cus_id','=','customer.cus_id');
+			})
+			->join('customer_address', 'customer_adr.cad_id', '=', 'customer_address.cad_id')
+			->select('customer.*', 'customer_address.cad_address as address', 'customer_address.cad_id')
+			->whereRaw("customer_address.delete_flg = '0'")
 			->orderBy($sort_name, $order_by)
 			->offset($page * $rows_per_page)
 			->limit($rows_per_page)
@@ -128,32 +138,44 @@ public function getCustomers($page = 0, $sort = '')
     }
 	
 	public function insertCustomer($param) {
-        $id = DB::table('customer')->insertGetId(
-          [
-              'cus_name'=>$param['cus_name'],
-			  'cus_type'=>$param['cus_type'],
-              'cus_phone'=>$param['cus_phone'],
-              'cus_fax'=>$param['cus_fax'],
-              'cus_mail'=>$param['cus_mail'],
-              'inp_date'=>'now()',
-              'upd_date'=>'now()',
-              'inp_user'=>'1',
-              'upd_user'=>'1'
-          ]
-        );
+		try {
+			$id = DB::table('customer')->insertGetId(
+			  [
+				  'cus_code'=>$param['cus_code'],
+				  'cus_name'=>$param['cus_name'],
+				  'cus_avatar'=>$param['cus_avatar'],
+				  'cus_type'=>$param['cus_type'],
+				  'cus_phone'=>$param['cus_phone'],
+				  'cus_fax'=>$param['cus_fax'],
+				  'cus_mail'=>$param['cus_mail'],
+				  'inp_date'=>'now()',
+				  'upd_date'=>'now()',
+				  'inp_user'=>'1',
+				  'upd_user'=>'1'
+			  ]
+			);
+		} catch (\Throwable $e) {
+            throw $e;
+        }
         return $id;
     }
 	
 	public function insertCustomerAddress($param) {
-        DB::table('customer_address')->insert(
-          [
-              'cus_id'=>$param['cus_id'],
-			  'cad_address'=>$param['cad_address'],
-              'inp_date'=>'now()',
-              'upd_date'=>'now()',
-              'inp_user'=>'1',
-              'upd_user'=>'1'
-          ]
-        );
+		try {
+			DB::table('customer_address')->insert(
+			  [
+				  'cus_id'=>$param['cus_id'],
+				  'cad_address'=>$param['cad_address'],
+				  'inp_date'=>'now()',
+				  'upd_date'=>'now()',
+				  'inp_user'=>'1',
+				  'upd_user'=>'1'
+			  ]
+			);
+		} catch (\Throwable $e) {
+            throw $e;
+        }
     }
+	
+
 }
