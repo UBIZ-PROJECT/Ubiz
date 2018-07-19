@@ -73,7 +73,7 @@
         </div>
         <div class="m-content"></div>
         <div class="r-content">
-            <div class="jAQ" id="o-put">
+            <div class="jAQ" id="o-put" style="display: none">
                 <div class="bkK">
                     <div class="aeH">
                         <div class="aqK">
@@ -333,7 +333,7 @@
                     </div>
                 </div>
             </div>
-            <div class="jAQ" id="i-put"  style="display: none">
+            <div class="jAQ" id="i-put" >
                 <div class="bkK">
                     <div class="aeH">
                         <div class="aqK">
@@ -397,14 +397,30 @@
                 </div>
                 <div class="jAQ">
                     <div class="aqI nicescroll" id="nicescroll-iput">
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
+                        <div class="row z-mgl z-mgr">
+                            <div class="col-sm-2 col-md-2 col-xl-2 z-pdl">
+                                <a class="ato">
+                                    <img src="http://ubiz.local/images/avatar.jpg">
+                                    <input type="file" id="avatar" accept="image/*" style="display: none"/>
+                                    <span >Thay đổi</span>
+                                </a>
+                            </div>
+                            <div class="col-sm-5 col-md-5 col-xl-5">
+                                @include('layouts/input',['control_id'=>'txt_code', 'label'=>'Mã nhân viên'])
+                                @include('layouts/input',['control_id'=>'txt_name', 'label'=>'Tên nhân viên'])
+                                @include('layouts/dropdown',['control_id'=>'txt_dep_id', 'type' => 'disabled', 'label'=>'Phòng ban', 'data'=>['a'=>'b']])
+                                @include('layouts/input',['control_id'=>'txt_phone', 'label'=>'Điện thoại'])
+                                @include('layouts/input',['control_id'=>'txt_email', 'label'=>'E-Mail'])
+                                @include('layouts/input',['control_id'=>'txt_bhxh', 'label'=>'Bảo hiểm xã hội'])
+                            </div>
+                            <div class="col-sm-5 col-md-5 col-xl-5 z-pdr">
+                                @include('layouts/input',['control_id'=>'txt_address', 'label'=>'Địa chỉ'])
+                                @include('layouts/input',['control_id'=>'txt_join_date', 'label'=>'Ngày vào làm'])
+                                @include('layouts/input',['control_id'=>'txt_salary', 'label'=>'Lương'])
+                                @include('layouts/input',['control_id'=>'txt_name', 'label'=>'Tên nhân viên'])
+                                @include('layouts/input',['control_id'=>'txt_bhyt', 'label'=>'Bảo hiểm y tế'])
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
