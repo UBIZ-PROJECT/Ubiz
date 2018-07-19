@@ -73,7 +73,7 @@ function hide_apps_form(e) {
 }
 
 function logout(){
-    ubizapis('v1', '/users', 'get', null, null, function (response) {
+    ubizapis('v1', '/logout', 'get', null, null, function (response) {
         if (response.data.success == true) {
             window.location.href = '/login';
         } else {
