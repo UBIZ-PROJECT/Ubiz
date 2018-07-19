@@ -321,7 +321,7 @@
             $("#i-put #nicescroll-iput #txt_sup_mail").val("").isChange("false");
             $("#i-put #nicescroll-iput .file-upload").isChange("false");
             $("#i-put #nicescroll-iput .image-upload .img-show").attr("src", jQuery.UbizOIWidget.defaultImage);
-
+            removeErrorInput();
         },
         w_get_specific_supplier_by_id(id) {
             ubizapis('v1','/suppliers/' + id, 'get', null, {'page': 0},jQuery.UbizOIWidget.w_render_data_to_input_page);
