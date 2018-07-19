@@ -135,11 +135,15 @@ class Supplier implements JWTSubject
 
     public function updateSupplierById($supplier) {
         DB::beginTransaction();
-        $sup_ava = '';
-        if (!empty($supplier['extension'])) {
-            $sup_ava = $supplier['sup_id'] . ".".$supplier['extension'];
-        }
         try {
+            $sup_ava = '';
+            if (!empty($supplier['extension'])) {
+                $sup_ava = explode(".",$supplier['sup_avatar']);
+                $sup_ava = $sup_ava[0] . ".".$supplier['extension'];
+                Helper::resizeImage($supplier['tmp_name'], $sup_ava, 200,200, 'sup');
+            } else {
+                $sup_ava = $supplier['sup_avatar'];
+            }
             DB::table('suppliers')->where('sup_id','=',$supplier['sup_id'])
                 ->update([
                    'sup_name'=>$supplier['sup_name'],
@@ -150,7 +154,6 @@ class Supplier implements JWTSubject
                    'sup_website'=>$supplier['sup_website'],
                    'upd_date'=>date('Y-m-d H:i:s')
                 ]);
-            Helper::resizeImage($supplier['tmp_name'], $sup_ava, 200,200, 'sup');
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollback();
@@ -198,7 +201,6 @@ class Supplier implements JWTSubject
 
     private function generateCode() {
         $code = $this->getNextId();
-        $code++;
         return  sprintf("%05d", $code);
     }
 }

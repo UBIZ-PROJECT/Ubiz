@@ -150,10 +150,11 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
 }
 
 function showErrorInput(control, error_message) {
-    $(control).html(error_message);
-    $(control).closest('.error_message').removeClass('hidden-content');
-    $(control).closest('.root_textfield').find('.wrapper').addClass('invalid');
-    $(control).closest('.root_textfield').find('.fieldGroup').addClass('invalid');
+    parentControl = $(control).closest(".root_textfield");
+    $(parentControl).find(".error-message-text").html(error_message);
+    $(parentControl).find('.error_message').removeClass('hidden-content');
+    $(parentControl).find('.wrapper').addClass('invalid');
+    $(parentControl).find('.fieldGroup').addClass('invalid');
 }
 
 function removeErrorInput() {
@@ -182,3 +183,21 @@ function readURL(input) {
         $(input).attr("is-change", "true");
     }
 }
+
+function inputChange(self, oldVal) {
+    if ($(self).val() == oldVal) {
+        $(self).isChange("false");
+    } else {
+        $(self).isChange("true");
+    }
+}
+
+jQuery.fn.extend({
+    isChange: function(bool) {
+        if (bool === undefined || bool === null || bool === "") {
+            return this.attr("is-change");
+        } else {
+            this.attr("is-change", bool);
+        }
+    }
+});

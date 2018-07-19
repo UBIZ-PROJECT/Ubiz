@@ -29,7 +29,7 @@ switch ($type) {
     <div class="wrapper">
         <label for="{{$control_id}}" class="lbl-primary ms-Label root-56">{{$label}}:</label>
         <div class="fieldGroup">
-            <input type="text" maxlength='{{$length}}' {{$html_control_type}} id="{{$control_id}}" value="" class="input_field">
+            <input is-change="false" type="text" maxlength='{{$length}}' {{$html_control_type}} id="{{$control_id}}" value="" class="input_field">
         </div>
     </div>
     <span class="error_message hidden-content">
