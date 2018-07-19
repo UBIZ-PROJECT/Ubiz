@@ -81,7 +81,6 @@ function logout(){
                 icon: "error",
             });
         }
-
     });
 }
 
