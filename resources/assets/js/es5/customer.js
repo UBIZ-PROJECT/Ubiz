@@ -46,7 +46,7 @@
             jQuery(self).find('svg').removeClass('sVGT');
             jQuery(self).find('svg.' + order_by).addClass('sVGT');
 
-            ubizapis('v1', '/customers'', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/customers', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_delete: function () {
             var ids = jQuery.UbizOIWidget.w_get_checked_rows();
@@ -69,7 +69,7 @@
             }).then((value) => {
                 switch (value) {
                     case "catch":
-                        ubizapis('v1', '/customers'/' + ids.join(','), 'delete', null, null, jQuery.UbizOIWidget.w_delete_callback);
+                        ubizapis('v1', '/customers/' + ids.join(','), 'delete', null, null, jQuery.UbizOIWidget.w_delete_callback);
                         break;
                 }
             });
@@ -147,6 +147,9 @@
             }
         },
         w_go_to_input_page: function (id) {
+			if(id != 0){
+				ubizapis('v1','/customer-edit', 'get', null, {'cus_id': id}, jQuery.UbizOIWidget.w_render_data_to_input_page);
+			}
             jQuery.UbizOIWidget.o_page.hide();
             jQuery.UbizOIWidget.i_page.fadeIn("slow");
             jQuery('#nicescroll-oput').getNiceScroll().remove();
@@ -161,6 +164,10 @@
                 autohidemode: false,
                 horizrailenabled: false
             });
+			
+			$(".save").click(function(){
+				jQuery.UbizOIWidget.w_save();
+			});
         },
         w_go_back_to_output_page: function (self) {
             jQuery.UbizOIWidget.o_page.fadeIn("slow");
@@ -181,7 +188,7 @@
         w_refresh_output_page: function () {
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/customers'', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/customers', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_sort_info: function () {
             var sort_obj = jQuery.UbizOIWidget.o_page.find('div.dWT');
@@ -194,14 +201,14 @@
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             jQuery.UbizOIWidget.sort = sort_info;
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/customers'', 'get', null, {'page': page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/customers', 'get', null, {'page': page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_newer_data: function (page) {
             jQuery.UbizOIWidget.page = page;
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             jQuery.UbizOIWidget.sort = sort_info;
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/customers'', 'get', null, {'page': page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/customers', 'get', null, {'page': page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_delete_callback: function (response) {
             if (response.data.success == true) {
@@ -222,7 +229,7 @@
                 var rows = [];
                 for (let i = 0; i < customer.length; i++) {
                     var cols = [];
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_id, 3));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_code, 1));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_name, 3));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_type, 3));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_phone, 3));
@@ -239,6 +246,17 @@
             jQuery.UbizOIWidget.page = response.data.paging.page;
             jQuery.UbizOIWidget.w_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
         },
+		w_render_data_to_input_page: function (response) {
+			var customer = response.data.customers[0];
+			$('input[name="cus_id"]').val(customer.cus_id);
+			$('input[name="cus_code"]').val(customer.cus_code);
+			$('input[name="cus_name"]').val(customer.cus_name);
+			$('input[name="cus_avatar"]').val(customer.cus_avatar);
+			$('input[name="cus_type"]').val(customer.cus_type);
+			$('input[name="cus_phone"]').val(customer.cus_phone);
+			$('input[name="cus_fax"]').val(customer.cus_fax);
+			$('input[name="cus_mail"]').val(customer.cus_email);
+		},
         w_make_row_html: function (id, cols) {
             var row_html = '';
             if (cols.length > 0) {
@@ -359,9 +377,43 @@
             jQuery("#paging-label").replaceWith(paging_label);
             jQuery("#paging-older").replaceWith(paging_older);
             jQuery("#paging-newer").replaceWith(paging_newer);
-        }
+        },
+		w_get_data_input_form: function () {
+			var data = $('form').getForm2obj();
+			return data;
+		},
+		w_save: function () {
+			var data = jQuery.UbizOIWidget.w_get_data_input_form();
+			ubizapis('v1', '/customer-create', 'get', null, {'data': data}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+			jQuery.UbizOIWidget.w_go_back_to_output_page();
+		}
     });
 })(jQuery);
 jQuery(document).ready(function () {
     jQuery.UbizOIWidget.w_init();
 });
+
+(function($){
+    $.fn.getForm2obj = function(){
+        var _ = {},_t=this;
+        this.c = function(k,v){ eval("c = typeof "+k+";"); if(c == 'undefined') _t.b(k,v);}
+        this.b = function(k,v,a = 0){ if(a) eval(k+".push("+v+");"); else eval(k+"="+v+";"); };
+        $.map(this.serializeArray(),function(n){
+            if(n.name.indexOf('[') > -1 ){
+                var keys = n.name.match(/[a-zA-Z0-9_]+|(?=\[\])/g),le = Object.keys(keys).length,tmp = '_';
+                $.map(keys,function(key,i){
+                    if(key == ''){
+                        eval("ale = Object.keys("+tmp+").length;");
+                        if(!ale) _t.b(tmp,'[]');
+                        if(le == (i+1)) _t.b(tmp,"'"+n['value']+"'",1);
+                        else _t.b(tmp += "["+ale+"]",'{}');
+                    }else{
+                        _t.c(tmp += "['"+key+"']",'{}');
+                        if(le == (i+1)) _t.b(tmp,"'"+n['value']+"'");
+                    }
+                });
+            }else _t.b("_['"+n['name']+"']","'"+n['value']+"'");
+        });
+        return _;
+    }
+})(jQuery);

@@ -94,15 +94,27 @@ public function getCustomers($page = 0, $sort = '')
                    ->groupBy('cus_id')->toSql();
 
 		$customers = DB::table('customer')
-			->join(DB::raw('('.$firstAddress.') customer_adr'),function($join){
+			->leftJoin(DB::raw('('.$firstAddress.') customer_adr'),function($join){
 				$join->on('customer_adr.cad_cus_id','=','customer.cus_id');
 			})
-			->join('customer_address', 'customer_adr.cad_id', '=', 'customer_address.cad_id')
+			->leftJoin('customer_address', 'customer_adr.cad_id', '=', 'customer_address.cad_id')
 			->select('customer.*', 'customer_address.cad_address as address', 'customer_address.cad_id')
-			->whereRaw("customer_address.delete_flg = '0'")
+			->whereRaw("customer.delete_flg = '0'")
 			->orderBy($sort_name, $order_by)
 			->offset($page * $rows_per_page)
 			->limit($rows_per_page)
+			->get();
+		}catch (\Throwable $e) {
+            throw $e;
+        }
+        return $customers;
+    }
+	
+public function getCustomer($id) 
+	{
+		try {
+		$customers = DB::table('customer')
+			->where('cus_id', $id)
 			->get();
 		}catch (\Throwable $e) {
             throw $e;
@@ -143,13 +155,14 @@ public function getCustomers($page = 0, $sort = '')
 			  [
 				  'cus_code'=>$param['cus_code'],
 				  'cus_name'=>$param['cus_name'],
-				  'cus_avatar'=>$param['cus_avatar'],
+				  //'cus_avatar'=>$param['cus_avatar'],
 				  'cus_type'=>$param['cus_type'],
 				  'cus_phone'=>$param['cus_phone'],
 				  'cus_fax'=>$param['cus_fax'],
 				  'cus_mail'=>$param['cus_mail'],
-				  'inp_date'=>'now()',
-				  'upd_date'=>'now()',
+				  'user_id'=>$param['user_id'],
+				  'inp_date'=>now(),
+				  'upd_date'=>now(),
 				  'inp_user'=>'1',
 				  'upd_user'=>'1'
 			  ]
@@ -166,8 +179,8 @@ public function getCustomers($page = 0, $sort = '')
 			  [
 				  'cus_id'=>$param['cus_id'],
 				  'cad_address'=>$param['cad_address'],
-				  'inp_date'=>'now()',
-				  'upd_date'=>'now()',
+				  'inp_date'=>now(),
+				  'upd_date'=>now(),
 				  'inp_user'=>'1',
 				  'upd_user'=>'1'
 			  ]

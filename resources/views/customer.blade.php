@@ -351,8 +351,8 @@
                                         </div>
 										<div class="tcB col-3">
                                             <div class="cbo">
-                                                <div class="nCj" title="{{$customer->address[0]->cad_address}}">
-                                                    <span>{{$customer->address[0]->cad_address}}</span>
+                                                <div class="nCj" title="{{count($customer->address) ? $customer->address[0]->cad_address : ''}}">
+                                                    <span>{{count($customer->address) ? $customer->address[0]->cad_address : ''}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -377,7 +377,7 @@
                                         </div>
                                     </div>
                                     <div class="GNi">
-                                        <div class="ax7 poK utooltip" title="Lưu trữ">
+                                        <div class="ax7 poK utooltip save" title="Lưu trữ">
                                             <div class="asA">
                                                 <div class="arS"></div>
                                             </div>
@@ -427,14 +427,19 @@
                 </div>
                 <div class="jAQ">
                     <div class="aqI nicescroll" id="nicescroll-iput">
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
+						<form id="f-input">
+							<input type="hidden" name="cus_id"/>
+							@include('layouts/input',['type'=>'required', 'control_id'=>'cus_code', 'label'=>'Mã'])
+							@include('layouts/input',['type'=>'required', 'control_id'=>'cus_name', 'label'=>'Tên khách hàng'])
+							@include('layouts/input',['mode'=>'file', 'control_id'=>'cus_avatar', 'label'=>'Ảnh đại diện'])
+							@include('layouts/input',['type'=>'required', 'control_id'=>'cus_type', 'label'=>'Loại khách hàng'])
+							@include('layouts/input',['control_id'=>'cus_phone', 'label'=>'Số điện thoại'])
+							@include('layouts/input',['control_id'=>'cus_fax', 'label'=>'Fax'])
+							@include('layouts/input',['control_id'=>'cus_mail', 'label'=>'Email'])
+							@include('layouts/input',['control_id'=>'user_id', 'label'=>'Nhân viên phụ trách'])
+							@include('layouts/input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ'])
+							@include('layouts/input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ'])
+						</form>
                     </div>
                 </div>
             </div>

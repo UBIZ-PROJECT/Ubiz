@@ -11,6 +11,9 @@ $html_control_type = '';
 if (!isset($type)) {
     $type = '';
 }
+if (!isset($mode)) {
+    $mode = 'text';
+}
 switch ($type) {
     case 'disabled':
         $html_type = 'rootIsDisabled';
@@ -29,7 +32,7 @@ switch ($type) {
     <div class="wrapper">
         <label for="{{$control_id}}" class="ms-Label root-56">{{$label}}:</label>
         <div class="fieldGroup">
-            <input type="text" {{$html_control_type}} id="{{$control_id}}" value="" class="input_field">
+            <input type="{{$mode}}" {{$html_control_type}} name="{{$control_id}}" id="{{$control_id}}" value="" class="input_field">
         </div>
     </div>
     <span class="error_message hidden-content">

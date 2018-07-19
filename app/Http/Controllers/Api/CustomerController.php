@@ -36,6 +36,31 @@ class CustomerController extends Controller
         }
         return response()->json(['customers' => $customers, 'paging' => $paging, 'success' => true, 'message' => ''], 200);
     }
+	
+	public function getCustomer(Request $request)
+    {
+        try {
+            $customer = new Customer();
+            $customers = $customer->getCustomer($request->cus_id);
+			$customerAddress = $customer->getCustomerAddress($request->cus_id);
+			$customers[0]->address = $customerAddress;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['customers' => $customers, 'success' => true, 'message' => ''], 200);
+    }
+	
+	public function insertCustomer(Request $request)
+    {
+		$data = json_decode($request->data, true);
+        try {
+            $customer = new Customer();
+            $customer->insertCustomer($data);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['success' => true, 'message' => ''], 200);
+    }
 
     public function deleteCustomer($ids, Request $request)
     {
