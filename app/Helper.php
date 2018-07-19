@@ -11,9 +11,9 @@ class Helper
 			$image = new SimpleImage();
 			$target_dir = base_path() . '/resources/images/' . $img_type;
 			if($img_type != ''){
-				$target_file = $target_dir . '/' . $target_img);
+				$target_file = $target_dir . '/' . $target_img;
 			}else{
-				$target_file = $target_dir . $target_img);
+				$target_file = $target_dir . $target_img;
 			}
 			$image->load($img);
 			$image->resize($new_img_width, $new_img_height);
@@ -25,9 +25,9 @@ class Helper
 			$image = new SimpleImage();
 			$target_dir = base_path() . '/resources/images/' . $img_type;
 			if($img_type != ''){
-				$target_file = $target_dir . '/' . $target_img);
+				$target_file = $target_dir . '/' . $target_img;
 			}else{
-				$target_file = $target_dir . $target_img);
+				$target_file = $target_dir . $target_img;
 			}
 			$image->load($img);
 			$image->resizeToHeight($new_img_height);
@@ -39,9 +39,9 @@ class Helper
 			$image = new SimpleImage();
 			$target_dir = base_path() . '/resources/images/' . $img_type;
 			if($img_type != ''){
-				$target_file = $target_dir . '/' . $target_img);
+				$target_file = $target_dir . '/' . $target_img;
 			}else{
-				$target_file = $target_dir . $target_img);
+				$target_file = $target_dir . $target_img;
 			}
 			$image->load($img);
 			$image->resizeToWidth($new_img_width);
@@ -53,9 +53,9 @@ class Helper
 			$image = new SimpleImage();
 			$target_dir = base_path() . '/resources/images/' . $img_type;
 			if($img_type != ''){
-				$target_file = $target_dir . '/' . $target_img);
+				$target_file = $target_dir . '/' . $target_img;
 			}else{
-				$target_file = $target_dir . $target_img);
+				$target_file = $target_dir . $target_img;
 			}
 			$image->load($img);
 			$image->scale($scale);
@@ -69,6 +69,9 @@ class Helper
 		}else{
 			$path   = base_path() . '/resources/images/' . $img;
 		}
+		if (empty($img) || !file_exists($path)) {
+		    return "";
+        }
 		$type   = pathinfo($path, PATHINFO_EXTENSION);
 		$data   = file_get_contents($path);
 		$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);

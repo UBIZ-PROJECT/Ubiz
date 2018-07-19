@@ -4,6 +4,7 @@
         this.sort = {};
         this.o_page = null;
         this.i_page = null;
+        this.defaultImage = "../images/avatar.png";
     };
 
     jQuery.UbizOIWidget = new UbizOIWidget();
@@ -83,21 +84,79 @@
             jQuery.UbizOIWidget.w_go_to_input_page(0);
         },
         w_save: function(id, paging = '') {
+            const ALERT_TITLE = "Bạn có muốn lưu lại không?";
+            const ALERT_ICON = "warning";
+
+            //validate
+            if (jQuery.UbizOIWidget.w_validate_input() == false) {
+                return;
+            }
+
+            var formData = jQuery.UbizOIWidget.w_get_images_upload();
+            formData.append("supplier", JSON.stringify(jQuery.UbizOIWidget.w_get_data_input_form()));
             if (id == 0) {
-                var data_form = jQuery.UbizOIWidget.w_get_data_input_form();
-                data_form = JSON.stringify(data_form);
-                ubizapis('v1','/suppliers/insert', 'get', null, {"supplier":data_form}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
-                jQuery.UbizOIWidget.w_go_back_to_output_page();
+                swal({
+                    title:ALERT_TITLE,
+                    icon: ALERT_ICON,
+                    buttons: true,
+                    buttons: {
+                        cancel: "Không",
+                        catch: {
+                            text: "Có",
+                            value: "catch",
+                        }
+                    },
+                    dangerMode: true,
+                }).then((value) => {
+                    switch (value) {
+                        case "catch":
+                            ubizapis('v1','/suppliers/insert', 'post', formData, null, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+                            jQuery.UbizOIWidget.w_go_back_to_output_page();
+                            break;
+                    }
+                });
             } else {
-                var data_form = jQuery.UbizOIWidget.w_get_data_input_form();
-                data_form = JSON.stringify(data_form);
+                if (jQuery.UbizOIWidget.w_is_input_changed() == false) {
+                    swal({
+                        title: "Không có gì thay đổi!",
+                        icon: "error"
+                    });
+                    return false;
+                }
                 var callback_function = jQuery.UbizOIWidget.w_render_data_to_ouput_page.bind({});
                 if (paging != '') {
 
                 }
-                ubizapis('v1','/suppliers/update/' + id, 'get', null, {"supplier":data_form}, callback_function);
-                jQuery.UbizOIWidget.w_go_back_to_output_page();
+                swal({
+                    title: ALERT_TITLE,
+                    icon: ALERT_ICON,
+                    buttons: true,
+                    buttons: {
+                        cancel: "Không",
+                        catch: {
+                            text: "Có",
+                            value: "catch",
+                        }
+                    },
+                    dangerMode: true,
+                }).then((value) => {
+                    switch (value) {
+                        case "catch":
+                            ubizapis('v1','/suppliers/update/' + id, 'post', formData, null, callback_function);
+                            jQuery.UbizOIWidget.w_go_back_to_output_page();
+                            break;
+                    }
+                });
             }
+
+        },
+        w_get_images_upload: function() {
+            var formData = new FormData();
+            var images = $(".image-upload .file-upload");
+            if ($(images).attr("is-change") == "true") {
+                formData.append('image-upload',images[0].files[0]);
+            }
+            return formData;
         },
         w_get_data_input_form: function() {
             var data = {
@@ -107,6 +166,7 @@
                 sup_phone: $("#i-put #txt_sup_phone").val(),
                 sup_fax: $("#i-put #txt_sup_fax").val(),
                 sup_mail: $("#i-put #txt_sup_mail").val(),
+                sup_avatar: $(".image-upload .img-show").attr("img-name")
             };
             return data;
         },
@@ -217,19 +277,51 @@
             data = response.data.supplier[0];
             $("#i-put .GtF .delete").attr("onclick","jQuery.UbizOIWidget.w_delete("+data.sup_id+")");
             $("#i-put #nicescroll-iput #txt_sup_code").val(data.sup_code);
-            $("#i-put #nicescroll-iput #txt_sup_name").val(data.sup_name);
-            $("#i-put #nicescroll-iput #txt_sup_website").val(data.sup_website);
-            $("#i-put #nicescroll-iput #txt_sup_phone").val(data.sup_phone);
-            $("#i-put #nicescroll-iput #txt_sup_fax").val(data.sup_fax);
-            $("#i-put #nicescroll-iput #txt_sup_mail").val(data.sup_mail);
+            $("#i-put #nicescroll-iput #txt_sup_name").val(data.sup_name).change(function() {inputChange(this, data.sup_name)});
+            $("#i-put #nicescroll-iput #txt_sup_website").val(data.sup_website).change(function() {inputChange(this, data.sup_website)});
+            $("#i-put #nicescroll-iput #txt_sup_phone").val(data.sup_phone).change(function() {inputChange(this, data.sup_phone)});
+            $("#i-put #nicescroll-iput #txt_sup_fax").val(data.sup_fax).change(function() {inputChange(this, data.sup_fax)});
+            $("#i-put #nicescroll-iput #txt_sup_mail").val(data.sup_mail).change(function() {inputChange(this, data.sup_mail)});
+            if (isEmpty(data.src)) {
+                data.src = jQuery.UbizOIWidget.defaultImage;
+            }
+            $("#i-put #nicescroll-iput .image-upload .img-show").attr("src", data.src);
+            $("#i-put #nicescroll-iput .image-upload .img-show").attr("img-name", data.sup_avatar);
+        },
+        w_is_input_changed: function() {
+            var txt_input = $("#i-put .jAQ input");
+            for(var i = 0; i < txt_input.length; i++) {
+                if ($(txt_input[i]).isChange() == "true") {
+                    return true;
+                }
+            }
+            return false;
+        },
+        w_validate_input: function() {
+            var isValid = true;
+            removeErrorInput();
+            var txt_input = $("#i-put .jAQ input.input_field");
+            // Validate Requirement
+            for(var i = 0; i < txt_input.length; i++) {
+                if ($(txt_input[i]).prop("required") == true) {
+                    if ($(txt_input[i]).val() == "") {
+                        isValid = false;
+                        showErrorInput(txt_input[i], "Thông tin bắt buộc nhập");
+                    }
+                }
+            }
+            return isValid;
         },
         w_clear_input_page: function() {
-            $("#i-put #nicescroll-iput #txt_sup_code").val("");
-            $("#i-put #nicescroll-iput #txt_sup_name").val("");
-            $("#i-put #nicescroll-iput #txt_sup_website").val("");
-            $("#i-put #nicescroll-iput #txt_sup_phone").val("");
-            $("#i-put #nicescroll-iput #txt_sup_fax").val("");
-            $("#i-put #nicescroll-iput #txt_sup_mail").val("");
+            $("#i-put #nicescroll-iput #txt_sup_code").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_sup_name").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_sup_website").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_sup_phone").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_sup_fax").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_sup_mail").val("").isChange("false");
+            $("#i-put #nicescroll-iput .file-upload").isChange("false");
+            $("#i-put #nicescroll-iput .image-upload .img-show").attr("src", jQuery.UbizOIWidget.defaultImage);
+            removeErrorInput();
         },
         w_get_specific_supplier_by_id(id) {
             ubizapis('v1','/suppliers/' + id, 'get', null, {'page': 0},jQuery.UbizOIWidget.w_render_data_to_input_page);
@@ -360,3 +452,10 @@
 jQuery(document).ready(function () {
     jQuery.UbizOIWidget.w_init();
 });
+
+function isEmpty(str) {
+    if (str == null || str == undefined || str == "") {
+        return true;
+    }
+    return false;
+}
