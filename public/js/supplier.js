@@ -83,21 +83,26 @@
             jQuery.UbizOIWidget.w_go_to_input_page(0);
         },
         w_save: function(id, paging = '') {
+            var formData = jQuery.UbizOIWidget.w_get_images_upload();
+            var data_form = jQuery.UbizOIWidget.w_get_data_input_form();
+                data_form = JSON.stringify(data_form);
+                formData.append("supplier", data_form);
             if (id == 0) {
-                var data_form = jQuery.UbizOIWidget.w_get_data_input_form();
-                data_form = JSON.stringify(data_form);
-                ubizapis('v1','/suppliers/insert', 'get', null, {"supplier":data_form}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
-                jQuery.UbizOIWidget.w_go_back_to_output_page();
+                ubizapis('v1','/suppliers/insert', 'post', formData, null, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
             } else {
-                var data_form = jQuery.UbizOIWidget.w_get_data_input_form();
-                data_form = JSON.stringify(data_form);
                 var callback_function = jQuery.UbizOIWidget.w_render_data_to_ouput_page.bind({});
                 if (paging != '') {
 
                 }
-                ubizapis('v1','/suppliers/update/' + id, 'get', null, {"supplier":data_form}, callback_function);
-                jQuery.UbizOIWidget.w_go_back_to_output_page();
+                ubizapis('v1','/suppliers/update/' + id, 'post', formData, null, callback_function);
             }
+            jQuery.UbizOIWidget.w_go_back_to_output_page();
+        },
+        w_get_images_upload: function() {
+            var formData = new FormData();
+            var images = $(".image-upload .file-upload");
+            formData.append('image-upload',images[0].files[0]);
+            return formData;
         },
         w_get_data_input_form: function() {
             var data = {

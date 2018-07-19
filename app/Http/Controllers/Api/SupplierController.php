@@ -50,9 +50,14 @@ class SupplierController extends Controller
         return response()->json(['supplier' => $data, 'success' => true, 'message' => ''], 200);
     }
 
-    public function insertSupplier(Request $request) {
+    public function insertSupplier() {
+        $path_parts = pathinfo($_FILES['image-upload']["name"]);
+        $extension = $path_parts['extension'];
+        $params = json_decode($_POST['supplier'], true);
+        $params['extension'] = $extension;
+        $params['tmp_name'] = $_FILES['image-upload']['tmp_name'];
         $supplier = new Supplier();
-        $supplier->insertSupplier($request->supplier);
+        $supplier->insertSupplier($params);
 
         $data = $supplier->getSupplierPaging(0, '');
         $paging = $supplier->getPagingInfo();
@@ -74,12 +79,17 @@ class SupplierController extends Controller
         return response()->json(['supplier' => $data, 'paging' => $paging, 'success' => true, 'message' => 'Xử lý thành công'], 200);
     }
 
-    public function updateSupplierById($id, Request $request) {
+    public function updateSupplierById($id) {
         try {
+            
+            $path_parts = pathinfo($_FILES['image-upload']["name"]);
+            $extension = $path_parts['extension'];
             $supplier = new Supplier();
-            $data = $request->supplier;
+            $data = $_POST['supplier'];
             $data = json_decode($data, true);
             $data['sup_id'] = $id;
+            $data['extension'] = $extension;
+            $data['tmp_name'] = $_FILES['image-upload']['tmp_name'];
             $supplier->updateSupplierById($data);
 
             $data = $supplier->getSupplierPaging(0, '');

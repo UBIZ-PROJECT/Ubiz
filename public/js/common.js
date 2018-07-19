@@ -72,8 +72,8 @@ function hide_apps_form(e) {
     }
 }
 
-function logout() {
-    ubizapis('v1', '/logout', 'get', null, null, function (response) {
+function logout(){
+    ubizapis('v1', '/users', 'get', null, null, function (response) {
         if (response.data.success == true) {
             window.location.href = '/login';
         } else {
@@ -81,6 +81,7 @@ function logout() {
                 icon: "error",
             });
         }
+
     });
 }
 
@@ -108,7 +109,7 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
     };
 
     if (typeof api_data === 'object') {
-        options.data = qs.stringify(api_data);
+        options.data = api_data;
     }
 
     if (typeof api_params === 'object') {
@@ -162,4 +163,22 @@ function removeErrorInput() {
         $(this).find('.wrapper').removeClass('invalid');
         $(this).find('.fieldGroup').removeClass('invalid');
     });
+}
+
+function openFileUpload(self) {
+    $(self).closest('.image-upload').find(".file-upload").click();
+}
+
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $(input).closest('.image-upload').find(".img-show")
+                .attr('src', e.target.result);
+        };
+
+        reader.readAsDataURL(input.files[0]);
+        $(input).attr("is-change", "true");
+    }
 }
