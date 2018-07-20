@@ -30,9 +30,11 @@ workflows:
          filters:
            branches:
              only: master
+             ignore: /.*/
       - staging:
          filters:
            branches:
              only: staging
+             ignore: /.*/
       - development
         
