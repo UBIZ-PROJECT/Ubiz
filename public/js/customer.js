@@ -48,8 +48,10 @@
 
             ubizapis('v1', '/customers', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
-        w_delete: function () {
-            var ids = jQuery.UbizOIWidget.w_get_checked_rows();
+        w_delete: function (ids) {
+			if(ids == 0){
+				var ids = jQuery.UbizOIWidget.w_get_checked_rows();
+			}
             if (ids.length == 0)
                 return false;
 
@@ -149,6 +151,8 @@
         w_go_to_input_page: function (id) {
 			if(id != 0){
 				ubizapis('v1','/customer-edit', 'get', null, {'cus_id': id}, jQuery.UbizOIWidget.w_render_data_to_input_page);
+			}else{
+				$('#f-input input').val('');
 			}
             jQuery.UbizOIWidget.o_page.hide();
             jQuery.UbizOIWidget.i_page.fadeIn("slow");
@@ -167,6 +171,13 @@
 			
 			$(".save").click(function(){
 				jQuery.UbizOIWidget.w_save();
+			});
+			
+			$(".delete").click(function(){
+				var id = $('input[name="cus_id"]').val();
+				var ids = [];
+				ids.push(id);
+				jQuery.UbizOIWidget.w_delete(ids);
 			});
         },
         w_go_back_to_output_page: function (self) {
@@ -213,6 +224,7 @@
         w_delete_callback: function (response) {
             if (response.data.success == true) {
                 jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
+				jQuery.UbizOIWidget.w_go_back_to_output_page(this);
                 swal(response.data.message, {
                     icon: "success",
                 });
@@ -428,6 +440,7 @@
 		w_save_callback: function (response) {
 			if (response.data.success == true) {
                 jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
+				jQuery.UbizOIWidget.w_go_back_to_output_page(this);
                 swal(response.data.message, {
                     icon: "success",
                 });

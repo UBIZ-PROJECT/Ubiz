@@ -93,7 +93,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_delete()">
+                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_delete(0)">
                                         <div class="ax7 poK utooltip" title="Xóa">
                                             <div class="asA">
                                                 <div class="asX"></div>
