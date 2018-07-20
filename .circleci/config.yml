@@ -13,6 +13,10 @@ jobs:
      - checkout
            
   development:
+    branches:
+        ignore:
+          - master
+          - staging
     docker:
       - image: circleci/php:7.0
     steps:
