@@ -40,17 +40,30 @@ class SupplierController extends Controller
         return response()->json(['supplier' => $data, 'paging' => $paging,'success' => true, 'message' => ''], 200);
     }
 
-    public function getSupplierById($id) {
+    public function getSupplierById($id, Request $request) {
         try {
             $supplier = new Supplier();
-            $data = $supplier->getSupplierById($id);
+            $page = 0;
+            if ($request->has('page')) {
+                $page = $request->page;
+            }
+
+            $sort = '';
+            if ($request->has('sort')) {
+                $sort = $request->sort;
+            }
+            $data = $supplier->getEachSupplierByPaging($page, $sort);
+
             $image = Helper::readImage($data[0]->sup_avatar,'sup');
             $data[0]->src = $image;
+            $paging = $supplier->getPagingInfo();
+            $paging['page'] = $page;
+            $paging['rows_per_page'] = 1;
         } catch (\Throwable $e) {
             throw $e;
         }
         
-        return response()->json(['supplier' => $data, 'success' => true, 'message' => ''], 200);
+        return response()->json(['supplier' => $data, 'paging' => $paging, 'success' => true, 'message' => ''], 200);
     }
 
     public function insertSupplier() {

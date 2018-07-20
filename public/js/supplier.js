@@ -40,7 +40,7 @@
             var sort_name = jQuery(self).attr('sort-name');
             var order_by = jQuery(self).attr('order-by') == '' ? 'asc' : (jQuery(self).attr('order-by') == 'asc' ? 'desc' : 'asc');
             var sort = sort_name + "_" + order_by;
-
+            jQuery.UbizOIWidget.sort = sort;
             jQuery.UbizOIWidget.o_page.find('div.dWT').removeClass('dWT');
             jQuery(self).attr('order-by', order_by);
             jQuery(self).addClass('dWT');
@@ -173,9 +173,9 @@
         w_open_searh_form: function (self) {
             swal('ok');
         },
-        w_go_to_input_page: function (id) {
+        w_go_to_input_page: function (id, index) {
             if (id != 0)
-                jQuery.UbizOIWidget.w_get_specific_supplier_by_id(id);
+                jQuery.UbizOIWidget.w_get_specific_supplier_by_id(id, index);
             $("#i-put .save").attr("onclick", "jQuery.UbizOIWidget.w_save("+id+")");
             jQuery.UbizOIWidget.o_page.hide();
             jQuery.UbizOIWidget.i_page.fadeIn("slow");
@@ -191,6 +191,27 @@
                 autohidemode: false,
                 horizrailenabled: false
             });
+        },
+        w_set_paging_for_detail_page: function(page, totalPage) {
+            var previous = $("#i-put #nicescroll-iput .previous");
+            var next = $("#i-put #nicescroll-iput .next");
+            if (page == 0) {
+                $(previous).find(".amI").removeClass("aaT").addClass("adS");
+                $(next).find(".amJ").removeClass("adS").addClass("aaT");
+                $(previous).removeAttr("onclick");
+                $(next).attr("onclick", "jQuery.UbizOIWidget.w_go_to_input_page(-1,"+(page + 1)+")");
+            } else if (page == totalPage - 1) {
+                $(next).find(".amI").removeClass("aaT").addClass("adS");
+                $(previous).find(".amJ").removeClass("adS").addClass("aaT");
+                $(next).removeAttr("onclick");
+                $(previous).attr("onclick", "jQuery.UbizOIWidget.w_go_to_input_page(-1,"+(page - 1)+")");
+            } else {
+                $(next).find(".amI").removeClass("adS").addClass("aaT");
+                $(previous).find(".amJ").removeClass("adS").addClass("aaT");
+                $(next).removeAttr("onclick", "jQuery.UbizOIWidget.w_go_to_input_page(-1,"+(page + 1)+")");
+                $(previous).attr("onclick", "jQuery.UbizOIWidget.w_go_to_input_page(-1,"+(page - 1)+")");
+            }
+            
         },
         w_go_back_to_output_page: function (self) {
             jQuery.UbizOIWidget.o_page.fadeIn("slow");
@@ -252,6 +273,7 @@
             var suppliers = response.data.supplier;
             if (suppliers.length > 0) {
                 var rows = [];
+                var index = 0 + (Number(response.data.paging.page) * Number(response.data.paging.rows_per_page));
                 for (let i = 0; i < suppliers.length; i++) {
                     var cols = [];
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(suppliers[i].sup_id, suppliers[i].sup_code, 1));
@@ -260,7 +282,8 @@
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(suppliers[i].sup_id, suppliers[i].sup_phone, 4));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(suppliers[i].sup_id, suppliers[i].sup_fax, 5));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(suppliers[i].sup_id, suppliers[i].sup_mail, 6));
-                    rows.push(jQuery.UbizOIWidget.w_make_row_html(suppliers[i].sup_id, cols));
+                    rows.push(jQuery.UbizOIWidget.w_make_row_html(suppliers[i].sup_id, cols, index));
+                    index++;
                 }
                 table_html += rows.join("");
             }
@@ -270,7 +293,7 @@
             jQuery.UbizOIWidget.page = response.data.paging.page;
             jQuery.UbizOIWidget.w_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
         },
-        w_render_data_to_input_page: function(response, callback) {
+        w_render_data_to_input_page: function(response) {
             if (response == undefined || response.data == undefined || response.data.supplier.length <= 0) {
                 return;
             }
@@ -287,6 +310,8 @@
             }
             $("#i-put #nicescroll-iput .image-upload .img-show").attr("src", data.src);
             $("#i-put #nicescroll-iput .image-upload .img-show").attr("img-name", data.sup_avatar);
+
+            jQuery.UbizOIWidget.w_set_paging_for_detail_page(response.paging.page, response.paging.rows_num);
         },
         w_is_input_changed: function() {
             var txt_input = $("#i-put .jAQ input");
@@ -323,13 +348,15 @@
             $("#i-put #nicescroll-iput .image-upload .img-show").attr("src", jQuery.UbizOIWidget.defaultImage);
             removeErrorInput();
         },
-        w_get_specific_supplier_by_id(id) {
-            ubizapis('v1','/suppliers/' + id, 'get', null, {'page': 0},jQuery.UbizOIWidget.w_render_data_to_input_page);
+        w_get_specific_supplier_by_id(id, index) {
+            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
+            var sort = sort_info.sort_name + "_" + sort_info.order_by;
+            ubizapis('v1','/suppliers/' + id, 'get', null, {'page': index, 'sort': sort},jQuery.UbizOIWidget.w_render_data_to_input_page);
         },
-        w_make_row_html: function (id, cols) {
+        w_make_row_html: function (id, cols, index) {
             var row_html = '';
             if (cols.length > 0) {
-                row_html = '<div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page(' + id + ',this)">';
+                row_html = '<div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page(' + id + ','+index+')">';
                 row_html += cols.join("");
                 row_html += '</div>';
             }
