@@ -1,8 +1,8 @@
 version: 2
 jobs:
   build:
-    docker: # See https://docs.docker.com/get-started/#docker-concepts if you are new to Docker.
-      - image: circleci/php:7.0
+    machine:
+      - image: circleci/php:5.4.15
     steps:
      - checkout
      #- run: echo "A first hello"
@@ -20,6 +20,9 @@ workflows:
   build-and-deploy:
     jobs:
       - build
+          filters:
+            branches:
+              only: /.*/
       #- deploy:
       #    requires:
       #      - build
