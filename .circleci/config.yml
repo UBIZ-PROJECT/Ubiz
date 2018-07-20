@@ -31,8 +31,5 @@ workflows:
            branches:
              only: staging
       - development:
-            branches:
-              ignore: 
-                  - staging
-                  - master
+            branches: /.*/
         
