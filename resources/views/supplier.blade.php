@@ -377,7 +377,7 @@
                                 <span class="Di">
                                     <div class="amH" style="user-select: none">
                                         <span class="Dj">
-                                            <span><span class="ts">1</span></span> / <span class="ts">229</span>
+                                            <span><span class="current-page">1</span></span> / <span class="row-numbers">229</span>
                                         </span>
                                     </div>
                                     <div class="amD utooltip previous" title="Cũ hơn">
