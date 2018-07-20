@@ -406,19 +406,18 @@
                                 </a>
                             </div>
                             <div class="col-sm-5 col-md-5 col-xl-5">
-                                @include('layouts/input',['control_id'=>'txt_code', 'label'=>'Mã nhân viên'])
-                                @include('layouts/input',['control_id'=>'txt_name', 'label'=>'Tên nhân viên'])
-                                @include('layouts/dropdown',['control_id'=>'txt_dep_id', 'type' => 'disabled', 'label'=>'Phòng ban', 'data'=>['a'=>'b']])
-                                @include('layouts/input',['control_id'=>'txt_phone', 'label'=>'Điện thoại'])
-                                @include('layouts/input',['control_id'=>'txt_email', 'label'=>'E-Mail'])
-                                @include('layouts/input',['control_id'=>'txt_bhxh', 'label'=>'Bảo hiểm xã hội'])
+                                @include('layouts/input',['control_id'=>'txt_code', 'label'=>__('Code')])
+                                @include('layouts/input',['control_id'=>'txt_name', 'label'=>__('Name')])
+                                @include('layouts/dropdown',['control_id'=>'txt_dep_id', 'label'=>__('Department'), 'data'=>['a'=>'b']])
+                                @include('layouts/input',['control_id'=>'txt_phone', 'label'=>__('Phone')])
+                                @include('layouts/input',['control_id'=>'txt_email', 'label'=>__('E-Mail')])
                             </div>
                             <div class="col-sm-5 col-md-5 col-xl-5 z-pdr">
-                                @include('layouts/input',['control_id'=>'txt_address', 'label'=>'Địa chỉ'])
-                                @include('layouts/input',['control_id'=>'txt_join_date', 'label'=>'Ngày vào làm'])
-                                @include('layouts/input',['control_id'=>'txt_salary', 'label'=>'Lương'])
-                                @include('layouts/input',['control_id'=>'txt_name', 'label'=>'Tên nhân viên'])
-                                @include('layouts/input',['control_id'=>'txt_bhyt', 'label'=>'Bảo hiểm y tế'])
+                                @include('layouts/input',['control_id'=>'txt_address', 'label'=>__('Address')])
+                                @include('layouts/input',['control_id'=>'txt_join_date', 'label'=>__('Join Date')])
+                                @include('layouts/input',['control_id'=>'txt_salary', 'label'=>__('Salary')])
+                                @include('layouts/input',['control_id'=>'txt_bhxh', 'label'=>__('Social Insurance')])
+                                @include('layouts/input',['control_id'=>'txt_bhyt', 'label'=>__('Health Insurance')])
                             </div>
                         </div>
                     </div>

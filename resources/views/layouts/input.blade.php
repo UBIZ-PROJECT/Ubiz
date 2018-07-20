@@ -11,6 +11,7 @@ $html_control_type = '';
 if (!isset($type)) {
     $type = '';
 }
+$length = 20;
 switch ($type) {
     case 'disabled':
         $html_type = 'rootIsDisabled';

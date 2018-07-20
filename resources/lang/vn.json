@@ -1,10 +1,15 @@
 {
   "Code": "Mã",
   "Name": "Tên",
-  "E-mail": "E-mail",
+  "E-Mail": "E-Mail",
   "Phone": "Điện thoại",
   "Department": "Phòng ban",
   "Address": "Địa chỉ",
   "Includes the words": "Chứa các từ",
-  "Doesn't have": "Không chứa"
+  "Doesn't have": "Không chứa",
+  "Social Insurance": "Bảo hiểm xã hội",
+  "Health Insurance": "Bảo hiểm y tế",
+  "Join Date": "Bảo hiểm y tế",
+  "Salary": "Lương",
+  "Change": "Thay đổi"
 }

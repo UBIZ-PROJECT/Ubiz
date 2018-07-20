@@ -109,6 +109,9 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
 
     if (typeof api_data === 'object') {
         options.data = api_data;
+        if (api_data instanceof FormData) {
+            options.headers['Content-Type'] = 'multipart/form-data';
+        }
     }
 
     if (typeof api_params === 'object') {
