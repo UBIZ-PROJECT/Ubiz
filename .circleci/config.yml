@@ -30,8 +30,5 @@ workflows:
          filters:
            branches:
              only: staging
-      - development:
-        filters:
-             branches:
-               only: /*/
+      - development
         
