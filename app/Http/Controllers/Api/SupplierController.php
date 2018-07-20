@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Api;
 
 
+use App\Helper;
 use App\Http\Controllers\Controller;
 use App\Model\Supplier;
 use Illuminate\Http\Request;
@@ -43,6 +44,8 @@ class SupplierController extends Controller
         try {
             $supplier = new Supplier();
             $data = $supplier->getSupplierById($id);
+            $image = Helper::readImage($data[0]->sup_avatar,'sup');
+            $data[0]->src = $image;
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -50,9 +53,18 @@ class SupplierController extends Controller
         return response()->json(['supplier' => $data, 'success' => true, 'message' => ''], 200);
     }
 
-    public function insertSupplier(Request $request) {
+    public function insertSupplier() {
+        $params = json_decode($_POST['supplier'], true);
+
+        if (!empty($_FILES)) {
+            $path_parts = pathinfo($_FILES['image-upload']["name"]);
+            $extension = $path_parts['extension'];
+            $params['extension'] = $extension;
+            $params['tmp_name'] = $_FILES['image-upload']['tmp_name'];
+        }
+
         $supplier = new Supplier();
-        $supplier->insertSupplier($request->supplier);
+        $supplier->insertSupplier($params);
 
         $data = $supplier->getSupplierPaging(0, '');
         $paging = $supplier->getPagingInfo();
@@ -74,12 +86,20 @@ class SupplierController extends Controller
         return response()->json(['supplier' => $data, 'paging' => $paging, 'success' => true, 'message' => 'Xử lý thành công'], 200);
     }
 
-    public function updateSupplierById($id, Request $request) {
+    public function updateSupplierById($id) {
         try {
-            $supplier = new Supplier();
-            $data = $request->supplier;
+            $data = $_POST['supplier'];
             $data = json_decode($data, true);
             $data['sup_id'] = $id;
+
+            if (!empty($_FILES)) {
+                $path_parts = pathinfo($_FILES['image-upload']["name"]);
+                $extension = $path_parts['extension'];
+                $data['extension'] = $extension;
+                $data['tmp_name'] = $_FILES['image-upload']['tmp_name'];
+            }
+
+            $supplier = new Supplier();
             $supplier->updateSupplierById($data);
 
             $data = $supplier->getSupplierPaging(0, '');

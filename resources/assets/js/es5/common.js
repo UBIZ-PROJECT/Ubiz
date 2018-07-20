@@ -73,7 +73,7 @@ function hide_apps_form(e) {
 }
 
 function logout(){
-    ubizapis('v1', '/users', 'get', null, null, function (response) {
+    ubizapis('v1', '/logout', 'get', null, null, function (response) {
         if (response.data.success == true) {
             window.location.href = '/login';
         } else {
@@ -81,7 +81,6 @@ function logout(){
                 icon: "error",
             });
         }
-
     });
 }
 
@@ -109,7 +108,7 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
     };
 
     if (typeof api_data === 'object') {
-        options.data = qs.stringify(api_data);
+        options.data = api_data;
     }
 
     if (typeof api_params === 'object') {
@@ -150,10 +149,11 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
 }
 
 function showErrorInput(control, error_message) {
-    $(control).html(error_message);
-    $(control).closest('.error_message').removeClass('hidden-content');
-    $(control).closest('.root_textfield').find('.wrapper').addClass('invalid');
-    $(control).closest('.root_textfield').find('.fieldGroup').addClass('invalid');
+    parentControl = $(control).closest(".root_textfield");
+    $(parentControl).find(".error-message-text").html(error_message);
+    $(parentControl).find('.error_message').removeClass('hidden-content');
+    $(parentControl).find('.wrapper').addClass('invalid');
+    $(parentControl).find('.fieldGroup').addClass('invalid');
 }
 
 function removeErrorInput() {
@@ -164,3 +164,39 @@ function removeErrorInput() {
         $(this).find('.fieldGroup').removeClass('invalid');
     });
 }
+
+function openFileUpload(self) {
+    $(self).closest('.image-upload').find(".file-upload").click();
+}
+
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $(input).closest('.image-upload').find(".img-show")
+                .attr('src', e.target.result);
+        };
+
+        reader.readAsDataURL(input.files[0]);
+        $(input).attr("is-change", "true");
+    }
+}
+
+function inputChange(self, oldVal) {
+    if ($(self).val() == oldVal) {
+        $(self).isChange("false");
+    } else {
+        $(self).isChange("true");
+    }
+}
+
+jQuery.fn.extend({
+    isChange: function(bool) {
+        if (bool === undefined || bool === null || bool === "") {
+            return this.attr("is-change");
+        } else {
+            this.attr("is-change", bool);
+        }
+    }
+});
