@@ -391,7 +391,7 @@
                                         </div>
                                     </div>
                                     <div class="GNi">
-                                        <div class="ax7 poK utooltip" title="Xóa">
+                                        <div class="ax7 poK utooltip delete" title="Xóa">
                                             <div class="asA">
                                                 <div class="asX"></div>
                                             </div>
@@ -437,8 +437,8 @@
 							@include('layouts/input',['control_id'=>'cus_fax', 'label'=>'Fax'])
 							@include('layouts/input',['control_id'=>'cus_mail', 'label'=>'Email'])
 							@include('layouts/input',['control_id'=>'user_id', 'label'=>'Nhân viên phụ trách'])
-							@include('layouts/input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ'])
-							@include('layouts/input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ'])
+							@include('layouts/input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 1'])
+							@include('layouts/input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 2'])
 						</form>
                     </div>
                 </div>

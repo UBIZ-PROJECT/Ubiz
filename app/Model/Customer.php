@@ -167,24 +167,50 @@ public function getCustomer($id)
 				  'upd_user'=>'1'
 			  ]
 			);
+			
+			foreach($param['cus_address'] as $cad_address){
+				$this->insertCustomerAddress($id, $cad_address);
+			}
 		} catch (\Throwable $e) {
             throw $e;
         }
         return $id;
     }
 	
-	public function insertCustomerAddress($param) {
+	public function insertCustomerAddress($cus_id, $cad_address) {
 		try {
 			DB::table('customer_address')->insert(
 			  [
-				  'cus_id'=>$param['cus_id'],
-				  'cad_address'=>$param['cad_address'],
+				  'cus_id'=>$cus_id,
+				  'cad_address'=>$cad_address,
 				  'inp_date'=>now(),
 				  'upd_date'=>now(),
 				  'inp_user'=>'1',
 				  'upd_user'=>'1'
 			  ]
 			);
+		} catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+	
+	public function updateCustomer($param) {
+		try {
+			DB::table('customer')->where('cus_id', $param['cus_id'])->update(
+			  [
+				  'cus_code'=>$param['cus_code'],
+				  'cus_name'=>$param['cus_name'],
+				  //'cus_avatar'=>$param['cus_avatar'],
+				  'cus_type'=>$param['cus_type'],
+				  'cus_phone'=>$param['cus_phone'],
+				  'cus_fax'=>$param['cus_fax'],
+				  'cus_mail'=>$param['cus_mail'],
+				  'user_id'=>$param['user_id'],
+				  'upd_date'=>now(),
+				  'upd_user'=>'1'
+			  ]
+			);
+			
 		} catch (\Throwable $e) {
             throw $e;
         }

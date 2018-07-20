@@ -56,10 +56,36 @@ class CustomerController extends Controller
         try {
             $customer = new Customer();
             $customer->insertCustomer($data);
+			$customers = $customer->getCustomers(0);
+            $paging = $customer->getPagingInfo();
+            $paging['page'] = 0;
+			foreach($customers as $key => $item){
+				$customerAddress = $customer->getCustomerAddress($item->cus_id);
+				$customers[$key]->address = $customerAddress;
+			}
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['success' => true, 'message' => ''], 200);
+        return response()->json(['customers' => $customers, 'paging' => $paging, 'success' => true, 'message' => 'Xử lý thành công'], 200);
+    }
+	
+	public function updateCustomer(Request $request)
+    {
+		$data = json_decode($request->data, true);
+        try {
+            $customer = new Customer();
+            $customer->updateCustomer($data);
+			$customers = $customer->getCustomers(0);
+            $paging = $customer->getPagingInfo();
+            $paging['page'] = 0;
+			foreach($customers as $key => $item){
+				$customerAddress = $customer->getCustomerAddress($item->cus_id);
+				$customers[$key]->address = $customerAddress;
+			}
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['customers' => $customers, 'paging' => $paging, 'success' => true, 'message' => 'Xử lý thành công'], 200);
     }
 
     public function deleteCustomer($ids, Request $request)
