@@ -73,7 +73,7 @@ function hide_apps_form(e) {
 }
 
 function logout(){
-    ubizapis('v1', '/users', 'get', null, null, function (response) {
+    ubizapis('v1', '/logout', 'get', null, null, function (response) {
         if (response.data.success == true) {
             window.location.href = '/login';
         } else {
@@ -109,7 +109,7 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
     };
 
     if (typeof api_data === 'object') {
-        options.data = qs.stringify(api_data);
+        options.data = api_data;
     }
 
     if (typeof api_params === 'object') {
@@ -160,10 +160,11 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
 }
 
 function showErrorInput(control, error_message) {
-    $(control).html(error_message);
-    $(control).closest('.error_message').removeClass('hidden-content');
-    $(control).closest('.root_textfield').find('.wrapper').addClass('invalid');
-    $(control).closest('.root_textfield').find('.fieldGroup').addClass('invalid');
+    parentControl = $(control).closest(".root_textfield");
+    $(parentControl).find(".error-message-text").html(error_message);
+    $(parentControl).find('.error_message').removeClass('hidden-content');
+    $(parentControl).find('.wrapper').addClass('invalid');
+    $(parentControl).find('.fieldGroup').addClass('invalid');
 }
 
 function removeErrorInput() {

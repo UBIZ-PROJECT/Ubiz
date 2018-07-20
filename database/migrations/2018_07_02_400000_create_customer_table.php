@@ -15,8 +15,10 @@ class CreateCustomerTable extends Migration
     {
         Schema::create('customer', function (Blueprint $table) {
             $table->increments('cus_id');
+			$table->string('cus_code',5);
 			$table->integer('user_id');
             $table->string('cus_name', 100);
+			$table->string('cus_avatar', 250);
             $table->char('cus_type', 2);
             $table->char('cus_phone', 15);
             $table->char('cus_fax', 20);
