@@ -31,9 +31,8 @@ workflows:
            branches:
              only: staging
       - development:
-        filters:
-             branches:
-               ignore: 
-                   - staging
-                   - master
+            branches:
+              ignore: 
+                  - staging
+                  - master
         
