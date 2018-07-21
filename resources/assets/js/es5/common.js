@@ -1,7 +1,7 @@
 function showProgress() {
     var progress = jQuery('.ubiz-progress');
     if (progress.length == 0) {
-        var progress_dom = '<div class="ubiz-progress">Đang xử lý...</div>';
+        var progress_dom = '<div class="ubiz-progress">' + i18next.t("Processing...") + '</div>';
         jQuery('body').append(progress_dom);
         progress = jQuery('.ubiz-progress');
     }
@@ -139,7 +139,7 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
                 console.log(error.response.status);
                 console.log(error.response.headers);
                 if (error.response.status === 401) {
-                    swal("Xác thực thất bại.\nBạn sẽ được đưa trở lại trang Đăng nhập trong 5 giây.", {
+                    swal(i18next.t("Authentication failed.\nYou will be taken back to the login page for 5 seconds."), {
                         icon: "error",
                         closeOnClickOutside: false,
                         closeOnEsc: false,
@@ -213,3 +213,34 @@ jQuery.fn.extend({
         }
     }
 });
+
+var I18n = function () {
+
+    I18n.prototype.init = function init() {
+        var _this2 = this;
+        this.options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    };
+
+    I18n.prototype.t = function t() {
+        var key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
+        var replace = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        if (typeof key !== "string" || key == "")
+            return "";
+
+        if (typeof this.options.resources[this.options.lng] === "undefined")
+            return key;
+
+        if (typeof this.options.resources[this.options.lng].translation[key] === "undefined")
+            return key;
+
+        var value = this.options.resources[this.options.lng].translation[key];
+        if (typeof replace == "object") {
+            Object.keys(replace).map(function (objectKey, index) {
+                var pattern = new RegExp(':' + objectKey, "g");
+                value = value.replace(pattern, replace[objectKey]);
+            });
+        }
+        return value;
+    };
+}
+var i18next = new I18n();

@@ -81,7 +81,6 @@ function logout(){
                 icon: "error",
             });
         }
-
     });
 }
 
@@ -110,6 +109,9 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
 
     if (typeof api_data === 'object') {
         options.data = api_data;
+        if (api_data instanceof FormData) {
+            options.headers['Content-Type'] = 'multipart/form-data';
+        }
     }
 
     if (typeof api_params === 'object') {
@@ -137,7 +139,7 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
                 console.log(error.response.status);
                 console.log(error.response.headers);
                 if (error.response.status === 401) {
-                    swal("Xác thực thất bại.\nBạn sẽ được đưa trở lại trang Đăng nhập trong 5 giây.", {
+                    swal(i18next.t("Authentication failed.\nYou will be taken back to the login page for 5 seconds."), {
                         icon: "error",
                         closeOnClickOutside: false,
                         closeOnEsc: false,
@@ -175,3 +177,72 @@ function removeErrorInput() {
         $(this).find('.fieldGroup').removeClass('invalid');
     });
 }
+
+function openFileUpload(self) {
+    $(self).closest('.image-upload').find(".file-upload").click();
+}
+
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $(input).closest('.image-upload').find(".img-show")
+                .attr('src', e.target.result);
+        };
+
+        reader.readAsDataURL(input.files[0]);
+        $(input).attr("is-change", "true");
+    }
+}
+
+function inputChange(self, oldVal) {
+    if ($(self).val() == oldVal) {
+        $(self).isChange("false");
+    } else {
+        $(self).isChange("true");
+    }
+}
+
+jQuery.fn.extend({
+    isChange: function(bool) {
+        if (bool === undefined || bool === null || bool === "") {
+            return this.attr("is-change");
+        } else {
+            this.attr("is-change", bool);
+        }
+    }
+});
+
+var I18n = function(){
+
+    I18n.prototype.init = function init(){
+        var _this2 = this;
+        this.options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    };
+
+    I18n.prototype.t = function t() {
+        var key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
+        var replace = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        if (typeof key !== "string" || key == "")
+            return "";
+
+        if (typeof this.options.resources[this.options.lng] === "undefined")
+            return key;
+
+        if (typeof this.options.resources[this.options.lng].translation[key] === "undefined")
+            return key;
+
+        var value = this.options.resources[this.options.lng].translation[key];
+        if (typeof replace == "object") {
+            Object.keys(replace).map(function(objectKey, index) {
+                var pattern = new RegExp(':'+objectKey, "g");
+                value = value.replace(pattern, replace[objectKey]);
+                console.log(objectKey);
+                console.log(replace[objectKey]);
+            });
+        }
+        return value;
+    };
+}
+var i18next = new I18n();

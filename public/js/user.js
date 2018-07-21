@@ -61,14 +61,14 @@
                 return false;
 
             swal({
-                title: "Bạn có muốn xóa dữ liệu không?",
-                text: "Một khi xóa, bạn sẽ không có khả năng khôi phục dữ liệu này!",
+                title: i18next.t("Do you want to delete the data?"),
+                text: i18next.t("Once deleted, you will not be able to recover this data!"),
                 icon: "warning",
                 buttons: true,
                 buttons: {
-                    cancel: "Không",
+                    cancel: i18next.t("No"),
                     catch: {
-                        text: "Có",
+                        text: i18next.t("Yes"),
                         value: "catch",
                     }
                 },
