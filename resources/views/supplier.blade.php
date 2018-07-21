@@ -397,13 +397,13 @@
                 </div>
                 <div class="jAQ">
                     <div class="aqI" id="nicescroll-iput">
-                        @include('layouts/upload_image')
-                        @include('layouts/input',['type'=>'disabled', 'control_id'=>'txt_sup_code', 'label'=>'Mã', 'length'=>'5'])
-                        @include('layouts/input',['type'=>'required', 'control_id'=>'txt_sup_name', 'label'=>'Tên nhà cung cấp', 'length'=>'100'])
-                        @include('layouts/input',['control_id'=>'txt_sup_website', 'label'=>'Website', 'length'=>'100'])
-                        @include('layouts/input',['type'=>'required', 'control_id'=>'txt_sup_phone', 'label'=>'Phone', 'length'=>'15'])
-                        @include('layouts/input',['control_id'=>'txt_sup_fax', 'label'=>'Fax', 'length'=>'20'])
-                        @include('layouts/input',['type'=>'required', 'control_id'=>'txt_sup_mail', 'label'=>'Email', 'length'=>'100'])
+                        @include('components.upload_image')
+                        @include('components.input',['type'=>'disabled', 'control_id'=>'txt_sup_code', 'label'=>'Mã', 'length'=>'5'])
+                        @include('components.input',['type'=>'required', 'control_id'=>'txt_sup_name', 'label'=>'Tên nhà cung cấp', 'length'=>'100'])
+                        @include('components.input',['control_id'=>'txt_sup_website', 'label'=>'Website', 'length'=>'100'])
+                        @include('components.input',['type'=>'required', 'control_id'=>'txt_sup_phone', 'label'=>'Phone', 'length'=>'15'])
+                        @include('components.input',['control_id'=>'txt_sup_fax', 'label'=>'Fax', 'length'=>'20'])
+                        @include('components.input',['type'=>'required', 'control_id'=>'txt_sup_mail', 'label'=>'Email', 'length'=>'100'])
                     </div>
                 </div>
             </div>
