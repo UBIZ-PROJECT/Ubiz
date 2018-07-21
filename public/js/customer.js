@@ -71,7 +71,7 @@
             }).then((value) => {
                 switch (value) {
                     case "catch":
-                        ubizapis('v1', '/customers/' + ids.join(','), 'delete', null, null, jQuery.UbizOIWidget.w_delete_callback);
+                        ubizapis('v1', '/customers/' + ids.join(',') + '/delete', 'delete', null, null, jQuery.UbizOIWidget.w_delete_callback);
                         break;
                 }
             });
