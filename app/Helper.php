@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+use App;
 use App\Libs\SimpleImage;
 
 
@@ -19,7 +20,7 @@ class Helper
 			$image->resize($new_img_width, $new_img_height);
 			$image->save($target_file);
 	}
-	
+
 	public static function resizeImageToHeight($img, $target_img, $new_img_height, $img_type = '')
 	{
 			$image = new SimpleImage();
@@ -33,7 +34,7 @@ class Helper
 			$image->resizeToHeight($new_img_height);
 			$image->save($target_file);
 	}
-	
+
 	public static function resizeImageToWidth($img, $target_img, $new_img_width, $img_type = '')
 	{
 			$image = new SimpleImage();
@@ -47,7 +48,7 @@ class Helper
 			$image->resizeToWidth($new_img_width);
 			$image->save($target_file);
 	}
-	
+
 	public static function scaleImage($img, $scale, $img_type = '')
 	{
 			$image = new SimpleImage();
@@ -61,7 +62,7 @@ class Helper
 			$image->scale($scale);
 			$image->save($target_file);
 	}
-	
+
 	public static function readImage($img, $img_type = '')
 	{
 		if($img_type != ''){
@@ -76,5 +77,16 @@ class Helper
 		$data   = file_get_contents($path);
 		$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
 		return $base64;
+	}
+
+    public static function readJsonBasedLanguage()
+    {
+        $json_based_language = "{}";
+        $locale = App::getLocale();
+        $path = base_path() . "/resources/lang/$locale.json";
+        if (file_exists($path)) {
+            $json_based_language = file_get_contents($path);
+        }
+        return $json_based_language;
 	}
 }

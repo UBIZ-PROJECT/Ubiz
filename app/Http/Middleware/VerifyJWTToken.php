@@ -47,10 +47,10 @@ class VerifyJWTToken extends BaseMiddleware
                     return $next($request)->cookie('Authorization', $token);// Response with new token on cookie Authorization.
                 } catch (JWTException $e) {
                     if ($request->ajax()) {
-                        return response()->json(['success' => false, 'message' => 'Token has been blacklisted']);
+                        return response()->json(['success' => false, 'message' => 'Token has been blacklisted'], 401)->cookie('Authorization', '');
                     } else {
                         if ($request->is('login')) {
-                            return $next($request);
+                            return $next($request)->cookie('Authorization', '');
                         } else {
                             return redirect('login')->cookie('Authorization', '');
                         }
@@ -58,7 +58,7 @@ class VerifyJWTToken extends BaseMiddleware
                 }
             } else if ($e instanceof TokenInvalidException) {
                 if ($request->ajax()) {
-                    return response()->json(['success' => false, 'message' => 'Token is invalid']);
+                    return response()->json(['success' => false, 'message' => 'Token is invalid'], 401)->cookie('Authorization', '');
                 } else {
                     if ($request->is('login')) {
                         return $next($request);
@@ -68,10 +68,10 @@ class VerifyJWTToken extends BaseMiddleware
                 }
             } else {
                 if ($request->ajax()) {
-                    return response()->json(['success' => false, 'message' => 'Token is not provided']);
+                    return response()->json(['success' => false, 'message' => 'Token is not provided'], 401)->cookie('Authorization', '');
                 } else {
                     if ($request->is('login')) {
-                        return $next($request);
+                        return $next($request)->cookie('Authorization', '');
                     } else {
                         return redirect('login')->cookie('Authorization', '');
                     }
@@ -79,10 +79,10 @@ class VerifyJWTToken extends BaseMiddleware
             }
         } catch (UnauthorizedHttpException $e) {
             if ($request->ajax()) {
-                return response()->json(['success' => false, 'message' => $e->getMessage()]);
+                return response()->json(['success' => false, 'message' => $e->getMessage()], 401);
             } else {
                 if ($request->is('login')) {
-                    return $next($request);
+                    return $next($request)->cookie('Authorization', '');
                 } else {
                     return redirect('login')->cookie('Authorization', '');
                 }

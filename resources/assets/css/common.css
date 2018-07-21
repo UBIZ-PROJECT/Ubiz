@@ -860,6 +860,7 @@
 .main-content .r-content .aqI {
     width: 100%;
     height: calc(100% - 107px);
+    padding: 10px 0;
 }
 
 .main-content .r-content .yTP {
@@ -1121,7 +1122,7 @@
     padding: 0;
     border: 1px solid #a6a6a6;
     background: #ffffff;
-    height: 32px;
+    height: 31px;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -1133,6 +1134,12 @@
     -ms-flex-align: stretch;
     align-items: stretch;
     position: relative;
+}
+
+.fieldGroup svg{
+    fill: currentColor;
+    color: black;
+    opacity: .54;
 }
 
 .input_field {
@@ -1153,6 +1160,18 @@
     min-width: 0;
     text-overflow: ellipsis;
     outline: 0;
+}
+
+
+.dropdown_field {
+    background-color: transparent;
+    color: #333333;
+    border: none;
+    padding-left: 10px;
+    user-select: none;
+    width: 100%;
+    outline: none;
+
 }
 
 .root_textfield.rootIsUnderlined.rootIsDisabled {
@@ -1178,7 +1197,7 @@
 }
 
 input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabled], textarea[disabled] {
-    color: rgba(0,0,0,.2) !important;
+    color: rgba(0, 0, 0, .2) !important;
     cursor: not-allowed !important;
 }
 
@@ -1214,6 +1233,7 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
     -ms-flex-align: center;
     align-items: center;
 }
+
 .css-57 {
     animation-name: css-0, css-13;
     animation-duration: 0.367s;
@@ -1224,11 +1244,12 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
 .hidden-content {
     display: none;
 }
-/* END CSS INPUT CONTROL */
 
 .lbl-primary {
     color: #1967d2;
 }
+
+/* END CSS INPUT CONTROL */
 
 /* CSS FOR IMAGE UPLOAD */
 
@@ -1253,4 +1274,80 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
 }
 .image-upload:hover .label-change{
     display: block;
+}
+
+.ato {
+    -webkit-border-radius: 10%;
+    border-radius: 10%;
+    overflow: hidden;
+    -webkit-transform: translateZ(0);
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.ato img {
+    vertical-align: top;
+    height: 96px;
+    width: 96px;
+}
+
+.ato span {
+    background: rgba(0, 0, 0, .54);
+    bottom: 0;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    left: 0;
+    line-height: 9px;
+    position: absolute;
+    padding: 7px 0;
+    text-align: center;
+    width: 96px;
+    display: none;
+    cursor: pointer;
+}
+
+.ato:hover span {
+    display: block;
+}
+
+.z-pdl {
+    padding-left: 0px;
+}
+
+.z-pdr {
+    padding-right: 0px;
+}
+
+.z-pdt {
+    padding-top: 0px;
+}
+
+.z-pdb {
+    padding-bottom: 0px;
+}
+
+.z-pd {
+    padding: 0px;
+}
+
+.z-mgl {
+    margin-left: 0px;
+}
+
+.z-mgr {
+    margin-right: 0px;
+}
+
+.z-mgt {
+    margin-top: 0px;
+}
+
+.z-mgb {
+    margin-bottom: 0px;
+}
+
+.z-mg {
+    margin: 0px;
 }
