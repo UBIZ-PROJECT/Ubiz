@@ -1,6 +1,6 @@
 @extends('layouts.main')
-@section('title','Nhân viên')
-@section('headbar-title','Nhân viên')
+@section('title',__("Employee"))
+@section('headbar-title', __("Employee"))
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/headbar.css') }}">
@@ -23,7 +23,7 @@
     <div class="main-content">
         <div class="l-content">
             <div class="zY">
-                <div class="yP" onclick="jQuery.UbizOIWidget.w_create()">Thêm mới</div>
+                <div class="yP" onclick="jQuery.UbizOIWidget.w_create()">{{ __("Add new") }}</div>
             </div>
             <div id="nicescroll-sidebar" class="zX nicescroll">
                 <nav role="navigation">
@@ -63,7 +63,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <span class="dG">Danh sách</span>
+                                    <span class="dG">{{ __("List") }}</span>
                                 </div>
                             </div>
                         </div>
@@ -73,28 +73,28 @@
         </div>
         <div class="m-content"></div>
         <div class="r-content">
-            <div class="jAQ" id="o-put">
+            <div class="jAQ" id="o-put" >
                 <div class="bkK">
                     <div class="aeH">
                         <div class="aqK">
                             <div class="aqL">
                                 <div class="GtF">
                                     <div class="GNi" onclick="jQuery.UbizOIWidget.w_f_checkbox_click(this)">
-                                        <div class="ax7 poK utooltip" title="Chọn">
+                                        <div class="ax7 poK utooltip" title="{{ __("Select") }}">
                                             <div class="asA">
                                                 <div class="asU ckb-f"></div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="GNi" onclick="jQuery.UbizOIWidget.w_refresh_output_page(this)">
-                                        <div class="ax7 poK utooltip" title="Làm mới">
+                                        <div class="ax7 poK utooltip" title="{{ __("Refresh") }}">
                                             <div class="asA">
                                                 <div class="asF"></div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="GNi" onclick="jQuery.UbizOIWidget.w_delete()">
-                                        <div class="ax7 poK utooltip" title="Xóa">
+                                        <div class="ax7 poK utooltip" title="{{ __("Delete") }}">
                                             <div class="asA">
                                                 <div class="asX"></div>
                                             </div>
@@ -113,9 +113,9 @@
                                 <div class="ar5">
                                 <span class="Di">
                                     @include('layouts/paging',['paging'=>$paging])
-                                    <div class="amD utooltip" title="Cài đặt">
+                                    <div class="amD utooltip" title="{{ __("Setting") }}">
                                         <span class="amF">&nbsp;</span>
-                                        <img class="amG" src="http://ubiz.local/images/cleardot.gif" alt="">
+                                        <img class="amG" src="{{ asset("images/cleardot.gif") }}" alt="">
                                     </div>
                                 </span>
                                 </div>
@@ -137,7 +137,7 @@
                                 <div class="dcB col-1" role="presentation">
                                     <div class="dWB dWT" role="button" sort-name="code" order-by="asc" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">Mã</div>
+                                            <div class="tDv">{{ __('Code') }}</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -160,7 +160,7 @@
                                 <div class="dcB col-2" role="presentation">
                                     <div class="dWB" role="button" sort-name="name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">Tên</div>
+                                            <div class="tDv">{{ __('Name') }}</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -183,7 +183,7 @@
                                 <div class="dcB col-3" role="presentation">
                                     <div class="dWB" role="button" sort-name="email" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">E-mail</div>
+                                            <div class="tDv">{{ __('E-mail') }}</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -206,7 +206,7 @@
                                 <div class="dcB col-4" role="presentation">
                                     <div class="dWB" role="button" sort-name="phone" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">Điện thoại</div>
+                                            <div class="tDv">{{ __('Phone') }}</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -229,7 +229,7 @@
                                 <div class="dcB col-5" role="presentation">
                                     <div class="dWB" role="button">
                                         <div class="dvJ" sort-name="dep_name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
-                                            <div class="tDv">Phòng ban</div>
+                                            <div class="tDv">{{ __('Department') }}</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -252,7 +252,7 @@
                                 <div class="dcB col-6" role="presentation">
                                     <div class="dWB" role="button" sort-name="address" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">Địa chỉ</div>
+                                            <div class="tDv">{{ __('Address') }}</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -333,35 +333,35 @@
                     </div>
                 </div>
             </div>
-            <div class="jAQ" id="i-put"  style="display: none">
+            <div class="jAQ" id="i-put" style="display: none">
                 <div class="bkK">
                     <div class="aeH">
                         <div class="aqK">
                             <div class="aqL">
                                 <div class="GtF">
                                     <div class="GNi" onclick="jQuery.UbizOIWidget.w_go_back_to_output_page(this)">
-                                        <div class="ax7 poK utooltip" title="Quay lại">
+                                        <div class="ax7 poK utooltip" title="{{ __("Back") }}">
                                             <div class="asA">
                                                 <div class="arB"></div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="GNi">
-                                        <div class="ax7 poK utooltip" title="Lưu trữ">
+                                        <div class="ax7 poK utooltip" title="{{ __("Save") }}">
                                             <div class="asA">
                                                 <div class="arS"></div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="GNi">
-                                        <div class="ax7 poK utooltip" title="Làm mới">
+                                        <div class="ax7 poK utooltip" title="{{ __("Refresh") }}">
                                             <div class="asA">
                                                 <div class="arR"></div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="GNi">
-                                        <div class="ax7 poK utooltip" title="Xóa">
+                                        <div class="ax7 poK utooltip" title="{{ __("Delete") }}">
                                             <div class="asA">
                                                 <div class="asX"></div>
                                             </div>
@@ -377,17 +377,17 @@
                                             <span><span class="ts">1</span></span> / <span class="ts">229</span>
                                         </span>
                                     </div>
-                                    <div class="amD utooltip" title="Cũ hơn">
+                                    <div class="amD utooltip" title="{{ __("Older") }}">
                                         <span class="amF">&nbsp;</span>
-                                        <img class="amI" src="http://ubiz.local/images/cleardot.gif" alt="">
+                                        <img class="amI" src="{{ asset("images/cleardot.gif") }}" alt="">
                                     </div>
-                                    <div class="amD utooltip" title="Mới hơn">
+                                    <div class="amD utooltip" title="{{ __("Newer") }}">
                                         <span class="amF">&nbsp;</span>
-                                        <img class="amJ" src="http://ubiz.local/images/cleardot.gif" alt="">
+                                        <img class="amJ" src="{{ asset("images/cleardot.gif") }}" alt="">
                                     </div>
-                                    <div class="amD utooltip" title="Cài đặt">
+                                    <div class="amD utooltip" title="{{ __("Setting") }}">
                                         <span class="amF">&nbsp;</span>
-                                        <img class="amG" src="http://ubiz.local/images/cleardot.gif" alt="">
+                                        <img class="amG" src="{{ asset("images/cleardot.gif") }}" alt="">
                                     </div>
                                 </span>
                                 </div>
@@ -397,14 +397,29 @@
                 </div>
                 <div class="jAQ">
                     <div class="aqI nicescroll" id="nicescroll-iput">
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
+                        <div class="row z-mgl z-mgr">
+                            <div class="col-sm-2 col-md-2 col-xl-2 z-pdl">
+                                <a class="ato">
+                                    <img src="{{ asset("images/avatar.jpg") }}">
+                                    <input type="file" id="avatar" accept="image/*" style="display: none"/>
+                                    <span >{{ __("Change") }}</span>
+                                </a>
+                            </div>
+                            <div class="col-sm-5 col-md-5 col-xl-5">
+                                @include('layouts/input',['control_id'=>'txt_code', 'label'=>__('Code')])
+                                @include('layouts/input',['control_id'=>'txt_name', 'label'=>__('Name')])
+                                @include('components/dropdown',['control_id'=>'txt_dep_id', 'label'=>__('Department'), 'data'=>['a'=>'b']])
+                                @include('layouts/input',['control_id'=>'txt_phone', 'label'=>__('Phone')])
+                                @include('layouts/input',['control_id'=>'txt_email', 'label'=>__('E-Mail')])
+                            </div>
+                            <div class="col-sm-5 col-md-5 col-xl-5 z-pdr">
+                                @include('layouts/input',['control_id'=>'txt_address', 'label'=>__('Address')])
+                                @include('layouts/input',['control_id'=>'txt_join_date', 'label'=>__('Join Date')])
+                                @include('layouts/input',['control_id'=>'txt_salary', 'label'=>__('Salary')])
+                                @include('layouts/input',['control_id'=>'txt_bhxh', 'label'=>__('Social Insurance')])
+                                @include('layouts/input',['control_id'=>'txt_bhyt', 'label'=>__('Health Insurance')])
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

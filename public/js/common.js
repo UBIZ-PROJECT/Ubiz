@@ -109,6 +109,9 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
 
     if (typeof api_data === 'object') {
         options.data = api_data;
+        if (api_data instanceof FormData) {
+            options.headers['Content-Type'] = 'multipart/form-data';
+        }
     }
 
     if (typeof api_params === 'object') {
@@ -135,6 +138,16 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
                 console.log(error.response.data);
                 console.log(error.response.status);
                 console.log(error.response.headers);
+                if (error.response.status === 401) {
+                    swal(i18next.t("Authentication failed.\nYou will be taken back to the login page for 5 seconds."), {
+                        icon: "error",
+                        closeOnClickOutside: false,
+                        closeOnEsc: false,
+                        timer: 5000,
+                    }).then((value) => {
+                        window.location.href = '/login';
+                    });
+                }
             } else if (error.request) {
                 // The request was made but no response was received
                 // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -200,3 +213,36 @@ jQuery.fn.extend({
         }
     }
 });
+
+var I18n = function(){
+
+    I18n.prototype.init = function init(){
+        var _this2 = this;
+        this.options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    };
+
+    I18n.prototype.t = function t() {
+        var key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
+        var replace = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        if (typeof key !== "string" || key == "")
+            return "";
+
+        if (typeof this.options.resources[this.options.lng] === "undefined")
+            return key;
+
+        if (typeof this.options.resources[this.options.lng].translation[key] === "undefined")
+            return key;
+
+        var value = this.options.resources[this.options.lng].translation[key];
+        if (typeof replace == "object") {
+            Object.keys(replace).map(function(objectKey, index) {
+                var pattern = new RegExp(':'+objectKey, "g");
+                value = value.replace(pattern, replace[objectKey]);
+                console.log(objectKey);
+                console.log(replace[objectKey]);
+            });
+        }
+        return value;
+    };
+}
+var i18next = new I18n();
