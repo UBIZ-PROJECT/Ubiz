@@ -40,36 +40,54 @@ class SupplierController extends Controller
         return response()->json(['supplier' => $data, 'paging' => $paging,'success' => true, 'message' => ''], 200);
     }
 
-    public function getSupplierById($id) {
+    public function getSupplierById($id, Request $request) {
         try {
             $supplier = new Supplier();
-            $data = $supplier->getSupplierById($id);
+            $page = 0;
+            if ($request->has('page')) {
+                $page = $request->page;
+            }
+
+            $sort = '';
+            if ($request->has('sort')) {
+                $sort = $request->sort;
+            }
+            $data = $supplier->getEachSupplierByPaging($page, $sort);
+
             $image = Helper::readImage($data[0]->sup_avatar,'sup');
             $data[0]->src = $image;
+            $paging = $supplier->getPagingInfo();
+            $paging['page'] = $page;
+            $paging['rows_per_page'] = 1;
         } catch (\Throwable $e) {
             throw $e;
         }
         
-        return response()->json(['supplier' => $data, 'success' => true, 'message' => ''], 200);
+        return response()->json(['supplier' => $data, 'paging' => $paging, 'success' => true, 'message' => ''], 200);
     }
 
     public function insertSupplier() {
-        $params = json_decode($_POST['supplier'], true);
+        try {
+            $params = json_decode($_POST['supplier'], true);
 
-        if (!empty($_FILES)) {
-            $path_parts = pathinfo($_FILES['image-upload']["name"]);
-            $extension = $path_parts['extension'];
-            $params['extension'] = $extension;
-            $params['tmp_name'] = $_FILES['image-upload']['tmp_name'];
+            if (!empty($_FILES)) {
+                $path_parts = pathinfo($_FILES['image-upload']["name"]);
+                $extension = $path_parts['extension'];
+                $params['extension'] = $extension;
+                $params['tmp_name'] = $_FILES['image-upload']['tmp_name'];
+            }
+
+            $supplier = new Supplier();
+            $supplier->insertSupplier($params);
+
+            $data = $supplier->getSupplierPaging(0, '');
+            $paging = $supplier->getPagingInfo();
+            $paging['page'] = 0;
+        } catch (\Throwable $e) {
+            throw $e;
         }
 
-        $supplier = new Supplier();
-        $supplier->insertSupplier($params);
-
-        $data = $supplier->getSupplierPaging(0, '');
-        $paging = $supplier->getPagingInfo();
-        $paging['page'] = 0;
-        return response()->json(['supplier' => $data,'paging' => $paging, 'success' => true, 'message' => ''], 200);
+        return response()->json(['supplier' => $data,'paging' => $paging, 'success' => true, 'message' => 'Thêm dữ liệu thành công!'], 200);
     }
 
     public function deleteSuppliersById(Request $request) {
@@ -83,7 +101,7 @@ class SupplierController extends Controller
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['supplier' => $data, 'paging' => $paging, 'success' => true, 'message' => 'Xử lý thành công'], 200);
+        return response()->json(['supplier' => $data, 'paging' => $paging, 'success' => true, 'message' => 'Xóa dữ liệu thành công!'], 200);
     }
 
     public function updateSupplierById($id) {
@@ -108,6 +126,6 @@ class SupplierController extends Controller
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['supplier' => $data,'paging' => $paging, 'success' => true, 'message' => ''], 200);
+        return response()->json(['supplier' => $data,'paging' => $paging, 'success' => true, 'message' => 'Sửa dữ liệu thành công!'], 200);
     }
 }
