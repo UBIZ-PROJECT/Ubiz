@@ -406,18 +406,18 @@
                                 </a>
                             </div>
                             <div class="col-sm-5 col-md-5 col-xl-5">
-                                @include('layouts/input',['control_id'=>'txt_code', 'label'=>__('Code')])
-                                @include('layouts/input',['control_id'=>'txt_name', 'label'=>__('Name')])
+                                @include('components.input',['control_id'=>'txt_code', 'label'=>__('Code')])
+                                @include('components.input',['control_id'=>'txt_name', 'label'=>__('Name')])
                                 @include('components/dropdown',['control_id'=>'txt_dep_id', 'label'=>__('Department'), 'data'=>['a'=>'b']])
-                                @include('layouts/input',['control_id'=>'txt_phone', 'label'=>__('Phone')])
-                                @include('layouts/input',['control_id'=>'txt_email', 'label'=>__('E-Mail')])
+                                @include('components.input',['control_id'=>'txt_phone', 'label'=>__('Phone')])
+                                @include('components.input',['control_id'=>'txt_email', 'label'=>__('E-Mail')])
                             </div>
                             <div class="col-sm-5 col-md-5 col-xl-5 z-pdr">
-                                @include('layouts/input',['control_id'=>'txt_address', 'label'=>__('Address')])
-                                @include('layouts/input',['control_id'=>'txt_join_date', 'label'=>__('Join Date')])
-                                @include('layouts/input',['control_id'=>'txt_salary', 'label'=>__('Salary')])
-                                @include('layouts/input',['control_id'=>'txt_bhxh', 'label'=>__('Social Insurance')])
-                                @include('layouts/input',['control_id'=>'txt_bhyt', 'label'=>__('Health Insurance')])
+                                @include('components.input',['control_id'=>'txt_address', 'label'=>__('Address')])
+                                @include('components.input',['control_id'=>'txt_join_date', 'label'=>__('Join Date')])
+                                @include('components.input',['control_id'=>'txt_salary', 'label'=>__('Salary')])
+                                @include('components.input',['control_id'=>'txt_bhxh', 'label'=>__('Social Insurance')])
+                                @include('components.input',['control_id'=>'txt_bhyt', 'label'=>__('Health Insurance')])
                             </div>
                         </div>
                     </div>
