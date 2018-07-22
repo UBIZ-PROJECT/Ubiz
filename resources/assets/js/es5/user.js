@@ -34,6 +34,7 @@
             jQuery('.utooltip').tooltipster({
                 side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
             });
+            jQuery(".i-numeric").forceNumeric();
         },
         w_sort: function (self) {
 
@@ -146,20 +147,7 @@
             }
         },
         w_go_to_input_page: function (id) {
-            jQuery.UbizOIWidget.o_page.hide();
-            jQuery.UbizOIWidget.i_page.fadeIn("slow");
-            jQuery('#nicescroll-oput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-input',
-                autohidemode: false,
-                horizrailenabled: false
-            });
+            ubizapis('v1', '/users/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
         },
         w_go_back_to_output_page: function (self) {
             jQuery.UbizOIWidget.o_page.fadeIn("slow");
@@ -293,6 +281,64 @@
             jQuery.UbizOIWidget.w_reset_f_checkbox_status();
             jQuery.UbizOIWidget.page = response.data.paging.page;
             jQuery.UbizOIWidget.w_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
+        },
+        w_render_data_to_input_page: function (response) {
+            var user = response.data.user;
+            jQuery.UbizOIWidget.w_clean_input_page();
+            jQuery.UbizOIWidget.w_set_input_page(user);
+
+            jQuery.UbizOIWidget.o_page.hide();
+            jQuery.UbizOIWidget.i_page.fadeIn("slow");
+            jQuery('#nicescroll-oput').getNiceScroll().remove();
+            jQuery('#nicescroll-iput').getNiceScroll().remove();
+            jQuery('#nicescroll-iput').niceScroll({
+                cursorcolor: "#9fa8b0",
+                cursorwidth: "5px",
+                cursorborder: "none",
+                cursorborderradius: 5,
+                cursoropacitymin: 0.4,
+                scrollbarid: 'nc-input',
+                autohidemode: false,
+                horizrailenabled: false
+            });
+        },
+        w_clean_input_page: function () {
+            jQuery("#txt_code").val("");
+            jQuery("#txt_name").val("");
+            jQuery("#txt_phone").val("");
+            jQuery("#txt_email").val("");
+            jQuery("#txt_dep_id").val("");
+            jQuery("#txt_address").val("");
+            jQuery("#txt_join_date").val("");
+            jQuery("#txt_salary").val("");
+            jQuery("#txt_bhxh").prop('checked', false).prop('disabled', false);
+            jQuery("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+            jQuery("#txt_bhyt").prop('checked', false).prop('disabled', false);
+            jQuery("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+        },
+        w_set_input_page: function (data) {
+            jQuery("#txt_code").val(data.code);
+            jQuery("#txt_name").val(data.name);
+            jQuery("#txt_phone").val(data.phone);
+            jQuery("#txt_email").val(data.email);
+            jQuery("#txt_dep_id").val(data.dep_id);
+            jQuery("#txt_address").val(data.address);
+            jQuery("#txt_join_date").val(format_date(data.join_date, 'YYYY/MM/DD'));
+            jQuery("#txt_salary").val(numeral(data.salary).format('0,0'));
+            if (data.bhxh == '0') {
+                jQuery("#txt_bhxh").prop('checked', false);
+                jQuery("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+            } else {
+                jQuery("#txt_bhxh").prop('checked', true);
+                jQuery("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('suc').addClass('sck');
+            }
+            if (data.bhxh == '0') {
+                jQuery("#txt_bhyt").prop('checked', false);
+                jQuery("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+            } else {
+                jQuery("#txt_bhyt").prop('checked', true);
+                jQuery("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('suc').addClass('sck');
+            }
         },
         w_make_row_html: function (id, cols) {
             var row_html = '';

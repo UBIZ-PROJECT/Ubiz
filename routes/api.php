@@ -17,8 +17,9 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
     Route::post('login', 'Api\AuthController@login');
     Route::middleware(['jwt'])->group(function () {
         Route::get('logout', ['as' => 'api-logout', 'uses' => 'Api\AuthController@logout']);
-        Route::get('users', ['as' => 'api-users', 'uses' => 'Api\UsersController@getUsers']);
-        Route::delete('users/{ids}/delte', ['as' => 'delete-users', 'uses' => 'Api\UsersController@deleteUsers']);
+        Route::get('users', ['as' => 'get-users', 'uses' => 'Api\UsersController@getUsers']);
+        Route::get('users/{id}', ['as' => 'get-user', 'uses' => 'Api\UsersController@getUser']);
+        Route::delete('users/{ids}/delete', ['as' => 'delete-users', 'uses' => 'Api\UsersController@deleteUsers']);
         Route::get('suppliers', ['as' => 'api-suppliers', 'uses' => 'Api\SupplierController@getSuppliers']);
         Route::post('suppliers/insert', ['as' => 'suppliers-insert', 'uses' => 'Api\SupplierController@insertSupplier']);
         Route::get('suppliers/delete', ['as' => 'suppliers-delete', 'uses' => 'Api\SupplierController@deleteSuppliersById']);
