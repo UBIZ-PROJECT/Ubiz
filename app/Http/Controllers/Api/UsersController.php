@@ -26,6 +26,45 @@ class UsersController extends Controller
         return response()->json(['users' => $users, 'paging' => $paging, 'success' => true, 'message' => ''], 200);
     }
 
+    public function getUser($id, Request $request)
+    {
+        try {
+            $user = new User();
+            $data = $user->getUser($id);
+
+            list($page, $sort, $search) = $this->getRequestData($request);
+            $count = $user->countUsers($search);
+
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['user' => $data, 'message' => __("Successfully processed.")], 200);
+    }
+
+    public function updateUser($id, Request $request)
+    {
+        try {
+            $user = new User();
+            $paging = $user->getPagingInfo();
+            $paging['page'] = 0;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['users' => $users, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed.")], 200);
+    }
+
+    public function insertUser(Request $request)
+    {
+        try {
+            $user = new User();
+            $paging = $user->getPagingInfo();
+            $paging['page'] = 0;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['users' => $users, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed.")], 200);
+    }
+
     public function deleteUsers($ids, Request $request)
     {
         try {
@@ -37,7 +76,7 @@ class UsersController extends Controller
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['users' => $users, 'paging' => $paging, 'success' => true, 'message' => 'Xử lý thành công'], 200);
+        return response()->json(['users' => $users, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed.")], 200);
     }
 
     public function getRequestData(Request $request)

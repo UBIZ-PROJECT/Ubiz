@@ -11,19 +11,19 @@ $html_control_type = '';
 if (!isset($type)) {
     $type = '';
 }
+
+$html_value = "0";
+if (isset($value)) {
+    $html_value = $value;
+}
+$html_checked = "";
+if (isset($checked) && $checked == true) {
+    $html_checked = "checked";
+}
 $html_width = "300px";
 if(isset($width)){
     $html_width = $width . "px";
 }
-$html_max_length = "";
-if(isset($length)){
-    $html_max_length = "maxlength='$length'";
-}
-$html_class = "";
-if(isset($class)){
-    $html_class = $class;
-}
-
 switch ($type) {
     case 'disabled':
         $html_type = 'rootIsDisabled';
@@ -42,14 +42,16 @@ switch ($type) {
     <div class="wrapper">
         <label for="{{$control_id}}" class="lbl-primary ms-Label root-56">{{$label}}:</label>
         <div class="fieldGroup">
-            <input is-change="false" type="text" {{ $html_max_length }} {{$html_control_type}} id="{{$control_id}}" value="" class="input_field {{ $html_class }}">
+            <div class="{{ $html_checked == "checked"?"sck":"suc" }}" onclick="checkbox_click(this)"></div>
+            <input is-change="false"
+                   type="checkbox"
+                   {{ $html_checked }}
+                   {{ $html_control_type }}
+                   id="{{ $control_id }}"
+                   value="{{ $html_value }}"
+                   style="display: none"
+                   class="checkbox_field"
+            />
         </div>
     </div>
-    <span class="error_message hidden-content">
-       <div class="message-container">
-          <p class="label_errorMessage css-57 errorMessage">
-              <span class="error-message-text"></span>
-          </p>
-       </div>
-    </span>
 </div>

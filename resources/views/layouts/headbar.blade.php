@@ -82,12 +82,12 @@
                                 <div class="zho">
                                     <div class="ano">
                                         <a class="yno">
-                                            <img class="pno" src="{{ asset('images/avatar.jpg') }}">
+                                            <img class="pno" src="{!!  Helper::readImage($auth_user->avatar, 'usr') !!}">
                                             <span class="wno">{{ __("Change") }}</span>
                                         </a>
                                         <div class="rho">
-                                            <div class="iho">ubiz</div>
-                                            <div class="mno">ubiz@gmail.com</div>
+                                            <div class="iho">{{ $auth_user->name }}</div>
+                                            <div class="mno">{{ $auth_user->email }}</div>
                                             <div class="jno">
                                                 <a href="#">{{ __("Privacy") }}</a>
                                             </div>
@@ -106,7 +106,7 @@
                             <img src="{{ asset('images/logo.png') }}">
                         </div>
                         <div class="vyo">
-                            <a><span><img src="{{ asset('images/avatar.jpg') }}"></span></a>
+                            <a><span><img src="{!!  Helper::readImage($auth_user->avatar, 'usr') !!}"></span></a>
                         </div>
                     </div>
                 </div>
