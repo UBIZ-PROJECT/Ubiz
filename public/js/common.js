@@ -1,7 +1,7 @@
 function showProgress() {
     var progress = jQuery('.ubiz-progress');
     if (progress.length == 0) {
-        var progress_dom = '<div class="ubiz-progress">Đang xử lý...</div>';
+        var progress_dom = '<div class="ubiz-progress">' + i18next.t("Processing...") + '</div>';
         jQuery('body').append(progress_dom);
         progress = jQuery('.ubiz-progress');
     }
@@ -100,11 +100,11 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
     var protocol = window.location.protocol;
     var hostname = window.location.hostname;
     var api_base_url = protocol + "//" + hostname + "/api/" + api_version + "/";
-
     var options = {
         baseURL: api_base_url,
         url: api_url,
-        method: api_method
+        method: api_method,
+        headers:[]
     };
 
     if (typeof api_data === 'object') {
@@ -214,9 +214,9 @@ jQuery.fn.extend({
     }
 });
 
-var I18n = function(){
+var I18n = function () {
 
-    I18n.prototype.init = function init(){
+    I18n.prototype.init = function init() {
         var _this2 = this;
         this.options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     };
@@ -235,11 +235,9 @@ var I18n = function(){
 
         var value = this.options.resources[this.options.lng].translation[key];
         if (typeof replace == "object") {
-            Object.keys(replace).map(function(objectKey, index) {
-                var pattern = new RegExp(':'+objectKey, "g");
+            Object.keys(replace).map(function (objectKey, index) {
+                var pattern = new RegExp(':' + objectKey, "g");
                 value = value.replace(pattern, replace[objectKey]);
-                console.log(objectKey);
-                console.log(replace[objectKey]);
             });
         }
         return value;

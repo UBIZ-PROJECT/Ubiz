@@ -74,7 +74,8 @@
                 switch (value) {
                     case "catch":
                         listId = JSON.stringify(listId);
-                        ubizapis('v1','/suppliers/delete', 'get',null, {'listId':listId},jQuery.UbizOIWidget.w_process_callback);
+                        var params = jQuery.UbizOIWidget.w_get_param_search_sort();
+                        ubizapis('v1','/suppliers/'+listId+'/delete', 'delete',null, params,jQuery.UbizOIWidget.w_process_callback);
                         break;
                 }
             });
@@ -94,6 +95,8 @@
 
             var formData = jQuery.UbizOIWidget.w_get_images_upload();
             formData.append("supplier", JSON.stringify(jQuery.UbizOIWidget.w_get_data_input_form()));
+
+            var params = jQuery.UbizOIWidget.w_get_param_search_sort();
             if (id == 0) {
                 swal({
                     title:ALERT_TITLE,
@@ -110,7 +113,7 @@
                 }).then((value) => {
                     switch (value) {
                         case "catch":
-                            ubizapis('v1','/suppliers/insert', 'post', formData, null, jQuery.UbizOIWidget.w_process_callback);
+                            ubizapis('v1','/suppliers/insert', 'post', formData, params, jQuery.UbizOIWidget.w_process_callback);
                             break;
                     }
                 });
@@ -137,12 +140,124 @@
                 }).then((value) => {
                     switch (value) {
                         case "catch":
-                            ubizapis('v1','/suppliers/update/' + id, 'post', formData, null, jQuery.UbizOIWidget.w_process_callback);
+                            formData.append("_method","put");
+                            ubizapis('v1','/suppliers/'+id+'/update', 'post', formData,params, jQuery.UbizOIWidget.w_process_callback);
                             break;
                     }
                 });
             }
 
+        },
+        w_search:function(){
+
+            var params = jQuery.UbizOIWidget.w_get_param_search_sort();
+
+            var event = new CustomEvent("click");
+            document.body.dispatchEvent(event);
+            ubizapis('v1', '/suppliers', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+        },
+        w_get_search_info: function () {
+
+            var search_info = {};
+
+            if (jQuery('#search-form #sup_code').val().replace(/\s/g, '') != '') {
+                search_info.sup_code = jQuery('#search-form #sup_code').val();
+            }
+
+            if (jQuery('#search-form #sup_name').val().replace(/\s/g, '') != '') {
+                search_info.sup_name = jQuery('#search-form #sup_name').val();
+            }
+
+            if (jQuery('#search-form #sup_mail').val().replace(/\s/g, '') != '') {
+                search_info.sup_mail = jQuery('#search-form #sup_mail').val();
+            }
+
+            if (jQuery('#search-form #sup_phone').val().replace(/\s/g, '') != '') {
+                search_info.sup_phone = jQuery('#search-form #sup_phone').val();
+            }
+
+            if (jQuery('#search-form #sup_website').val().replace(/\s/g, '') != '') {
+                search_info.sup_website = jQuery('#search-form #sup_website').val();
+            }
+
+            if (jQuery('#search-form #sup_fax').val().replace(/\s/g, '') != '') {
+                search_info.sup_fax = jQuery('#search-form #sup_fax').val();
+            }
+
+            if (jQuery('#search-form #contain').val().replace(/\s/g, '') != '') {
+                search_info.contain = jQuery('#search-form #contain').val();
+            }
+
+            if (jQuery('#search-form #notcontain').val().replace(/\s/g, '') != '') {
+                search_info.notcontain = jQuery('#search-form #notcontain').val();
+            }
+
+            return search_info;
+        },
+        w_convert_search_info_to_fuzzy: function (search_info) {
+            var fuzzy = JSON.stringify(search_info);
+            return fuzzy;
+        },
+        w_convert_fuzzy_to_search_info: function (fuzzy) {
+            var search_info = {};
+            try {
+                search_info = JSON.parse(fuzzy);
+            } catch (e) {
+                var fuzzy_info = fuzzy.split('-');
+                if (fuzzy_info.length == 1) {
+                    search_info.contain = fuzzy;
+                } else {
+                    fuzzy_info.shift();
+                    search_info.notcontain = fuzzy_info.join('-');
+                }
+            }
+            return search_info;
+        },
+        w_update_search_form:function(search_info){
+            jQuery.each(search_info, function (key, val) {
+                var search_item = jQuery('#search-form #' + key);
+                if (search_item.length == 1) {
+                    search_item.val(val);
+                }
+            });
+        },
+        w_fuzzy_search: function () {
+            var params = {};
+            params.page = '0';
+            jQuery.UbizOIWidget.page = '0';
+
+            var fuzzy = jQuery('#fuzzy').val();
+            var search_info = jQuery.UbizOIWidget.w_convert_fuzzy_to_search_info(fuzzy);
+            jQuery.UbizOIWidget.w_update_search_form(search_info);
+            params.search = search_info;
+
+            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
+            var sort = sort_info.sort_name + "_" + sort_info.order_by;
+            params.sort = sort;
+
+            ubizapis('v1', '/suppliers', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+        },
+        w_fuzzy_search_handle_enter(e) {
+            var keycode = (e.keyCode ? e.keyCode : e.which);
+            if (keycode == '13') {
+                jQuery.UbizOIWidget.w_fuzzy_search();
+            }
+        },
+        w_get_param_search_sort: function() {
+            var params = {};
+            params.page = '0';
+
+            var search_info = jQuery.UbizOIWidget.w_get_search_info();
+            params.search = search_info;
+
+            if (jQuery.isEmptyObject(search_info) === false) {
+                var fuzzy = jQuery.UbizOIWidget.w_convert_search_info_to_fuzzy(search_info);
+                jQuery('#fuzzy').val(fuzzy);
+            }
+
+            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
+            params.sort = sort_info.sort_name + "_" + sort_info.order_by;
+            return params;
         },
         w_get_images_upload: function() {
             var formData = new FormData();
@@ -168,11 +283,20 @@
             swal('ok');
         },
         w_go_to_input_page: function (id, index) {
-            if (id != 0)
+            if (id != 0) {
                 jQuery.UbizOIWidget.w_get_specific_supplier_by_id(id, index);
+                $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
+
+            }
+            else{
+
+                $("#i-put .GtF .delete").css("display","none").removeAttr("onclick");
+            }
+
             if (isEmpty(index)) {
                 $("#i-put .GtF .save").attr("onclick", "jQuery.UbizOIWidget.w_save(0)");
             }
+
             jQuery.UbizOIWidget.o_page.hide();
             jQuery.UbizOIWidget.i_page.fadeIn("slow");
             jQuery('#nicescroll-oput').getNiceScroll().remove();
@@ -266,16 +390,45 @@
         },
         w_process_callback: function (response) {
             if (response.data.success == true) {
-                jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
-                swal(response.data.message, {
-                    icon: "success",
-                });
+                if (response.data.method == "insert") {
+                    swal({
+                        title:response.data.message,
+                        icon: "success",
+                        text: "Bạn có muốn tiếp tục thêm dữ liệu?",
+                        buttons: true,
+                        buttons: {
+                            cancel: "Không",
+                            catch: {
+                                text: "Có",
+                                value: "catch",
+                            }
+                        },
+                        dangerMode: true,
+                    }).then((value) => {
+                        switch (value) {
+                            case "catch":
+                                jQuery.UbizOIWidget.w_clear_input_page();
+                                break;
+                            default:
+                                jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
+                                jQuery.UbizOIWidget.w_go_back_to_output_page();
+                                break;
+                        }
+                    });
+                } else {
+                    jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
+                    jQuery.UbizOIWidget.w_go_back_to_output_page();
+                    swal(response.data.message, {
+                        icon: "success",
+                    });
+                }
+
             } else {
                 swal(response.data.message, {
                     icon: "error",
                 });
             }
-            jQuery.UbizOIWidget.w_go_back_to_output_page();
+
         },
         w_render_data_to_ouput_page: function (response) {
             var table_html = "";
@@ -359,6 +512,17 @@
             jQuery.UbizOIWidget.sort = {'sort_name': 'sup_id', 'order_by': 'asc'};
             jQuery.UbizOIWidget.w_set_paging_for_detail_page(0,0,true);
             removeErrorInput();
+        },
+        w_clear_search_form:function(){
+            jQuery('#search-form  #sup_code').val("");
+            jQuery('#search-form  #sup_name').val("");
+            jQuery('#search-form  #sup_mail').val("");
+            jQuery('#search-form  #sup_phone').val("");
+            jQuery('#search-form  #sup_fax').val("");
+            jQuery('#search-form  #sup_website').val("");
+            jQuery('#search-form  #sup_contain').val("");
+            jQuery('#search-form  #sup_notcontain').val("");
+            jQuery('#search-form  #sup_fuzzy').val("");
         },
         w_get_specific_supplier_by_id(id, index) {
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
