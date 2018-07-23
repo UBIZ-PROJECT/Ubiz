@@ -36,11 +36,11 @@ if ($newer_page < $max_page) {
         /
         <span class="ts">{{$rows_num}}</span></span>
 </div>
-<div id="paging-older" class="amD utooltip" title="Cũ hơn"  <?php echo $get_older_data_func;?>>
+<div id="paging-older" class="amD utooltip" title="{{ __("Older") }}"  <?php echo $get_older_data_func;?>>
     <span class="amF">&nbsp;</span>
-    <img class="amI {{$older_css}}" src="http://ubiz.local/images/cleardot.gif" alt="">
+    <img class="amI {{$older_css}}" src="{{ asset("images/cleardot.gif") }}" alt="">
 </div>
-<div id="paging-newer" class="amD utooltip" title="Mới hơn" <?php echo $get_newer_data_func;?>>
+<div id="paging-newer" class="amD utooltip" title="{{ __("Newer") }}" <?php echo $get_newer_data_func;?>>
     <span class="amF">&nbsp;</span>
-    <img class="amJ {{$newer_css}}" src="http://ubiz.local/images/cleardot.gif" alt="">
+    <img class="amJ {{$newer_css}}" src="{{ asset("images/cleardot.gif") }}" alt="">
 </div>

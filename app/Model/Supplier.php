@@ -11,6 +11,7 @@ namespace App\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use App\Helper;
 
 class Supplier implements JWTSubject
 {
@@ -83,15 +84,38 @@ class Supplier implements JWTSubject
         return $supplier;
     }
 
+    public function getEachSupplierByPaging($page,$sort = '') {
+        $sort_name = 'sup_id';
+        $order_by = 'asc';
+        if (!isset($sort) || !empty($sort)) {
+            $sort_info = explode('_', $sort);
+            $order_by = $sort_info[sizeof($sort_info) - 1];
+            unset($sort_info[sizeof($sort_info) - 1]);
+            $sort_name = implode('_', $sort_info);
+        } 
+        $rows_per_page = 1;
+        $supplier = DB::table('suppliers')
+            ->select('sup_id','sup_code','sup_avatar','sup_name','sup_phone','sup_fax','sup_mail','sup_website')
+            ->where('delete_flg', '=', '0')
+            ->orderBy($sort_name, $order_by)
+            ->offset($page * $rows_per_page)
+            ->limit($rows_per_page)
+            ->get();
+        return $supplier;
+    }
+
     public function insertSupplier($param) {
-        $param = json_decode($param, true);
         DB::beginTransaction();
+        $sup_ava = '';
+        if (!empty($param['extension'])) {
+            $sup_ava = $this->getNextId() . "." . $param['extension'];
+        }
         try {
             $code = $this->generateCode();
-             DB::table('suppliers')->insertGetId(
+            $id = DB::table('suppliers')->insertGetId(
                 [
                     'sup_code'=>$code,
-                    'sup_avatar'=>'',
+                    'sup_avatar'=>$sup_ava,
                     'sup_name'=>$param['sup_name'],
                     'sup_phone'=>$param['sup_phone'],
                     'sup_fax'=>$param['sup_fax'],
@@ -103,7 +127,9 @@ class Supplier implements JWTSubject
                     'inp_user'=>'2',
                     'upd_user'=>'2'
                 ]
-            );\
+            );
+            
+            Helper::resizeImage($param['tmp_name'], $sup_ava, 200,200, 'sup');
             DB::commit();
         } catch(\Throwable $e) {
             DB::rollback();
@@ -130,9 +156,18 @@ class Supplier implements JWTSubject
     public function updateSupplierById($supplier) {
         DB::beginTransaction();
         try {
+            $sup_ava = '';
+            if (!empty($supplier['extension'])) {
+                $sup_ava = explode(".",$supplier['sup_avatar']);
+                $sup_ava = $sup_ava[0] . ".".$supplier['extension'];
+                Helper::resizeImage($supplier['tmp_name'], $sup_ava, 200,200, 'sup');
+            } else {
+                $sup_ava = $supplier['sup_avatar'];
+            }
             DB::table('suppliers')->where('sup_id','=',$supplier['sup_id'])
                 ->update([
                    'sup_name'=>$supplier['sup_name'],
+                   'sup_avatar'=>$sup_ava,
                    'sup_phone'=>$supplier['sup_phone'],
                    'sup_fax'=>$supplier['sup_fax'],
                    'sup_mail'=>$supplier['sup_mail'],
@@ -172,15 +207,20 @@ class Supplier implements JWTSubject
         return $count;
     }
 
-    private function generateCode() {
+    private function getNextId() {
         $code = DB::table("suppliers")
         ->select('sup_code')
         ->max('sup_code');
         if (empty($code)) {
-            return '00001';
+            return 1;
         }
         $code = (int)$code;
         $code++;
+        return $code;
+    }
+
+    private function generateCode() {
+        $code = $this->getNextId();
         return  sprintf("%05d", $code);
     }
 }

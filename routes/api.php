@@ -18,11 +18,11 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
     Route::middleware(['jwt'])->group(function () {
         Route::get('logout', ['as' => 'api-logout', 'uses' => 'Api\AuthController@logout']);
         Route::get('users', ['as' => 'api-users', 'uses' => 'Api\UsersController@getUsers']);
-        Route::delete('users/{ids}', ['as' => 'delete-users', 'uses' => 'Api\UsersController@deleteUsers']);
+        Route::delete('users/{ids}/delte', ['as' => 'delete-users', 'uses' => 'Api\UsersController@deleteUsers']);
         Route::get('suppliers', ['as' => 'api-suppliers', 'uses' => 'Api\SupplierController@getSuppliers']);
-        Route::get('suppliers/insert', ['as' => 'suppliers-insert', 'uses' => 'Api\SupplierController@insertSupplier']);
+        Route::post('suppliers/insert', ['as' => 'suppliers-insert', 'uses' => 'Api\SupplierController@insertSupplier']);
         Route::get('suppliers/delete', ['as' => 'suppliers-delete', 'uses' => 'Api\SupplierController@deleteSuppliersById']);
-        Route::get('suppliers/update/{id}', ['as' => 'suppliers-update', 'uses' => 'Api\SupplierController@updateSupplierById']);
+        Route::post('suppliers/update/{id}', ['as' => 'suppliers-update', 'uses' => 'Api\SupplierController@updateSupplierById']);
         Route::get('suppliers/{id}', ['as'=> 'suppliers-detail','uses'=> 'Api\SupplierController@getSupplierById']);
 		Route::get('customers', ['as' => 'api-customer', 'uses' => 'Api\CustomerController@getCustomers']);
 		Route::get('customer-edit', ['as'=> 'get-customer','uses'=> 'Api\CustomerController@getCustomer']);

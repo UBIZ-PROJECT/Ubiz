@@ -1,7 +1,7 @@
 <div class="search">
     <div class="tyo" role="search">
         <div class="cyo">
-            <input id="fuzzy" autocomplete="off" placeholder="Tìm kiếm nhân viên" value="" type="text" onkeypress="jQuery.UbizOIWidget.w_fuzzy_search_handle_enter(event)">
+            <input id="fuzzy" spellcheck="false" autocomplete="off" placeholder="Tìm kiếm nhân viên" value="" type="text" onkeypress="jQuery.UbizOIWidget.w_fuzzy_search_handle_enter(event)">
         </div>
         <button class="dyo" onclick="show_searh_form()">
             <svg focusable="false" height="24px" viewBox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg">
@@ -30,7 +30,7 @@
                         <label for="code">Mã</label>
                     </span>
                     <span class="avo">
-                        <input type="text" id="code" value="" autocomplete="off">
+                        <input type="text" spellcheck="false" id="code" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo">
@@ -38,7 +38,7 @@
                         <label for="name">Tên</label>
                     </span>
                     <span class="avo">
-                        <input type="text" id="name" value="" autocomplete="off">
+                        <input type="text" spellcheck="false" id="name" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo">
@@ -54,7 +54,7 @@
                         <label for="phone">Điện thoại</label>
                     </span>
                     <span class="avo">
-                        <input type="text" id="phone" value="" autocomplete="off">
+                        <input type="text" spellcheck="false" id="phone" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo">
@@ -62,7 +62,7 @@
                         <label for="dep_name">Phòng ban</label>
                     </span>
                     <span class="avo">
-                        <input type="text" id="dep_name" value="" autocomplete="off">
+                        <input type="text" spellcheck="false" id="dep_name" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo">
@@ -70,12 +70,28 @@
                         <label for="address">Địa chỉ</label>
                     </span>
                     <span class="avo">
-                        <input type="text" id="address" value="" autocomplete="off">
+                        <input type="text" spellcheck="false" id="address" value="" autocomplete="off">
+                    </span>
+                </div>
+                <div class="rvo">
+                    <span class="yvo">
+                        <label for="contain">Chứa các từ</label>
+                    </span>
+                    <span class="avo">
+                        <input type="text" spellcheck="false" spellcheck="false" id="contain" value="" autocomplete="off">
+                    </span>
+                </div>
+                <div class="rvo">
+                    <span class="yvo">
+                        <label for="notcontain">Không có</label>
+                    </span>
+                    <span class="avo">
+                        <input type="text" spellcheck="false" id="notcontain" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo fvo">
                     <button type="button" class="btn btn-primary btn-sm" onclick="jQuery.UbizOIWidget.w_search()">Tìm kiếm</button>
-                    <button type="button" class="btn btn-link btn-sm text-secondary" onclick="jQuery.UbizOIWidget.w_clear_search_form">Xóa bộ lọc</button>
+                    <button type="button" class="btn btn-link btn-sm text-secondary" onclick="jQuery.UbizOIWidget.w_clear_search_form()">Xóa bộ lọc</button>
                 </div>
             </div>
         </div>

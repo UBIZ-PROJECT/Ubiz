@@ -278,8 +278,9 @@
                     <div class="aqB" id="nicescroll-oput">
                         <div class="yTP">
                             <div id="table-content" class="jFr">
+                                <?php $index = 0; ?>
                                 @foreach($data as $sup)
-                                    <div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{$sup->sup_id}})">
+                                    <div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{$sup->sup_id}},{{$index}})">
                                         <div class="tcB col-1">
                                             <div class="cbo">
                                                 <div class="jgQ" onclick="jQuery.UbizOIWidget.w_c_checkbox_click(this)">
@@ -327,6 +328,8 @@
                                             </div>
                                         </div>
                                     </div>
+                                    
+                                <?php $index=$index + 1; ?>
                                 @endforeach
                             </div>
                         </div>
@@ -374,7 +377,7 @@
                                 <span class="Di">
                                     <div class="amH" style="user-select: none">
                                         <span class="Dj">
-                                            <span><span class="ts">1</span></span> / <span class="ts">229</span>
+                                            <span><span class="current-page">1</span></span> / <span class="row-numbers">229</span>
                                         </span>
                                     </div>
                                     <div class="amD utooltip previous" title="Cũ hơn">
@@ -397,12 +400,13 @@
                 </div>
                 <div class="jAQ">
                     <div class="aqI" id="nicescroll-iput">
-                        @include('layouts/input',['type'=>'disabled', 'control_id'=>'txt_sup_code', 'label'=>'Mã'])
-                        @include('layouts/input',['control_id'=>'txt_sup_name', 'label'=>'Tên nhà cung cấp'])
-                        @include('layouts/input',['control_id'=>'txt_sup_website', 'label'=>'Website'])
-                        @include('layouts/input',['control_id'=>'txt_sup_phone', 'label'=>'Phone'])
-                        @include('layouts/input',['control_id'=>'txt_sup_fax', 'label'=>'Fax'])
-                        @include('layouts/input',['control_id'=>'txt_sup_mail', 'label'=>'Email'])
+                        @include('components.upload_image')
+                        @include('components.input',['type'=>'disabled', 'control_id'=>'txt_sup_code', 'label'=>'Mã', 'length'=>'5'])
+                        @include('components.input',['type'=>'required', 'control_id'=>'txt_sup_name', 'label'=>'Tên nhà cung cấp', 'length'=>'100'])
+                        @include('components.input',['control_id'=>'txt_sup_website', 'label'=>'Website', 'length'=>'100'])
+                        @include('components.input',['type'=>'required', 'control_id'=>'txt_sup_phone', 'label'=>'Phone', 'length'=>'15'])
+                        @include('components.input',['control_id'=>'txt_sup_fax', 'label'=>'Fax', 'length'=>'20'])
+                        @include('components.input',['type'=>'required', 'control_id'=>'txt_sup_mail', 'label'=>'Email', 'length'=>'100'])
                     </div>
                 </div>
             </div>
