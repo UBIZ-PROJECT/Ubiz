@@ -31566,7 +31566,7 @@ __webpack_require__(255);
 window.axios = __webpack_require__(37);
 window.qs = __webpack_require__(258);
 __webpack_require__(261);
-__webpack_require__(263);
+window.TinyDatePicker = __webpack_require__(263);
 window.moment = __webpack_require__(0);
 window.numeral = __webpack_require__(265);
 /**
