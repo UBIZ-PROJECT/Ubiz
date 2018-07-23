@@ -34,6 +34,7 @@
             jQuery('.utooltip').tooltipster({
                 side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
             });
+            jQuery(".i-numeric").forceNumeric();
         },
         w_sort: function (self) {
 
