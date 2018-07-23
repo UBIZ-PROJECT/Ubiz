@@ -41,6 +41,30 @@ class UsersController extends Controller
         return response()->json(['user' => $data, 'message' => __("Successfully processed.")], 200);
     }
 
+    public function updateUser($id, Request $request)
+    {
+        try {
+            $user = new User();
+            $paging = $user->getPagingInfo();
+            $paging['page'] = 0;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['users' => $users, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed.")], 200);
+    }
+
+    public function insertUser(Request $request)
+    {
+        try {
+            $user = new User();
+            $paging = $user->getPagingInfo();
+            $paging['page'] = 0;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['users' => $users, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed.")], 200);
+    }
+
     public function deleteUsers($ids, Request $request)
     {
         try {

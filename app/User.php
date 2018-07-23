@@ -75,6 +75,21 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
+    public function updateUser($id = '')
+    {
+        DB::beginTransaction();
+        try {
+
+            DB::table('users')
+                ->whereIn('id', explode(',', $ids))
+                ->update(['delete_flg' => '1']);
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
     public function getUsers($page = 0, $sort = '', $search = [])
     {
         try {

@@ -23,7 +23,7 @@
     <div class="main-content">
         <div class="l-content">
             <div class="zY">
-                <div class="yP" onclick="jQuery.UbizOIWidget.w_create()">{{ __("Add new") }}</div>
+                <div class="yP" onclick="jQuery.UbizOIWidget.w_go_to_input_page(0)">{{ __("Add new") }}</div>
             </div>
             <div id="nicescroll-sidebar" class="zX nicescroll">
                 <nav role="navigation">
@@ -346,21 +346,21 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="GNi">
+                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_save()">
                                         <div class="ax7 poK utooltip" title="{{ __("Save") }}">
                                             <div class="asA">
                                                 <div class="arS"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="GNi">
+                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_refresh()">
                                         <div class="ax7 poK utooltip" title="{{ __("Refresh") }}">
                                             <div class="asA">
                                                 <div class="arR"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="GNi">
+                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_delete()">
                                         <div class="ax7 poK utooltip" title="{{ __("Delete") }}">
                                             <div class="asA">
                                                 <div class="asX"></div>
@@ -397,6 +397,7 @@
                 </div>
                 <div class="jAQ">
                     <div class="aqI nicescroll" id="nicescroll-iput">
+                        <input type="hidden" id="txt_id" value="0">
                         <div class="row z-mgl z-mgr">
                             <div class="col-sm-2 col-md-2 col-xl-2 z-pdl">
                                 @include('components.upload_image')
