@@ -428,17 +428,29 @@
                 <div class="jAQ">
                     <div class="aqI nicescroll" id="nicescroll-iput">
 						<form id="f-input">
-							<input type="hidden" name="cus_id"/>
-							@include('layouts/input',['type'=>'required', 'control_id'=>'cus_code', 'label'=>'Mã'])
-							@include('layouts/input',['type'=>'required', 'control_id'=>'cus_name', 'label'=>'Tên khách hàng'])
-							@include('layouts/input',['mode'=>'file', 'control_id'=>'cus_avatar', 'label'=>'Ảnh đại diện'])
-							@include('layouts/input',['type'=>'required', 'control_id'=>'cus_type', 'label'=>'Loại khách hàng'])
-							@include('layouts/input',['control_id'=>'cus_phone', 'label'=>'Số điện thoại'])
-							@include('layouts/input',['control_id'=>'cus_fax', 'label'=>'Fax'])
-							@include('layouts/input',['control_id'=>'cus_mail', 'label'=>'Email'])
-							@include('layouts/input',['control_id'=>'user_id', 'label'=>'Nhân viên phụ trách'])
-							@include('layouts/input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 1'])
-							@include('layouts/input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 2'])
+							<div class="row z-mgl z-mgr">
+								<div class="col-sm-2 col-md-2 col-xl-2 z-pdl">
+									<a class="ato">
+										<img id="avt_img" src="{{ asset("images/avatar.jpg") }}">
+										<input type="file" id="avatar" name="avatar" accept="image/*" style="display: none"/>
+										<span id="change_avt">{{ __("Change") }}</span>
+									</a>
+								</div>
+								<div class="col-sm-5 col-md-5 col-xl-5">
+									<input type="hidden" name="cus_id"/>
+									@include('components.input',['type'=>'required', 'control_id'=>'cus_code', 'label'=>'Mã'])
+									@include('components.input',['type'=>'required', 'control_id'=>'cus_name', 'label'=>'Tên khách hàng'])
+									@include('components.input',['type'=>'required', 'control_id'=>'cus_type', 'label'=>'Loại khách hàng'])
+									@include('components.input',['control_id'=>'cus_phone', 'label'=>'Số điện thoại'])
+								</div>
+								<div class="col-sm-5 col-md-5 col-xl-5 z-pdr cus-part-2">
+									@include('components.input',['control_id'=>'cus_fax', 'label'=>'Fax'])
+									@include('components.input',['control_id'=>'cus_mail', 'label'=>'Email'])
+									@include('components.input',['control_id'=>'user_id', 'label'=>'Nhân viên phụ trách'])
+									@include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 1'])
+									@include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 2'])
+								</div>
+							</div>
 						</form>
                     </div>
                 </div>

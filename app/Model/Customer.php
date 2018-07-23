@@ -5,6 +5,7 @@ namespace App\Model;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Support\Facades\DB;
+use App\Helper;
 
 class Customer implements JWTSubject
 {
@@ -200,7 +201,7 @@ public function getCustomer($id)
 			  [
 				  'cus_code'=>$param['cus_code'],
 				  'cus_name'=>$param['cus_name'],
-				  //'cus_avatar'=>$param['cus_avatar'],
+				  'cus_avatar'=>$param['cus_id'].'.'.$param['avatar']->getClientOriginalExtension(),
 				  'cus_type'=>$param['cus_type'],
 				  'cus_phone'=>$param['cus_phone'],
 				  'cus_fax'=>$param['cus_fax'],
@@ -210,6 +211,8 @@ public function getCustomer($id)
 				  'upd_user'=>'1'
 			  ]
 			);
+			
+			Helper::resizeImage($param['avatar']->getRealPath(), $param['cus_id'].'.'.$param['avatar']->getClientOriginalExtension(), 200, 200, 'cus');
 			
 		} catch (\Throwable $e) {
             throw $e;

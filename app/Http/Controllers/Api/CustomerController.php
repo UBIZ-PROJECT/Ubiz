@@ -71,10 +71,9 @@ class CustomerController extends Controller
 	
 	public function updateCustomer(Request $request)
     {
-		$data = json_decode($request->data, true);
         try {
             $customer = new Customer();
-            $customer->updateCustomer($data);
+            $customer->updateCustomer($request);
 			$customers = $customer->getCustomers(0);
             $paging = $customer->getPagingInfo();
             $paging['page'] = 0;

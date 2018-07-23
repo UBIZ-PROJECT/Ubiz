@@ -179,6 +179,14 @@
 				ids.push(id);
 				jQuery.UbizOIWidget.w_delete(ids);
 			});
+			
+			$("#change_avt").click(function(){
+				$("#avatar").click();
+			});
+			
+			$("#avatar").change(function(){
+				jQuery.UbizOIWidget.w_preview_avatar(this);
+			});
         },
         w_go_back_to_output_page: function (self) {
             jQuery.UbizOIWidget.o_page.fadeIn("slow");
@@ -279,7 +287,7 @@
 				$(".cus_address\\[\\]_container").remove();
 				for(var i = 0; i < customer.address.length; i++){
 					var html = '<div class="textfield  root_textfield rootIsUnderlined cus_address[]_container"><div class="wrapper"><label for="cus_address[]" class="ms-Label root-56">Địa chỉ '+ (i+1) +' :</label><div class="fieldGroup"><input type="text" name="cus_address[]" id="cus_address[]" value="'+ customer.address[i].cad_address +'" class="input_field"></div></div><span class="error_message hidden-content"><div class="message-container"><p class="label_errorMessage css-57 errorMessage"><span class="error-message-text"></span></p></div></span></div>';
-					$('#f-input').append(html);
+					$('.cus-part-2').append(html);
 				}
 			}
 		},
@@ -405,7 +413,8 @@
             jQuery("#paging-newer").replaceWith(paging_newer);
         },
 		w_get_data_input_form: function () {
-			var data = $('form').getForm2obj();
+			//var data = $('form').getForm2obj();
+			var data = new FormData($('#f-input')[0]);
 			return data;
 		},
 		w_save: function () {
@@ -427,9 +436,9 @@
                 switch (value) {
                     case "catch":
                         if(data.cus_id != 0){
-							ubizapis('v1', '/customer-update', 'get', null, {'data': data}, jQuery.UbizOIWidget.w_save_callback);
+							ubizapis('v1', '/customer-update', 'post', data, null, jQuery.UbizOIWidget.w_save_callback);
 						}else{
-							ubizapis('v1', '/customer-create', 'get', null, {'data': data}, jQuery.UbizOIWidget.w_save_callback);
+							ubizapis('v1', '/customer-create', 'post', data, null, jQuery.UbizOIWidget.w_save_callback);
 						}
                         break;
                 }
@@ -449,6 +458,17 @@
                     icon: "error",
                 });
             }
+		},
+		w_preview_avatar: function (input) {
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
+
+				reader.onload = function (e) {
+					$('#avt_img').attr('src', e.target.result);
+				}
+
+				reader.readAsDataURL(input.files[0]);
+			}
 		}
     });
 })(jQuery);
