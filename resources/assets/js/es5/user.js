@@ -2,6 +2,7 @@
     UbizOIWidget = function () {
         this.page = 0;
         this.sort = {};
+        this.row_nums = 0;
         this.o_page = null;
         this.i_page = null;
     };
@@ -188,6 +189,7 @@
         },
         w_go_to_input_page: function (id, pos) {
             if (id == 0 || pos == 0) {
+                jQuery("btn-delete").hide();
                 jQuery.UbizOIWidget.w_clean_input_page();
                 jQuery.UbizOIWidget.o_page.hide();
                 jQuery.UbizOIWidget.i_page.fadeIn("slow");
@@ -204,6 +206,7 @@
                     horizrailenabled: false
                 });
             } else {
+                jQuery("btn-delete").show();
                 ubizapis('v1', '/users/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
             }
         },
@@ -537,6 +540,23 @@
             form_data.append('bhyt', bhyt);
             return form_data;
         },
+        w_get_detail_data: function (pos) {
+            var params = {};
+            params.pos = pos;
+
+            var search_info = jQuery.UbizOIWidget.w_get_search_info();
+            Object.assign(params, search_info);
+
+            if (jQuery.isEmptyObject(search_info) === false) {
+                var fuzzy = jQuery.UbizOIWidget.w_convert_search_info_to_fuzzy(search_info);
+                jQuery('#fuzzy').val(fuzzy);
+            }
+
+            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
+            params.sort = sort_info.sort_name + "_" + sort_info.order_by;
+
+            ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+        },
         w_o_paging: function (page, rows_num, rows_per_page) {
             var page = parseInt(page);
             var f_num = (page * rows_per_page) + 1;
@@ -564,23 +584,14 @@
             }
 
             var paging_label = '<div id="paging-label" class="amH" style="user-select: none"><span class="Dj"><span><span class="ts">' + f_num + '</span>–<span class="ts">' + m_num + '</span></span> / <span class="ts">' + rows_num + '</span></span></div>';
-            var paging_older = '<div id="paging-older" ' + get_older_data_func + ' class="amD utooltip" title="Cũ hơn"><span class="amF">&nbsp;</span><img class="amI ' + older_css + '" src="http://ubiz.local/images/cleardot.gif" alt=""></div>';
-            var paging_newer = '<div id="paging-newer" ' + get_newer_data_func + ' class="amD utooltip" title="Mới hơn"><span class="amF">&nbsp;</span><img class="amJ ' + newer_css + '" src="http://ubiz.local/images/cleardot.gif" alt=""></div>';
+            var paging_older = '<div id="paging-older" ' + get_older_data_func + ' class="amD utooltip" title="' + i18next.t('Older') + '"><span class="amF">&nbsp;</span><img class="amI ' + older_css + '" src="http://ubiz.local/images/cleardot.gif" alt=""></div>';
+            var paging_newer = '<div id="paging-newer" ' + get_newer_data_func + ' class="amD utooltip" title="' + i18next.t('Newer') + '"><span class="amF">&nbsp;</span><img class="amJ ' + newer_css + '" src="http://ubiz.local/images/cleardot.gif" alt=""></div>';
 
             jQuery("#paging-label").replaceWith(paging_label);
             jQuery("#paging-older").replaceWith(paging_older);
             jQuery("#paging-newer").replaceWith(paging_newer);
         },
         w_i_paging: function (pos, rows_num) {
-            var page = parseInt(page);
-            var f_num = (page * rows_per_page) + 1;
-            var m_num = (page + 1) * rows_per_page;
-            if (m_num > rows_num) m_num = rows_num;
-
-            var older_page = page - 1;
-            var newer_page = page + 1;
-
-            var max_page = Math.ceil(rows_num / rows_per_page);
 
             var get_older_data_func = '';
             var get_newer_data_func = '';
@@ -588,22 +599,22 @@
             var older_css = 'adS';
             if (pos > 0) {
                 older_css = 'aaT';
-                get_older_data_func = 'onclick="jQuery.UbizOIWidget.w_get_older_data(' + older_page + ')"';
+                get_older_data_func = 'onclick="jQuery.UbizOIWidget.w_get_detail_data(' + (pos - 1) + ')"';
             }
 
             var newer_css = 'adS';
-            if (newer_page < max_page) {
+            if (pos < rows_num) {
                 newer_css = 'aaT';
-                get_newer_data_func = 'onclick="jQuery.UbizOIWidget.w_get_newer_data(' + newer_page + ')"';
+                get_newer_data_func = 'onclick="jQuery.UbizOIWidget.w_get_detail_data(' + (pos + 1) + ')"';
             }
 
-            var paging_label = '<div id="i-paging-label" class="amH" style="user-select: none"><span class="Dj"><span><span class="ts">' + f_num + '</span>–<span class="ts">' + m_num + '</span></span> / <span class="ts">' + rows_num + '</span></span></div>';
-            var paging_older = '<div id="i-paging-older" ' + get_older_data_func + ' class="amD utooltip" title="Cũ hơn"><span class="amF">&nbsp;</span><img class="amI ' + older_css + '" src="http://ubiz.local/images/cleardot.gif" alt=""></div>';
-            var paging_newer = '<div id="i-paging-newer" ' + get_newer_data_func + ' class="amD utooltip" title="Mới hơn"><span class="amF">&nbsp;</span><img class="amJ ' + newer_css + '" src="http://ubiz.local/images/cleardot.gif" alt=""></div>';
+            var paging_label = '<div id="i-paging-label" class="amH" style="user-select: none"><span class="Dj"><span class="Dj"><span><span class="ts">' + pos + '</span></span> / <span class="ts">' + row_num + '</span></span></div>';
+            var paging_older = '<div id="i-paging-older" ' + get_older_data_func + ' class="amD utooltip" title="' + i18next.t('Older') + '"><span class="amF">&nbsp;</span><img class="amI ' + older_css + '" src="/images/cleardot.gif" alt=""></div>';
+            var paging_newer = '<div id="i-paging-newer" ' + get_newer_data_func + ' class="amD utooltip" title="' + i18next.t('Newer') + '"><span class="amF">&nbsp;</span><img class="amJ ' + newer_css + '" src="/images/cleardot.gif" alt=""></div>';
 
-            jQuery("#paging-label").replaceWith(paging_label);
-            jQuery("#paging-older").replaceWith(paging_older);
-            jQuery("#paging-newer").replaceWith(paging_newer);
+            jQuery("#i-paging-label").replaceWith(paging_label);
+            jQuery("#i-paging-older").replaceWith(paging_older);
+            jQuery("#i-paging-newer").replaceWith(paging_newer);
         }
     });
 })(jQuery);
