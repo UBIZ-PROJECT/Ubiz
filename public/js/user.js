@@ -61,52 +61,71 @@
             var form_data = jQuery.UbizOIWidget.w_get_form_data();
             var id = jQuery("#txt_id").val();
             form_data.append("id", id);
-            if (id != "0"){
+            if (id == "0") {
                 form_data.append('_method', 'put');
                 ubizapis('v1', '/users', 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
-            }else{
+            } else {
                 ubizapis('v1', '/users', 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
             }
         },
-        w_delete: function () {
+        w_o_delete: function () {
             var ids = jQuery.UbizOIWidget.w_get_checked_rows();
             if (ids.length == 0)
                 return false;
 
             swal({
-                title: "Bạn có muốn xóa dữ liệu không?",
-                text: "Một khi xóa, bạn sẽ không có khả năng khôi phục dữ liệu này!",
-                icon: "warning",
-                buttons: true,
-                buttons: {
-                    cancel: "Không",
-                    catch: {
-                        text: "Có",
-                        value: "catch",
-                    }
-                },
-                dangerMode: true,
-            }).then((value) => {
-                switch (value) {
-                    case "catch":
-                        ubizapis('v1', '/users/' + ids.join(',') + '/delete', 'delete', null, null, jQuery.UbizOIWidget.w_delete_callback);
-                        break;
+                title: i18next.t('Do you want to delete the data?'),
+                text: i18next.t('Once deleted, you will not be able to recover this data!'),
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: i18next.t('No'),
+                confirmButtonText: i18next.t('Yes'),
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    ubizapis('v1', '/users/' + ids.join(',') + '/delete', 'delete', null, null, jQuery.UbizOIWidget.w_o_delete_callback);
                 }
-            });
+            })
+        },
+        w_i_delete: function () {
+            var id = jQuery("#txt_id").val();
+            swal({
+                title: i18next.t('Do you want to delete the data?'),
+                text: i18next.t('Once deleted, you will not be able to recover this data!'),
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: i18next.t('No'),
+                confirmButtonText: i18next.t('Yes'),
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    ubizapis('v1', '/users/' + id + '/delete', 'delete', null, null, jQuery.UbizOIWidget.w_i_delete_callback);
+                }
+            })
         },
         w_refresh: function () {
-
+            var id = jQuery("#txt_id").val();
+            if (id == '0') {
+                jQuery.UbizOIWidget.w_clean_input_page();
+            } else {
+                ubizapis('v1', '/users/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
+            }
         },
         w_save_callback: function (response) {
             if (response.data.success == true) {
                 console.log("OK");
             } else {
-                swal(response.data.message, {
-                    icon: "error",
+                swal({
+                    type: 'error',
+                    text: response.data.message
                 });
             }
         },
-        w_search:function(){
+        w_search: function () {
 
             var params = {};
             params.page = '0';
@@ -126,7 +145,7 @@
             document.body.dispatchEvent(event);
             ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
-        w_clear_search_form:function(){
+        w_clear_search_form: function () {
             jQuery('#code').val("");
             jQuery('#name').val("");
             jQuery('#email').val("");
@@ -137,7 +156,7 @@
             jQuery('#notcontain').val("");
             jQuery('#fuzzy').val("");
         },
-        w_update_search_form:function(search_info){
+        w_update_search_form: function (search_info) {
             jQuery.each(search_info, function (key, val) {
                 var search_item = jQuery('#' + key);
                 if (search_item.length == 1) {
@@ -167,10 +186,28 @@
                 jQuery.UbizOIWidget.w_fuzzy_search();
             }
         },
-        w_go_to_input_page: function (id) {
-            ubizapis('v1', '/users/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
+        w_go_to_input_page: function (id, pos) {
+            if (id == 0 || pos == 0) {
+                jQuery.UbizOIWidget.w_clean_input_page();
+                jQuery.UbizOIWidget.o_page.hide();
+                jQuery.UbizOIWidget.i_page.fadeIn("slow");
+                jQuery('#nicescroll-oput').getNiceScroll().remove();
+                jQuery('#nicescroll-iput').getNiceScroll().remove();
+                jQuery('#nicescroll-iput').niceScroll({
+                    cursorcolor: "#9fa8b0",
+                    cursorwidth: "5px",
+                    cursorborder: "none",
+                    cursorborderradius: 5,
+                    cursoropacitymin: 0.4,
+                    scrollbarid: 'nc-input',
+                    autohidemode: false,
+                    horizrailenabled: false
+                });
+            } else {
+                ubizapis('v1', '/users/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
+            }
         },
-        w_go_back_to_output_page: function (self) {
+        w_go_back_to_output_page: function () {
             jQuery.UbizOIWidget.o_page.fadeIn("slow");
             jQuery.UbizOIWidget.i_page.hide();
             jQuery('#nicescroll-oput').getNiceScroll().remove();
@@ -189,7 +226,10 @@
         w_refresh_output_page: function () {
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/users', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/users', 'get', null, {
+                'page': jQuery.UbizOIWidget.page,
+                'sort': sort
+            }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_sort_info: function () {
             var sort_obj = jQuery.UbizOIWidget.o_page.find('div.dWT');
@@ -259,24 +299,48 @@
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             jQuery.UbizOIWidget.sort = sort_info;
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/users', 'get', null, {'page': page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/users', 'get', null, {
+                'page': page,
+                'sort': sort
+            }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_newer_data: function (page) {
             jQuery.UbizOIWidget.page = page;
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             jQuery.UbizOIWidget.sort = sort_info;
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/users', 'get', null, {'page': page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/users', 'get', null, {
+                'page': page,
+                'sort': sort
+            }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
-        w_delete_callback: function (response) {
+        w_o_delete_callback: function (response) {
             if (response.data.success == true) {
                 jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
-                swal(response.data.message, {
-                    icon: "success",
+                swal({
+                    type: 'success',
+                    text: response.data.message
                 });
             } else {
-                swal(response.data.message, {
-                    icon: "error",
+                swal({
+                    type: 'error',
+                    text: response.data.message
+                });
+            }
+        },
+        w_i_delete_callback: function (response) {
+            if (response.data.success == true) {
+                swal({
+                    type: 'success',
+                    text: response.data.message,
+                    onClose: function(){
+                        jQuery.UbizOIWidget.w_go_back_to_output_page();
+                    }
+                });
+            } else {
+                swal({
+                    type: 'error',
+                    text: response.data.message
                 });
             }
         },

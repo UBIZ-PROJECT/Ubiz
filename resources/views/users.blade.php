@@ -23,7 +23,7 @@
     <div class="main-content">
         <div class="l-content">
             <div class="zY">
-                <div class="yP" onclick="jQuery.UbizOIWidget.w_go_to_input_page(0)">{{ __("Add new") }}</div>
+                <div class="yP" onclick="jQuery.UbizOIWidget.w_go_to_input_page(0, 0)">{{ __("Add new") }}</div>
             </div>
             <div id="nicescroll-sidebar" class="zX nicescroll">
                 <nav role="navigation">
@@ -93,7 +93,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_delete()">
+                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_o_delete()">
                                         <div class="ax7 poK utooltip" title="{{ __("Delete") }}">
                                             <div class="asA">
                                                 <div class="asX"></div>
@@ -278,8 +278,8 @@
                     <div class="aqB nicescroll" id="nicescroll-oput">
                         <div class="yTP">
                             <div id="table-content" class="jFr">
-                                @foreach($users as $user)
-                                    <div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{$user->id}})">
+                                @foreach($users as $key => $user)
+                                    <div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{$user->id}}, {{ $key + 1 }})">
                                         <div class="tcB col-1">
                                             <div class="cbo">
                                                 <div class="jgQ" onclick="jQuery.UbizOIWidget.w_c_checkbox_click(this)">
@@ -339,7 +339,7 @@
                         <div class="aqK">
                             <div class="aqL">
                                 <div class="GtF">
-                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_go_back_to_output_page(this)">
+                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_go_back_to_output_page()">
                                         <div class="ax7 poK utooltip" title="{{ __("Back") }}">
                                             <div class="asA">
                                                 <div class="arB"></div>
@@ -360,7 +360,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_delete()">
+                                    <div id="btn-delete" class="GNi" onclick="jQuery.UbizOIWidget.w_i_delete()">
                                         <div class="ax7 poK utooltip" title="{{ __("Delete") }}">
                                             <div class="asA">
                                                 <div class="asX"></div>
