@@ -34,6 +34,8 @@
             jQuery('.utooltip').tooltipster({
                 side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
             });
+            jQuery(".i-numeric").forceNumeric();
+            TinyDatePicker('.i-date', {mode: 'dp-below'});
         },
         w_sort: function (self) {
 
@@ -54,6 +56,17 @@
             params.sort = sort_name + "_" + order_by;
 
             ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+        },
+        w_save: function () {
+            var form_data = jQuery.UbizOIWidget.w_get_form_data();
+            var id = jQuery("#txt_id").val();
+            form_data.append("id", id);
+            if (id != "0"){
+                form_data.append('_method', 'put');
+                ubizapis('v1', '/users', 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
+            }else{
+                ubizapis('v1', '/users', 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
+            }
         },
         w_delete: function () {
             var ids = jQuery.UbizOIWidget.w_get_checked_rows();
@@ -76,13 +89,22 @@
             }).then((value) => {
                 switch (value) {
                     case "catch":
-                        ubizapis('v1', '/users/' + ids.join(','), 'delete', null, null, jQuery.UbizOIWidget.w_delete_callback);
+                        ubizapis('v1', '/users/' + ids.join(',') + '/delete', 'delete', null, null, jQuery.UbizOIWidget.w_delete_callback);
                         break;
                 }
             });
         },
-        w_create:function(){
-            jQuery.UbizOIWidget.w_go_to_input_page(0);
+        w_refresh: function () {
+
+        },
+        w_save_callback: function (response) {
+            if (response.data.success == true) {
+                console.log("OK");
+            } else {
+                swal(response.data.message, {
+                    icon: "error",
+                });
+            }
         },
         w_search:function(){
 
@@ -146,20 +168,7 @@
             }
         },
         w_go_to_input_page: function (id) {
-            jQuery.UbizOIWidget.o_page.hide();
-            jQuery.UbizOIWidget.i_page.fadeIn("slow");
-            jQuery('#nicescroll-oput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-input',
-                autohidemode: false,
-                horizrailenabled: false
-            });
+            ubizapis('v1', '/users/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
         },
         w_go_back_to_output_page: function (self) {
             jQuery.UbizOIWidget.o_page.fadeIn("slow");
@@ -294,6 +303,66 @@
             jQuery.UbizOIWidget.page = response.data.paging.page;
             jQuery.UbizOIWidget.w_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
         },
+        w_render_data_to_input_page: function (response) {
+            var user = response.data.user;
+            jQuery.UbizOIWidget.w_clean_input_page();
+            jQuery.UbizOIWidget.w_set_input_page(user);
+
+            jQuery.UbizOIWidget.o_page.hide();
+            jQuery.UbizOIWidget.i_page.fadeIn("slow");
+            jQuery('#nicescroll-oput').getNiceScroll().remove();
+            jQuery('#nicescroll-iput').getNiceScroll().remove();
+            jQuery('#nicescroll-iput').niceScroll({
+                cursorcolor: "#9fa8b0",
+                cursorwidth: "5px",
+                cursorborder: "none",
+                cursorborderradius: 5,
+                cursoropacitymin: 0.4,
+                scrollbarid: 'nc-input',
+                autohidemode: false,
+                horizrailenabled: false
+            });
+        },
+        w_clean_input_page: function () {
+            jQuery("#txt_id").val("0");
+            jQuery("#txt_code").val("");
+            jQuery("#txt_name").val("");
+            jQuery("#txt_phone").val("");
+            jQuery("#txt_email").val("");
+            jQuery("#txt_dep_id").val("");
+            jQuery("#txt_address").val("");
+            jQuery("#txt_join_date").val("");
+            jQuery("#txt_salary").val("");
+            jQuery("#txt_bhxh").prop('checked', false).prop('disabled', false);
+            jQuery("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+            jQuery("#txt_bhyt").prop('checked', false).prop('disabled', false);
+            jQuery("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+        },
+        w_set_input_page: function (data) {
+            jQuery("#txt_id").val(data.id);
+            jQuery("#txt_code").val(data.code);
+            jQuery("#txt_name").val(data.name);
+            jQuery("#txt_phone").val(data.phone);
+            jQuery("#txt_email").val(data.email);
+            jQuery("#txt_dep_id").val(data.dep_id);
+            jQuery("#txt_address").val(data.address);
+            jQuery("#txt_join_date").val(format_date(data.join_date, 'YYYY/MM/DD'));
+            jQuery("#txt_salary").val(numeral(data.salary).format('0,0'));
+            if (data.bhxh == '0') {
+                jQuery("#txt_bhxh").prop('checked', false);
+                jQuery("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+            } else {
+                jQuery("#txt_bhxh").prop('checked', true);
+                jQuery("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('suc').addClass('sck');
+            }
+            if (data.bhxh == '0') {
+                jQuery("#txt_bhyt").prop('checked', false);
+                jQuery("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+            } else {
+                jQuery("#txt_bhyt").prop('checked', true);
+                jQuery("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('suc').addClass('sck');
+            }
+        },
         w_make_row_html: function (id, cols) {
             var row_html = '';
             if (cols.length > 0) {
@@ -380,6 +449,29 @@
                 ids.push(id);
             });
             return ids;
+        },
+        w_get_form_data: function () {
+            var form_data = new FormData();
+            form_data.append('code', jQuery("#txt_code").val());
+            form_data.append('name', jQuery("#txt_name").val());
+
+            if (jQuery('input[name=inp-upload-image]')[0].files.length > 0) {
+                form_data.append('avatar', jQuery('input[name=inp-upload-image]')[0].files[0]);
+            }
+
+            form_data.append('dep_id', jQuery("#txt_dep_id").val());
+            form_data.append('phone', jQuery("#txt_phone").val());
+            form_data.append('email', jQuery("#txt_email").val());
+            form_data.append('address', jQuery("#txt_address").val());
+            form_data.append('join_date', jQuery("#txt_join_date").val());
+            form_data.append('salary', numeral(jQuery("#txt_salary").val()).format('0'));
+
+            var bhxh = jQuery("#txt_bhxh").is(':checked') ? jQuery("#txt_bhxh").val() : 0;
+            form_data.append('bhxh', bhxh);
+
+            var bhyt = jQuery("#txt_bhyt").is(':checked') ? jQuery("#txt_bhyt").val() : 0;
+            form_data.append('bhyt', bhyt);
+            return form_data;
         },
         w_paging: function (page, rows_num, rows_per_page) {
             var page = parseInt(page);
