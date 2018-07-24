@@ -69,7 +69,7 @@ class SupplierController extends Controller
             throw $e;
         }
 
-        return response()->json(['supplier' => $data,'paging' => $paging, 'success' => true, 'message' => 'Thêm dữ liệu thành công!','method'=>'insert'], 200);
+        return response()->json(['supplier' => $data,'paging' => $paging, 'success' => true, 'message' => __("Successfully processed."),'method'=>'insert'], 200);
     }
 
     public function deleteSuppliersById($ids, Request $request) {
@@ -84,7 +84,7 @@ class SupplierController extends Controller
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['supplier' => $data, 'paging' => $paging, 'success' => true, 'message' => 'Xóa dữ liệu thành công!','method'=>'delete'], 200);
+        return response()->json(['supplier' => $data, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed."),'method'=>'delete'], 200);
     }
 
     public function updateSupplierById($id, Request $request) {
@@ -107,7 +107,7 @@ class SupplierController extends Controller
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['supplier' => $data,'paging' => $paging, 'success' => true, 'message' => 'Sửa dữ liệu thành công!','method'=>'update'], 200);
+        return response()->json(['supplier' => $data,'paging' => $paging, 'success' => true, 'message' => __("Successfully processed."),'method'=>'update'], 200);
     }
 
     private function getPageSortSearch($request) {

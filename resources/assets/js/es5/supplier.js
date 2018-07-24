@@ -1,3 +1,5 @@
+const _YES = i18next.t("Yes");
+const _NO = i18next.t("No");
 (function ($) {
     UbizOIWidget = function () {
         this.page = 0;
@@ -58,14 +60,14 @@
             }
 
             swal({
-                title: "Bạn có muốn xóa dữ liệu không?",
-                text: "Một khi xóa, bạn sẽ không có khả năng khôi phục dữ liệu này!",
+                title: i18next.t('Do you want to delete the data?'),
+                text: i18next.t('Once deleted, you will not be able to recover this data!'),
                 icon: "warning",
                 buttons: true,
                 buttons: {
-                    cancel: "Không",
+                    cancel: _NO,
                     catch: {
-                        text: "Có",
+                        text: _YES,
                         value: "catch",
                     }
                 },
@@ -85,7 +87,7 @@
             jQuery.UbizOIWidget.w_go_to_input_page(0);
         },
         w_save: function(id) {
-            const ALERT_TITLE = "Bạn có muốn lưu lại không?";
+            const ALERT_TITLE = i18next.t("Do you want to save it?");
             const ALERT_ICON = "warning";
 
             //validate
@@ -103,9 +105,9 @@
                     icon: ALERT_ICON,
                     buttons: true,
                     buttons: {
-                        cancel: "Không",
+                        cancel: _NO,
                         catch: {
-                            text: "Có",
+                            text: _YES,
                             value: "catch",
                         }
                     },
@@ -120,7 +122,7 @@
             } else {
                 if (jQuery.UbizOIWidget.w_is_input_changed() == false) {
                     swal({
-                        title: "Không có gì thay đổi!",
+                        title: i18next.t("Nothing change!"),
                         icon: "error"
                     });
                     return false;
@@ -130,9 +132,9 @@
                     icon: ALERT_ICON,
                     buttons: true,
                     buttons: {
-                        cancel: "Không",
+                        cancel: _NO,
                         catch: {
-                            text: "Có",
+                            text: _YES,
                             value: "catch",
                         }
                     },
@@ -364,9 +366,9 @@
             jQuery.UbizOIWidget.w_clear_input_page();
         },
         w_refresh_output_page: function () {
-            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-            var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/suppliers', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            var params = jQuery.UbizOIWidget.w_get_param_search_sort();
+            params.page = jQuery.UbizOIWidget.page;
+            ubizapis('v1', '/suppliers', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_sort_info: function () {
             var sort_obj = jQuery.UbizOIWidget.o_page.find('div.dWT');
@@ -394,12 +396,12 @@
                     swal({
                         title:response.data.message,
                         icon: "success",
-                        text: "Bạn có muốn tiếp tục thêm dữ liệu?",
+                        text: i18next.t("Do you want to continue insert Supplier?"),
                         buttons: true,
                         buttons: {
-                            cancel: "Không",
+                            cancel: _NO,
                             catch: {
-                                text: "Có",
+                                text: _YES,
                                 value: "catch",
                             }
                         },
