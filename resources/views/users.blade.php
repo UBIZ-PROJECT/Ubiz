@@ -279,7 +279,7 @@
                         <div class="yTP">
                             <div id="table-content" class="jFr">
                                 @foreach($users as $key => $user)
-                                    <div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{$user->id}}, {{ $key + 1 }})">
+                                    <div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{ $key + 1 }}, {{$user->id}})">
                                         <div class="tcB col-1">
                                             <div class="cbo">
                                                 <div class="jgQ" onclick="jQuery.UbizOIWidget.w_c_checkbox_click(this)">
@@ -340,7 +340,7 @@
                             <div class="aqL">
                                 <div class="GtF">
                                     <div class="GNi" onclick="jQuery.UbizOIWidget.w_go_back_to_output_page()">
-                                        <div class="ax7 poK utooltip" title="{{ __("Back") }}">
+                                        <div class="ax7 poK utooltip" title="{{ __("Back to list page") }}">
                                             <div class="asA">
                                                 <div class="arB"></div>
                                             </div>
@@ -415,4 +415,7 @@
 @endsection
 @section('end-javascript')
     <script type="text/javascript" src="{{ asset('js/user.js') }}"></script>
+    <script type="text/javascript">
+        jQuery.UbizOIWidget.rows_num = {{ intval($paging['rows_num']) }};
+    </script>
 @endsection

@@ -2,7 +2,8 @@
     UbizOIWidget = function () {
         this.page = 0;
         this.sort = {};
-        this.row_nums = 0;
+        this.pos = 0;
+        this.rows_num = 0;
         this.o_page = null;
         this.i_page = null;
     };
@@ -188,8 +189,12 @@
             }
         },
         w_go_to_input_page: function (id, pos) {
+            jQuery.UbizOIWidget.pos = pos;
             if (id == 0 || pos == 0) {
-                jQuery("btn-delete").hide();
+                jQuery("#btn-delete").hide();
+                jQuery("#i-paging-label").hide();
+                jQuery("#i-paging-older").hide();
+                jQuery("#i-paging-newer").hide();
                 jQuery.UbizOIWidget.w_clean_input_page();
                 jQuery.UbizOIWidget.o_page.hide();
                 jQuery.UbizOIWidget.i_page.fadeIn("slow");
@@ -206,7 +211,7 @@
                     horizrailenabled: false
                 });
             } else {
-                jQuery("btn-delete").show();
+                jQuery("#btn-delete").show();
                 ubizapis('v1', '/users/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
             }
         },
@@ -369,11 +374,14 @@
             jQuery.UbizOIWidget.w_reset_f_checkbox_status();
             jQuery.UbizOIWidget.page = response.data.paging.page;
             jQuery.UbizOIWidget.w_o_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
+            jQuery.UbizOIWidget.rows_num = response.data.paging.rows_num;
+
         },
         w_render_data_to_input_page: function (response) {
             var user = response.data.user;
             jQuery.UbizOIWidget.w_clean_input_page();
             jQuery.UbizOIWidget.w_set_input_page(user);
+            jQuery.UbizOIWidget.w_i_paging();
 
             jQuery.UbizOIWidget.o_page.hide();
             jQuery.UbizOIWidget.i_page.fadeIn("slow");
@@ -541,6 +549,10 @@
             return form_data;
         },
         w_get_detail_data: function (pos) {
+
+            if (pos >= jQuery.UbizOIWidget.pos || pos <= 1)
+                return false;
+
             var params = {};
             params.pos = pos;
 
@@ -555,7 +567,9 @@
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             params.sort = sort_info.sort_name + "_" + sort_info.order_by;
 
-            ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            var id = jQuery.UbizOIWidget.i_page.find("#txt_id").val();
+
+            ubizapis('v1', '/users/' + id, 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_o_paging: function (page, rows_num, rows_per_page) {
             var page = parseInt(page);
@@ -591,30 +605,35 @@
             jQuery("#paging-older").replaceWith(paging_older);
             jQuery("#paging-newer").replaceWith(paging_newer);
         },
-        w_i_paging: function (pos, rows_num) {
+        w_i_paging: function () {
 
-            var get_older_data_func = '';
-            var get_newer_data_func = '';
+            var pos = jQuery.UbizOIWidget.pos;
+            var rows_num = jQuery.UbizOIWidget.rows_num;
+            var w_get_next_detail_data = '';
+            var w_get_prev_detail_data = '';
 
-            var older_css = 'adS';
-            if (pos > 0) {
-                older_css = 'aaT';
-                get_older_data_func = 'onclick="jQuery.UbizOIWidget.w_get_detail_data(' + (pos - 1) + ')"';
+            var prev_css = 'adS';
+            if (pos > 1) {
+                prev_css = 'aaT';
+                w_get_prev_detail_data = 'onclick="jQuery.UbizOIWidget.w_get_detail_data(' + (pos - 1) + ')"';
             }
 
-            var newer_css = 'adS';
+            var next_css = 'adS';
             if (pos < rows_num) {
-                newer_css = 'aaT';
-                get_newer_data_func = 'onclick="jQuery.UbizOIWidget.w_get_detail_data(' + (pos + 1) + ')"';
+                next_css = 'aaT';
+                w_get_next_detail_data = 'onclick="jQuery.UbizOIWidget.w_get_detail_data(' + (pos + 1) + ')"';
             }
 
-            var paging_label = '<div id="i-paging-label" class="amH" style="user-select: none"><span class="Dj"><span class="Dj"><span><span class="ts">' + pos + '</span></span> / <span class="ts">' + row_num + '</span></span></div>';
-            var paging_older = '<div id="i-paging-older" ' + get_older_data_func + ' class="amD utooltip" title="' + i18next.t('Older') + '"><span class="amF">&nbsp;</span><img class="amI ' + older_css + '" src="/images/cleardot.gif" alt=""></div>';
-            var paging_newer = '<div id="i-paging-newer" ' + get_newer_data_func + ' class="amD utooltip" title="' + i18next.t('Newer') + '"><span class="amF">&nbsp;</span><img class="amJ ' + newer_css + '" src="/images/cleardot.gif" alt=""></div>';
+            var paging_label = '<div id="i-paging-label" class="amH" style="user-select: none"><span class="Dj"><span class="Dj"><span><span class="ts">' + pos + '</span></span> / <span class="ts">' + jQuery.UbizOIWidget.rows_num + '</span></span></div>';
+            var paging_older = '<div id="i-paging-older" ' + w_get_prev_detail_data + ' class="amD itooltip" title="' + i18next.t('Older') + '"><span class="amF">&nbsp;</span><img class="amI ' + prev_css + '" src="/images/cleardot.gif" alt=""></div>';
+            var paging_newer = '<div id="i-paging-newer" ' + w_get_next_detail_data + ' class="amD itooltip" title="' + i18next.t('Newer') + '"><span class="amF">&nbsp;</span><img class="amJ ' + next_css + '" src="/images/cleardot.gif" alt=""></div>';
 
             jQuery("#i-paging-label").replaceWith(paging_label);
             jQuery("#i-paging-older").replaceWith(paging_older);
             jQuery("#i-paging-newer").replaceWith(paging_newer);
+            jQuery('.itooltip').tooltipster({
+                side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
+            });
         }
     });
 })(jQuery);

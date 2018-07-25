@@ -112,13 +112,34 @@ class User extends Authenticatable implements JWTSubject
         return $users;
     }
 
-    public function getUser($id = '')
+    public function getUserById($id = '')
     {
         $user = DB::table('users')
             ->select('users.*', 'm_department.dep_name')
             ->leftJoin('m_department', 'users.dep_id', '=', 'm_department.id')
             ->where([['users.delete_flg','=','0'],['users.id','=',$id]])
             ->first();
+        return $user;
+    }
+
+    public function getUserByPos($pos = 0, $sort = '', $search = [])
+    {
+        try {
+
+            list($where_raw,$params) = $this->makeWhereRaw($search);
+            list($field_name, $order_by) = $this->makeOrderBy($sort);
+
+            $user = DB::table('users')
+                ->select('users.*', 'm_department.dep_name')
+                ->leftJoin('m_department', 'users.dep_id', '=', 'm_department.id')
+                ->whereRaw($where_raw, $params)
+                ->orderBy($field_name, $order_by)
+                ->offset($pos)
+                ->limit(1)
+                ->get();
+        } catch (\Throwable $e) {
+            throw $e;
+        }
         return $user;
     }
 
@@ -266,7 +287,7 @@ class User extends Authenticatable implements JWTSubject
         $user = null;
         if (\Auth::check()) {
             $id = \Auth::user()->id;
-            $user = $this->getUser($id);
+            $user = $this->getUserById($id);
         }
         return $user;
     }
