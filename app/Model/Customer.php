@@ -120,6 +120,7 @@ public function getCustomer($id)
 		}catch (\Throwable $e) {
             throw $e;
         }
+		$customers[0]->avt_src = Helper::readImage($customers[0]->cus_avatar, 'cus');
         return $customers;
     }
 
@@ -199,20 +200,20 @@ public function getCustomer($id)
 		try {
 			DB::table('customer')->where('cus_id', $param['cus_id'])->update(
 			  [
-				  'cus_code'=>$param['cus_code'],
-				  'cus_name'=>$param['cus_name'],
-				  'cus_avatar'=>$param['cus_id'].'.'.$param['avatar']->getClientOriginalExtension(),
-				  'cus_type'=>$param['cus_type'],
-				  'cus_phone'=>$param['cus_phone'],
-				  'cus_fax'=>$param['cus_fax'],
-				  'cus_mail'=>$param['cus_mail'],
-				  'user_id'=>$param['user_id'],
-				  'upd_date'=>now(),
-				  'upd_user'=>'1'
+				  'cus_code'   => $param['cus_code'],
+				  'cus_name'   => $param['cus_name'],
+				  'cus_avatar' => $param['cus_id'].'.'.$param['cus_avatar']->getClientOriginalExtension(),
+				  'cus_type'   => $param['cus_type'],
+				  'cus_phone'  => $param['cus_phone'],
+				  'cus_fax'    => $param['cus_fax'],
+				  'cus_mail'   => $param['cus_mail'],
+				  'user_id'    => $param['user_id'],
+				  'upd_date'   => now(),
+				  'upd_user'   => '1'
 			  ]
 			);
 			
-			Helper::resizeImage($param['avatar']->getRealPath(), $param['cus_id'].'.'.$param['avatar']->getClientOriginalExtension(), 200, 200, 'cus');
+			Helper::resizeImage($param['cus_avatar']->getRealPath(), $param['cus_id'].'.'.$param['cus_avatar']->getClientOriginalExtension(), 200, 200, 'cus');
 			
 		} catch (\Throwable $e) {
             throw $e;

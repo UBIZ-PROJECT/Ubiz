@@ -272,11 +272,11 @@
         },
 		w_render_data_to_input_page: function (response) {
 			var customer = response.data.customers[0];
-		
+		console.log(customer)
 			$('input[name="cus_id"]').val(customer.cus_id);
 			$('input[name="cus_code"]').val(customer.cus_code);
 			$('input[name="cus_name"]').val(customer.cus_name);
-			$('input[name="cus_avatar"]').val(customer.cus_avatar);
+			$('#avt_img').attr("src", customer.avt_src);
 			$('input[name="cus_type"]').val(customer.cus_type);
 			$('input[name="cus_phone"]').val(customer.cus_phone);
 			$('input[name="cus_fax"]').val(customer.cus_fax);

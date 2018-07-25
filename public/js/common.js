@@ -104,7 +104,8 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
     var options = {
         baseURL: api_base_url,
         url: api_url,
-        method: api_method
+        method: api_method,
+		headers: []
     };
 
     if (typeof api_data === 'object') {

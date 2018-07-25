@@ -432,7 +432,7 @@
 								<div class="col-sm-2 col-md-2 col-xl-2 z-pdl">
 									<a class="ato">
 										<img id="avt_img" src="{{ asset("images/avatar.jpg") }}">
-										<input type="file" id="avatar" name="avatar" accept="image/*" style="display: none"/>
+										<input type="file" id="avatar" name="cus_avatar" accept="image/*" style="display: none"/>
 										<span id="change_avt">{{ __("Change") }}</span>
 									</a>
 								</div>
