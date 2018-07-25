@@ -496,7 +496,62 @@ const _NO = i18next.t("No");
                 if ($(txt_input[i]).prop("required") == true) {
                     if ($(txt_input[i]).val() == "") {
                         isValid = false;
-                        showErrorInput(txt_input[i], "Thông tin bắt buộc nhập");
+                        showErrorInput(txt_input[i], i18next.t("This input is required"));
+                    }
+                    var txt_id = $(txt_input[i]).attr("id");
+                    var txt_val = $(txt_input[i]).val().trim();
+                    switch(txt_id) {
+                        case "txt_sup_name":
+                            if (txt_val.length > 100) {
+                                isValid = false;
+                                showErrorInput(txt_input[i], i18next.t("invalid length",{length: "100"}));
+                            }
+                            break;
+                        case "txt_sup_website":
+                            var regex = new RegExp('^(https?:\\/\\/)?'+ // protocol
+                                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|'+ // domain name
+                                '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+                                '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+                                '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+                                '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+                            if (txt_val.length > 100) {
+                                isValid = false;
+                                showErrorInput(txt_input[i], i18next.t("invalid length",{length: "100"}));
+                            } else if (regex.test(String(txt_val).toLowerCase()) == false) {
+                                isValid = false;
+                                showErrorInput(txt_input[i], i18next.t("invalid input", {control: i18next.t("Website")}));
+                            }
+                        break;
+                        case "txt_sup_phone":
+                            var regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+                            if (txt_val.length > 15) {
+                                isValid = false;
+                                showErrorInput(txt_input[i], i18next.t("invalid length",{length: "100"}));
+                            }else if (regex.test(String(txt_val).toLowerCase()) == false) {
+                                isValid = false;
+                                showErrorInput(txt_input[i], i18next.t("invalid input", {control: i18next.t("Phone")}));
+                            }
+                        break;
+                        case "txt_sup_fax":
+                            var regex = /^\+?[0-9]{6,}$/;
+                            if (txt_val.length > 20) {
+                                isValid = false;
+                                showErrorInput(txt_input[i], i18next.t("invalid length",{length: "100"}));
+                            } else if (regex.test(String(txt_val).toLowerCase()) == false) {
+                                isValid = false;
+                                showErrorInput(txt_input[i], i18next.t("invalid input",{control: i18next.t("Fax")}));
+                            }
+                        break;
+                        case "txt_sup_mail":
+                            var regex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+                            if (txt_val.length > 100) {
+                                isValid = false;
+                                showErrorInput(txt_input[i], i18next.t("invalid length",{length: "100"}));
+                            } else if (regex.test(String(txt_val).toLowerCase()) == false) {
+                                isValid = false;
+                                showErrorInput(txt_input[i], i18next.t("invalid input", {control: i18next.t("E-Mail")}));
+                            }
+                        break;
                     }
                 }
             }

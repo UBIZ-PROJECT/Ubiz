@@ -42,5 +42,8 @@
   "Nothing change!": "Không có gì thay đổi!",
   "Do you want to continue insert Supplier?":"Bạn có muốn tiếp tục thêm nhà cung cấp?",
   "Fax":"Fax",
-  "Supplier Name": "Tên nhà cung cấp"
+  "Supplier Name": "Tên nhà cung cấp",
+  "invalid length": "Không nhập vượt quá {{length}} ký tự",
+  "This input is required": "Thông tin này bắt buộc nhập!",
+  "invalid input": "{{control}} chưa chính xác!",
 }
