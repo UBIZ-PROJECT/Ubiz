@@ -5,12 +5,22 @@ jobs:
       - image: circleci/php:7.0
     steps:
      - checkout
+     - run:
+          name: Deploy Over SSH
+          command: |
+            ssh $SSH_USER@$SSH_HOST mkdir -p /home/$CIRCLE_BRANCH
+            rsync -r ./html $SSH_USER@$SSH_HOST:/home/$CIRCLE_BRANCH/
            
   staging:
     docker:
       - image: circleci/php:7.0
     steps:
      - checkout
+     - run:
+          name: Deploy Over SSH
+          command: |
+            ssh $SSH_USER@$SSH_HOST mkdir -p /home/$CIRCLE_BRANCH
+            rsync -r ./html $SSH_USER@$SSH_HOST:/home/$CIRCLE_BRANCH/
            
   development:
     docker:
