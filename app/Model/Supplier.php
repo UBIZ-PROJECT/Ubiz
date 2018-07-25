@@ -84,6 +84,26 @@ class Supplier implements JWTSubject
         return $supplier;
     }
 
+    public function getEachSupplierByPaging($page,$sort = '') {
+        $sort_name = 'sup_id';
+        $order_by = 'asc';
+        if (!isset($sort) || !empty($sort)) {
+            $sort_info = explode('_', $sort);
+            $order_by = $sort_info[sizeof($sort_info) - 1];
+            unset($sort_info[sizeof($sort_info) - 1]);
+            $sort_name = implode('_', $sort_info);
+        } 
+        $rows_per_page = 1;
+        $supplier = DB::table('suppliers')
+            ->select('sup_id','sup_code','sup_avatar','sup_name','sup_phone','sup_fax','sup_mail','sup_website')
+            ->where('delete_flg', '=', '0')
+            ->orderBy($sort_name, $order_by)
+            ->offset($page * $rows_per_page)
+            ->limit($rows_per_page)
+            ->get();
+        return $supplier;
+    }
+
     public function insertSupplier($param) {
         DB::beginTransaction();
         $sup_ava = '';
