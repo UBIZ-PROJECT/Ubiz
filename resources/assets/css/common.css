@@ -1066,7 +1066,6 @@
 /* START CSS FOR INPUT CONTROL */
 .textfield {
     margin: 0 0 5px 0;
-    max-width: 300px;
 }
 
 .root_textfield.rootIsUnderlined {
@@ -1254,17 +1253,13 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
 
 .label-change {
     background: rgba(0, 0, 0, .54);
-    width: 100px;
-    height: 30px;
     position: relative;
-    top: -30px;
     text-align: center;
     display: none;
     color: white;
     border-bottom-right-radius: 5px;
     border-bottom-left-radius: 5px;
     vertical-align: middle;
-    line-height: 30px;
     font-size: 12px;
     font-weight: 500;
 }

@@ -100,11 +100,11 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
     var protocol = window.location.protocol;
     var hostname = window.location.hostname;
     var api_base_url = protocol + "//" + hostname + "/api/" + api_version + "/";
-
     var options = {
         baseURL: api_base_url,
         url: api_url,
-        method: api_method
+        method: api_method,
+        headers:[]
     };
 
     if (typeof api_data === 'object') {
