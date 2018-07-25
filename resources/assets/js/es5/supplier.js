@@ -270,6 +270,11 @@ const _NO = i18next.t("No");
             return formData;
         },
         w_get_data_input_form: function() {
+            var addresses = $("#i-put .txt_address");
+            var addParam = [];
+            for(var i = 0; i < addresses.length; i++) {
+                addParam.put($(addresses[i]).val());
+            }
             var data = {
                 sup_code: $("#i-put #txt_sup_code").val(),
                 sup_name: $("#i-put #txt_sup_name").val(),
@@ -277,7 +282,8 @@ const _NO = i18next.t("No");
                 sup_phone: $("#i-put #txt_sup_phone").val(),
                 sup_fax: $("#i-put #txt_sup_fax").val(),
                 sup_mail: $("#i-put #txt_sup_mail").val(),
-                sup_avatar: $(".image-upload .img-show").attr("img-name")
+                sup_avatar: $(".image-upload .img-show").attr("img-name"),
+                addresses: addParam
             };
             return data;
         },
@@ -461,7 +467,8 @@ const _NO = i18next.t("No");
             if (response == undefined || response.data == undefined || response.data.supplier.length <= 0) {
                 return;
             }
-            data = response.data.supplier[0];
+            var data = response.data.supplier[0];
+            var addresses = data.sad_address;
             $("#i-put .GtF .delete").attr("onclick","jQuery.UbizOIWidget.w_delete("+data.sup_id+")");
             $("#i-put .GtF .save").attr("onclick", "jQuery.UbizOIWidget.w_save("+data.sup_id+")");
             $("#i-put #nicescroll-iput #txt_sup_code").val(data.sup_code);
@@ -472,6 +479,17 @@ const _NO = i18next.t("No");
             $("#i-put #nicescroll-iput #txt_sup_mail").val(data.sup_mail).change(function() {inputChange(this, data.sup_mail)});
             if (isEmpty(data.src)) {
                 data.src = jQuery.UbizOIWidget.defaultImage;
+            }
+            for(var i = 0; i < addresses.length; i++) {
+                if (i <= 2) {
+                    $("#i-put #nicescroll-iput #txt_adr" + (i+1)).val(addresses[i].address).change(function() {inputChange(this, addresses[i])}).attr("sad_id",addresses[i].id);
+                } else {
+                    var address = $("#i-put #nicescroll-iput .txt_adr1_container").clone();
+                    $(address).removeClass("txt_adr1_container").addClass("txt_adr"+(i+1)+"_container").addClass("clone-address");
+                    $(address).find("input").attr("id","txt_adr"+(i+1)).val(addresses[i].address).change(function() {inputChange(this, addresses[i].address)}).attr("sad_id",addresses[i].id);
+                    $(address).find("label.lbl-primary").html(i18next.t("Address") + " " + (i+1));
+                    $(address).insertAfter("#i-put #nicescroll-iput .txt_adr"+i+"_container");
+                }
             }
             $("#i-put #nicescroll-iput .image-upload .img-show").attr("src", data.src);
             $("#i-put #nicescroll-iput .image-upload .img-show").attr("img-name", data.sup_avatar);
@@ -498,61 +516,61 @@ const _NO = i18next.t("No");
                         isValid = false;
                         showErrorInput(txt_input[i], i18next.t("This input is required"));
                     }
-                    var txt_id = $(txt_input[i]).attr("id");
-                    var txt_val = $(txt_input[i]).val().trim();
-                    switch(txt_id) {
-                        case "txt_sup_name":
-                            if (txt_val.length > 100) {
-                                isValid = false;
-                                showErrorInput(txt_input[i], i18next.t("invalid length",{length: "100"}));
-                            }
-                            break;
-                        case "txt_sup_website":
-                            var regex = new RegExp('^(https?:\\/\\/)?'+ // protocol
-                                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|'+ // domain name
-                                '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-                                '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-                                '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-                                '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-                            if (txt_val.length > 100) {
-                                isValid = false;
-                                showErrorInput(txt_input[i], i18next.t("invalid length",{length: "100"}));
-                            } else if (regex.test(String(txt_val).toLowerCase()) == false) {
-                                isValid = false;
-                                showErrorInput(txt_input[i], i18next.t("invalid input", {control: i18next.t("Website")}));
-                            }
+                }
+                var txt_id = $(txt_input[i]).attr("id");
+                var txt_val = $(txt_input[i]).val().trim();
+                switch(txt_id) {
+                    case "txt_sup_name":
+                        if (txt_val.length > 100) {
+                            isValid = false;
+                            showErrorInput(txt_input[i], i18next.t("invalid length",{length: "100"}));
+                        }
                         break;
-                        case "txt_sup_phone":
-                            var regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
-                            if (txt_val.length > 15) {
-                                isValid = false;
-                                showErrorInput(txt_input[i], i18next.t("invalid length",{length: "100"}));
-                            }else if (regex.test(String(txt_val).toLowerCase()) == false) {
-                                isValid = false;
-                                showErrorInput(txt_input[i], i18next.t("invalid input", {control: i18next.t("Phone")}));
-                            }
+                    case "txt_sup_website":
+                        var regex = new RegExp('^(https?:\\/\\/)?'+ // protocol
+                            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|'+ // domain name
+                            '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+                            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+                            '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+                            '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+                        if (txt_val.length > 100) {
+                            isValid = false;
+                            showErrorInput(txt_input[i], i18next.t("invalid length",{length: "100"}));
+                        } else if (regex.test(String(txt_val).toLowerCase()) == false) {
+                            isValid = false;
+                            showErrorInput(txt_input[i], i18next.t("invalid input", {control: i18next.t("Website")}));
+                        }
                         break;
-                        case "txt_sup_fax":
-                            var regex = /^\+?[0-9]{6,}$/;
-                            if (txt_val.length > 20) {
-                                isValid = false;
-                                showErrorInput(txt_input[i], i18next.t("invalid length",{length: "100"}));
-                            } else if (regex.test(String(txt_val).toLowerCase()) == false) {
-                                isValid = false;
-                                showErrorInput(txt_input[i], i18next.t("invalid input",{control: i18next.t("Fax")}));
-                            }
+                    case "txt_sup_phone":
+                        var regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+                        if (txt_val.length > 15) {
+                            isValid = false;
+                            showErrorInput(txt_input[i], i18next.t("invalid length",{length: "15"}));
+                        } else if (regex.test(String(txt_val).toLowerCase()) == false || txt_val.length < 9) {
+                            isValid = false;
+                            showErrorInput(txt_input[i], i18next.t("invalid input", {control: i18next.t("Phone")}));
+                        }
                         break;
-                        case "txt_sup_mail":
-                            var regex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-                            if (txt_val.length > 100) {
-                                isValid = false;
-                                showErrorInput(txt_input[i], i18next.t("invalid length",{length: "100"}));
-                            } else if (regex.test(String(txt_val).toLowerCase()) == false) {
-                                isValid = false;
-                                showErrorInput(txt_input[i], i18next.t("invalid input", {control: i18next.t("E-Mail")}));
-                            }
+                    case "txt_sup_fax":
+                        var regex = /^\+?[0-9]{6,}$/;
+                        if (txt_val.length > 20) {
+                            isValid = false;
+                            showErrorInput(txt_input[i], i18next.t("invalid length",{length: "20"}));
+                        } else if (regex.test(String(txt_val).toLowerCase()) == false) {
+                            isValid = false;
+                            showErrorInput(txt_input[i], i18next.t("invalid input",{control: i18next.t("Fax")}));
+                        }
                         break;
-                    }
+                    case "txt_sup_mail":
+                        var regex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+                        if (txt_val.length > 100) {
+                            isValid = false;
+                            showErrorInput(txt_input[i], i18next.t("invalid length",{length: "100"}));
+                        } else if (regex.test(String(txt_val).toLowerCase()) == false) {
+                            isValid = false;
+                            showErrorInput(txt_input[i], i18next.t("invalid input", {control: i18next.t("E-Mail")}));
+                        }
+                        break;
                 }
             }
             return isValid;
@@ -566,6 +584,8 @@ const _NO = i18next.t("No");
             $("#i-put #nicescroll-iput #txt_sup_mail").val("").isChange("false");
             $("#i-put #nicescroll-iput .file-upload").isChange("false");
             $("#i-put #nicescroll-iput .image-upload .img-show").attr("src", jQuery.UbizOIWidget.defaultImage);
+            $("#i-put .txt_address").val("");
+            $("#i-put .clone-address").remove();
             jQuery.UbizOIWidget.sort = {'sort_name': 'sup_code', 'order_by': 'asc'};
             jQuery.UbizOIWidget.w_set_paging_for_detail_page(0,0,true);
             removeErrorInput();

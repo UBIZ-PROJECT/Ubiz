@@ -17,7 +17,7 @@ if(isset($width)){
 }
 $html_max_length = "";
 if(isset($length)){
-    $html_max_length = "maxlength='$length'";
+    $html_max_length = "maxlength=$length";
 }
 $html_class = "";
 if(isset($class)){

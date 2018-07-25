@@ -1066,7 +1066,6 @@
 /* START CSS FOR INPUT CONTROL */
 .textfield {
     margin: 0 0 5px 0;
-    max-width: 300px;
 }
 
 .root_textfield.rootIsUnderlined {

@@ -82,14 +82,35 @@ class Supplier implements JWTSubject
         list($where_raw,$params) = $this->makeWhereRaw($search);
         list($field_name, $order_by) = $this->makeOrderBy($sort);
         $rows_per_page = 1;
-        $supplier = DB::table('suppliers')
-            ->select('sup_id','sup_code','sup_avatar','sup_name','sup_phone','sup_fax','sup_mail','sup_website')
-            ->whereRaw($where_raw, $params)
-            ->orderBy($field_name, $order_by)
-            ->offset($page * $rows_per_page)
-            ->limit($rows_per_page)
-            ->get();
-        return $supplier;
+        $params[] = $rows_per_page;
+        $params[] = $page * $rows_per_page;
+        $supplier = DB::select("select addr.sad_id, sup.sup_id, sup_code,sup_avatar,sup_name,sup_phone, sup_fax,sup_mail,sup_website,sad_address from (select * 
+                from suppliers 
+                where $where_raw
+                order by $field_name $order_by
+                limit ? offset ?) sup
+                left join supplier_address addr ON 
+                sup.sup_id = addr.sup_id
+                where addr.delete_flg='0'",$params);
+        $data = array();
+        $data[0] = (object) array();
+        $data[0]->sad_address = array();
+        foreach ($supplier as $index=>$sup) {
+            $data[0]->sup_id = $sup->sup_id;
+            $data[0]->sup_code = $sup->sup_code;
+            $data[0]->sup_avatar = $sup->sup_avatar;
+            $data[0]->sup_name = $sup->sup_name;
+            $data[0]->sup_phone = $sup->sup_phone;
+            $data[0]->sup_fax = $sup->sup_fax;
+            $data[0]->sup_mail = $sup->sup_mail;
+            $data[0]->sup_website = $sup->sup_website;
+            $addrObj = (object) array();
+            $addrObj->address = $sup->sad_address;
+            $addrObj->id = $sup->sad_id;
+            $data[0]->sad_address[] = $addrObj;
+        }
+
+        return $data;
     }
 
     public function insertSupplier($param) {
@@ -116,8 +137,36 @@ class Supplier implements JWTSubject
                     'upd_user'=>'2'
                 ]
             );
+            if (!empty($param['addresses'])) {
+                $addresses = $param['addresses'];
+                foreach ($addresses as $address) {
+                    $addrParam = array("sup_id"=>$id, "address"=>$address);
+                    $this->insertSupplierAddress($addrParam);
+                }
+            }
             
             Helper::resizeImage($param['tmp_name'], $sup_ava, 200,200, 'sup');
+            DB::commit();
+        } catch(\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    public function insertSupplierAddress($param) {
+        DB::beginTransaction();
+        try {
+            $id = DB::table('supplier_address')->insertGetId(
+              [
+                  'sup_id'=>$param['sup_id'],
+                  'sad_address'=>$param['address'],
+                  'delete_flg'=> '0',
+                  'inp_date'=>date('Y-m-d H:i:s'),
+                  'upd_date'=>date('Y-m-d H:i:s'),
+                  'inp_user'=>'2',
+                  'upd_user'=>'2'
+              ]
+            );
             DB::commit();
         } catch(\Throwable $e) {
             DB::rollback();
