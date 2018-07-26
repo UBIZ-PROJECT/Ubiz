@@ -30,7 +30,7 @@ jobs:
      - run:
           name: Deploy Over SSH
           command: |
-            ssh -o 'StrictHostKeyChecking=no' $SSH_USER@$SSH_HOST ls /home > /home/list.txt
+            ssh -o 'StrictHostKeyChecking=no' $SSH_USER@$SSH_HOST mkdir -p /home/$CIRCLE_BRANCH
 
 workflows:
   version: 2
