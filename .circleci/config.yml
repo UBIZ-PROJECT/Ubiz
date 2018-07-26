@@ -30,7 +30,7 @@ jobs:
      - run:
           name: Deploy Over SSH
           command: |
-            ssh -o 'StrictHostKeyChecking=no' -i ./ubiz $SSH_USER@$SSH_HOST mkdir -p /home/$CIRCLE_BRANCH
+            ssh -o 'StrictHostKeyChecking=no' -i ./.circleci/ubiz $SSH_USER@$SSH_HOST mkdir -p /home/$CIRCLE_BRANCH
 
 workflows:
   version: 2
