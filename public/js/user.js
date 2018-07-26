@@ -34,11 +34,10 @@
             jQuery('.utooltip').tooltipster({
                 side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
             });
+            jQuery(".i-numeric").forceNumeric();
+            TinyDatePicker('.i-date', {mode: 'dp-below'});
         },
         w_sort: function (self) {
-            var sort_name = jQuery(self).attr('sort-name');
-            var order_by = jQuery(self).attr('order-by') == '' ? 'asc' : (jQuery(self).attr('order-by') == 'asc' ? 'desc' : 'asc');
-            var sort = sort_name + "_" + order_by;
 
             jQuery.UbizOIWidget.o_page.find('div.dWT').removeClass('dWT');
             jQuery(self).attr('order-by', order_by);
@@ -46,7 +45,28 @@
             jQuery(self).find('svg').removeClass('sVGT');
             jQuery(self).find('svg.' + order_by).addClass('sVGT');
 
-            ubizapis('v1', '/users', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            var params = {};
+            params.page = jQuery.UbizOIWidget.page;
+
+            var search_info = jQuery.UbizOIWidget.w_get_search_info();
+            Object.assign(params, search_info);
+
+            var sort_name = jQuery(self).attr('sort-name');
+            var order_by = jQuery(self).attr('order-by') == '' ? 'asc' : (jQuery(self).attr('order-by') == 'asc' ? 'desc' : 'asc');
+            params.sort = sort_name + "_" + order_by;
+
+            ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+        },
+        w_save: function () {
+            var form_data = jQuery.UbizOIWidget.w_get_form_data();
+            var id = jQuery("#txt_id").val();
+            form_data.append("id", id);
+            if (id != "0"){
+                form_data.append('_method', 'put');
+                ubizapis('v1', '/users', 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
+            }else{
+                ubizapis('v1', '/users', 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
+            }
         },
         w_delete: function () {
             var ids = jQuery.UbizOIWidget.w_get_checked_rows();
@@ -69,45 +89,41 @@
             }).then((value) => {
                 switch (value) {
                     case "catch":
-                        ubizapis('v1', '/users/' + ids.join(','), 'delete', null, null, jQuery.UbizOIWidget.w_delete_callback);
+                        ubizapis('v1', '/users/' + ids.join(',') + '/delete', 'delete', null, null, jQuery.UbizOIWidget.w_delete_callback);
                         break;
                 }
             });
         },
-        w_create:function(){
-            jQuery.UbizOIWidget.w_go_to_input_page(0);
+        w_refresh: function () {
+
+        },
+        w_save_callback: function (response) {
+            if (response.data.success == true) {
+                console.log("OK");
+            } else {
+                swal(response.data.message, {
+                    icon: "error",
+                });
+            }
         },
         w_search:function(){
+
             var params = {};
             params.page = '0';
 
-            if (jQuery('#code').val().replace(/\s/g, '') != '') {
-                params.code = jQuery('#code').val();
-            }
+            var search_info = jQuery.UbizOIWidget.w_get_search_info();
+            Object.assign(params, search_info);
 
-            if (jQuery('#name').val().replace(/\s/g, '') != '') {
-                params.name = jQuery('#name').val();
-            }
-
-            if (jQuery('#email').val().replace(/\s/g, '') != '') {
-                params.email = jQuery('#email').val();
-            }
-
-            if (jQuery('#phone').val().replace(/\s/g, '') != '') {
-                params.phone = jQuery('#phone').val();
-            }
-
-            if (jQuery('#dep_name').val().replace(/\s/g, '') != '') {
-                params.dep_name = jQuery('#dep_name').val();
-            }
-
-            if (jQuery('#address').val().replace(/\s/g, '') != '') {
-                params.address = jQuery('#address').val();
+            if (jQuery.isEmptyObject(search_info) === false) {
+                var fuzzy = jQuery.UbizOIWidget.w_convert_search_info_to_fuzzy(search_info);
+                jQuery('#fuzzy').val(fuzzy);
             }
 
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             params.sort = sort_info.sort_name + "_" + sort_info.order_by;
 
+            var event = new CustomEvent("click");
+            document.body.dispatchEvent(event);
             ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_clear_search_form:function(){
@@ -117,19 +133,30 @@
             jQuery('#phone').val("");
             jQuery('#dep_name').val("");
             jQuery('#address').val("");
-            jQuery.UbizOIWidget.page = '0';
-            jQuery.UbizOIWidget.w_search();
+            jQuery('#contain').val("");
+            jQuery('#notcontain').val("");
+            jQuery('#fuzzy').val("");
+        },
+        w_update_search_form:function(search_info){
+            jQuery.each(search_info, function (key, val) {
+                var search_item = jQuery('#' + key);
+                if (search_item.length == 1) {
+                    search_item.val(val);
+                }
+            });
         },
         w_fuzzy_search: function () {
             var params = {};
             params.page = '0';
             jQuery.UbizOIWidget.page = '0';
 
-            var fuzzy_val = jQuery('#fuzzy').val();
+            var fuzzy = jQuery('#fuzzy').val();
+            var search_info = jQuery.UbizOIWidget.w_convert_fuzzy_to_search_info(fuzzy);
+            jQuery.UbizOIWidget.w_update_search_form(search_info);
+            Object.assign(params, search_info);
+
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-
-            params.search = fuzzy_val;
             params.sort = sort;
 
             ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
@@ -141,20 +168,7 @@
             }
         },
         w_go_to_input_page: function (id) {
-            jQuery.UbizOIWidget.o_page.hide();
-            jQuery.UbizOIWidget.i_page.fadeIn("slow");
-            jQuery('#nicescroll-oput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-input',
-                autohidemode: false,
-                horizrailenabled: false
-            });
+            ubizapis('v1', '/users/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
         },
         w_go_back_to_output_page: function (self) {
             jQuery.UbizOIWidget.o_page.fadeIn("slow");
@@ -182,6 +196,63 @@
             var sort_name = sort_obj.attr('sort-name');
             var order_by = sort_obj.attr('order-by');
             return {'sort_name': sort_name, 'order_by': order_by};
+        },
+        w_get_search_info: function () {
+
+            var search_info = {};
+
+            if (jQuery('#code').val().replace(/\s/g, '') != '') {
+                search_info.code = jQuery('#code').val();
+            }
+
+            if (jQuery('#name').val().replace(/\s/g, '') != '') {
+                search_info.name = jQuery('#name').val();
+            }
+
+            if (jQuery('#email').val().replace(/\s/g, '') != '') {
+                search_info.email = jQuery('#email').val();
+            }
+
+            if (jQuery('#phone').val().replace(/\s/g, '') != '') {
+                search_info.phone = jQuery('#phone').val();
+            }
+
+            if (jQuery('#dep_name').val().replace(/\s/g, '') != '') {
+                search_info.dep_name = jQuery('#dep_name').val();
+            }
+
+            if (jQuery('#address').val().replace(/\s/g, '') != '') {
+                search_info.address = jQuery('#address').val();
+            }
+
+            if (jQuery('#contain').val().replace(/\s/g, '') != '') {
+                search_info.contain = jQuery('#contain').val();
+            }
+
+            if (jQuery('#notcontain').val().replace(/\s/g, '') != '') {
+                search_info.notcontain = jQuery('#notcontain').val();
+            }
+
+            return search_info;
+        },
+        w_convert_search_info_to_fuzzy: function (search_info) {
+            var fuzzy = JSON.stringify(search_info);
+            return fuzzy;
+        },
+        w_convert_fuzzy_to_search_info: function (fuzzy) {
+            var search_info = {};
+            try {
+                search_info = JSON.parse(fuzzy);
+            } catch (e) {
+                var fuzzy_info = fuzzy.split('-');
+                if (fuzzy_info.length == 1) {
+                    search_info.contain = fuzzy;
+                } else {
+                    fuzzy_info.shift();
+                    search_info.notcontain = fuzzy_info.join('-');
+                }
+            }
+            return search_info;
         },
         w_get_older_data: function (page) {
             jQuery.UbizOIWidget.page = page;
@@ -231,6 +302,66 @@
             jQuery.UbizOIWidget.w_reset_f_checkbox_status();
             jQuery.UbizOIWidget.page = response.data.paging.page;
             jQuery.UbizOIWidget.w_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
+        },
+        w_render_data_to_input_page: function (response) {
+            var user = response.data.user;
+            jQuery.UbizOIWidget.w_clean_input_page();
+            jQuery.UbizOIWidget.w_set_input_page(user);
+
+            jQuery.UbizOIWidget.o_page.hide();
+            jQuery.UbizOIWidget.i_page.fadeIn("slow");
+            jQuery('#nicescroll-oput').getNiceScroll().remove();
+            jQuery('#nicescroll-iput').getNiceScroll().remove();
+            jQuery('#nicescroll-iput').niceScroll({
+                cursorcolor: "#9fa8b0",
+                cursorwidth: "5px",
+                cursorborder: "none",
+                cursorborderradius: 5,
+                cursoropacitymin: 0.4,
+                scrollbarid: 'nc-input',
+                autohidemode: false,
+                horizrailenabled: false
+            });
+        },
+        w_clean_input_page: function () {
+            jQuery("#txt_id").val("0");
+            jQuery("#txt_code").val("");
+            jQuery("#txt_name").val("");
+            jQuery("#txt_phone").val("");
+            jQuery("#txt_email").val("");
+            jQuery("#txt_dep_id").val("");
+            jQuery("#txt_address").val("");
+            jQuery("#txt_join_date").val("");
+            jQuery("#txt_salary").val("");
+            jQuery("#txt_bhxh").prop('checked', false).prop('disabled', false);
+            jQuery("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+            jQuery("#txt_bhyt").prop('checked', false).prop('disabled', false);
+            jQuery("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+        },
+        w_set_input_page: function (data) {
+            jQuery("#txt_id").val(data.id);
+            jQuery("#txt_code").val(data.code);
+            jQuery("#txt_name").val(data.name);
+            jQuery("#txt_phone").val(data.phone);
+            jQuery("#txt_email").val(data.email);
+            jQuery("#txt_dep_id").val(data.dep_id);
+            jQuery("#txt_address").val(data.address);
+            jQuery("#txt_join_date").val(format_date(data.join_date, 'YYYY/MM/DD'));
+            jQuery("#txt_salary").val(numeral(data.salary).format('0,0'));
+            if (data.bhxh == '0') {
+                jQuery("#txt_bhxh").prop('checked', false);
+                jQuery("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+            } else {
+                jQuery("#txt_bhxh").prop('checked', true);
+                jQuery("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('suc').addClass('sck');
+            }
+            if (data.bhxh == '0') {
+                jQuery("#txt_bhyt").prop('checked', false);
+                jQuery("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+            } else {
+                jQuery("#txt_bhyt").prop('checked', true);
+                jQuery("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('suc').addClass('sck');
+            }
         },
         w_make_row_html: function (id, cols) {
             var row_html = '';
@@ -318,6 +449,29 @@
                 ids.push(id);
             });
             return ids;
+        },
+        w_get_form_data: function () {
+            var form_data = new FormData();
+            form_data.append('code', jQuery("#txt_code").val());
+            form_data.append('name', jQuery("#txt_name").val());
+
+            if (jQuery('input[name=inp-upload-image]')[0].files.length > 0) {
+                form_data.append('avatar', jQuery('input[name=inp-upload-image]')[0].files[0]);
+            }
+
+            form_data.append('dep_id', jQuery("#txt_dep_id").val());
+            form_data.append('phone', jQuery("#txt_phone").val());
+            form_data.append('email', jQuery("#txt_email").val());
+            form_data.append('address', jQuery("#txt_address").val());
+            form_data.append('join_date', jQuery("#txt_join_date").val());
+            form_data.append('salary', numeral(jQuery("#txt_salary").val()).format('0'));
+
+            var bhxh = jQuery("#txt_bhxh").is(':checked') ? jQuery("#txt_bhxh").val() : 0;
+            form_data.append('bhxh', bhxh);
+
+            var bhyt = jQuery("#txt_bhyt").is(':checked') ? jQuery("#txt_bhyt").val() : 0;
+            form_data.append('bhyt', bhyt);
+            return form_data;
         },
         w_paging: function (page, rows_num, rows_per_page) {
             var page = parseInt(page);

@@ -1,7 +1,7 @@
 <div class="search">
     <div class="tyo" role="search">
         <div class="cyo">
-            <input id="fuzzy" spellcheck="false" autocomplete="off" placeholder="Tìm kiếm nhân viên" value="" type="text" onkeypress="jQuery.UbizOIWidget.w_fuzzy_search_handle_enter(event)">
+            <input id="fuzzy" spellcheck="false" autocomplete="off" placeholder="Tìm kiếm nhà cung cấp" value="" type="text" onkeypress="jQuery.UbizOIWidget.w_fuzzy_search_handle_enter(event)">
         </div>
         <button class="dyo" onclick="show_searh_form()">
             <svg focusable="false" height="24px" viewBox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg">
@@ -27,50 +27,51 @@
             <div class="gvo">
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="code">Mã</label>
+                        <label for="sup_code">Mã</label>
                     </span>
                     <span class="avo">
-                        <input type="text" spellcheck="false" id="code" value="" autocomplete="off">
+                        <input type="text" spellcheck="false" id="sup_code" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="name">Tên</label>
+                        <label for="sup_name">Tên</label>
                     </span>
                     <span class="avo">
-                        <input type="text" spellcheck="false" id="name" value="" autocomplete="off">
+                        <input type="text" spellcheck="false" id="sup_name" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="email">E-mail</label>
+                        <label for="sup_website">Website</label>
                     </span>
                     <span class="avo">
-                        <input type="text" id="email" value="" autocomplete="off">
+                        <input type="text" spellcheck="false" id="sup_website" value="" autocomplete="off">
+                    </span>
+                </div>
+
+                <div class="rvo">
+                    <span class="yvo">
+                        <label for="sup_phone">Điện thoại</label>
+                    </span>
+                    <span class="avo">
+                        <input type="text" spellcheck="false" id="sup_phone" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="phone">Điện thoại</label>
+                        <label for="sup_fax">Fax</label>
                     </span>
                     <span class="avo">
-                        <input type="text" spellcheck="false" id="phone" value="" autocomplete="off">
+                        <input type="text" spellcheck="false" id="sup_fax" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="dep_name">Phòng ban</label>
+                        <label for="sup_mail">E-mail</label>
                     </span>
                     <span class="avo">
-                        <input type="text" spellcheck="false" id="dep_name" value="" autocomplete="off">
-                    </span>
-                </div>
-                <div class="rvo">
-                    <span class="yvo">
-                        <label for="address">Địa chỉ</label>
-                    </span>
-                    <span class="avo">
-                        <input type="text" spellcheck="false" id="address" value="" autocomplete="off">
+                        <input type="text" id="sup_mail" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo">

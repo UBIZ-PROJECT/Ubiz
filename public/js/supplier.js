@@ -1,3 +1,5 @@
+const _YES = i18next.t("Yes");
+const _NO = i18next.t("No");
 (function ($) {
     UbizOIWidget = function () {
         this.page = 0;
@@ -40,7 +42,7 @@
             var sort_name = jQuery(self).attr('sort-name');
             var order_by = jQuery(self).attr('order-by') == '' ? 'asc' : (jQuery(self).attr('order-by') == 'asc' ? 'desc' : 'asc');
             var sort = sort_name + "_" + order_by;
-
+            jQuery.UbizOIWidget.sort = sort;
             jQuery.UbizOIWidget.o_page.find('div.dWT').removeClass('dWT');
             jQuery(self).attr('order-by', order_by);
             jQuery(self).addClass('dWT');
@@ -58,14 +60,14 @@
             }
 
             swal({
-                title: "Bạn có muốn xóa dữ liệu không?",
-                text: "Một khi xóa, bạn sẽ không có khả năng khôi phục dữ liệu này!",
+                title: i18next.t('Do you want to delete the data?'),
+                text: i18next.t('Once deleted, you will not be able to recover this data!'),
                 icon: "warning",
                 buttons: true,
                 buttons: {
-                    cancel: "Không",
+                    cancel: _NO,
                     catch: {
-                        text: "Có",
+                        text: _YES,
                         value: "catch",
                     }
                 },
@@ -74,7 +76,8 @@
                 switch (value) {
                     case "catch":
                         listId = JSON.stringify(listId);
-                        ubizapis('v1','/suppliers/delete', 'get',null, {'listId':listId},jQuery.UbizOIWidget.w_delete_callback);
+                        var params = jQuery.UbizOIWidget.w_get_param_search_sort();
+                        ubizapis('v1','/suppliers/'+listId+'/delete', 'delete',null, params,jQuery.UbizOIWidget.w_process_callback);
                         break;
                 }
             });
@@ -83,8 +86,8 @@
             jQuery.UbizOIWidget.w_clear_input_page();
             jQuery.UbizOIWidget.w_go_to_input_page(0);
         },
-        w_save: function(id, paging = '') {
-            const ALERT_TITLE = "Bạn có muốn lưu lại không?";
+        w_save: function(id) {
+            const ALERT_TITLE = i18next.t("Do you want to save it?");
             const ALERT_ICON = "warning";
 
             //validate
@@ -94,15 +97,17 @@
 
             var formData = jQuery.UbizOIWidget.w_get_images_upload();
             formData.append("supplier", JSON.stringify(jQuery.UbizOIWidget.w_get_data_input_form()));
+
+            var params = jQuery.UbizOIWidget.w_get_param_search_sort();
             if (id == 0) {
                 swal({
                     title:ALERT_TITLE,
                     icon: ALERT_ICON,
                     buttons: true,
                     buttons: {
-                        cancel: "Không",
+                        cancel: _NO,
                         catch: {
-                            text: "Có",
+                            text: _YES,
                             value: "catch",
                         }
                     },
@@ -110,31 +115,26 @@
                 }).then((value) => {
                     switch (value) {
                         case "catch":
-                            ubizapis('v1','/suppliers/insert', 'post', formData, null, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
-                            jQuery.UbizOIWidget.w_go_back_to_output_page();
+                            ubizapis('v1','/suppliers/insert', 'post', formData, params, jQuery.UbizOIWidget.w_process_callback);
                             break;
                     }
                 });
             } else {
                 if (jQuery.UbizOIWidget.w_is_input_changed() == false) {
                     swal({
-                        title: "Không có gì thay đổi!",
+                        title: i18next.t("Nothing change!"),
                         icon: "error"
                     });
                     return false;
-                }
-                var callback_function = jQuery.UbizOIWidget.w_render_data_to_ouput_page.bind({});
-                if (paging != '') {
-
                 }
                 swal({
                     title: ALERT_TITLE,
                     icon: ALERT_ICON,
                     buttons: true,
                     buttons: {
-                        cancel: "Không",
+                        cancel: _NO,
                         catch: {
-                            text: "Có",
+                            text: _YES,
                             value: "catch",
                         }
                     },
@@ -142,13 +142,124 @@
                 }).then((value) => {
                     switch (value) {
                         case "catch":
-                            ubizapis('v1','/suppliers/update/' + id, 'post', formData, null, callback_function);
-                            jQuery.UbizOIWidget.w_go_back_to_output_page();
+                            formData.append("_method","put");
+                            ubizapis('v1','/suppliers/'+id+'/update', 'post', formData,params, jQuery.UbizOIWidget.w_process_callback);
                             break;
                     }
                 });
             }
 
+        },
+        w_search:function(){
+
+            var params = jQuery.UbizOIWidget.w_get_param_search_sort();
+
+            var event = new CustomEvent("click");
+            document.body.dispatchEvent(event);
+            ubizapis('v1', '/suppliers', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+        },
+        w_get_search_info: function () {
+
+            var search_info = {};
+
+            if (jQuery('#search-form #sup_code').val().replace(/\s/g, '') != '') {
+                search_info.sup_code = jQuery('#search-form #sup_code').val();
+            }
+
+            if (jQuery('#search-form #sup_name').val().replace(/\s/g, '') != '') {
+                search_info.sup_name = jQuery('#search-form #sup_name').val();
+            }
+
+            if (jQuery('#search-form #sup_mail').val().replace(/\s/g, '') != '') {
+                search_info.sup_mail = jQuery('#search-form #sup_mail').val();
+            }
+
+            if (jQuery('#search-form #sup_phone').val().replace(/\s/g, '') != '') {
+                search_info.sup_phone = jQuery('#search-form #sup_phone').val();
+            }
+
+            if (jQuery('#search-form #sup_website').val().replace(/\s/g, '') != '') {
+                search_info.sup_website = jQuery('#search-form #sup_website').val();
+            }
+
+            if (jQuery('#search-form #sup_fax').val().replace(/\s/g, '') != '') {
+                search_info.sup_fax = jQuery('#search-form #sup_fax').val();
+            }
+
+            if (jQuery('#search-form #contain').val().replace(/\s/g, '') != '') {
+                search_info.contain = jQuery('#search-form #contain').val();
+            }
+
+            if (jQuery('#search-form #notcontain').val().replace(/\s/g, '') != '') {
+                search_info.notcontain = jQuery('#search-form #notcontain').val();
+            }
+
+            return search_info;
+        },
+        w_convert_search_info_to_fuzzy: function (search_info) {
+            var fuzzy = JSON.stringify(search_info);
+            return fuzzy;
+        },
+        w_convert_fuzzy_to_search_info: function (fuzzy) {
+            var search_info = {};
+            try {
+                search_info = JSON.parse(fuzzy);
+            } catch (e) {
+                var fuzzy_info = fuzzy.split('-');
+                if (fuzzy_info.length == 1) {
+                    search_info.contain = fuzzy;
+                } else {
+                    fuzzy_info.shift();
+                    search_info.notcontain = fuzzy_info.join('-');
+                }
+            }
+            return search_info;
+        },
+        w_update_search_form:function(search_info){
+            jQuery.each(search_info, function (key, val) {
+                var search_item = jQuery('#search-form #' + key);
+                if (search_item.length == 1) {
+                    search_item.val(val);
+                }
+            });
+        },
+        w_fuzzy_search: function () {
+            var params = {};
+            params.page = '0';
+            jQuery.UbizOIWidget.page = '0';
+
+            var fuzzy = jQuery('#fuzzy').val();
+            var search_info = jQuery.UbizOIWidget.w_convert_fuzzy_to_search_info(fuzzy);
+            jQuery.UbizOIWidget.w_update_search_form(search_info);
+            params.search = search_info;
+
+            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
+            var sort = sort_info.sort_name + "_" + sort_info.order_by;
+            params.sort = sort;
+
+            ubizapis('v1', '/suppliers', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+        },
+        w_fuzzy_search_handle_enter(e) {
+            var keycode = (e.keyCode ? e.keyCode : e.which);
+            if (keycode == '13') {
+                jQuery.UbizOIWidget.w_fuzzy_search();
+            }
+        },
+        w_get_param_search_sort: function() {
+            var params = {};
+            params.page = '0';
+
+            var search_info = jQuery.UbizOIWidget.w_get_search_info();
+            params.search = search_info;
+
+            if (jQuery.isEmptyObject(search_info) === false) {
+                var fuzzy = jQuery.UbizOIWidget.w_convert_search_info_to_fuzzy(search_info);
+                jQuery('#fuzzy').val(fuzzy);
+            }
+
+            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
+            params.sort = sort_info.sort_name + "_" + sort_info.order_by;
+            return params;
         },
         w_get_images_upload: function() {
             var formData = new FormData();
@@ -159,6 +270,11 @@
             return formData;
         },
         w_get_data_input_form: function() {
+            var addresses = $("#i-put .txt_address");
+            var addParam = [];
+            for(var i = 0; i < addresses.length; i++) {
+                addParam.put($(addresses[i]).val());
+            }
             var data = {
                 sup_code: $("#i-put #txt_sup_code").val(),
                 sup_name: $("#i-put #txt_sup_name").val(),
@@ -166,17 +282,29 @@
                 sup_phone: $("#i-put #txt_sup_phone").val(),
                 sup_fax: $("#i-put #txt_sup_fax").val(),
                 sup_mail: $("#i-put #txt_sup_mail").val(),
-                sup_avatar: $(".image-upload .img-show").attr("img-name")
+                sup_avatar: $(".image-upload .img-show").attr("img-name"),
+                addresses: addParam
             };
             return data;
         },
         w_open_searh_form: function (self) {
             swal('ok');
         },
-        w_go_to_input_page: function (id) {
-            if (id != 0)
-                jQuery.UbizOIWidget.w_get_specific_supplier_by_id(id);
-            $("#i-put .save").attr("onclick", "jQuery.UbizOIWidget.w_save("+id+")");
+        w_go_to_input_page: function (id, index) {
+            if (id != 0) {
+                jQuery.UbizOIWidget.w_get_specific_supplier_by_id(id, index);
+                $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
+
+            }
+            else{
+
+                $("#i-put .GtF .delete").css("display","none").removeAttr("onclick");
+            }
+
+            if (isEmpty(index)) {
+                $("#i-put .GtF .save").attr("onclick", "jQuery.UbizOIWidget.w_save(0)");
+            }
+
             jQuery.UbizOIWidget.o_page.hide();
             jQuery.UbizOIWidget.i_page.fadeIn("slow");
             jQuery('#nicescroll-oput').getNiceScroll().remove();
@@ -191,6 +319,40 @@
                 autohidemode: false,
                 horizrailenabled: false
             });
+        },
+        w_set_paging_for_detail_page: function(page, totalPage, isReset = false) {
+            var previous = $("#i-put .aqK .previous");
+            var next = $("#i-put .aqK .next");
+            var currentPage = $("#i-put .aqK .current-page");
+            var rowNumbers = $("#i-put .aqK .row-numbers");
+            page = Number(page);
+            totalPage = Number(totalPage);
+            if (page == 0) {
+                $(previous).find(".amI").removeClass("aaT").addClass("adS");
+                $(next).find(".amJ").removeClass("adS").addClass("aaT");
+                $(previous).removeAttr("onclick");
+                $(next).attr("onclick", "jQuery.UbizOIWidget.w_go_to_input_page(-1,"+(page + 1)+")");
+            } else if (page >= totalPage - 1) {
+                $(next).find(".amJ").removeClass("aaT").addClass("adS");
+                $(previous).find(".amI").removeClass("adS").addClass("aaT");
+                $(next).removeAttr("onclick");
+                $(previous).attr("onclick", "jQuery.UbizOIWidget.w_go_to_input_page(-1,"+(page - 1)+")");
+            } else {
+                $(next).find(".amJ").removeClass("adS").addClass("aaT");
+                $(previous).find(".amI").removeClass("adS").addClass("aaT");
+                $(next).attr("onclick", "jQuery.UbizOIWidget.w_go_to_input_page(-1,"+(page + 1)+")");
+                $(previous).attr("onclick", "jQuery.UbizOIWidget.w_go_to_input_page(-1,"+(page - 1)+")");
+            }
+            $(currentPage).html(page + 1);
+            $(rowNumbers).html(totalPage);
+            if (isReset) {
+                $(next).removeAttr("onclick");
+                $(previous).removeAttr("onclick");
+                $(previous).find(".amI").removeClass("aaT").addClass("adS");
+                $(next).find(".amJ").removeClass("aaT").addClass("adS");
+                $(currentPage).html(0);
+                $(rowNumbers).html(0);
+            }
         },
         w_go_back_to_output_page: function (self) {
             jQuery.UbizOIWidget.o_page.fadeIn("slow");
@@ -210,9 +372,9 @@
             jQuery.UbizOIWidget.w_clear_input_page();
         },
         w_refresh_output_page: function () {
-            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-            var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/suppliers', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            var params = jQuery.UbizOIWidget.w_get_param_search_sort();
+            params.page = jQuery.UbizOIWidget.page;
+            ubizapis('v1', '/suppliers', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_sort_info: function () {
             var sort_obj = jQuery.UbizOIWidget.o_page.find('div.dWT');
@@ -234,24 +396,54 @@
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
             ubizapis('v1', '/suppliers', 'get', null, {'page': page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
-        w_delete_callback: function (response) {
+        w_process_callback: function (response) {
             if (response.data.success == true) {
-                jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
-                swal(response.data.message, {
-                    icon: "success",
-                });
+                if (response.data.method == "insert") {
+                    swal({
+                        title:response.data.message,
+                        icon: "success",
+                        text: i18next.t("Do you want to continue insert Supplier?"),
+                        buttons: true,
+                        buttons: {
+                            cancel: _NO,
+                            catch: {
+                                text: _YES,
+                                value: "catch",
+                            }
+                        },
+                        dangerMode: true,
+                    }).then((value) => {
+                        switch (value) {
+                            case "catch":
+                                jQuery.UbizOIWidget.w_clear_input_page();
+                                break;
+                            default:
+                                jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
+                                jQuery.UbizOIWidget.w_go_back_to_output_page();
+                                break;
+                        }
+                    });
+                } else {
+                    jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
+                    jQuery.UbizOIWidget.w_go_back_to_output_page();
+                    swal(response.data.message, {
+                        icon: "success",
+                    });
+                }
+
             } else {
                 swal(response.data.message, {
                     icon: "error",
                 });
             }
-            jQuery.UbizOIWidget.w_go_back_to_output_page(this);
+
         },
         w_render_data_to_ouput_page: function (response) {
             var table_html = "";
             var suppliers = response.data.supplier;
             if (suppliers.length > 0) {
                 var rows = [];
+                var index = 0 + (Number(response.data.paging.page) * Number(response.data.paging.rows_per_page));
                 for (let i = 0; i < suppliers.length; i++) {
                     var cols = [];
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(suppliers[i].sup_id, suppliers[i].sup_code, 1));
@@ -260,7 +452,8 @@
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(suppliers[i].sup_id, suppliers[i].sup_phone, 4));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(suppliers[i].sup_id, suppliers[i].sup_fax, 5));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(suppliers[i].sup_id, suppliers[i].sup_mail, 6));
-                    rows.push(jQuery.UbizOIWidget.w_make_row_html(suppliers[i].sup_id, cols));
+                    rows.push(jQuery.UbizOIWidget.w_make_row_html(suppliers[i].sup_id, cols, index));
+                    index++;
                 }
                 table_html += rows.join("");
             }
@@ -270,12 +463,14 @@
             jQuery.UbizOIWidget.page = response.data.paging.page;
             jQuery.UbizOIWidget.w_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
         },
-        w_render_data_to_input_page: function(response, callback) {
+        w_render_data_to_input_page: function(response) {
             if (response == undefined || response.data == undefined || response.data.supplier.length <= 0) {
                 return;
             }
-            data = response.data.supplier[0];
+            var data = response.data.supplier[0];
+            var addresses = data.sad_address;
             $("#i-put .GtF .delete").attr("onclick","jQuery.UbizOIWidget.w_delete("+data.sup_id+")");
+            $("#i-put .GtF .save").attr("onclick", "jQuery.UbizOIWidget.w_save("+data.sup_id+")");
             $("#i-put #nicescroll-iput #txt_sup_code").val(data.sup_code);
             $("#i-put #nicescroll-iput #txt_sup_name").val(data.sup_name).change(function() {inputChange(this, data.sup_name)});
             $("#i-put #nicescroll-iput #txt_sup_website").val(data.sup_website).change(function() {inputChange(this, data.sup_website)});
@@ -285,8 +480,21 @@
             if (isEmpty(data.src)) {
                 data.src = jQuery.UbizOIWidget.defaultImage;
             }
+            for(var i = 0; i < addresses.length; i++) {
+                if (i <= 2) {
+                    $("#i-put #nicescroll-iput #txt_adr" + (i+1)).val(addresses[i].address).change(function() {inputChange(this, addresses[i])}).attr("sad_id",addresses[i].id);
+                } else {
+                    var address = $("#i-put #nicescroll-iput .txt_adr1_container").clone();
+                    $(address).removeClass("txt_adr1_container").addClass("txt_adr"+(i+1)+"_container").addClass("clone-address");
+                    $(address).find("input").attr("id","txt_adr"+(i+1)).val(addresses[i].address).change(function() {inputChange(this, addresses[i].address)}).attr("sad_id",addresses[i].id);
+                    $(address).find("label.lbl-primary").html(i18next.t("Address") + " " + (i+1));
+                    $(address).insertAfter("#i-put #nicescroll-iput .txt_adr"+i+"_container");
+                }
+            }
             $("#i-put #nicescroll-iput .image-upload .img-show").attr("src", data.src);
             $("#i-put #nicescroll-iput .image-upload .img-show").attr("img-name", data.sup_avatar);
+
+            jQuery.UbizOIWidget.w_set_paging_for_detail_page(response.data.paging.page, response.data.paging.rows_num);
         },
         w_is_input_changed: function() {
             var txt_input = $("#i-put .jAQ input");
@@ -306,8 +514,63 @@
                 if ($(txt_input[i]).prop("required") == true) {
                     if ($(txt_input[i]).val() == "") {
                         isValid = false;
-                        showErrorInput(txt_input[i], "Thông tin bắt buộc nhập");
+                        showErrorInput(txt_input[i], i18next.t("This input is required"));
                     }
+                }
+                var txt_id = $(txt_input[i]).attr("id");
+                var txt_val = $(txt_input[i]).val().trim();
+                switch(txt_id) {
+                    case "txt_sup_name":
+                        if (txt_val.length > 100) {
+                            isValid = false;
+                            showErrorInput(txt_input[i], i18next.t("invalid length",{length: "100"}));
+                        }
+                        break;
+                    case "txt_sup_website":
+                        var regex = new RegExp('^(https?:\\/\\/)?'+ // protocol
+                            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|'+ // domain name
+                            '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+                            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+                            '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+                            '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+                        if (txt_val.length > 100) {
+                            isValid = false;
+                            showErrorInput(txt_input[i], i18next.t("invalid length",{length: "100"}));
+                        } else if (regex.test(String(txt_val).toLowerCase()) == false) {
+                            isValid = false;
+                            showErrorInput(txt_input[i], i18next.t("invalid input", {control: i18next.t("Website")}));
+                        }
+                        break;
+                    case "txt_sup_phone":
+                        var regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+                        if (txt_val.length > 15) {
+                            isValid = false;
+                            showErrorInput(txt_input[i], i18next.t("invalid length",{length: "15"}));
+                        } else if (regex.test(String(txt_val).toLowerCase()) == false || txt_val.length < 9) {
+                            isValid = false;
+                            showErrorInput(txt_input[i], i18next.t("invalid input", {control: i18next.t("Phone")}));
+                        }
+                        break;
+                    case "txt_sup_fax":
+                        var regex = /^\+?[0-9]{6,}$/;
+                        if (txt_val.length > 20) {
+                            isValid = false;
+                            showErrorInput(txt_input[i], i18next.t("invalid length",{length: "20"}));
+                        } else if (regex.test(String(txt_val).toLowerCase()) == false) {
+                            isValid = false;
+                            showErrorInput(txt_input[i], i18next.t("invalid input",{control: i18next.t("Fax")}));
+                        }
+                        break;
+                    case "txt_sup_mail":
+                        var regex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+                        if (txt_val.length > 100) {
+                            isValid = false;
+                            showErrorInput(txt_input[i], i18next.t("invalid length",{length: "100"}));
+                        } else if (regex.test(String(txt_val).toLowerCase()) == false) {
+                            isValid = false;
+                            showErrorInput(txt_input[i], i18next.t("invalid input", {control: i18next.t("E-Mail")}));
+                        }
+                        break;
                 }
             }
             return isValid;
@@ -321,15 +584,32 @@
             $("#i-put #nicescroll-iput #txt_sup_mail").val("").isChange("false");
             $("#i-put #nicescroll-iput .file-upload").isChange("false");
             $("#i-put #nicescroll-iput .image-upload .img-show").attr("src", jQuery.UbizOIWidget.defaultImage);
+            $("#i-put .txt_address").val("");
+            $("#i-put .clone-address").remove();
+            jQuery.UbizOIWidget.sort = {'sort_name': 'sup_code', 'order_by': 'asc'};
+            jQuery.UbizOIWidget.w_set_paging_for_detail_page(0,0,true);
             removeErrorInput();
         },
-        w_get_specific_supplier_by_id(id) {
-            ubizapis('v1','/suppliers/' + id, 'get', null, {'page': 0},jQuery.UbizOIWidget.w_render_data_to_input_page);
+        w_clear_search_form:function(){
+            jQuery('#search-form  #sup_code').val("");
+            jQuery('#search-form  #sup_name').val("");
+            jQuery('#search-form  #sup_mail').val("");
+            jQuery('#search-form  #sup_phone').val("");
+            jQuery('#search-form  #sup_fax').val("");
+            jQuery('#search-form  #sup_website').val("");
+            jQuery('#search-form  #sup_contain').val("");
+            jQuery('#search-form  #sup_notcontain').val("");
+            jQuery('#search-form  #sup_fuzzy').val("");
         },
-        w_make_row_html: function (id, cols) {
+        w_get_specific_supplier_by_id(id, index) {
+            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
+            var sort = sort_info.sort_name + "_" + sort_info.order_by;
+            ubizapis('v1','/suppliers/' + id, 'get', null, {'page': index, 'sort': sort},jQuery.UbizOIWidget.w_render_data_to_input_page);
+        },
+        w_make_row_html: function (id, cols, index) {
             var row_html = '';
             if (cols.length > 0) {
-                row_html = '<div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page(' + id + ',this)">';
+                row_html = '<div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page(' + id + ','+index+')">';
                 row_html += cols.join("");
                 row_html += '</div>';
             }

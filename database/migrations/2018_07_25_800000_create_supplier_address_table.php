@@ -1,11 +1,16 @@
 <?php
-
+/**
+ * Created by PhpStorm.
+ * User: User
+ * Date: 7/25/2018
+ * Time: 9:37 PM
+ */
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-
-class CreateMDepartmentTable extends Migration
+class CreateSupplierAddressTable extends Migration
 {
+
     /**
      * Run the migrations.
      *
@@ -13,13 +18,12 @@ class CreateMDepartmentTable extends Migration
      */
     public function up()
     {
-        Schema::create('m_department', function (Blueprint $table) {
-            $table->increments('id');
-            $table->char('dep_code', 5);
-            $table->string('dep_name', 100);
-            $table->char('dep_type', 2);
+        Schema::create('supplier_address', function (Blueprint $table) {
+            $table->increments('sad_id');
+            $table->integer('sup_id');
+            $table->string('sad_address', 250);
             $table->char('delete_flg', 1)->default('0');
-            $table->timestamp('inp_date')->useCurrent();
+            $table->timestamp('inp_date');
             $table->integer('inp_user');
             $table->timestamp('upd_date')->useCurrent();
             $table->integer('upd_user');
@@ -33,6 +37,6 @@ class CreateMDepartmentTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('m_department');
+        Schema::dropIfExists('supplier_address');
     }
 }

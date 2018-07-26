@@ -20,6 +20,15 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('dist/tooltipster/tooltipster.bundle.css') }}">
     <script type="text/javascript" src="{{ asset('dist/tooltipster/tooltipster.bundle.js') }}"></script>
 
+    <script>
+        var i18next_options = {};
+        i18next_options.lng = document.documentElement.lang;
+        i18next_options.resources = {};
+        i18next_options.resources[document.documentElement.lang] = {};
+        i18next_options.resources[document.documentElement.lang]['translation'] = {!! Helper::readJsonBasedLanguage() !!};
+        i18next.init(i18next_options);
+    </script>
+
     @yield('top-javascript')
 </head>
 <body>
