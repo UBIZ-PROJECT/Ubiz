@@ -5,7 +5,10 @@ jobs:
       - image: circleci/php:7.0
     steps:
      - checkout
-     - run: sh ./sh/deploy.sh $CIRCLE_BRANCH
+     - run:
+          name: Deploy Over SSH
+          command: |
+            ssh -o 'StrictHostKeyChecking=no' $SSH_USER@$SSH_HOST mkdir -p /home/$CIRCLE_BRANCH
 
 workflows:
   version: 2
