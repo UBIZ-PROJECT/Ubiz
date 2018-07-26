@@ -10,7 +10,7 @@ jobs:
   #        command: |
   #          ssh -o 'StrictHostKeyChecking=no' $SSH_USER@$SSH_HOST mkdir -p /home/$CIRCLE_BRANCH
   #          rsync -r ./html $SSH_USER@$SSH_HOST:/home/$CIRCLE_BRANCH/
-  #  
+    
   #staging:
   #  docker:
   #    - image: circleci/php:7.0
