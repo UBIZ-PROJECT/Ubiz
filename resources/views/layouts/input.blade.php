@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 7/12/2018
- * Time: 10:29 PM
- */
 
 $html_type = '';
 $html_control_type = '';
