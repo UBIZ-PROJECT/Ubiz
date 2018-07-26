@@ -57,7 +57,7 @@
                                             </a>
                                         </li>
                                         <li class="who">
-                                            <a class="ruo" role="button" href="/suppliers">
+                                            <a class="ruo" role="button" href="#">
                                                 <div class="pto">
                                                     <img src="{{asset('images/app_bg.png')}}">
                                                     <div class="zro">
