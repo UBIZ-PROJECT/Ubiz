@@ -297,12 +297,13 @@
                                 </div>
                             </div>
                         </div>
+						<input type="hidden" id="pageno" name="pageno" value="0">
                     </div>
                     <div class="aqB nicescroll" id="nicescroll-oput">
                         <div class="yTP">
                             <div id="table-content" class="jFr">
                                 @foreach($customers as $customer)
-                                    <div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{$customer->cus_id}})">
+                                    <div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{$customer->cus_id}}, this)">
                                         <div class="tcB col-3">
                                             <div class="cbo">
                                                 <div class="jgQ" onclick="jQuery.UbizOIWidget.w_c_checkbox_click(this)">
@@ -431,13 +432,13 @@
 							<div class="row z-mgl z-mgr">
 								<div class="col-sm-2 col-md-2 col-xl-2 z-pdl">
 									<a class="ato">
-										<img id="avt_img" src="{{ asset("images/avatar.jpg") }}">
+										<img id="avt_img" src="{{ asset("images/avatar.png") }}">
 										<input type="file" id="avatar" name="cus_avatar" accept="image/*" style="display: none"/>
 										<span id="change_avt">{{ __("Change") }}</span>
 									</a>
 								</div>
 								<div class="col-sm-5 col-md-5 col-xl-5">
-									<input type="hidden" name="cus_id"/>
+									<input type="hidden" name="cus_id" value="0"/>
 									@include('components.input',['type'=>'required', 'control_id'=>'cus_code', 'label'=>'Mã'])
 									@include('components.input',['type'=>'required', 'control_id'=>'cus_name', 'label'=>'Tên khách hàng'])
 									@include('components.input',['type'=>'required', 'control_id'=>'cus_type', 'label'=>'Loại khách hàng'])

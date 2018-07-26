@@ -76,7 +76,7 @@ class Customer implements JWTSubject
         }
     }
 
-public function getCustomers($page = 0, $sort = '') 
+	public function getCustomers($page = 0, $sort = '') 
 	{
 		try {
             $sort_name = 'cus_id';
@@ -111,17 +111,36 @@ public function getCustomers($page = 0, $sort = '')
         return $customers;
     }
 	
-public function getCustomer($id) 
+	public function getCustomer($id) 
 	{
 		try {
-		$customers = DB::table('customer')
-			->where('cus_id', $id)
-			->get();
+			$customers = DB::table('customer')
+				->where('cus_id', $id)
+				->get();
+			$customers[0]->avt_src = Helper::readImage($customers[0]->cus_avatar, 'cus');
 		}catch (\Throwable $e) {
             throw $e;
         }
-		$customers[0]->avt_src = Helper::readImage($customers[0]->cus_avatar, 'cus');
         return $customers;
+    }
+	
+	public function getCustomerPaging($index, $sort, $order) 
+	{
+		try {
+			$sort_name = 'cus_id';
+			$order_by = 'asc';
+			$rows_per_page = 1;
+			$customer = DB::table('customers')
+				->where('delete_flg', '0')
+				->orderBy($sort_name, $order_by)
+				->offset($index * $rows_per_page)
+				->limit($rows_per_page)
+				->get();
+			$customers[0]->avt_src = Helper::readImage($customers[0]->cus_avatar, 'cus');
+		}catch (\Throwable $e) {
+            throw $e;
+        }
+        return $customer;
     }
 
     public function countAllCustomers()
@@ -153,11 +172,17 @@ public function getCustomer($id)
 	
 	public function insertCustomer($param) {
 		try {
+			if($param['cus_avatar']){
+				$avatar = $param['cus_id'].'.'.$param['cus_avatar']->getClientOriginalExtension();
+				Helper::resizeImage($param['cus_avatar']->getRealPath(), $param['cus_id'].'.'.$param['cus_avatar']->getClientOriginalExtension(), 200, 200, 'cus');
+			}else{
+				$avatar = '';
+			}
 			$id = DB::table('customer')->insertGetId(
 			  [
 				  'cus_code'=>$param['cus_code'],
 				  'cus_name'=>$param['cus_name'],
-				  //'cus_avatar'=>$param['cus_avatar'],
+				  'cus_avatar' => $avatar,
 				  'cus_type'=>$param['cus_type'],
 				  'cus_phone'=>$param['cus_phone'],
 				  'cus_fax'=>$param['cus_fax'],
@@ -169,7 +194,6 @@ public function getCustomer($id)
 				  'upd_user'=>'1'
 			  ]
 			);
-			
 			foreach($param['cus_address'] as $cad_address){
 				$this->insertCustomerAddress($id, $cad_address);
 			}
@@ -198,11 +222,17 @@ public function getCustomer($id)
 	
 	public function updateCustomer($param) {
 		try {
+			if($param['cus_avatar']){
+				$avatar = $param['cus_id'].'.'.$param['cus_avatar']->getClientOriginalExtension();
+				Helper::resizeImage($param['cus_avatar']->getRealPath(), $param['cus_id'].'.'.$param['cus_avatar']->getClientOriginalExtension(), 200, 200, 'cus');
+			}else{
+				$avatar = '';
+			}
 			DB::table('customer')->where('cus_id', $param['cus_id'])->update(
 			  [
 				  'cus_code'   => $param['cus_code'],
 				  'cus_name'   => $param['cus_name'],
-				  'cus_avatar' => $param['cus_id'].'.'.$param['cus_avatar']->getClientOriginalExtension(),
+				  'cus_avatar' => $avatar,
 				  'cus_type'   => $param['cus_type'],
 				  'cus_phone'  => $param['cus_phone'],
 				  'cus_fax'    => $param['cus_fax'],
@@ -212,8 +242,6 @@ public function getCustomer($id)
 				  'upd_user'   => '1'
 			  ]
 			);
-			
-			Helper::resizeImage($param['cus_avatar']->getRealPath(), $param['cus_id'].'.'.$param['cus_avatar']->getClientOriginalExtension(), 200, 200, 'cus');
 			
 		} catch (\Throwable $e) {
             throw $e;

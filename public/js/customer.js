@@ -148,11 +148,15 @@
                 jQuery.UbizOIWidget.w_fuzzy_search();
             }
         },
-        w_go_to_input_page: function (id) {
+        w_go_to_input_page: function (id, ele) {
+			var index = jQuery('input[name="pageno"]').val()*10 + (jQuery(ele).index()+1);
+	
 			if(id != 0){
-				ubizapis('v1','/customer-edit', 'get', null, {'cus_id': id}, jQuery.UbizOIWidget.w_render_data_to_input_page);
+				var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
+				ubizapis('v1','/customer-edit', 'get', null, {'cus_id': id, 'index': index, 'sort': sort_info.sort_name, 'order': sort_info.order_by}, jQuery.UbizOIWidget.w_render_data_to_input_page);
 			}else{
 				$('#f-input input').val('');
+				$('#avt_img').attr('src','../images/avatar.png');
 			}
             jQuery.UbizOIWidget.o_page.hide();
             jQuery.UbizOIWidget.i_page.fadeIn("slow");
@@ -272,11 +276,15 @@
         },
 		w_render_data_to_input_page: function (response) {
 			var customer = response.data.customers[0];
-		console.log(customer)
+		
 			$('input[name="cus_id"]').val(customer.cus_id);
 			$('input[name="cus_code"]').val(customer.cus_code);
 			$('input[name="cus_name"]').val(customer.cus_name);
-			$('#avt_img').attr("src", customer.avt_src);
+			if(customer.avt_src != ''){
+				$('#avt_img').attr("src", customer.avt_src);
+			}else{
+				$('#avt_img').attr('src','../images/avatar.png');
+			}
 			$('input[name="cus_type"]').val(customer.cus_type);
 			$('input[name="cus_phone"]').val(customer.cus_phone);
 			$('input[name="cus_fax"]').val(customer.cus_fax);
@@ -411,6 +419,7 @@
             jQuery("#paging-label").replaceWith(paging_label);
             jQuery("#paging-older").replaceWith(paging_older);
             jQuery("#paging-newer").replaceWith(paging_newer);
+			jQuery('input[name="pageno"]').val(page);
         },
 		w_get_data_input_form: function () {
 			//var data = $('form').getForm2obj();
@@ -419,6 +428,7 @@
 		},
 		w_save: function () {
 			var data = jQuery.UbizOIWidget.w_get_data_input_form();
+			var cus_id = jQuery('input[name="cus_id"]').val();
 			
 			swal({
                 title: "Bạn có chắc chắn muốn lưu dữ liệu?",
@@ -435,7 +445,7 @@
             }).then((value) => {
                 switch (value) {
                     case "catch":
-                        if(data.cus_id != 0){
+                        if(cus_id != 0){
 							ubizapis('v1', '/customer-update', 'post', data, null, jQuery.UbizOIWidget.w_save_callback);
 						}else{
 							ubizapis('v1', '/customer-create', 'post', data, null, jQuery.UbizOIWidget.w_save_callback);

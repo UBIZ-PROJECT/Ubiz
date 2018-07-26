@@ -50,12 +50,42 @@ class CustomerController extends Controller
         return response()->json(['customers' => $customers, 'success' => true, 'message' => ''], 200);
     }
 	
+	public function getCustomerPaging(Request $request)
+    {
+        try {
+			if ($request->has('page')) {
+				$page = $request->page;
+			}else{
+				$page = 0;
+			}
+
+			if ($request->has('sort')) {
+				$sort = $request->sort;
+			}else{
+				$sort = '';
+			}
+			
+			if ($request->has('order')) {
+				$sort = $request->order;
+			}else{
+				$order = '';
+			}
+		
+            $customer = new Customer();
+            $customers = $customer->getCustomerPaging($request->index, $sort, $order);
+			$customerAddress = $customer->getCustomerAddress($request->cus_id);
+			$customers[0]->address = $customerAddress;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['customers' => $customers, 'success' => true, 'message' => ''], 200);
+    }
+	
 	public function insertCustomer(Request $request)
     {
-		$data = json_decode($request->data, true);
         try {
             $customer = new Customer();
-            $customer->insertCustomer($data);
+            $customer->insertCustomer($request);
 			$customers = $customer->getCustomers(0);
             $paging = $customer->getPagingInfo();
             $paging['page'] = 0;
