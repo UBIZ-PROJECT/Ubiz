@@ -367,14 +367,14 @@
                 </div>
                 <div class="jAQ">
                     <div class="aqI nicescroll" id="nicescroll-iput">
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
+                        <form>
+                            <input type="text" name="full_name">
+                            <input type="text" name="full_name">
+                            <input type="text" name="full_name">
+                            <input type="text" name="full_name">
+                            <input type="text" name="full_name">
+                            <input type="submit" value="Add">
+                        </form>
                     </div>
                 </div>
             </div>
