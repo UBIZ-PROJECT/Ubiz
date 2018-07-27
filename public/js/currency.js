@@ -151,7 +151,7 @@
         },
         w_render_data_to_ouput_page: function (response) {
             var table_html = "";
-            var currency = response.data.currencies;
+            var currency = response.data.currency;
             if (currency.length > 0) {
                 var rows = [];
                 for (let i = 0; i < currency.length; i++) {

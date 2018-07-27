@@ -30,11 +30,12 @@ class UsersController extends Controller
     {
         try {
             $user = new User();
-            $data = $user->getUser($id);
-
-            list($page, $sort, $search) = $this->getRequestData($request);
-            $count = $user->countUsers($search);
-
+            if ($request->has('pos')) {
+                list ($page, $sort, $search) = $this->getRequestData();
+                $data = $user->getUserByPos($request->pos, $sort, $search);
+            }else{
+                $data = $user->getUserById($id);
+            }
         } catch (\Throwable $e) {
             throw $e;
         }

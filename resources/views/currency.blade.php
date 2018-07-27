@@ -367,14 +367,18 @@
                 </div>
                 <div class="jAQ">
                     <div class="aqI nicescroll" id="nicescroll-iput">
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
+                        <input type="hidden" id="txt_id" value="0">
+                        <div class="row z-mgl z-mgr">
+                            <div class="col-sm-2 col-md-2 col-xl-2 z-pdl">
+                                @include('components.upload_image')
+                            </div>
+                            <div class="col-sm-5 col-md-5 col-xl-5">
+                                @include('components.input',['control_id'=>'txt_name', 'label'=>__('Name')])
+                                @include('components.input',['control_id'=>'txt_code', 'label'=>__('Code')])
+                                @include('components.input',['control_id'=>'txt_symbol', 'label'=>__('Symbol')])
+                                @include('components.input',['control_id'=>'txt_state', 'label'=>__('State')])
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
