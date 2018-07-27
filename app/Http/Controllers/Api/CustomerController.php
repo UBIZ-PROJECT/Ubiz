@@ -40,19 +40,6 @@ class CustomerController extends Controller
 	public function getCustomer(Request $request)
     {
         try {
-            $customer = new Customer();
-            $customers = $customer->getCustomer($request->cus_id);
-			$customerAddress = $customer->getCustomerAddress($request->cus_id);
-			$customers[0]->address = $customerAddress;
-        } catch (\Throwable $e) {
-            throw $e;
-        }
-        return response()->json(['customers' => $customers, 'success' => true, 'message' => ''], 200);
-    }
-	
-	public function getCustomerPaging(Request $request)
-    {
-        try {
 			if ($request->has('page')) {
 				$page = $request->page;
 			}else{
@@ -66,19 +53,24 @@ class CustomerController extends Controller
 			}
 			
 			if ($request->has('order')) {
-				$sort = $request->order;
+				$order = $request->order;
 			}else{
 				$order = '';
 			}
-		
+			
             $customer = new Customer();
-            $customers = $customer->getCustomerPaging($request->index, $sort, $order);
-			$customerAddress = $customer->getCustomerAddress($request->cus_id);
+			if($request->cus_id != 0){
+				$customers = $customer->getCustomer($request->cus_id);
+			}else{
+				$customers = $customer->getCustomerPaging($request->index, $sort, $order);
+			}
+			$totalCustomers = $customer->countCustomers();
+			$customerAddress = $customer->getCustomerAddress($customers[0]->cus_id);
 			$customers[0]->address = $customerAddress;
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['customers' => $customers, 'success' => true, 'message' => ''], 200);
+        return response()->json(['customers' => $customers, 'totalCustomers' => $totalCustomers, 'success' => true, 'message' => ''], 200);
     }
 	
 	public function insertCustomer(Request $request)

@@ -405,16 +405,16 @@
                                 <span class="Di">
                                     <div class="amH" style="user-select: none">
                                         <span class="Dj">
-                                            <span><span class="ts">1</span></span> / <span class="ts">229</span>
+                                            <span><span class="ts curindex"></span></span> / <span class="ts totalindex"></span>
                                         </span>
                                     </div>
                                     <div class="amD utooltip" title="Cũ hơn">
                                         <span class="amF">&nbsp;</span>
-                                        <img class="amI" src="http://ubiz.local/images/cleardot.gif" alt="">
+                                        <img class="amI prev" src="http://ubiz.local/images/cleardot.gif" alt="">
                                     </div>
                                     <div class="amD utooltip" title="Mới hơn">
                                         <span class="amF">&nbsp;</span>
-                                        <img class="amJ" src="http://ubiz.local/images/cleardot.gif" alt="">
+                                        <img class="amJ next" src="http://ubiz.local/images/cleardot.gif" alt="">
                                     </div>
                                     <div class="amD utooltip" title="Cài đặt">
                                         <span class="amF">&nbsp;</span>

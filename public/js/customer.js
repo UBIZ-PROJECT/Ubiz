@@ -149,11 +149,26 @@
             }
         },
         w_go_to_input_page: function (id, ele) {
-			var index = jQuery('input[name="pageno"]').val()*10 + (jQuery(ele).index()+1);
-	
 			if(id != 0){
+				var index = jQuery('input[name="pageno"]').val()*10 + jQuery(ele).index();
 				var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-				ubizapis('v1','/customer-edit', 'get', null, {'cus_id': id, 'index': index, 'sort': sort_info.sort_name, 'order': sort_info.order_by}, jQuery.UbizOIWidget.w_render_data_to_input_page);
+				ubizapis('v1','/customer-edit', 'get', null, {'cus_id': id}, jQuery.UbizOIWidget.w_render_data_to_input_page);
+				jQuery('.curindex').text(index+1);
+				jQuery('.prev').attr('onclick', 'jQuery.UbizOIWidget.w_go_to_input_page_paging('+ (index-1) +')');
+				jQuery('.next').attr('onclick', 'jQuery.UbizOIWidget.w_go_to_input_page_paging('+ (index+1) +')');
+				if(index == 0){
+					jQuery('.prev').removeAttr('onclick');
+					jQuery('.prev').addClass('adS');
+				}else{
+					jQuery('.prev').removeClass('adS');
+				}
+				
+				if( (index+1) == parseInt($('.totalindex').text()) ){
+					jQuery('.next').removeAttr('onclick');
+					jQuery('.next').addClass('adS');
+				}else{
+					jQuery('.next').removeClass('adS');
+				}
 			}else{
 				$('#f-input input').val('');
 				$('#avt_img').attr('src','../images/avatar.png');
@@ -192,6 +207,26 @@
 				jQuery.UbizOIWidget.w_preview_avatar(this);
 			});
         },
+		w_go_to_input_page_paging: function (index) {
+			var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
+			ubizapis('v1','/customer-edit', 'get', null, {'cus_id': 0, 'index': index, 'sort': sort_info.sort_name, 'order': sort_info.order_by}, jQuery.UbizOIWidget.w_render_data_to_input_page);
+			jQuery('.curindex').text(index+1);
+			jQuery('.prev').attr('onclick', 'jQuery.UbizOIWidget.w_go_to_input_page_paging('+ (index-1) +')');
+			jQuery('.next').attr('onclick', 'jQuery.UbizOIWidget.w_go_to_input_page_paging('+ (index+1) +')');
+			if(index == 0){
+				jQuery('.prev').removeAttr('onclick');
+				jQuery('.prev').addClass('adS');
+			}else{
+				jQuery('.prev').removeClass('adS');
+			}
+			
+			if( (index+1) == parseInt($('.totalindex').text()) ){
+				jQuery('.next').removeAttr('onclick');
+				jQuery('.next').addClass('adS');
+			}else{
+				jQuery('.next').removeClass('adS');
+			}
+		},
         w_go_back_to_output_page: function (self) {
             jQuery.UbizOIWidget.o_page.fadeIn("slow");
             jQuery.UbizOIWidget.i_page.hide();
@@ -276,6 +311,7 @@
         },
 		w_render_data_to_input_page: function (response) {
 			var customer = response.data.customers[0];
+			$('.totalindex').text(response.data.totalCustomers);
 		
 			$('input[name="cus_id"]').val(customer.cus_id);
 			$('input[name="cus_code"]').val(customer.cus_code);

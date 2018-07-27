@@ -88,28 +88,34 @@ class Customer implements JWTSubject
                 $sort_name = implode('_', $sort_info);
             }
 			
-        $rows_per_page = env('ROWS_PER_PAGE', 10);
-		$firstAddress = DB::table('customer_address')
-                   ->select('cus_id as cad_cus_id', DB::raw('min(cad_id) as cad_id'))
-                   ->whereRaw("delete_flg = '0'")
-                   ->groupBy('cus_id')->toSql();
+			$rows_per_page = env('ROWS_PER_PAGE', 10);
+			$firstAddress = DB::table('customer_address')
+					   ->select('cus_id as cad_cus_id', DB::raw('min(cad_id) as cad_id'))
+					   ->whereRaw("delete_flg = '0'")
+					   ->groupBy('cus_id')->toSql();
 
-		$customers = DB::table('customer')
-			->leftJoin(DB::raw('('.$firstAddress.') customer_adr'),function($join){
-				$join->on('customer_adr.cad_cus_id','=','customer.cus_id');
-			})
-			->leftJoin('customer_address', 'customer_adr.cad_id', '=', 'customer_address.cad_id')
-			->select('customer.*', 'customer_address.cad_address as address', 'customer_address.cad_id')
-			->whereRaw("customer.delete_flg = '0'")
-			->orderBy($sort_name, $order_by)
-			->offset($page * $rows_per_page)
-			->limit($rows_per_page)
-			->get();
+			$customers = DB::table('customer')
+				->leftJoin(DB::raw('('.$firstAddress.') customer_adr'),function($join){
+					$join->on('customer_adr.cad_cus_id','=','customer.cus_id');
+				})
+				->leftJoin('customer_address', 'customer_adr.cad_id', '=', 'customer_address.cad_id')
+				->select('customer.*', 'customer_address.cad_address as address', 'customer_address.cad_id')
+				->whereRaw("customer.delete_flg = '0'")
+				->orderBy($sort_name, $order_by)
+				->offset($page * $rows_per_page)
+				->limit($rows_per_page)
+				->get();
 		}catch (\Throwable $e) {
             throw $e;
         }
         return $customers;
     }
+	
+	public function countCustomers(){
+		$totalCustomers = DB::table('customer')->where('delete_flg', '0')->count();
+		
+		return $totalCustomers;
+	}
 	
 	public function getCustomer($id) 
 	{
@@ -127,20 +133,17 @@ class Customer implements JWTSubject
 	public function getCustomerPaging($index, $sort, $order) 
 	{
 		try {
-			$sort_name = 'cus_id';
-			$order_by = 'asc';
-			$rows_per_page = 1;
-			$customer = DB::table('customers')
+			$customers = DB::table('customer')
 				->where('delete_flg', '0')
-				->orderBy($sort_name, $order_by)
-				->offset($index * $rows_per_page)
-				->limit($rows_per_page)
+				->orderBy($sort, $order)
+				->offset($index)
+				->limit(1)
 				->get();
 			$customers[0]->avt_src = Helper::readImage($customers[0]->cus_avatar, 'cus');
 		}catch (\Throwable $e) {
             throw $e;
         }
-        return $customer;
+        return $customers;
     }
 
     public function countAllCustomers()
