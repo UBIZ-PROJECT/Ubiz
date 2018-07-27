@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -25,6 +26,46 @@ class UsersController extends Controller
         return response()->json(['users' => $users, 'paging' => $paging, 'success' => true, 'message' => ''], 200);
     }
 
+    public function getUser($id, Request $request)
+    {
+        try {
+            $user = new User();
+            if ($request->has('pos')) {
+                list ($page, $sort, $search) = $this->getRequestData();
+                $data = $user->getUserByPos($request->pos, $sort, $search);
+            }else{
+                $data = $user->getUserById($id);
+            }
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['user' => $data, 'message' => __("Successfully processed.")], 200);
+    }
+
+    public function updateUser($id, Request $request)
+    {
+        try {
+            $user = new User();
+            $paging = $user->getPagingInfo();
+            $paging['page'] = 0;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['users' => $users, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed.")], 200);
+    }
+
+    public function insertUser(Request $request)
+    {
+        try {
+            $user = new User();
+            $paging = $user->getPagingInfo();
+            $paging['page'] = 0;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['users' => $users, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed.")], 200);
+    }
+
     public function deleteUsers($ids, Request $request)
     {
         try {
@@ -36,7 +77,7 @@ class UsersController extends Controller
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['users' => $users, 'paging' => $paging, 'success' => true, 'message' => 'Xử lý thành công'], 200);
+        return response()->json(['users' => $users, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed.")], 200);
     }
 
     public function getRequestData(Request $request)
@@ -72,6 +113,12 @@ class UsersController extends Controller
         }
         if ($request->has('address')) {
             $search['address'] = $request->address;
+        }
+        if ($request->has('contain')) {
+            $search['contain'] = $request->contain;
+        }
+        if ($request->has('notcontain')) {
+            $search['notcontain'] = $request->notcontain;
         }
         return [$page, $sort, $search];
     }

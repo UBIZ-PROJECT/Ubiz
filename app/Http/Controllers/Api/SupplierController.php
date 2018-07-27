@@ -19,18 +19,10 @@ class SupplierController extends Controller
     public function getSuppliers(Request $request)
     {
         try {
-            $page = 0;
-            if ($request->has('page')) {
-                $page = $request->page;
-            }
-
-            $sort = '';
-            if ($request->has('sort')) {
-                $sort = $request->sort;
-            }
+            list($page, $sort,$search) = $this->getPageSortSearch($request);
 
             $supplier = new Supplier();
-            $data = $supplier->getSupplierPaging($page, $sort);
+            $data = $supplier->getSupplierPaging($page, $sort,$search);
             $paging = $supplier->getPagingInfo();
             $paging['page'] = $page;
         } catch(\Throwable $e) {
@@ -40,74 +32,98 @@ class SupplierController extends Controller
         return response()->json(['supplier' => $data, 'paging' => $paging,'success' => true, 'message' => ''], 200);
     }
 
-    public function getSupplierById($id) {
+    public function getSupplierById($id, Request $request) {
         try {
             $supplier = new Supplier();
-            $data = $supplier->getSupplierById($id);
+            list($page, $sort,$search) = $this->getPageSortSearch($request);
+            $data = $supplier->getEachSupplierByPaging($page, $sort,$search);
+
             $image = Helper::readImage($data[0]->sup_avatar,'sup');
             $data[0]->src = $image;
+            $paging = $supplier->getPagingInfo();
+            $paging['page'] = $page;
+            $paging['rows_per_page'] = 1;
         } catch (\Throwable $e) {
             throw $e;
         }
         
-        return response()->json(['supplier' => $data, 'success' => true, 'message' => ''], 200);
+        return response()->json(['supplier' => $data, 'paging' => $paging, 'success' => true, 'message' => ''], 200);
     }
 
-    public function insertSupplier() {
-        $params = json_decode($_POST['supplier'], true);
-
-        if (!empty($_FILES)) {
-            $path_parts = pathinfo($_FILES['image-upload']["name"]);
-            $extension = $path_parts['extension'];
-            $params['extension'] = $extension;
-            $params['tmp_name'] = $_FILES['image-upload']['tmp_name'];
-        }
-
-        $supplier = new Supplier();
-        $supplier->insertSupplier($params);
-
-        $data = $supplier->getSupplierPaging(0, '');
-        $paging = $supplier->getPagingInfo();
-        $paging['page'] = 0;
-        return response()->json(['supplier' => $data,'paging' => $paging, 'success' => true, 'message' => ''], 200);
-    }
-
-    public function deleteSuppliersById(Request $request) {
+    public function insertSupplier(Request $request) {
         try {
-            $supplier = new Supplier();
-            $listId = $request->listId;
-            $supplier->deleteSuppliersById($listId);
-            $data = $supplier->getSupplierPaging(0);
-            $paging = $supplier->getPagingInfo();
-            $paging['page'] = 0;
-        } catch (\Throwable $e) {
-            throw $e;
-        }
-        return response()->json(['supplier' => $data, 'paging' => $paging, 'success' => true, 'message' => 'Xử lý thành công'], 200);
-    }
-
-    public function updateSupplierById($id) {
-        try {
-            $data = $_POST['supplier'];
-            $data = json_decode($data, true);
-            $data['sup_id'] = $id;
-
-            if (!empty($_FILES)) {
-                $path_parts = pathinfo($_FILES['image-upload']["name"]);
-                $extension = $path_parts['extension'];
-                $data['extension'] = $extension;
-                $data['tmp_name'] = $_FILES['image-upload']['tmp_name'];
+            $params = json_decode($request['supplier'], true);
+            list($page, $sort, $search) = $this->getPageSortSearch($request);
+            if (!empty($request->file('image-upload'))) {
+                $params['extension'] = $request->file('image-upload')->getClientOriginalExtension();
+                $params['tmp_name'] = $request->file('image-upload')->getRealPath();
             }
 
             $supplier = new Supplier();
-            $supplier->updateSupplierById($data);
+            $supplier->insertSupplier($params);
 
-            $data = $supplier->getSupplierPaging(0, '');
+            $data = $supplier->getSupplierPaging($page, $sort,$search);
             $paging = $supplier->getPagingInfo();
-            $paging['page'] = 0;
+            $paging['page'] = $page;
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['supplier' => $data,'paging' => $paging, 'success' => true, 'message' => ''], 200);
+
+        return response()->json(['supplier' => $data,'paging' => $paging, 'success' => true, 'message' => __("Successfully processed."),'method'=>'insert'], 200);
+    }
+
+    public function deleteSuppliersById($ids, Request $request) {
+        try {
+            list($page, $sort, $search) = $this->getPageSortSearch($request);
+            $supplier = new Supplier();
+            $ids = json_decode($ids,true);
+            $supplier->deleteSuppliersById($ids);
+            $data = $supplier->getSupplierPaging($page,$sort,$search);
+            $paging = $supplier->getPagingInfo();
+            $paging['page'] = $page;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['supplier' => $data, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed."),'method'=>'delete'], 200);
+    }
+
+    public function updateSupplierById($id, Request $request) {
+        try {
+            $params = json_decode($request->input('supplier'), true);
+            $params['sup_id'] = $id;
+
+            list($page, $sort, $search) = $this->getPageSortSearch($request);
+
+            if (!empty($request->file('image-upload'))) {
+                $params['extension'] = $request->file('image-upload')->getClientOriginalExtension();
+                $params['tmp_name'] = $request->file('image-upload')->getRealPath();
+            }
+            $supplier = new Supplier();
+            $supplier->updateSupplierById($params);
+
+            $data = $supplier->getSupplierPaging($page, $sort, $search);
+            $paging = $supplier->getPagingInfo();
+            $paging['page'] = $page;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['supplier' => $data,'paging' => $paging, 'success' => true, 'message' => __("Successfully processed."),'method'=>'update'], 200);
+    }
+
+    private function getPageSortSearch($request) {
+        $page = 0;
+        if ($request->has('page')) {
+            $page = $request->page;
+        }
+
+        $sort = '';
+        if ($request->has('sort')) {
+            $sort = $request->sort;
+        }
+        $search = '';
+        if ($request->has('search')) {
+            $search = json_decode($request->search, true);
+        }
+        return array($page, $sort, $search);
     }
 }
