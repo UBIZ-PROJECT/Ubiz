@@ -7,7 +7,7 @@
 require('./bootstrap');
 window.axios = require('axios');
 window.qs = require('qs');
-require('sweetalert');
+window.swal = require('sweetalert2');
 window.TinyDatePicker = require('tiny-date-picker');
 window.moment = require('moment');
 window.numeral = require('numeral');
