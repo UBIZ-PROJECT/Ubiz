@@ -46,8 +46,8 @@ class UsersController extends Controller
     {
         try {
             $user = new User();
-            $paging = $user->getPagingInfo();
-            $paging['page'] = 0;
+            list($page, $sort, $search, $user) = $this->getRequestData($request);
+            $user->updateUser($user);
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -96,30 +96,66 @@ class UsersController extends Controller
         if ($request->has('search')) {
             $search['search'] = $request->search;
         }
-        if ($request->has('search_code')) {
-            $search['code'] = $request->search_code;
+        if ($request->has('code')) {
+            $search['code'] = $request->code;
         }
-        if ($request->has('search_name')) {
-            $search['name'] = $request->search_name;
+        if ($request->has('name')) {
+            $search['name'] = $request->name;
         }
-        if ($request->has('search_phone')) {
-            $search['phone'] = $request->search_phone;
+        if ($request->has('phone')) {
+            $search['phone'] = $request->phone;
         }
-        if ($request->has('search_email')) {
-            $search['email'] = $request->search_email;
+        if ($request->has('email')) {
+            $search['email'] = $request->email;
         }
-        if ($request->has('search_dep_name')) {
-            $search['dep_name'] = $request->search_dep_name;
+        if ($request->has('dep_name')) {
+            $search['dep_name'] = $request->dep_name;
         }
-        if ($request->has('search_address')) {
-            $search['address'] = $request->search_address;
+        if ($request->has('address')) {
+            $search['address'] = $request->address;
         }
-        if ($request->has('search_contain')) {
-            $search['contain'] = $request->search_contain;
+        if ($request->has('contain')) {
+            $search['contain'] = $request->contain;
         }
-        if ($request->has('search_notcontain')) {
-            $search['notcontain'] = $request->search_notcontain;
+        if ($request->has('notcontain')) {
+            $search['notcontain'] = $request->notcontain;
         }
-        return [$page, $sort, $search];
+
+        $user = [];
+        if ($request->has('txt_code')) {
+            $user['code'] = $request->code;
+        }
+        if ($request->has('txt_name')) {
+            $user['name'] = $request->txt_name;
+        }
+        if ($request->has('txt_phone')) {
+            $user['phone'] = $request->txt_phone;
+        }
+        if ($request->has('txt_email')) {
+            $user['email'] = $request->txt_email;
+        }
+        if ($request->has('txt_dep_name')) {
+            $user['dep_name'] = $request->txt_dep_name;
+        }
+        if ($request->has('txt_join_date')) {
+            $user['join_date'] = $request->txt_join_date;
+        }
+        if ($request->has('txt_salary')) {
+            $user['salary'] = $request->txt_salary;
+        }
+        if ($request->has('txt_address')) {
+            $user['address'] = $request->txt_address;
+        }
+        if ($request->has('txt_bhxh')) {
+            $user['bhxh'] = $request->txt_bhxh;
+        }
+        if ($request->has('txt_bhyt')) {
+            $user['bhyt'] = $request->txt_bhyt;
+        }
+        if ($request->hasFile('avatar')) {
+            $user['avatar'] = $request->avatar;
+        }
+
+        return [$page, $sort, $search, $user];
     }
 }
