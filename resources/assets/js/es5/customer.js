@@ -46,7 +46,7 @@
             jQuery(self).find('svg').removeClass('sVGT');
             jQuery(self).find('svg.' + order_by).addClass('sVGT');
 
-            ubizapis('v1', '/customers', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/customers'', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_delete: function (ids) {
 			if(ids == 0){
@@ -71,7 +71,7 @@
             }).then((value) => {
                 switch (value) {
                     case "catch":
-                        ubizapis('v1', '/customers/' + ids.join(','), 'delete', null, null, jQuery.UbizOIWidget.w_delete_callback);
+                        ubizapis('v1', '/customers'/' + ids.join(','), 'delete', null, null, jQuery.UbizOIWidget.w_delete_callback);
                         break;
                 }
             });
@@ -84,38 +84,37 @@
             params.page = '0';
 
             if (jQuery('#cus_code').val().replace(/\s/g, '') != '') {
-                params.code = jQuery('#cus_code').val();
+                params.cus_code = jQuery('#cus_code').val();
             }
 			
 			
             if (jQuery('#cus_type').val().replace(/\s/g, '') != '') {
-                params.name = jQuery('#cus_type').val();
+                params.cus_type = jQuery('#cus_type').val();
             }
 
             if (jQuery('#cus_name').val().replace(/\s/g, '') != '') {
-                params.name = jQuery('#cus_name').val();
+                params.cus_name = jQuery('#cus_name').val();
             }
 
             if (jQuery('#cus_phone').val().replace(/\s/g, '') != '') {
-                params.email = jQuery('#cus_phone').val();
+                params.cus_phone = jQuery('#cus_phone').val();
             }
 
             if (jQuery('#cus_fax').val().replace(/\s/g, '') != '') {
-                params.phone = jQuery('#cus_fax').val();
+                params.cus_fax = jQuery('#cus_fax').val();
             }
 
             if (jQuery('#cus_mail').val().replace(/\s/g, '') != '') {
-                params.dep_name = jQuery('#cus_mail').val();
+                params.cus_mail = jQuery('#cus_mail').val();
             }
 
             if (jQuery('#cus_address').val().replace(/\s/g, '') != '') {
-                params.address = jQuery('#cus_address').val();
+                params.cus_address = jQuery('#cus_address').val();
             }
 
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             params.sort = sort_info.sort_name + "_" + sort_info.order_by;
-
-            ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/customers', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_clear_search_form:function(){
             jQuery('#cus_code').val("");
@@ -148,11 +147,30 @@
                 jQuery.UbizOIWidget.w_fuzzy_search();
             }
         },
-        w_go_to_input_page: function (id) {
+        w_go_to_input_page: function (id, ele) {
 			if(id != 0){
+				var index = jQuery('input[name="pageno"]').val()*10 + jQuery(ele).index();
+				var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
 				ubizapis('v1','/customer-edit', 'get', null, {'cus_id': id}, jQuery.UbizOIWidget.w_render_data_to_input_page);
+				jQuery('.curindex').text(index+1);
+				jQuery('.prev').attr('onclick', 'jQuery.UbizOIWidget.w_go_to_input_page_paging('+ (index-1) +')');
+				jQuery('.next').attr('onclick', 'jQuery.UbizOIWidget.w_go_to_input_page_paging('+ (index+1) +')');
+				if(index == 0){
+					jQuery('.prev').removeAttr('onclick');
+					jQuery('.prev').addClass('adS');
+				}else{
+					jQuery('.prev').removeClass('adS');
+				}
+				
+				if( (index+1) == parseInt($('.totalindex').text()) ){
+					jQuery('.next').removeAttr('onclick');
+					jQuery('.next').addClass('adS');
+				}else{
+					jQuery('.next').removeClass('adS');
+				}
 			}else{
 				$('#f-input input').val('');
+				$('#avt_img').attr('src','../images/avatar.png');
 			}
             jQuery.UbizOIWidget.o_page.hide();
             jQuery.UbizOIWidget.i_page.fadeIn("slow");
@@ -179,7 +197,35 @@
 				ids.push(id);
 				jQuery.UbizOIWidget.w_delete(ids);
 			});
+			
+			$("#change_avt").click(function(){
+				$("#avatar").click();
+			});
+			
+			$("#avatar").change(function(){
+				jQuery.UbizOIWidget.w_preview_avatar(this);
+			});
         },
+		w_go_to_input_page_paging: function (index) {
+			var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
+			ubizapis('v1','/customer-edit', 'get', null, {'cus_id': 0, 'index': index, 'sort': sort_info.sort_name, 'order': sort_info.order_by}, jQuery.UbizOIWidget.w_render_data_to_input_page);
+			jQuery('.curindex').text(index+1);
+			jQuery('.prev').attr('onclick', 'jQuery.UbizOIWidget.w_go_to_input_page_paging('+ (index-1) +')');
+			jQuery('.next').attr('onclick', 'jQuery.UbizOIWidget.w_go_to_input_page_paging('+ (index+1) +')');
+			if(index == 0){
+				jQuery('.prev').removeAttr('onclick');
+				jQuery('.prev').addClass('adS');
+			}else{
+				jQuery('.prev').removeClass('adS');
+			}
+			
+			if( (index+1) == parseInt($('.totalindex').text()) ){
+				jQuery('.next').removeAttr('onclick');
+				jQuery('.next').addClass('adS');
+			}else{
+				jQuery('.next').removeClass('adS');
+			}
+		},
         w_go_back_to_output_page: function (self) {
             jQuery.UbizOIWidget.o_page.fadeIn("slow");
             jQuery.UbizOIWidget.i_page.hide();
@@ -199,7 +245,7 @@
         w_refresh_output_page: function () {
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/customers', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/customers'', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_sort_info: function () {
             var sort_obj = jQuery.UbizOIWidget.o_page.find('div.dWT');
@@ -212,14 +258,14 @@
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             jQuery.UbizOIWidget.sort = sort_info;
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/customers', 'get', null, {'page': page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/customers'', 'get', null, {'page': page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_newer_data: function (page) {
             jQuery.UbizOIWidget.page = page;
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             jQuery.UbizOIWidget.sort = sort_info;
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/customers', 'get', null, {'page': page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/customers'', 'get', null, {'page': page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_delete_callback: function (response) {
             if (response.data.success == true) {
@@ -241,7 +287,7 @@
                 var rows = [];
                 for (let i = 0; i < customer.length; i++) {
                     var cols = [];
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_code, 1));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_id, 3));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_name, 3));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_type, 3));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_phone, 3));
@@ -264,11 +310,16 @@
         },
 		w_render_data_to_input_page: function (response) {
 			var customer = response.data.customers[0];
+			$('.totalindex').text(response.data.totalCustomers);
 		
 			$('input[name="cus_id"]').val(customer.cus_id);
 			$('input[name="cus_code"]').val(customer.cus_code);
 			$('input[name="cus_name"]').val(customer.cus_name);
-			$('input[name="cus_avatar"]').val(customer.cus_avatar);
+			if(customer.avt_src != ''){
+				$('#avt_img').attr("src", customer.avt_src);
+			}else{
+				$('#avt_img').attr('src','../images/avatar.png');
+			}
 			$('input[name="cus_type"]').val(customer.cus_type);
 			$('input[name="cus_phone"]').val(customer.cus_phone);
 			$('input[name="cus_fax"]').val(customer.cus_fax);
@@ -279,7 +330,7 @@
 				$(".cus_address\\[\\]_container").remove();
 				for(var i = 0; i < customer.address.length; i++){
 					var html = '<div class="textfield  root_textfield rootIsUnderlined cus_address[]_container"><div class="wrapper"><label for="cus_address[]" class="ms-Label root-56">Địa chỉ '+ (i+1) +' :</label><div class="fieldGroup"><input type="text" name="cus_address[]" id="cus_address[]" value="'+ customer.address[i].cad_address +'" class="input_field"></div></div><span class="error_message hidden-content"><div class="message-container"><p class="label_errorMessage css-57 errorMessage"><span class="error-message-text"></span></p></div></span></div>';
-					$('#f-input').append(html);
+					$('.cus-part-2').append(html);
 				}
 			}
 		},
@@ -403,13 +454,16 @@
             jQuery("#paging-label").replaceWith(paging_label);
             jQuery("#paging-older").replaceWith(paging_older);
             jQuery("#paging-newer").replaceWith(paging_newer);
+			jQuery('input[name="pageno"]').val(page);
         },
 		w_get_data_input_form: function () {
-			var data = $('form').getForm2obj();
+			//var data = $('form').getForm2obj();
+			var data = new FormData($('#f-input')[0]);
 			return data;
 		},
 		w_save: function () {
 			var data = jQuery.UbizOIWidget.w_get_data_input_form();
+			var cus_id = jQuery('input[name="cus_id"]').val();
 			
 			swal({
                 title: "Bạn có chắc chắn muốn lưu dữ liệu?",
@@ -426,10 +480,10 @@
             }).then((value) => {
                 switch (value) {
                     case "catch":
-                        if(data.cus_id != 0){
-							ubizapis('v1', '/customer-update', 'get', null, {'data': data}, jQuery.UbizOIWidget.w_save_callback);
+                        if(cus_id != 0){
+							ubizapis('v1', '/customer-update', 'post', data, null, jQuery.UbizOIWidget.w_save_callback);
 						}else{
-							ubizapis('v1', '/customer-create', 'get', null, {'data': data}, jQuery.UbizOIWidget.w_save_callback);
+							ubizapis('v1', '/customer-create', 'post', data, null, jQuery.UbizOIWidget.w_save_callback);
 						}
                         break;
                 }
@@ -449,6 +503,17 @@
                     icon: "error",
                 });
             }
+		},
+		w_preview_avatar: function (input) {
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
+
+				reader.onload = function (e) {
+					$('#avt_img').attr('src', e.target.result);
+				}
+
+				reader.readAsDataURL(input.files[0]);
+			}
 		}
     });
 })(jQuery);
