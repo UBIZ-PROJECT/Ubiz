@@ -77,8 +77,9 @@ function logout() {
         if (response.data.success == true) {
             window.location.href = '/login';
         } else {
-            swal(response.data.message, {
-                icon: "error",
+            swal({
+                type: 'error',
+                text: response.data.message
             });
         }
     });
@@ -140,13 +141,21 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
                 console.log(error.response.status);
                 console.log(error.response.headers);
                 if (error.response.status === 401) {
-                    swal(i18next.t("Authentication failed.\nYou will be taken back to the login page for 5 seconds."), {
-                        icon: "error",
-                        closeOnClickOutside: false,
-                        closeOnEsc: false,
+                    let timerInterval
+                    swal({
+                        title: i18next.t("Authentication failed.\nYou will be taken back to the login page for 5 seconds."),
+                        html: '<strong></strong> ' + i18next.t('seconds') + '.',
                         timer: 5000,
-                    }).then((value) => {
-                        window.location.href = '/login';
+                        onOpen: () => {
+                            swal.showLoading()
+                            timerInterval = setInterval(() => {
+                                swal.getContent().querySelector('strong').textContent = swal.getTimerLeft()
+                            }, 100)
+                        },
+                        onClose: () => {
+                            clearInterval(timerInterval)
+                            window.location.href = '/login';
+                        }
                     });
                 }
             } else if (error.request) {

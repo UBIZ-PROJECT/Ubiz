@@ -399,6 +399,7 @@
                     </div>
                 </div>
                 <div class="jAQ">
+<<<<<<< HEAD
                     <div class="aqI nicescroll" id="nicescroll-iput">
                         <div class="row z-mgl z-mgr">
                             <div class="col-sm-2 col-md-2 col-xl-2 z-pdl">
@@ -418,6 +419,15 @@
                                 @include('components.input',['class'=>'txt_address','width'=>'500','control_id'=>'txt_adr3', 'label'=>__("Address") . " 3", 'length'=>100])
                             </div>
                         </div>
+=======
+                    <div class="aqI" id="nicescroll-iput">
+                        @include('layouts/input',['type'=>'disabled', 'control_id'=>'txt_sup_code', 'label'=>'Mã'])
+                        @include('layouts/input',['control_id'=>'txt_sup_name', 'label'=>'Tên nhà cung cấp'])
+                        @include('layouts/input',['control_id'=>'txt_sup_website', 'label'=>'Website'])
+                        @include('layouts/input',['control_id'=>'txt_sup_phone', 'label'=>'Phone'])
+                        @include('layouts/input',['control_id'=>'txt_sup_fax', 'label'=>'Fax'])
+                        @include('layouts/input',['control_id'=>'txt_sup_mail', 'label'=>'Email'])
+>>>>>>> currency-management
                     </div>
                 </div>
             </div>
