@@ -26,6 +26,46 @@ class UsersController extends Controller
         return response()->json(['users' => $users, 'paging' => $paging, 'success' => true, 'message' => ''], 200);
     }
 
+    public function getUser($id, Request $request)
+    {
+        try {
+            $user = new User();
+            if ($request->has('pos')) {
+                list ($page, $sort, $search) = $this->getRequestData($request);
+                $data = $user->getUserByPos($request->pos, $sort, $search);
+            }else{
+                $data = $user->getUserById($id);
+            }
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['user' => $data, 'message' => __("Successfully processed.")], 200);
+    }
+
+    public function updateUser($id, Request $request)
+    {
+        try {
+            $user = new User();
+            list($page, $sort, $search, $user) = $this->getRequestData($request);
+            $user->updateUser($user);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['users' => $users, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed.")], 200);
+    }
+
+    public function insertUser(Request $request)
+    {
+        try {
+            $user = new User();
+            $paging = $user->getPagingInfo();
+            $paging['page'] = 0;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['users' => $users, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed.")], 200);
+    }
+
     public function deleteUsers($ids, Request $request)
     {
         try {
@@ -37,7 +77,7 @@ class UsersController extends Controller
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['users' => $users, 'paging' => $paging, 'success' => true, 'message' => 'Xử lý thành công'], 200);
+        return response()->json(['users' => $users, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed.")], 200);
     }
 
     public function getRequestData(Request $request)
@@ -80,6 +120,42 @@ class UsersController extends Controller
         if ($request->has('notcontain')) {
             $search['notcontain'] = $request->notcontain;
         }
-        return [$page, $sort, $search];
+
+        $user = [];
+        if ($request->has('txt_code')) {
+            $user['code'] = $request->code;
+        }
+        if ($request->has('txt_name')) {
+            $user['name'] = $request->txt_name;
+        }
+        if ($request->has('txt_phone')) {
+            $user['phone'] = $request->txt_phone;
+        }
+        if ($request->has('txt_email')) {
+            $user['email'] = $request->txt_email;
+        }
+        if ($request->has('txt_dep_name')) {
+            $user['dep_name'] = $request->txt_dep_name;
+        }
+        if ($request->has('txt_join_date')) {
+            $user['join_date'] = $request->txt_join_date;
+        }
+        if ($request->has('txt_salary')) {
+            $user['salary'] = $request->txt_salary;
+        }
+        if ($request->has('txt_address')) {
+            $user['address'] = $request->txt_address;
+        }
+        if ($request->has('txt_bhxh')) {
+            $user['bhxh'] = $request->txt_bhxh;
+        }
+        if ($request->has('txt_bhyt')) {
+            $user['bhyt'] = $request->txt_bhyt;
+        }
+        if ($request->hasFile('avatar')) {
+            $user['avatar'] = $request->avatar;
+        }
+
+        return [$page, $sort, $search, $user];
     }
 }

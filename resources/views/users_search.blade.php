@@ -27,7 +27,7 @@
             <div class="gvo">
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="code">Mã</label>
+                        <label for="code">{{ __('Code') }}</label>
                     </span>
                     <span class="avo">
                         <input type="text" spellcheck="false" id="code" value="" autocomplete="off">
@@ -35,7 +35,7 @@
                 </div>
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="name">Tên</label>
+                        <label for="name">{{ __('Name') }}</label>
                     </span>
                     <span class="avo">
                         <input type="text" spellcheck="false" id="name" value="" autocomplete="off">
@@ -43,7 +43,7 @@
                 </div>
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="email">E-mail</label>
+                        <label for="email">{{ __('E-Mail') }}</label>
                     </span>
                     <span class="avo">
                         <input type="text" id="email" value="" autocomplete="off">
@@ -51,7 +51,7 @@
                 </div>
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="phone">Điện thoại</label>
+                        <label for="phone">{{ __('Phone') }}</label>
                     </span>
                     <span class="avo">
                         <input type="text" spellcheck="false" id="phone" value="" autocomplete="off">
@@ -59,7 +59,7 @@
                 </div>
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="dep_name">Phòng ban</label>
+                        <label for="dep_name">{{ __('Department') }}</label>
                     </span>
                     <span class="avo">
                         <input type="text" spellcheck="false" id="dep_name" value="" autocomplete="off">
@@ -67,7 +67,7 @@
                 </div>
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="address">Địa chỉ</label>
+                        <label for="address">{{ __('Address') }}</label>
                     </span>
                     <span class="avo">
                         <input type="text" spellcheck="false" id="address" value="" autocomplete="off">
@@ -75,7 +75,7 @@
                 </div>
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="contain">Chứa các từ</label>
+                        <label for="contain">{{ __('Includes the words') }}</label>
                     </span>
                     <span class="avo">
                         <input type="text" spellcheck="false" spellcheck="false" id="contain" value="" autocomplete="off">
@@ -83,15 +83,15 @@
                 </div>
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="notcontain">Không có</label>
+                        <label for="notcontain">{{ __("Doesn't have") }}</label>
                     </span>
                     <span class="avo">
                         <input type="text" spellcheck="false" id="notcontain" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo fvo">
-                    <button type="button" class="btn btn-primary btn-sm" onclick="jQuery.UbizOIWidget.w_search()">Tìm kiếm</button>
-                    <button type="button" class="btn btn-link btn-sm text-secondary" onclick="jQuery.UbizOIWidget.w_clear_search_form()">Xóa bộ lọc</button>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="jQuery.UbizOIWidget.w_search()">{{ __("Search") }}</button>
+                    <button type="button" class="btn btn-link btn-sm text-secondary" onclick="jQuery.UbizOIWidget.w_clear_search_form()">{{ __("Clear filter") }}</button>
                 </div>
             </div>
         </div>

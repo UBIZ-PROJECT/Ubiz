@@ -2,6 +2,8 @@
     UbizOIWidget = function () {
         this.page = 0;
         this.sort = {};
+        this.pos = 0;
+        this.rows_num = 0;
         this.o_page = null;
         this.i_page = null;
     };
@@ -34,6 +36,8 @@
             jQuery('.utooltip').tooltipster({
                 side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
             });
+            jQuery(".i-numeric").forceNumeric();
+            TinyDatePicker('.i-date', {mode: 'dp-below'});
         },
         w_sort: function (self) {
 
@@ -55,36 +59,75 @@
 
             ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
-        w_delete: function () {
+        w_save: function () {
+            var form_data = jQuery.UbizOIWidget.w_get_form_data();
+            var id = jQuery("#txt_id").val();
+            form_data.append("id", id);
+            if (id == "0") {
+                form_data.append('_method', 'put');
+                ubizapis('v1', '/users', 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
+            } else {
+                ubizapis('v1', '/users/' + id, 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
+            }
+        },
+        w_o_delete: function () {
             var ids = jQuery.UbizOIWidget.w_get_checked_rows();
             if (ids.length == 0)
                 return false;
 
             swal({
-                title: i18next.t("Do you want to delete the data?"),
-                text: i18next.t("Once deleted, you will not be able to recover this data!"),
-                icon: "warning",
-                buttons: true,
-                buttons: {
-                    cancel: i18next.t("No"),
-                    catch: {
-                        text: i18next.t("Yes"),
-                        value: "catch",
-                    }
-                },
-                dangerMode: true,
-            }).then((value) => {
-                switch (value) {
-                    case "catch":
-                        ubizapis('v1', '/users/' + ids.join(','), 'delete', null, null, jQuery.UbizOIWidget.w_delete_callback);
-                        break;
+                title: i18next.t('Do you want to delete the data?'),
+                text: i18next.t('Once deleted, you will not be able to recover this data!'),
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: i18next.t('No'),
+                confirmButtonText: i18next.t('Yes'),
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    ubizapis('v1', '/users/' + ids.join(',') + '/delete', 'delete', null, null, jQuery.UbizOIWidget.w_o_delete_callback);
                 }
-            });
+            })
         },
-        w_create:function(){
-            jQuery.UbizOIWidget.w_go_to_input_page(0);
+        w_i_delete: function () {
+            var id = jQuery("#txt_id").val();
+            swal({
+                title: i18next.t('Do you want to delete the data?'),
+                text: i18next.t('Once deleted, you will not be able to recover this data!'),
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: i18next.t('No'),
+                confirmButtonText: i18next.t('Yes'),
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    ubizapis('v1', '/users/' + id + '/delete', 'delete', null, null, jQuery.UbizOIWidget.w_i_delete_callback);
+                }
+            })
         },
-        w_search:function(){
+        w_refresh: function () {
+            var id = jQuery("#txt_id").val();
+            if (id == '0') {
+                jQuery.UbizOIWidget.w_clean_input_page();
+            } else {
+                ubizapis('v1', '/users/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
+            }
+        },
+        w_save_callback: function (response) {
+            if (response.data.success == true) {
+                console.log("OK");
+            } else {
+                swal({
+                    type: 'error',
+                    text: response.data.message
+                });
+            }
+        },
+        w_search: function () {
 
             var params = {};
             params.page = '0';
@@ -104,7 +147,7 @@
             document.body.dispatchEvent(event);
             ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
-        w_clear_search_form:function(){
+        w_clear_search_form: function () {
             jQuery('#code').val("");
             jQuery('#name').val("");
             jQuery('#email').val("");
@@ -115,7 +158,7 @@
             jQuery('#notcontain').val("");
             jQuery('#fuzzy').val("");
         },
-        w_update_search_form:function(search_info){
+        w_update_search_form: function (search_info) {
             jQuery.each(search_info, function (key, val) {
                 var search_item = jQuery('#' + key);
                 if (search_item.length == 1) {
@@ -145,23 +188,34 @@
                 jQuery.UbizOIWidget.w_fuzzy_search();
             }
         },
-        w_go_to_input_page: function (id) {
-            jQuery.UbizOIWidget.o_page.hide();
-            jQuery.UbizOIWidget.i_page.fadeIn("slow");
-            jQuery('#nicescroll-oput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-input',
-                autohidemode: false,
-                horizrailenabled: false
-            });
+        w_go_to_input_page: function (id, pos) {
+            jQuery.UbizOIWidget.pos = pos;
+            if (id == 0 || pos == 0) {
+                jQuery("#btn-delete").hide();
+                jQuery("#i-paging-label").hide();
+                jQuery("#i-paging-older").hide();
+                jQuery("#i-paging-newer").hide();
+                jQuery.UbizOIWidget.w_clean_input_page();
+                jQuery.UbizOIWidget.o_page.hide();
+                jQuery.UbizOIWidget.i_page.fadeIn("slow");
+                jQuery('#nicescroll-oput').getNiceScroll().remove();
+                jQuery('#nicescroll-iput').getNiceScroll().remove();
+                jQuery('#nicescroll-iput').niceScroll({
+                    cursorcolor: "#9fa8b0",
+                    cursorwidth: "5px",
+                    cursorborder: "none",
+                    cursorborderradius: 5,
+                    cursoropacitymin: 0.4,
+                    scrollbarid: 'nc-input',
+                    autohidemode: false,
+                    horizrailenabled: false
+                });
+            } else {
+                jQuery("#btn-delete").show();
+                ubizapis('v1', '/users/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
+            }
         },
-        w_go_back_to_output_page: function (self) {
+        w_go_back_to_output_page: function () {
             jQuery.UbizOIWidget.o_page.fadeIn("slow");
             jQuery.UbizOIWidget.i_page.hide();
             jQuery('#nicescroll-oput').getNiceScroll().remove();
@@ -180,7 +234,10 @@
         w_refresh_output_page: function () {
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/users', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/users', 'get', null, {
+                'page': jQuery.UbizOIWidget.page,
+                'sort': sort
+            }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_sort_info: function () {
             var sort_obj = jQuery.UbizOIWidget.o_page.find('div.dWT');
@@ -250,7 +307,10 @@
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             jQuery.UbizOIWidget.sort = sort_info;
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/users', 'get', null, {'page': page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/users', 'get', null, {
+                'page': page,
+                'sort': sort
+            }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_newer_data: function (page) {
             jQuery.UbizOIWidget.page = page;
@@ -259,15 +319,33 @@
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
             ubizapis('v1', '/users', 'get', null, {'page': page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
-        w_delete_callback: function (response) {
+        w_o_delete_callback: function (response) {
             if (response.data.success == true) {
                 jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
-                swal(response.data.message, {
-                    icon: "success",
+                swal({
+                    type: 'success',
+                    text: response.data.message
                 });
             } else {
-                swal(response.data.message, {
-                    icon: "error",
+                swal({
+                    type: 'error',
+                    text: response.data.message
+                });
+            }
+        },
+        w_i_delete_callback: function (response) {
+            if (response.data.success == true) {
+                swal({
+                    type: 'success',
+                    text: response.data.message,
+                    onClose: function(){
+                        jQuery.UbizOIWidget.w_go_back_to_output_page();
+                    }
+                });
+            } else {
+                swal({
+                    type: 'error',
+                    text: response.data.message
                 });
             }
         },
@@ -292,7 +370,70 @@
             jQuery.UbizOIWidget.o_page.find("#table-content").append(table_html);
             jQuery.UbizOIWidget.w_reset_f_checkbox_status();
             jQuery.UbizOIWidget.page = response.data.paging.page;
-            jQuery.UbizOIWidget.w_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
+            jQuery.UbizOIWidget.w_o_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
+            jQuery.UbizOIWidget.rows_num = response.data.paging.rows_num;
+
+        },
+        w_render_data_to_input_page: function (response) {
+            var user = response.data.user;
+            jQuery.UbizOIWidget.w_clean_input_page();
+            jQuery.UbizOIWidget.w_set_input_page(user);
+            jQuery.UbizOIWidget.w_i_paging();
+
+            jQuery.UbizOIWidget.o_page.hide();
+            jQuery.UbizOIWidget.i_page.fadeIn("slow");
+            jQuery('#nicescroll-oput').getNiceScroll().remove();
+            jQuery('#nicescroll-iput').getNiceScroll().remove();
+            jQuery('#nicescroll-iput').niceScroll({
+                cursorcolor: "#9fa8b0",
+                cursorwidth: "5px",
+                cursorborder: "none",
+                cursorborderradius: 5,
+                cursoropacitymin: 0.4,
+                scrollbarid: 'nc-input',
+                autohidemode: false,
+                horizrailenabled: false
+            });
+        },
+        w_clean_input_page: function () {
+            jQuery("#txt_id").val("0");
+            jQuery("#txt_code").val("");
+            jQuery("#txt_name").val("");
+            jQuery("#txt_phone").val("");
+            jQuery("#txt_email").val("");
+            jQuery("#txt_dep_id").val("");
+            jQuery("#txt_address").val("");
+            jQuery("#txt_join_date").val("");
+            jQuery("#txt_salary").val("");
+            jQuery("#txt_bhxh").prop('checked', false).prop('disabled', false);
+            jQuery("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+            jQuery("#txt_bhyt").prop('checked', false).prop('disabled', false);
+            jQuery("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+        },
+        w_set_input_page: function (data) {
+            jQuery("#txt_id").val(data.id);
+            jQuery("#txt_code").val(data.code);
+            jQuery("#txt_name").val(data.name);
+            jQuery("#txt_phone").val(data.phone);
+            jQuery("#txt_email").val(data.email);
+            jQuery("#txt_dep_id").val(data.dep_id);
+            jQuery("#txt_address").val(data.address);
+            jQuery("#txt_join_date").val(format_date(data.join_date, 'YYYY/MM/DD'));
+            jQuery("#txt_salary").val(numeral(data.salary).format('0,0'));
+            if (data.bhxh == '0') {
+                jQuery("#txt_bhxh").prop('checked', false);
+                jQuery("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+            } else {
+                jQuery("#txt_bhxh").prop('checked', true);
+                jQuery("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('suc').addClass('sck');
+            }
+            if (data.bhxh == '0') {
+                jQuery("#txt_bhyt").prop('checked', false);
+                jQuery("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+            } else {
+                jQuery("#txt_bhyt").prop('checked', true);
+                jQuery("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('suc').addClass('sck');
+            }
         },
         w_make_row_html: function (id, cols) {
             var row_html = '';
@@ -381,7 +522,54 @@
             });
             return ids;
         },
-        w_paging: function (page, rows_num, rows_per_page) {
+        w_get_form_data: function () {
+            var form_data = new FormData();
+            form_data.append('txt_code', jQuery("#txt_code").val());
+            form_data.append('txt_name', jQuery("#txt_name").val());
+
+            if (jQuery('input[name=inp-upload-image]')[0].files.length > 0) {
+                form_data.append('avatar', jQuery('input[name=inp-upload-image]')[0].files[0]);
+            }
+
+            form_data.append('txt_dep_id', jQuery("#txt_dep_id").val());
+            form_data.append('txt_phone', jQuery("#txt_phone").val());
+            form_data.append('txt_email', jQuery("#txt_email").val());
+            form_data.append('txt_address', jQuery("#txt_address").val());
+            form_data.append('txt_join_date', jQuery("#txt_join_date").val());
+            form_data.append('txt_salary', numeral(jQuery("#txt_salary").val()).format('0'));
+
+            var txt_bhxh = jQuery("#txt_bhxh").is(':checked') ? jQuery("#txt_bhxh").val() : 0;
+            form_data.append('txt_bhxh', txt_bhxh);
+
+            var txt_bhyt = jQuery("#txt_bhyt").is(':checked') ? jQuery("#txt_bhyt").val() : 0;
+            form_data.append('txt_bhyt', txt_bhyt);
+            return form_data;
+        },
+        w_get_detail_data: function (pos) {
+
+            if (pos >= jQuery.UbizOIWidget.rows_num || pos < 1)
+                return false;
+
+            var params = {};
+            params.pos = pos;
+            jQuery.UbizOIWidget.pos = pos;
+
+            var search_info = jQuery.UbizOIWidget.w_get_search_info();
+            Object.assign(params, search_info);
+
+            if (jQuery.isEmptyObject(search_info) === false) {
+                var fuzzy = jQuery.UbizOIWidget.w_convert_search_info_to_fuzzy(search_info);
+                jQuery('#fuzzy').val(fuzzy);
+            }
+
+            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
+            params.sort = sort_info.sort_name + "_" + sort_info.order_by;
+
+            var id = jQuery.UbizOIWidget.i_page.find("#txt_id").val();
+
+            ubizapis('v1', '/users/' + id, 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_input_page);
+        },
+        w_o_paging: function (page, rows_num, rows_per_page) {
             var page = parseInt(page);
             var f_num = (page * rows_per_page) + 1;
             var m_num = (page + 1) * rows_per_page;
@@ -408,12 +596,42 @@
             }
 
             var paging_label = '<div id="paging-label" class="amH" style="user-select: none"><span class="Dj"><span><span class="ts">' + f_num + '</span>–<span class="ts">' + m_num + '</span></span> / <span class="ts">' + rows_num + '</span></span></div>';
-            var paging_older = '<div id="paging-older" ' + get_older_data_func + ' class="amD utooltip" title="Cũ hơn"><span class="amF">&nbsp;</span><img class="amI ' + older_css + '" src="http://ubiz.local/images/cleardot.gif" alt=""></div>';
-            var paging_newer = '<div id="paging-newer" ' + get_newer_data_func + ' class="amD utooltip" title="Mới hơn"><span class="amF">&nbsp;</span><img class="amJ ' + newer_css + '" src="http://ubiz.local/images/cleardot.gif" alt=""></div>';
+            var paging_older = '<div id="paging-older" ' + get_older_data_func + ' class="amD utooltip" title="' + i18next.t('Older') + '"><span class="amF">&nbsp;</span><img class="amI ' + older_css + '" src="http://ubiz.local/images/cleardot.gif" alt=""></div>';
+            var paging_newer = '<div id="paging-newer" ' + get_newer_data_func + ' class="amD utooltip" title="' + i18next.t('Newer') + '"><span class="amF">&nbsp;</span><img class="amJ ' + newer_css + '" src="http://ubiz.local/images/cleardot.gif" alt=""></div>';
 
             jQuery("#paging-label").replaceWith(paging_label);
             jQuery("#paging-older").replaceWith(paging_older);
             jQuery("#paging-newer").replaceWith(paging_newer);
+        },
+        w_i_paging: function () {
+
+            var pos = jQuery.UbizOIWidget.pos;
+            var rows_num = jQuery.UbizOIWidget.rows_num;
+            var w_get_next_detail_data = '';
+            var w_get_prev_detail_data = '';
+
+            var prev_css = 'adS';
+            if (pos > 1) {
+                prev_css = 'aaT';
+                w_get_prev_detail_data = 'onclick="jQuery.UbizOIWidget.w_get_detail_data(' + (pos - 1) + ')"';
+            }
+
+            var next_css = 'adS';
+            if (pos < rows_num) {
+                next_css = 'aaT';
+                w_get_next_detail_data = 'onclick="jQuery.UbizOIWidget.w_get_detail_data(' + (pos + 1) + ')"';
+            }
+
+            var paging_label = '<div id="i-paging-label" class="amH" style="user-select: none"><span class="Dj"><span class="Dj"><span><span class="ts">' + pos + '</span></span> / <span class="ts">' + jQuery.UbizOIWidget.rows_num + '</span></span></div>';
+            var paging_older = '<div id="i-paging-older" ' + w_get_prev_detail_data + ' class="amD itooltip" title="' + i18next.t('Older') + '"><span class="amF">&nbsp;</span><img class="amI ' + prev_css + '" src="/images/cleardot.gif" alt=""></div>';
+            var paging_newer = '<div id="i-paging-newer" ' + w_get_next_detail_data + ' class="amD itooltip" title="' + i18next.t('Newer') + '"><span class="amF">&nbsp;</span><img class="amJ ' + next_css + '" src="/images/cleardot.gif" alt=""></div>';
+
+            jQuery("#i-paging-label").replaceWith(paging_label);
+            jQuery("#i-paging-older").replaceWith(paging_older);
+            jQuery("#i-paging-newer").replaceWith(paging_newer);
+            jQuery('.itooltip').tooltipster({
+                side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
+            });
         }
     });
 })(jQuery);
