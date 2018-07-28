@@ -41,12 +41,6 @@
         },
         w_sort: function (self) {
 
-            jQuery.UbizOIWidget.o_page.find('div.dWT').removeClass('dWT');
-            jQuery(self).attr('order-by', order_by);
-            jQuery(self).addClass('dWT');
-            jQuery(self).find('svg').removeClass('sVGT');
-            jQuery(self).find('svg.' + order_by).addClass('sVGT');
-
             var params = {};
             params.page = jQuery.UbizOIWidget.page;
 
@@ -57,6 +51,12 @@
             var order_by = jQuery(self).attr('order-by') == '' ? 'asc' : (jQuery(self).attr('order-by') == 'asc' ? 'desc' : 'asc');
             params.sort = sort_name + "_" + order_by;
 
+            jQuery.UbizOIWidget.o_page.find('div.dWT').removeClass('dWT');
+            jQuery(self).attr('order-by', order_by);
+            jQuery(self).addClass('dWT');
+            jQuery(self).find('svg').removeClass('sVGT');
+            jQuery(self).find('svg.' + order_by).addClass('sVGT');
+
             ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_save: function () {
@@ -65,7 +65,33 @@
             form_data.append("id", id);
             if (id == "0") {
                 form_data.append('_method', 'put');
-                ubizapis('v1', '/users', 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
+                ubizapis('v1', '/users', 'post', form_data, null, function(response){
+                    if (response.data.success == true) {
+                        swal({
+                            title: i18next.t('Successfully processed.'),
+                            text: i18next.t('Do you want to continue or go back to the list page?'),
+                            type: 'question',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#3085d6',
+                            cancelButtonText: i18next.t('Back to the list page'),
+                            confirmButtonText: i18next.t('Continue'),
+                            reverseButtons: true
+                        }).then((result) => {
+                            if (result.value) {
+                                jQuery.UbizOIWidget.w_clean_input_page();
+                            } else if (result.dismiss === swal.DismissReason.cancel) {
+                                jQuery.UbizOIWidget.w_go_back_to_output_page();
+                                jQuery.UbizOIWidget.w_refresh_output_page();
+                            }
+                        })
+                    } else {
+                        swal({
+                            type: 'error',
+                            text: response.data.message
+                        });
+                    }
+                });
             } else {
                 ubizapis('v1', '/users/' + id, 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
             }
@@ -119,7 +145,8 @@
         },
         w_save_callback: function (response) {
             if (response.data.success == true) {
-                console.log("OK");
+                jQuery.UbizOIWidget.w_go_back_to_output_page();
+                jQuery.UbizOIWidget.w_refresh_output_page();
             } else {
                 swal({
                     type: 'error',
@@ -343,6 +370,7 @@
                     text: response.data.message,
                     onClose: function(){
                         jQuery.UbizOIWidget.w_go_back_to_output_page();
+                        jQuery.UbizOIWidget.w_refresh_output_page();
                     }
                 });
             } else {
@@ -399,43 +427,47 @@
             });
         },
         w_clean_input_page: function () {
-            jQuery("#txt_id").val("0");
-            jQuery("#txt_code").val("");
-            jQuery("#txt_name").val("");
-            jQuery("#txt_phone").val("");
-            jQuery("#txt_email").val("");
-            jQuery("#txt_dep_id").val("");
-            jQuery("#txt_address").val("");
-            jQuery("#txt_join_date").val("");
-            jQuery("#txt_salary").val("");
-            jQuery("#txt_bhxh").prop('checked', false).prop('disabled', false);
-            jQuery("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
-            jQuery("#txt_bhyt").prop('checked', false).prop('disabled', false);
-            jQuery("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+            jQuery.UbizOIWidget.i_page.find("#txt_id").val("0");
+            jQuery.UbizOIWidget.i_page.find("#txt_code").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_name").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_phone").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_email").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_dep_id").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_address").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_join_date").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_salary").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_bhxh").prop('checked', false).prop('disabled', false);
+            jQuery.UbizOIWidget.i_page.find("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+            jQuery.UbizOIWidget.i_page.find("#txt_bhyt").prop('checked', false).prop('disabled', false);
+            jQuery.UbizOIWidget.i_page.find("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+            jQuery.UbizOIWidget.i_page.find("img.img-thumbnail").attr('src', "../images/avatar.png");
         },
         w_set_input_page: function (data) {
-            jQuery("#txt_id").val(data.id);
-            jQuery("#txt_code").val(data.code);
-            jQuery("#txt_name").val(data.name);
-            jQuery("#txt_phone").val(data.phone);
-            jQuery("#txt_email").val(data.email);
-            jQuery("#txt_dep_id").val(data.dep_id);
-            jQuery("#txt_address").val(data.address);
-            jQuery("#txt_join_date").val(format_date(data.join_date, 'YYYY/MM/DD'));
-            jQuery("#txt_salary").val(numeral(data.salary).format('0,0'));
+            jQuery.UbizOIWidget.i_page.find("#txt_id").val(data.id);
+            jQuery.UbizOIWidget.i_page.find("#txt_code").val(data.code);
+            jQuery.UbizOIWidget.i_page.find("#txt_name").val(data.name);
+            jQuery.UbizOIWidget.i_page.find("#txt_phone").val(data.phone);
+            jQuery.UbizOIWidget.i_page.find("#txt_email").val(data.email);
+            jQuery.UbizOIWidget.i_page.find("#txt_dep_id").val(data.dep_id);
+            jQuery.UbizOIWidget.i_page.find("#txt_address").val(data.address);
+            jQuery.UbizOIWidget.i_page.find("#txt_join_date").val(format_date(data.join_date, 'YYYY/MM/DD'));
+            jQuery.UbizOIWidget.i_page.find("#txt_salary").val(numeral(data.salary).format('0,0'));
             if (data.bhxh == '0') {
-                jQuery("#txt_bhxh").prop('checked', false);
-                jQuery("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+                jQuery.UbizOIWidget.i_page.find("#txt_bhxh").prop('checked', false);
+                jQuery.UbizOIWidget.i_page.find("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
             } else {
-                jQuery("#txt_bhxh").prop('checked', true);
-                jQuery("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('suc').addClass('sck');
+                jQuery.UbizOIWidget.i_page.find("#txt_bhxh").prop('checked', true);
+                jQuery.UbizOIWidget.i_page.find("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('suc').addClass('sck');
             }
             if (data.bhxh == '0') {
-                jQuery("#txt_bhyt").prop('checked', false);
-                jQuery("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+                jQuery.UbizOIWidget.i_page.find("#txt_bhyt").prop('checked', false);
+                jQuery.UbizOIWidget.i_page.find("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
             } else {
-                jQuery("#txt_bhyt").prop('checked', true);
-                jQuery("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('suc').addClass('sck');
+                jQuery.UbizOIWidget.i_page.find("#txt_bhyt").prop('checked', true);
+                jQuery.UbizOIWidget.i_page.find("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('suc').addClass('sck');
+            }
+            if(data.avatar != ''){
+                jQuery.UbizOIWidget.i_page.find("img.img-thumbnail").attr('src', data.avatar);
             }
         },
         w_make_row_html: function (id, cols) {

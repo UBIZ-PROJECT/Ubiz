@@ -1385,10 +1385,10 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
     background-size: 20px;
 }
 
-swal2-popup .swal2-styled {
-    padding: .3em 2em;
+.swal2-popup .swal2-styled {
+    padding: .3em 2em !important;
 }
 
 .swal2-popup .swal2-title {
-    font-size: 1.3em;
+    font-size: 1.3em !important;
 }

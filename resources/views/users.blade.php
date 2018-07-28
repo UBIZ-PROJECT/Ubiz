@@ -340,7 +340,7 @@
                             <div class="aqL">
                                 <div class="GtF">
                                     <div class="GNi" onclick="jQuery.UbizOIWidget.w_go_back_to_output_page()">
-                                        <div class="ax7 poK utooltip" title="{{ __("Back to list page") }}">
+                                        <div class="ax7 poK utooltip" title="{{ __("Back to the list page") }}">
                                             <div class="asA">
                                                 <div class="arB"></div>
                                             </div>
