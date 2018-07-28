@@ -1065,7 +1065,7 @@
 
 /* START CSS FOR INPUT CONTROL */
 .textfield {
-    margin: 0 0 15px 0;
+    margin: 0 0 5px 0;
     max-width: 300px;
 }
 
@@ -1136,7 +1136,7 @@
     position: relative;
 }
 
-.fieldGroup svg{
+.fieldGroup svg {
     fill: currentColor;
     color: black;
     opacity: .54;
@@ -1161,7 +1161,6 @@
     text-overflow: ellipsis;
     outline: 0;
 }
-
 
 .dropdown_field {
     background-color: transparent;
@@ -1269,10 +1268,12 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
     font-size: 12px;
     font-weight: 500;
 }
+
 .image-upload {
     cursor: pointer;
 }
-.image-upload:hover .label-change{
+
+.image-upload:hover .label-change {
     display: block;
 }
 
@@ -1350,4 +1351,44 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
 
 .z-mg {
     margin: 0px;
+}
+
+.suc {
+    display: inline-block;
+    height: 32px;
+    margin: 0 0 0 20px;
+    padding: 0;
+    -webkit-transition: opacity .15s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transition: opacity .15s cubic-bezier(0.4, 0.0, 0.2, 1);
+    width: 20px;
+    opacity: .54;
+    vertical-align: middle;
+    background-image: url(../images/check_box_outline.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 20px;
+}
+
+.sck {
+    display: inline-block;
+    height: 32px;
+    margin: 0 0 0 20px;
+    padding: 0;
+    -webkit-transition: opacity .15s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transition: opacity .15s cubic-bezier(0.4, 0.0, 0.2, 1);
+    width: 20px;
+    opacity: .54;
+    vertical-align: middle;
+    background-image: url(../images/check_box.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 20px;
+}
+
+swal2-popup .swal2-styled {
+    padding: .3em 2em;
+}
+
+.swal2-popup .swal2-title {
+    font-size: 1.3em;
 }
