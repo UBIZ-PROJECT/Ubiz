@@ -56,14 +56,20 @@ class Supplier implements JWTSubject
         return $supplier;
     }
 
-    public function getSupplierPaging($page,$sort = '', $search = []) {
-        list($where_raw,$params) = $this->makeWhereRaw($search);
-        list($field_name, $order_by) = $this->makeOrderBy($sort);
+    public function getSupplierPaging($page,$sort = '') {
+        $sort_name = 'sup_id';
+        $order_by = 'asc';
+        if ($sort != '') {
+            $sort_info = explode('_', $sort);
+            $order_by = $sort_info[sizeof($sort_info) - 1];
+            unset($sort_info[sizeof($sort_info) - 1]);
+            $sort_name = implode('_', $sort_info);
+        }
         $rows_per_page = env('ROWS_PER_PAGE', 10);
         $supplier = DB::table('suppliers')
             ->select('sup_id','sup_code','sup_avatar','sup_name','sup_phone','sup_fax','sup_mail','sup_website')
-            ->whereRaw($where_raw, $params)
-            ->orderBy($field_name, $order_by)
+            ->where('delete_flg', '=', '0')
+            ->orderBy($sort_name, $order_by)
             ->offset($page * $rows_per_page)
             ->limit($rows_per_page)
             ->get();
@@ -78,39 +84,24 @@ class Supplier implements JWTSubject
         return $supplier;
     }
 
-    public function getEachSupplierByPaging($page,$sort = '', $search) {
-        list($where_raw,$params) = $this->makeWhereRaw($search);
-        list($field_name, $order_by) = $this->makeOrderBy($sort);
+    public function getEachSupplierByPaging($page,$sort = '') {
+        $sort_name = 'sup_id';
+        $order_by = 'asc';
+        if (!isset($sort) || !empty($sort)) {
+            $sort_info = explode('_', $sort);
+            $order_by = $sort_info[sizeof($sort_info) - 1];
+            unset($sort_info[sizeof($sort_info) - 1]);
+            $sort_name = implode('_', $sort_info);
+        } 
         $rows_per_page = 1;
-        $params[] = $rows_per_page;
-        $params[] = $page * $rows_per_page;
-        $supplier = DB::select("select addr.sad_id, sup.sup_id, sup_code,sup_avatar,sup_name,sup_phone, sup_fax,sup_mail,sup_website,sad_address from (select * 
-                from suppliers 
-                where $where_raw
-                order by $field_name $order_by
-                limit ? offset ?) sup
-                left join supplier_address addr ON 
-                sup.sup_id = addr.sup_id
-                where addr.delete_flg='0'",$params);
-        $data = array();
-        $data[0] = (object) array();
-        $data[0]->sad_address = array();
-        foreach ($supplier as $index=>$sup) {
-            $data[0]->sup_id = $sup->sup_id;
-            $data[0]->sup_code = $sup->sup_code;
-            $data[0]->sup_avatar = $sup->sup_avatar;
-            $data[0]->sup_name = $sup->sup_name;
-            $data[0]->sup_phone = $sup->sup_phone;
-            $data[0]->sup_fax = $sup->sup_fax;
-            $data[0]->sup_mail = $sup->sup_mail;
-            $data[0]->sup_website = $sup->sup_website;
-            $addrObj = (object) array();
-            $addrObj->address = $sup->sad_address;
-            $addrObj->id = $sup->sad_id;
-            $data[0]->sad_address[] = $addrObj;
-        }
-
-        return $data;
+        $supplier = DB::table('suppliers')
+            ->select('sup_id','sup_code','sup_avatar','sup_name','sup_phone','sup_fax','sup_mail','sup_website')
+            ->where('delete_flg', '=', '0')
+            ->orderBy($sort_name, $order_by)
+            ->offset($page * $rows_per_page)
+            ->limit($rows_per_page)
+            ->get();
+        return $supplier;
     }
 
     public function insertSupplier($param) {
@@ -137,36 +128,8 @@ class Supplier implements JWTSubject
                     'upd_user'=>'2'
                 ]
             );
-            if (!empty($param['addresses'])) {
-                $addresses = $param['addresses'];
-                foreach ($addresses as $address) {
-                    $addrParam = array("sup_id"=>$id, "address"=>$address);
-                    $this->insertSupplierAddress($addrParam);
-                }
-            }
             
             Helper::resizeImage($param['tmp_name'], $sup_ava, 200,200, 'sup');
-            DB::commit();
-        } catch(\Throwable $e) {
-            DB::rollback();
-            throw $e;
-        }
-    }
-
-    public function insertSupplierAddress($param) {
-        DB::beginTransaction();
-        try {
-            $id = DB::table('supplier_address')->insertGetId(
-              [
-                  'sup_id'=>$param['sup_id'],
-                  'sad_address'=>$param['address'],
-                  'delete_flg'=> '0',
-                  'inp_date'=>date('Y-m-d H:i:s'),
-                  'upd_date'=>date('Y-m-d H:i:s'),
-                  'inp_user'=>'2',
-                  'upd_user'=>'2'
-              ]
-            );
             DB::commit();
         } catch(\Throwable $e) {
             DB::rollback();
@@ -177,6 +140,7 @@ class Supplier implements JWTSubject
     public function deleteSuppliersById($listId) {
         DB::beginTransaction();
         try {
+            $listId = json_decode($listId,true);
             DB::table('suppliers')->whereIn('sup_id', $listId)
                 ->update([
                     'delete_flg'=>'1',
@@ -192,11 +156,13 @@ class Supplier implements JWTSubject
     public function updateSupplierById($supplier) {
         DB::beginTransaction();
         try {
-            $sup_ava = $supplier['sup_avatar'];
+            $sup_ava = '';
             if (!empty($supplier['extension'])) {
                 $sup_ava = explode(".",$supplier['sup_avatar']);
                 $sup_ava = $sup_ava[0] . ".".$supplier['extension'];
                 Helper::resizeImage($supplier['tmp_name'], $sup_ava, 200,200, 'sup');
+            } else {
+                $sup_ava = $supplier['sup_avatar'];
             }
             DB::table('suppliers')->where('sup_id','=',$supplier['sup_id'])
                 ->update([
@@ -256,92 +222,5 @@ class Supplier implements JWTSubject
     private function generateCode() {
         $code = $this->getNextId();
         return  sprintf("%05d", $code);
-    }
-
-    public function makeWhereRaw($search = [])
-    {
-        $params = [0];
-        $where_raw = 'suppliers.delete_flg = ?';
-        if (sizeof($search) > 0) {
-            if (!empty($search['contain']) || !empty($search['notcontain'])) {
-                if(!empty($search['contain'])){
-                    $search_val = "%" . $search['contain'] . "%";
-                    $where_raw .= " AND (";
-                    $where_raw .= "suppliers.sup_code like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR suppliers.sup_name like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR suppliers.sup_website like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR suppliers.sup_phone like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR suppliers.sup_fax like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR suppliers.sup_mail like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " ) ";
-                }
-                if(!empty($search['notcontain'])){
-                    $search_val = "%" . $search['notcontain'] . "%";
-                    $where_raw .= " AND suppliers.sup_code not like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " AND suppliers.sup_name not like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " AND suppliers.sup_mail not like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " AND suppliers.sup_phone not like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " AND suppliers.sup_fax not like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " AND suppliers.sup_website not like ?";
-                    $params[] = $search_val;
-                }
-
-            } else {
-
-                $where_raw_tmp = [];
-                if (!empty($search['sup_code'])) {
-                    $where_raw_tmp[] = "suppliers.sup_code = ?";
-                    $params[] = $search['sup_code'];
-                }
-                if (!empty($search['sup_name'])) {
-                    $where_raw_tmp[] = "suppliers.sup_name = ?";
-                    $params[] = $search['sup_name'];
-                }
-                if (!empty($search['sup_mail'])) {
-                    $where_raw_tmp[] = "suppliers.sup_mail = ?";
-                    $params[] = $search['sup_mail'];
-                }
-                if (!empty($search['sup_phone'])) {
-                    $where_raw_tmp[] = "suppliers.sup_phone = ?";
-                    $params[] = $search['sup_phone'];
-                }
-                if (!empty($search['sup_fax'])) {
-                    $where_raw_tmp[] = "suppliers.sup_fax = ?";
-                    $params[] = $search['sup_fax'];
-                }
-                if (!empty($search['sup_website'])) {
-                    $where_raw_tmp[] = "suppliers.sup_website = ?";
-                    $params[] = $search['sup_website'];
-                }
-                if (sizeof($where_raw_tmp) > 0) {
-                    $where_raw .= " AND ( " . implode(" OR ", $where_raw_tmp) . " )";
-                }
-            }
-        }
-        return [$where_raw, $params];
-    }
-
-    private function makeOrderBy($sort)
-    {
-        $field_name = 'sup_code';
-        $order_by = 'asc';
-        if ($sort != '') {
-            $sort_info = explode('_', $sort);
-            $order_by = $sort_info[sizeof($sort_info) - 1];
-            unset($sort_info[sizeof($sort_info) - 1]);
-            $field_name = implode('_', $sort_info);
-        }
-        return [$field_name, $order_by];
     }
 }

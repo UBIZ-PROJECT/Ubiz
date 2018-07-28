@@ -1065,7 +1065,8 @@
 
 /* START CSS FOR INPUT CONTROL */
 .textfield {
-    margin: 0 0 5px 0;
+    margin: 0 0 10px 0;
+    max-width: 300px;
 }
 
 .root_textfield.rootIsUnderlined {
@@ -1135,7 +1136,7 @@
     position: relative;
 }
 
-.fieldGroup svg {
+.fieldGroup svg{
     fill: currentColor;
     color: black;
     opacity: .54;
@@ -1160,6 +1161,7 @@
     text-overflow: ellipsis;
     outline: 0;
 }
+
 
 .dropdown_field {
     background-color: transparent;
@@ -1249,26 +1251,29 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
 
 /* END CSS INPUT CONTROL */
 
+
 /* CSS FOR IMAGE UPLOAD */
 
 .label-change {
     background: rgba(0, 0, 0, .54);
+    width: 100px;
+    height: 30px;
     position: relative;
+    top: -30px;
     text-align: center;
     display: none;
     color: white;
     border-bottom-right-radius: 5px;
     border-bottom-left-radius: 5px;
     vertical-align: middle;
+    line-height: 30px;
     font-size: 12px;
     font-weight: 500;
 }
-
 .image-upload {
     cursor: pointer;
 }
-
-.image-upload:hover .label-change {
+.image-upload:hover .label-change{
     display: block;
 }
 
@@ -1346,44 +1351,4 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
 
 .z-mg {
     margin: 0px;
-}
-
-.suc {
-    display: inline-block;
-    height: 32px;
-    margin: 0 0 0 20px;
-    padding: 0;
-    -webkit-transition: opacity .15s cubic-bezier(0.4, 0.0, 0.2, 1);
-    transition: opacity .15s cubic-bezier(0.4, 0.0, 0.2, 1);
-    width: 20px;
-    opacity: .54;
-    vertical-align: middle;
-    background-image: url(../images/check_box_outline.png);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 20px;
-}
-
-.sck {
-    display: inline-block;
-    height: 32px;
-    margin: 0 0 0 20px;
-    padding: 0;
-    -webkit-transition: opacity .15s cubic-bezier(0.4, 0.0, 0.2, 1);
-    transition: opacity .15s cubic-bezier(0.4, 0.0, 0.2, 1);
-    width: 20px;
-    opacity: .54;
-    vertical-align: middle;
-    background-image: url(../images/check_box.png);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 20px;
-}
-
-.swal2-popup .swal2-styled {
-    padding: 0.3em 2em;
-}
-
-.swal2-popup .swal2-title {
-    font-size: 1.3em;
 }

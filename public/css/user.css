@@ -1,5 +1,5 @@
 .main-content .r-content .col-1 {
-    width: 100px;
+    width: 100%;
 }
 
 .main-content .r-content .col-2 {
@@ -7,7 +7,7 @@
 }
 
 .main-content .r-content .col-3 {
-    width: 150px;
+    width: 200px;
 }
 
 .main-content .r-content .col-4 {
@@ -15,9 +15,9 @@
 }
 
 .main-content .r-content .col-5 {
-    width: 150px;
+    width: 200px;
 }
 
 .main-content .r-content .col-6 {
-    width: 100%;
+    width: 250px;
 }
