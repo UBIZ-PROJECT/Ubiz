@@ -11,10 +11,7 @@ $html_control_type = '';
 if (!isset($type)) {
     $type = '';
 }
-$html_width = "300px";
-if(isset($width)){
-    $html_width = $width . "px";
-}
+$length = 20;
 switch ($type) {
     case 'disabled':
         $html_type = 'rootIsDisabled';
@@ -29,16 +26,11 @@ switch ($type) {
 }
 ?>
 
-<div class="textfield {{$html_type}} root_textfield rootIsUnderlined {{$control_id}}_container" style="width: {{ $html_width }}">
+<div class="textfield {{$html_type}} root_textfield rootIsUnderlined {{$control_id}}_container">
     <div class="wrapper">
         <label for="{{$control_id}}" class="lbl-primary ms-Label root-56">{{$label}}:</label>
         <div class="fieldGroup">
-            <select id="{{$control_id}}" {{$html_control_type}} class="dropdown_field">
-                <option value=""></option>
-                @foreach( $data as $value => $options)
-                    <option value="{{ $value }}">{{ $options }}</option>
-                @endforeach
-            </select>
+            <input is-change="false" type="text" maxlength='{{$length}}' {{$html_control_type}} id="{{$control_id}}" value="" class="input_field">
         </div>
     </div>
 </div>

@@ -31,20 +31,13 @@
   "Back": "Quay lại",
   "Save": "Lưu trữ",
   "seconds": "giây",
+  "Search": "Tìm kiếm",
+  "Clear filter": "Xóa bộ lọc",
   "Notifications": "Thông báo",
   "Processing...": "Đang xử lý...",
   "Ubiz apps": "Ứng dụng của Ubiz",
   "Successfully processed.": "Xử lý thành công.",
   "Do you want to delete the data?": "Bạn có muốn xóa dữ liệu không?",
   "Once deleted, you will not be able to recover this data!": "Một khi xóa, bạn sẽ không có khả năng khôi phục dữ liệu này!",
-  "Authentication failed.\nYou will be taken back to the login page for 5 seconds.": "Xác thực thất bại.\nBạn sẽ được đưa trở lại trang Đăng nhập trong 5 giây.",
-  "Website": "Website",
-  "Do you want to save it?":"Bạn có muốn lưu lại không?",
-  "Nothing change!": "Không có gì thay đổi!",
-  "Do you want to continue insert Supplier?":"Bạn có muốn tiếp tục thêm nhà cung cấp?",
-  "Fax":"Fax",
-  "Supplier Name": "Tên nhà cung cấp",
-  "invalid length": "Không nhập vượt quá :length ký tự",
-  "This input is required": "Thông tin này bắt buộc nhập!",
-  "invalid input": ":control chưa chính xác!"
+  "Authentication failed.\nYou will be taken back to the login page for 5 seconds.": "Xác thực thất bại.\nBạn sẽ được đưa trở lại trang Đăng nhập trong 5 giây."
 }

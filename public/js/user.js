@@ -67,7 +67,7 @@
                 form_data.append('_method', 'put');
                 ubizapis('v1', '/users', 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
             } else {
-                ubizapis('v1', '/users', 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
+                ubizapis('v1', '/users/' + id, 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
             }
         },
         w_o_delete: function () {
@@ -250,35 +250,35 @@
             var search_info = {};
 
             if (jQuery('#code').val().replace(/\s/g, '') != '') {
-                search_info.code = jQuery('#code').val();
+                search_info.search_code = jQuery('#code').val();
             }
 
             if (jQuery('#name').val().replace(/\s/g, '') != '') {
-                search_info.name = jQuery('#name').val();
+                search_info.search_name = jQuery('#name').val();
             }
 
             if (jQuery('#email').val().replace(/\s/g, '') != '') {
-                search_info.email = jQuery('#email').val();
+                search_info.search_email = jQuery('#email').val();
             }
 
             if (jQuery('#phone').val().replace(/\s/g, '') != '') {
-                search_info.phone = jQuery('#phone').val();
+                search_info.search_phone = jQuery('#phone').val();
             }
 
             if (jQuery('#dep_name').val().replace(/\s/g, '') != '') {
-                search_info.dep_name = jQuery('#dep_name').val();
+                search_info.search_dep_name = jQuery('#dep_name').val();
             }
 
             if (jQuery('#address').val().replace(/\s/g, '') != '') {
-                search_info.address = jQuery('#address').val();
+                search_info.search_address = jQuery('#address').val();
             }
 
             if (jQuery('#contain').val().replace(/\s/g, '') != '') {
-                search_info.contain = jQuery('#contain').val();
+                search_info.search_contain = jQuery('#contain').val();
             }
 
             if (jQuery('#notcontain').val().replace(/\s/g, '') != '') {
-                search_info.notcontain = jQuery('#notcontain').val();
+                search_info.search_notcontain = jQuery('#notcontain').val();
             }
 
             return search_info;
@@ -527,34 +527,35 @@
         },
         w_get_form_data: function () {
             var form_data = new FormData();
-            form_data.append('code', jQuery("#txt_code").val());
-            form_data.append('name', jQuery("#txt_name").val());
+            form_data.append('txt_code', jQuery("#txt_code").val());
+            form_data.append('txt_name', jQuery("#txt_name").val());
 
             if (jQuery('input[name=inp-upload-image]')[0].files.length > 0) {
                 form_data.append('avatar', jQuery('input[name=inp-upload-image]')[0].files[0]);
             }
 
-            form_data.append('dep_id', jQuery("#txt_dep_id").val());
-            form_data.append('phone', jQuery("#txt_phone").val());
-            form_data.append('email', jQuery("#txt_email").val());
-            form_data.append('address', jQuery("#txt_address").val());
-            form_data.append('join_date', jQuery("#txt_join_date").val());
-            form_data.append('salary', numeral(jQuery("#txt_salary").val()).format('0'));
+            form_data.append('txt_dep_id', jQuery("#txt_dep_id").val());
+            form_data.append('txt_phone', jQuery("#txt_phone").val());
+            form_data.append('txt_email', jQuery("#txt_email").val());
+            form_data.append('txt_address', jQuery("#txt_address").val());
+            form_data.append('txt_join_date', jQuery("#txt_join_date").val());
+            form_data.append('txt_salary', numeral(jQuery("#txt_salary").val()).format('0'));
 
-            var bhxh = jQuery("#txt_bhxh").is(':checked') ? jQuery("#txt_bhxh").val() : 0;
-            form_data.append('bhxh', bhxh);
+            var txt_bhxh = jQuery("#txt_bhxh").is(':checked') ? jQuery("#txt_bhxh").val() : 0;
+            form_data.append('txt_bhxh', txt_bhxh);
 
-            var bhyt = jQuery("#txt_bhyt").is(':checked') ? jQuery("#txt_bhyt").val() : 0;
-            form_data.append('bhyt', bhyt);
+            var txt_bhyt = jQuery("#txt_bhyt").is(':checked') ? jQuery("#txt_bhyt").val() : 0;
+            form_data.append('txt_bhyt', txt_bhyt);
             return form_data;
         },
         w_get_detail_data: function (pos) {
 
-            if (pos >= jQuery.UbizOIWidget.rows_num || pos <= 1)
+            if (pos >= jQuery.UbizOIWidget.rows_num || pos < 1)
                 return false;
 
             var params = {};
             params.pos = pos;
+            jQuery.UbizOIWidget.pos = pos;
 
             var search_info = jQuery.UbizOIWidget.w_get_search_info();
             Object.assign(params, search_info);
@@ -569,7 +570,7 @@
 
             var id = jQuery.UbizOIWidget.i_page.find("#txt_id").val();
 
-            ubizapis('v1', '/users/' + id, 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/users/' + id, 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_input_page);
         },
         w_o_paging: function (page, rows_num, rows_per_page) {
             var page = parseInt(page);

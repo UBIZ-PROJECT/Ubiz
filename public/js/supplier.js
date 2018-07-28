@@ -1,5 +1,3 @@
-const _YES = i18next.t("Yes");
-const _NO = i18next.t("No");
 (function ($) {
     UbizOIWidget = function () {
         this.page = 0;
@@ -60,14 +58,14 @@ const _NO = i18next.t("No");
             }
 
             swal({
-                title: i18next.t('Do you want to delete the data?'),
-                text: i18next.t('Once deleted, you will not be able to recover this data!'),
+                title: "Bạn có muốn xóa dữ liệu không?",
+                text: "Một khi xóa, bạn sẽ không có khả năng khôi phục dữ liệu này!",
                 icon: "warning",
                 buttons: true,
                 buttons: {
-                    cancel: _NO,
+                    cancel: "Không",
                     catch: {
-                        text: _YES,
+                        text: "Có",
                         value: "catch",
                     }
                 },
@@ -76,8 +74,7 @@ const _NO = i18next.t("No");
                 switch (value) {
                     case "catch":
                         listId = JSON.stringify(listId);
-                        var params = jQuery.UbizOIWidget.w_get_param_search_sort();
-                        ubizapis('v1','/suppliers/'+listId+'/delete', 'delete',null, params,jQuery.UbizOIWidget.w_process_callback);
+                        ubizapis('v1','/suppliers/delete', 'get',null, {'listId':listId},jQuery.UbizOIWidget.w_process_callback);
                         break;
                 }
             });
@@ -87,7 +84,7 @@ const _NO = i18next.t("No");
             jQuery.UbizOIWidget.w_go_to_input_page(0);
         },
         w_save: function(id) {
-            const ALERT_TITLE = i18next.t("Do you want to save it?");
+            const ALERT_TITLE = "Bạn có muốn lưu lại không?";
             const ALERT_ICON = "warning";
 
             //validate
@@ -97,17 +94,15 @@ const _NO = i18next.t("No");
 
             var formData = jQuery.UbizOIWidget.w_get_images_upload();
             formData.append("supplier", JSON.stringify(jQuery.UbizOIWidget.w_get_data_input_form()));
-
-            var params = jQuery.UbizOIWidget.w_get_param_search_sort();
             if (id == 0) {
                 swal({
                     title:ALERT_TITLE,
                     icon: ALERT_ICON,
                     buttons: true,
                     buttons: {
-                        cancel: _NO,
+                        cancel: "Không",
                         catch: {
-                            text: _YES,
+                            text: "Có",
                             value: "catch",
                         }
                     },
@@ -115,14 +110,14 @@ const _NO = i18next.t("No");
                 }).then((value) => {
                     switch (value) {
                         case "catch":
-                            ubizapis('v1','/suppliers/insert', 'post', formData, params, jQuery.UbizOIWidget.w_process_callback);
+                            ubizapis('v1','/suppliers/insert', 'post', formData, null, jQuery.UbizOIWidget.w_process_callback);
                             break;
                     }
                 });
             } else {
                 if (jQuery.UbizOIWidget.w_is_input_changed() == false) {
                     swal({
-                        title: i18next.t("Nothing change!"),
+                        title: "Không có gì thay đổi!",
                         icon: "error"
                     });
                     return false;
@@ -132,9 +127,9 @@ const _NO = i18next.t("No");
                     icon: ALERT_ICON,
                     buttons: true,
                     buttons: {
-                        cancel: _NO,
+                        cancel: "Không",
                         catch: {
-                            text: _YES,
+                            text: "Có",
                             value: "catch",
                         }
                     },
@@ -142,124 +137,12 @@ const _NO = i18next.t("No");
                 }).then((value) => {
                     switch (value) {
                         case "catch":
-                            formData.append("_method","put");
-                            ubizapis('v1','/suppliers/'+id+'/update', 'post', formData,params, jQuery.UbizOIWidget.w_process_callback);
+                            ubizapis('v1','/suppliers/update/' + id, 'post', formData, null, jQuery.UbizOIWidget.w_process_callback);
                             break;
                     }
                 });
             }
 
-        },
-        w_search:function(){
-
-            var params = jQuery.UbizOIWidget.w_get_param_search_sort();
-
-            var event = new CustomEvent("click");
-            document.body.dispatchEvent(event);
-            ubizapis('v1', '/suppliers', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
-        },
-        w_get_search_info: function () {
-
-            var search_info = {};
-
-            if (jQuery('#search-form #sup_code').val().replace(/\s/g, '') != '') {
-                search_info.sup_code = jQuery('#search-form #sup_code').val();
-            }
-
-            if (jQuery('#search-form #sup_name').val().replace(/\s/g, '') != '') {
-                search_info.sup_name = jQuery('#search-form #sup_name').val();
-            }
-
-            if (jQuery('#search-form #sup_mail').val().replace(/\s/g, '') != '') {
-                search_info.sup_mail = jQuery('#search-form #sup_mail').val();
-            }
-
-            if (jQuery('#search-form #sup_phone').val().replace(/\s/g, '') != '') {
-                search_info.sup_phone = jQuery('#search-form #sup_phone').val();
-            }
-
-            if (jQuery('#search-form #sup_website').val().replace(/\s/g, '') != '') {
-                search_info.sup_website = jQuery('#search-form #sup_website').val();
-            }
-
-            if (jQuery('#search-form #sup_fax').val().replace(/\s/g, '') != '') {
-                search_info.sup_fax = jQuery('#search-form #sup_fax').val();
-            }
-
-            if (jQuery('#search-form #contain').val().replace(/\s/g, '') != '') {
-                search_info.contain = jQuery('#search-form #contain').val();
-            }
-
-            if (jQuery('#search-form #notcontain').val().replace(/\s/g, '') != '') {
-                search_info.notcontain = jQuery('#search-form #notcontain').val();
-            }
-
-            return search_info;
-        },
-        w_convert_search_info_to_fuzzy: function (search_info) {
-            var fuzzy = JSON.stringify(search_info);
-            return fuzzy;
-        },
-        w_convert_fuzzy_to_search_info: function (fuzzy) {
-            var search_info = {};
-            try {
-                search_info = JSON.parse(fuzzy);
-            } catch (e) {
-                var fuzzy_info = fuzzy.split('-');
-                if (fuzzy_info.length == 1) {
-                    search_info.contain = fuzzy;
-                } else {
-                    fuzzy_info.shift();
-                    search_info.notcontain = fuzzy_info.join('-');
-                }
-            }
-            return search_info;
-        },
-        w_update_search_form:function(search_info){
-            jQuery.each(search_info, function (key, val) {
-                var search_item = jQuery('#search-form #' + key);
-                if (search_item.length == 1) {
-                    search_item.val(val);
-                }
-            });
-        },
-        w_fuzzy_search: function () {
-            var params = {};
-            params.page = '0';
-            jQuery.UbizOIWidget.page = '0';
-
-            var fuzzy = jQuery('#fuzzy').val();
-            var search_info = jQuery.UbizOIWidget.w_convert_fuzzy_to_search_info(fuzzy);
-            jQuery.UbizOIWidget.w_update_search_form(search_info);
-            params.search = search_info;
-
-            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-            var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            params.sort = sort;
-
-            ubizapis('v1', '/suppliers', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
-        },
-        w_fuzzy_search_handle_enter(e) {
-            var keycode = (e.keyCode ? e.keyCode : e.which);
-            if (keycode == '13') {
-                jQuery.UbizOIWidget.w_fuzzy_search();
-            }
-        },
-        w_get_param_search_sort: function() {
-            var params = {};
-            params.page = '0';
-
-            var search_info = jQuery.UbizOIWidget.w_get_search_info();
-            params.search = search_info;
-
-            if (jQuery.isEmptyObject(search_info) === false) {
-                var fuzzy = jQuery.UbizOIWidget.w_convert_search_info_to_fuzzy(search_info);
-                jQuery('#fuzzy').val(fuzzy);
-            }
-
-            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-            params.sort = sort_info.sort_name + "_" + sort_info.order_by;
-            return params;
         },
         w_get_images_upload: function() {
             var formData = new FormData();
@@ -286,8 +169,7 @@ const _NO = i18next.t("No");
                 sup_phone: $("#i-put #txt_sup_phone").val(),
                 sup_fax: $("#i-put #txt_sup_fax").val(),
                 sup_mail: $("#i-put #txt_sup_mail").val(),
-                sup_avatar: $(".image-upload .img-show").attr("img-name"),
-                addresses: addParam
+                sup_avatar: $(".image-upload .img-show").attr("img-name")
             };
             return data;
         },
@@ -295,20 +177,11 @@ const _NO = i18next.t("No");
             swal('ok');
         },
         w_go_to_input_page: function (id, index) {
-            if (id != 0) {
+            if (id != 0)
                 jQuery.UbizOIWidget.w_get_specific_supplier_by_id(id, index);
-                $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
-
-            }
-            else{
-
-                $("#i-put .GtF .delete").css("display","none").removeAttr("onclick");
-            }
-
             if (isEmpty(index)) {
                 $("#i-put .GtF .save").attr("onclick", "jQuery.UbizOIWidget.w_save(0)");
             }
-
             jQuery.UbizOIWidget.o_page.hide();
             jQuery.UbizOIWidget.i_page.fadeIn("slow");
             jQuery('#nicescroll-oput').getNiceScroll().remove();
@@ -376,9 +249,9 @@ const _NO = i18next.t("No");
             jQuery.UbizOIWidget.w_clear_input_page();
         },
         w_refresh_output_page: function () {
-            var params = jQuery.UbizOIWidget.w_get_param_search_sort();
-            params.page = jQuery.UbizOIWidget.page;
-            ubizapis('v1', '/suppliers', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
+            var sort = sort_info.sort_name + "_" + sort_info.order_by;
+            ubizapis('v1', '/suppliers', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_sort_info: function () {
             var sort_obj = jQuery.UbizOIWidget.o_page.find('div.dWT');
@@ -402,45 +275,16 @@ const _NO = i18next.t("No");
         },
         w_process_callback: function (response) {
             if (response.data.success == true) {
-                if (response.data.method == "insert") {
-                    swal({
-                        title:response.data.message,
-                        icon: "success",
-                        text: i18next.t("Do you want to continue insert Supplier?"),
-                        buttons: true,
-                        buttons: {
-                            cancel: _NO,
-                            catch: {
-                                text: _YES,
-                                value: "catch",
-                            }
-                        },
-                        dangerMode: true,
-                    }).then((value) => {
-                        switch (value) {
-                            case "catch":
-                                jQuery.UbizOIWidget.w_clear_input_page();
-                                break;
-                            default:
-                                jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
-                                jQuery.UbizOIWidget.w_go_back_to_output_page();
-                                break;
-                        }
-                    });
-                } else {
-                    jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
-                    jQuery.UbizOIWidget.w_go_back_to_output_page();
-                    swal(response.data.message, {
-                        icon: "success",
-                    });
-                }
-
+                jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
+                swal(response.data.message, {
+                    icon: "success",
+                });
             } else {
                 swal(response.data.message, {
                     icon: "error",
                 });
             }
-
+            jQuery.UbizOIWidget.w_go_back_to_output_page();
         },
         w_render_data_to_ouput_page: function (response) {
             var table_html = "";
@@ -471,8 +315,7 @@ const _NO = i18next.t("No");
             if (response == undefined || response.data == undefined || response.data.supplier.length <= 0) {
                 return;
             }
-            var data = response.data.supplier[0];
-            var addresses = data.sad_address;
+            data = response.data.supplier[0];
             $("#i-put .GtF .delete").attr("onclick","jQuery.UbizOIWidget.w_delete("+data.sup_id+")");
             $("#i-put .GtF .save").attr("onclick", "jQuery.UbizOIWidget.w_save("+data.sup_id+")");
             $("#i-put #nicescroll-iput #txt_sup_code").val(data.sup_code);
@@ -521,63 +364,8 @@ const _NO = i18next.t("No");
                 if ($(txt_input[i]).prop("required") == true) {
                     if ($(txt_input[i]).val() == "") {
                         isValid = false;
-                        showErrorInput(txt_input[i], i18next.t("This input is required"));
+                        showErrorInput(txt_input[i], "Thông tin bắt buộc nhập");
                     }
-                }
-                var txt_id = $(txt_input[i]).attr("id");
-                var txt_val = $(txt_input[i]).val().trim();
-                switch(txt_id) {
-                    case "txt_sup_name":
-                        if (txt_val.length > 100) {
-                            isValid = false;
-                            showErrorInput(txt_input[i], i18next.t("invalid length",{length: "100"}));
-                        }
-                        break;
-                    case "txt_sup_website":
-                        var regex = new RegExp('^(https?:\\/\\/)?'+ // protocol
-                            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|'+ // domain name
-                            '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-                            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-                            '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-                            '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-                        if (txt_val.length > 100) {
-                            isValid = false;
-                            showErrorInput(txt_input[i], i18next.t("invalid length",{length: "100"}));
-                        } else if (regex.test(String(txt_val).toLowerCase()) == false) {
-                            isValid = false;
-                            showErrorInput(txt_input[i], i18next.t("invalid input", {control: i18next.t("Website")}));
-                        }
-                        break;
-                    case "txt_sup_phone":
-                        var regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
-                        if (txt_val.length > 15) {
-                            isValid = false;
-                            showErrorInput(txt_input[i], i18next.t("invalid length",{length: "15"}));
-                        } else if (regex.test(String(txt_val).toLowerCase()) == false || txt_val.length < 9) {
-                            isValid = false;
-                            showErrorInput(txt_input[i], i18next.t("invalid input", {control: i18next.t("Phone")}));
-                        }
-                        break;
-                    case "txt_sup_fax":
-                        var regex = /^\+?[0-9]{6,}$/;
-                        if (txt_val.length > 20) {
-                            isValid = false;
-                            showErrorInput(txt_input[i], i18next.t("invalid length",{length: "20"}));
-                        } else if (regex.test(String(txt_val).toLowerCase()) == false) {
-                            isValid = false;
-                            showErrorInput(txt_input[i], i18next.t("invalid input",{control: i18next.t("Fax")}));
-                        }
-                        break;
-                    case "txt_sup_mail":
-                        var regex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-                        if (txt_val.length > 100) {
-                            isValid = false;
-                            showErrorInput(txt_input[i], i18next.t("invalid length",{length: "100"}));
-                        } else if (regex.test(String(txt_val).toLowerCase()) == false) {
-                            isValid = false;
-                            showErrorInput(txt_input[i], i18next.t("invalid input", {control: i18next.t("E-Mail")}));
-                        }
-                        break;
                 }
             }
             return isValid;
@@ -591,22 +379,9 @@ const _NO = i18next.t("No");
             $("#i-put #nicescroll-iput #txt_sup_mail").val("").isChange("false");
             $("#i-put #nicescroll-iput .file-upload").isChange("false");
             $("#i-put #nicescroll-iput .image-upload .img-show").attr("src", jQuery.UbizOIWidget.defaultImage);
-            $("#i-put .txt_address").val("");
-            $("#i-put .clone-address").remove();
-            jQuery.UbizOIWidget.sort = {'sort_name': 'sup_code', 'order_by': 'asc'};
+            jQuery.UbizOIWidget.sort = {'sort_name': 'sup_id', 'order_by': 'asc'};
             jQuery.UbizOIWidget.w_set_paging_for_detail_page(0,0,true);
             removeErrorInput();
-        },
-        w_clear_search_form:function(){
-            jQuery('#search-form  #sup_code').val("");
-            jQuery('#search-form  #sup_name').val("");
-            jQuery('#search-form  #sup_mail').val("");
-            jQuery('#search-form  #sup_phone').val("");
-            jQuery('#search-form  #sup_fax').val("");
-            jQuery('#search-form  #sup_website').val("");
-            jQuery('#search-form  #sup_contain').val("");
-            jQuery('#search-form  #sup_notcontain').val("");
-            jQuery('#search-form  #sup_fuzzy').val("");
         },
         w_get_specific_supplier_by_id(id, index) {
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();

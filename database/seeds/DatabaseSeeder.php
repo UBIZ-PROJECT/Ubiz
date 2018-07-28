@@ -12,12 +12,5 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // $this->call(UsersTableSeeder::class);
-
-
-        DB::table('users')->delete();
-        DB::unprepared(file_get_contents(database_path()."/seeds/creation-user.sql"));
-
-        DB::table('m_currency')->delete();
-        DB::unprepared(file_get_contents(database_path()."/seeds/creation-currency.sql"));
     }
 }
