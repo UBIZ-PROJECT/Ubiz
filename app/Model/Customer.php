@@ -76,17 +76,11 @@ class Customer implements JWTSubject
         }
     }
 
-	public function getCustomers($page = 0, $sort = '') 
+	public function getCustomers($page = 0, $sort = '', $search = []) 
 	{
 		try {
-            $sort_name = 'cus_id';
-            $order_by = 'asc';
-            if ($sort != '') {
-                $sort_info = explode('_', $sort);
-                $order_by = $sort_info[sizeof($sort_info) - 1];
-                unset($sort_info[sizeof($sort_info) - 1]);
-                $sort_name = implode('_', $sort_info);
-            }
+            list($where_raw,$params) = $this->makeWhereRaw($search);
+            list($field_name, $order_by) = $this->makeOrderBy($sort);
 			
 			$rows_per_page = env('ROWS_PER_PAGE', 10);
 			$firstAddress = DB::table('customer_address')
@@ -100,8 +94,8 @@ class Customer implements JWTSubject
 				})
 				->leftJoin('customer_address', 'customer_adr.cad_id', '=', 'customer_address.cad_id')
 				->select('customer.*', 'customer_address.cad_address as address', 'customer_address.cad_id')
-				->whereRaw("customer.delete_flg = '0'")
-				->orderBy($sort_name, $order_by)
+				->whereRaw($where_raw, $params)
+				->orderBy($field_name, $order_by)
 				->offset($page * $rows_per_page)
 				->limit($rows_per_page)
 				->get();
@@ -111,11 +105,11 @@ class Customer implements JWTSubject
         return $customers;
     }
 	
-	public function countCustomers(){
-		$totalCustomers = DB::table('customer')->where('delete_flg', '0')->count();
+	// public function countCustomers(){
+		// $totalCustomers = DB::table('customer')->where('delete_flg', '0')->count();
 		
-		return $totalCustomers;
-	}
+		// return $totalCustomers;
+	// }
 	
 	public function getCustomer($id) 
 	{
@@ -251,5 +245,98 @@ class Customer implements JWTSubject
         }
     }
 	
+	public function makeWhereRaw($search = [])
+    {
+        $params = [0];
+        $where_raw = 'customer.delete_flg = ?';
+        if (sizeof($search) > 0) {
+            if (isset($search['contain']) || isset($search['notcontain'])) {
 
+                $search_val = "%" . $search['search'] . "%";
+                if(isset($search['contain'])){
+                    $where_raw .= " AND (";
+                    $where_raw .= "customer.cus_code like ?'";
+                    $params[] = $search_val;
+                    $where_raw .= " OR customer.cus_name like ?";
+                    $params[] = $search_val;
+					$where_raw .= " OR customer.cus_type like ?";
+                    $params[] = $search_val;
+					$where_raw .= " OR customer.cus_fax like ?";
+                    $params[] = $search_val;
+                    $where_raw .= " OR customer.cus_mail like ?";
+                    $params[] = $search_val;
+                    $where_raw .= " OR customer.cus_phone like ?";
+                    $params[] = $search_val;
+                    $where_raw .= " OR customer_address.address like ?";
+                    $params[] = $search_val;
+                    $where_raw .= " ) ";
+                }
+                if(isset($search['notcontain'])){
+                    $where_raw .= "customer.cus_code not like ?'";
+                    $params[] = $search_val;
+                    $where_raw .= " OR customer.cus_name not like ?";
+                    $params[] = $search_val;
+					$where_raw .= " OR customer.cus_type not like ?";
+                    $params[] = $search_val;
+					$where_raw .= " OR customer.cus_fax not like ?";
+                    $params[] = $search_val;
+                    $where_raw .= " OR customer.cus_mail not like ?";
+                    $params[] = $search_val;
+                    $where_raw .= " OR customer.cus_phone not like ?";
+                    $params[] = $search_val;
+                    $where_raw .= " OR customer_address.cad_address not like ?";
+                    $params[] = $search_val;
+                }
+
+            } else {
+
+                $where_raw_tmp = [];
+                if (isset($search['cus_code'])) {
+                    $where_raw_tmp[] = "customer.cus_code = ?";
+                    $params[] = $search['cus_code'];
+                }
+                if (isset($search['cus_name'])) {
+                    $where_raw_tmp[] = "customer.cus_name = ?";
+                    $params[] = $search['cus_name'];
+                }
+                if (isset($search['cus_mail'])) {
+                    $where_raw_tmp[] = "customer.cus_mail = ?";
+                    $params[] = $search['cus_mail'];
+                }
+				if (isset($search['cus_type'])) {
+                    $where_raw_tmp[] = "customer.cus_type = ?";
+                    $params[] = $search['cus_type'];
+                }
+				if (isset($search['cus_fax'])) {
+                    $where_raw_tmp[] = "customer.cus_fax = ?";
+                    $params[] = $search['cus_fax'];
+                }
+                if (isset($search['cus_phone'])) {
+                    $where_raw_tmp[] = "customer.cus_phone = ?";
+                    $params[] = $search['cus_phone'];
+                }
+                if (isset($search['address'])) {
+                    $where_raw_tmp[] = "customer_address.cad_address = ?";
+                    $params[] = $search['address'];
+                }
+                if (sizeof($where_raw_tmp) > 0) {
+                    $where_raw .= " AND ( " . implode(" OR ", $where_raw_tmp) . " )";
+                }
+            }
+        }
+        return [$where_raw, $params];
+    }
+
+    public function makeOrderBy($sort)
+    {
+        $field_name = 'cus_code';
+        $order_by = 'asc';
+        if ($sort != '') {
+            $sort_info = explode('_', $sort);
+            $order_by = $sort_info[sizeof($sort_info) - 1];
+            unset($sort_info[sizeof($sort_info) - 1]);
+            $field_name = implode('_', $sort_info);
+        }
+        return [$field_name, $order_by];
+    }
 }

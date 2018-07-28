@@ -84,38 +84,37 @@
             params.page = '0';
 
             if (jQuery('#cus_code').val().replace(/\s/g, '') != '') {
-                params.code = jQuery('#cus_code').val();
+                params.cus_code = jQuery('#cus_code').val();
             }
 			
 			
             if (jQuery('#cus_type').val().replace(/\s/g, '') != '') {
-                params.name = jQuery('#cus_type').val();
+                params.cus_type = jQuery('#cus_type').val();
             }
 
             if (jQuery('#cus_name').val().replace(/\s/g, '') != '') {
-                params.name = jQuery('#cus_name').val();
+                params.cus_name = jQuery('#cus_name').val();
             }
 
             if (jQuery('#cus_phone').val().replace(/\s/g, '') != '') {
-                params.email = jQuery('#cus_phone').val();
+                params.cus_phone = jQuery('#cus_phone').val();
             }
 
             if (jQuery('#cus_fax').val().replace(/\s/g, '') != '') {
-                params.phone = jQuery('#cus_fax').val();
+                params.cus_fax = jQuery('#cus_fax').val();
             }
 
             if (jQuery('#cus_mail').val().replace(/\s/g, '') != '') {
-                params.dep_name = jQuery('#cus_mail').val();
+                params.cus_mail = jQuery('#cus_mail').val();
             }
 
             if (jQuery('#cus_address').val().replace(/\s/g, '') != '') {
-                params.address = jQuery('#cus_address').val();
+                params.cus_address = jQuery('#cus_address').val();
             }
 
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             params.sort = sort_info.sort_name + "_" + sort_info.order_by;
-
-            ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/customers', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_clear_search_form:function(){
             jQuery('#cus_code').val("");
