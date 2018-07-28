@@ -250,35 +250,35 @@
             var search_info = {};
 
             if (jQuery('#code').val().replace(/\s/g, '') != '') {
-                search_info.code = jQuery('#code').val();
+                search_info.search_code = jQuery('#code').val();
             }
 
             if (jQuery('#name').val().replace(/\s/g, '') != '') {
-                search_info.name = jQuery('#name').val();
+                search_info.search_name = jQuery('#name').val();
             }
 
             if (jQuery('#email').val().replace(/\s/g, '') != '') {
-                search_info.email = jQuery('#email').val();
+                search_info.search_email = jQuery('#email').val();
             }
 
             if (jQuery('#phone').val().replace(/\s/g, '') != '') {
-                search_info.phone = jQuery('#phone').val();
+                search_info.search_phone = jQuery('#phone').val();
             }
 
             if (jQuery('#dep_name').val().replace(/\s/g, '') != '') {
-                search_info.dep_name = jQuery('#dep_name').val();
+                search_info.search_dep_name = jQuery('#dep_name').val();
             }
 
             if (jQuery('#address').val().replace(/\s/g, '') != '') {
-                search_info.address = jQuery('#address').val();
+                search_info.search_address = jQuery('#address').val();
             }
 
             if (jQuery('#contain').val().replace(/\s/g, '') != '') {
-                search_info.contain = jQuery('#contain').val();
+                search_info.search_contain = jQuery('#contain').val();
             }
 
             if (jQuery('#notcontain').val().replace(/\s/g, '') != '') {
-                search_info.notcontain = jQuery('#notcontain').val();
+                search_info.search_notcontain = jQuery('#notcontain').val();
             }
 
             return search_info;
@@ -317,7 +317,10 @@
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             jQuery.UbizOIWidget.sort = sort_info;
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/users', 'get', null, {'page': page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/users', 'get', null, {
+                'page': page,
+                'sort': sort
+            }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_o_delete_callback: function (response) {
             if (response.data.success == true) {
