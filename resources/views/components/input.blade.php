@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 7/12/2018
- * Time: 10:29 PM
- */
 
 $html_type = '';
 $html_control_type = '';
@@ -40,7 +34,7 @@ switch ($type) {
 
 <div class="textfield {{$html_type}} root_textfield rootIsUnderlined {{$control_id}}_container" style="width: {{ $html_width }}">
     <div class="wrapper">
-        <label for="{{$control_id}}" class="lbl-primary ms-Label root-56">{{$label}}:</label>
+        <label for="{{$control_id}}" class="ms-Label root-56">{{$label}}:</label>
         <div class="fieldGroup">
             <input is-change="false" type="text" {{ $html_max_length }} {{$html_control_type}} id="{{$control_id}}" name="{{$control_id}}" value="" class="input_field {{ $html_class }}">
         </div>
