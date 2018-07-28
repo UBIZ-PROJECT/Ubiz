@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -12,19 +11,9 @@ class CustomerController extends Controller
     public function getCustomers(Request $request)
     {
         try {
-
-            $page = 0;
-            if ($request->has('page')) {
-                $page = $request->page;
-            }
-
-            $sort = '';
-            if ($request->has('sort')) {
-                $sort = $request->sort;
-            }
-
+			list($page, $sort, $search) = $this->getRequestData($request);
             $customer = new Customer();
-            $customers = $customer->getCustomers($page, $sort);
+            $customers = $customer->getCustomers($page, $sort, $search);
             $paging = $customer->getPagingInfo();
             $paging['page'] = $page;
 			foreach($customers as $key => $item){
@@ -125,5 +114,51 @@ class CustomerController extends Controller
             throw $e;
         }
         return response()->json(['customers' => $customers, 'paging' => $paging, 'success' => true, 'message' => 'Xử lý thành công'], 200);
+    }
+	
+	public function getRequestData(Request $request)
+    {
+        $page = 0;
+        if ($request->has('page')) {
+            $page = $request->page;
+        }
+
+        $sort = '';
+        if ($request->has('sort')) {
+            $sort = $request->sort;
+        }
+
+        $search = [];
+        if ($request->has('search')) {
+            $search['search'] = $request->search;
+        }
+        if ($request->has('cus_code')) {
+            $search['cus_code'] = $request->cus_code;
+        }
+        if ($request->has('cus_name')) {
+            $search['cus_name'] = $request->cus_name;
+        }
+		if ($request->has('cus_type')) {
+            $search['cus_type'] = $request->cus_type;
+        }
+        if ($request->has('cus_phone')) {
+            $search['cus_phone'] = $request->cus_phone;
+        }
+        if ($request->has('cus_fax')) {
+            $search['cus_fax'] = $request->cus_fax;
+        }
+        if ($request->has('cus_mail')) {
+            $search['cus_mail'] = $request->cus_mail;
+        }
+        if ($request->has('cus_address')) {
+            $search['cus_address'] = $request->cus_address;
+        }
+        if ($request->has('contain')) {
+            $search['contain'] = $request->contain;
+        }
+        if ($request->has('notcontain')) {
+            $search['notcontain'] = $request->notcontain;
+        }
+        return [$page, $sort, $search];
     }
 }
