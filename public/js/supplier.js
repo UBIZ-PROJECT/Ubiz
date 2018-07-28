@@ -162,7 +162,6 @@
                 }
                 addParam.push(addObj);
             }
-
             var data = {
                 sup_code: $("#i-put #txt_sup_code").val(),
                 sup_name: $("#i-put #txt_sup_name").val(),

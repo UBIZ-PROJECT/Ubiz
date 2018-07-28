@@ -1065,7 +1065,7 @@
 
 /* START CSS FOR INPUT CONTROL */
 .textfield {
-    margin: 0 0 10px 0;
+    margin: 0 0 15px 0;
     max-width: 300px;
 }
 
@@ -1250,7 +1250,6 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
 }
 
 /* END CSS INPUT CONTROL */
-
 
 /* CSS FOR IMAGE UPLOAD */
 

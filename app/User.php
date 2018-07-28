@@ -84,7 +84,7 @@ class User extends Authenticatable implements JWTSubject
                 $avatar = $user['avatar'];
                 $path = $avatar->path();
                 $extension = $avatar->extension();
-                Helper::resizeImage($supplier['tmp_name'], $sup_ava, 200,200, 'sup');
+                Helper::resizeImage($path, $sup_ava, 200,200, 'sup');
             }
 
             DB::table('users')
