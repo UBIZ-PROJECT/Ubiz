@@ -113,7 +113,7 @@ class User extends Authenticatable implements JWTSubject
     {
         try {
 
-            list($where_raw, $params) = $this->makeWhereRaw($search);
+            list($where_raw,$params) = $this->makeWhereRaw($search);
             list($field_name, $order_by) = $this->makeOrderBy($sort);
 
             $rows_per_page = env('ROWS_PER_PAGE', 10);
@@ -177,7 +177,7 @@ class User extends Authenticatable implements JWTSubject
     public function countUsers($search = [])
     {
         try {
-            list($where_raw, $params) = $this->makeWhereRaw($search);
+            list($where_raw,$params) = $this->makeWhereRaw($search);
             $count = DB::table('users')
                 ->leftJoin('m_department', 'users.dep_id', '=', 'm_department.id')
                 ->whereRaw($where_raw, $params)
@@ -211,7 +211,7 @@ class User extends Authenticatable implements JWTSubject
             if (isset($search['contain']) || isset($search['notcontain'])) {
 
                 $search_val = "%" . $search['search'] . "%";
-                if (isset($search['contain'])) {
+                if(isset($search['contain'])){
                     $where_raw .= " AND (";
                     $where_raw .= "users.code like ?'";
                     $params[] = $search_val;
@@ -227,7 +227,7 @@ class User extends Authenticatable implements JWTSubject
                     $params[] = $search_val;
                     $where_raw .= " ) ";
                 }
-                if (isset($search['notcontain'])) {
+                if(isset($search['notcontain'])){
                     $where_raw .= " AND users.code not like ?'";
                     $params[] = $search_val;
                     $where_raw .= " AND users.name not like ?";

@@ -153,6 +153,15 @@
             return formData;
         },
         w_get_data_input_form: function() {
+            var addresses = $("#i-put .txt_address");
+            var addParam = [];
+            for(var i = 0; i < addresses.length; i++) {
+                var addObj = {
+                    sad_id: $(addresses[i]).attr("sad_id"),
+                    address: $(addresses[i]).val()
+                }
+                addParam.push(addObj);
+            }
             var data = {
                 sup_code: $("#i-put #txt_sup_code").val(),
                 sup_name: $("#i-put #txt_sup_name").val(),
@@ -317,6 +326,20 @@
             $("#i-put #nicescroll-iput #txt_sup_mail").val(data.sup_mail).change(function() {inputChange(this, data.sup_mail)});
             if (isEmpty(data.src)) {
                 data.src = jQuery.UbizOIWidget.defaultImage;
+            }
+            var addrLength = addresses.length >= 3 ? addresses.length : 3;
+            for(let i = 0; i < addrLength; i++) {
+                if (i <= 2) {
+                    $($("#i-put #nicescroll-iput #txt_adr" + (i+1)).val(addresses[i] != undefined ? addresses[i].address : "" )).change(function() {
+                        inputChange(this, addresses[i] != undefined ? addresses[i].address : "" );
+                    }).attr("sad_id",addresses[i] != undefined ? addresses[i].id : "");
+                } else {
+                    var address = $("#i-put #nicescroll-iput .txt_adr1_container").clone();
+                    $(address).removeClass("txt_adr1_container").addClass("txt_adr"+(i+1)+"_container").addClass("clone-address");
+                    $($(address).find("input").attr("id","txt_adr"+(i+1)).val(addresses[i].address)).change(function() {inputChange(this, addresses[i].address)}).attr("sad_id",addresses[i].id);
+                    $(address).find("label.lbl-primary").html(i18next.t("Address") + " " + (i+1));
+                    $(address).insertAfter("#i-put #nicescroll-iput .txt_adr"+i+"_container");
+                }
             }
             $("#i-put #nicescroll-iput .image-upload .img-show").attr("src", data.src);
             $("#i-put #nicescroll-iput .image-upload .img-show").attr("img-name", data.sup_avatar);

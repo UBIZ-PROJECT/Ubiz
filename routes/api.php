@@ -27,7 +27,10 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::get('suppliers/delete', ['as' => 'suppliers-delete', 'uses' => 'Api\SupplierController@deleteSuppliersById']);
         Route::post('suppliers/update/{id}', ['as' => 'suppliers-update', 'uses' => 'Api\SupplierController@updateSupplierById']);
         Route::get('suppliers/{id}', ['as'=> 'suppliers-detail','uses'=> 'Api\SupplierController@getSupplierById']);
-		Route::get('customer', ['as' => 'api-customer', 'uses' => 'Api\CustomerController@getCustomers']);
-		Route::get('customer/{id}', ['as'=> 'delete-customer','uses'=> 'Api\CustomerController@deleteCustomer']);
+		Route::get('customers', ['as' => 'api-customer', 'uses' => 'Api\CustomerController@getCustomers']);
+		Route::get('customer-edit', ['as'=> 'get-customer','uses'=> 'Api\CustomerController@getCustomer']);
+		Route::post('customer-create', ['as'=> 'insert-customer','uses'=> 'Api\CustomerController@insertCustomer']);
+		Route::post('customer-update', ['as'=> 'update-customer','uses'=> 'Api\CustomerController@updateCustomer']);
+		Route::delete('customers/{ids}', ['as'=> 'delete-customer','uses'=> 'Api\CustomerController@deleteCustomer']);
     });
 });

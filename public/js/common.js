@@ -1,7 +1,7 @@
 function showProgress() {
     var progress = jQuery('.ubiz-progress');
     if (progress.length == 0) {
-        var progress_dom = '<div class="ubiz-progress">' + i18next.t("Processing...") + '</div>';
+        var progress_dom = '<div class="ubiz-progress">Đang xử lý...</div>';
         jQuery('body').append(progress_dom);
         progress = jQuery('.ubiz-progress');
     }
@@ -72,14 +72,13 @@ function hide_apps_form(e) {
     }
 }
 
-function logout() {
+function logout(){
     ubizapis('v1', '/logout', 'get', null, null, function (response) {
         if (response.data.success == true) {
             window.location.href = '/login';
         } else {
-            swal({
-                type: 'error',
-                text: response.data.message
+            swal(response.data.message, {
+                icon: "error",
             });
         }
     });
@@ -105,13 +104,13 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
     var options = {
         baseURL: api_base_url,
         url: api_url,
-        method: api_method
+        method: api_method,
+		headers: []
     };
 
     if (typeof api_data === 'object') {
         options.data = api_data;
         if (api_data instanceof FormData) {
-            options.headers = {};
             options.headers['Content-Type'] = 'multipart/form-data';
         }
     }
@@ -141,21 +140,13 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
                 console.log(error.response.status);
                 console.log(error.response.headers);
                 if (error.response.status === 401) {
-                    let timerInterval
-                    swal({
-                        title: i18next.t("Authentication failed.\nYou will be taken back to the login page for 5 seconds."),
-                        html: '<strong></strong> ' + i18next.t('seconds') + '.',
+                    swal(i18next.t("Authentication failed.\nYou will be taken back to the login page for 5 seconds."), {
+                        icon: "error",
+                        closeOnClickOutside: false,
+                        closeOnEsc: false,
                         timer: 5000,
-                        onOpen: () => {
-                            swal.showLoading()
-                            timerInterval = setInterval(() => {
-                                swal.getContent().querySelector('strong').textContent = swal.getTimerLeft()
-                            }, 100)
-                        },
-                        onClose: () => {
-                            clearInterval(timerInterval)
-                            window.location.href = '/login';
-                        }
+                    }).then((value) => {
+                        window.location.href = '/login';
                     });
                 }
             } else if (error.request) {
@@ -180,7 +171,7 @@ function showErrorInput(control, error_message) {
 }
 
 function removeErrorInput() {
-    $('.root_textfield').each(function () {
+    $('.root_textfield').each(function() {
         $(this).find('.error-message-text').html('');
         $(this).find('.error_message').addClass('hidden-content');
         $(this).find('.wrapper').removeClass('invalid');
@@ -214,81 +205,8 @@ function inputChange(self, oldVal) {
     }
 }
 
-function checkbox_click(self) {
-    if (jQuery(self).closest('div.fieldGroup').find('input').prop('disabled') === true)
-        return false;
-
-    var id = jQuery(self).closest('div.fieldGroup').find('input').attr('id');
-    if (jQuery(self).hasClass('suc')) {
-        jQuery(self).removeClass('suc');
-        jQuery(self).addClass('sck');
-        jQuery("#" + id).prop("checked", true);
-    } else {
-        jQuery(self).removeClass('sck');
-        jQuery(self).addClass('suc');
-        jQuery("#" + id).prop("checked", false);
-    }
-}
-
-function format_date(val, format){
-    val = val.replace(/\s/g, "");
-    if(val == "")
-        return "";
-
-    var f_date = moment(val).format(format);
-    if(f_date == "Invalid date")
-        return "";
-    return f_date;
-}
-
-jQuery.fn.forceNumeric = function () {
-    return this.each(function () {
-        $(this).keydown(function (e) {
-            var key = e.which || e.keyCode;
-
-            if (!e.shiftKey && !e.altKey && !e.ctrlKey &&
-                // numbers
-                key >= 48 && key <= 57 ||
-                // Numeric keypad
-                key >= 96 && key <= 105 ||
-                // comma, period and minus, . on keypad
-                key == 190 || key == 188 || key == 109 || key == 110 ||
-                // Backspace and Tab and Enter
-                key == 8 || key == 9 || key == 13 ||
-                // Home and End
-                key == 35 || key == 36 ||
-                // left and right arrows
-                key == 37 || key == 39 ||
-                // Del and Ins
-                key == 46 || key == 45)
-                return true;
-
-            return false;
-        });
-
-        $(this).focus(function () {
-            var _this2 = this;
-            setTimeout(function () {
-                var f_value = $(_this2).val();
-                var uf_value = numeral(f_value).format('0');
-                $(_this2).val(uf_value).select();
-            }, 10);
-        });
-
-        $(this).blur(function () {
-            var _this2 = this;
-            setTimeout(function () {
-                var f_value = $(_this2).val();
-                var uf_value = numeral(f_value).format('0,0');
-                $(_this2).val(uf_value);
-            }, 10);
-
-        });
-    });
-}
-
 jQuery.fn.extend({
-    isChange: function (bool) {
+    isChange: function(bool) {
         if (bool === undefined || bool === null || bool === "") {
             return this.attr("is-change");
         } else {
@@ -297,9 +215,9 @@ jQuery.fn.extend({
     }
 });
 
-var I18n = function () {
+var I18n = function(){
 
-    I18n.prototype.init = function init() {
+    I18n.prototype.init = function init(){
         var _this2 = this;
         this.options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     };
@@ -318,9 +236,11 @@ var I18n = function () {
 
         var value = this.options.resources[this.options.lng].translation[key];
         if (typeof replace == "object") {
-            Object.keys(replace).map(function (objectKey, index) {
-                var pattern = new RegExp(':' + objectKey, "g");
+            Object.keys(replace).map(function(objectKey, index) {
+                var pattern = new RegExp(':'+objectKey, "g");
                 value = value.replace(pattern, replace[objectKey]);
+                console.log(objectKey);
+                console.log(replace[objectKey]);
             });
         }
         return value;
