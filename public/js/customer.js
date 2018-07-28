@@ -48,8 +48,10 @@
 
             ubizapis('v1', '/customers'', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
-        w_delete: function () {
-            var ids = jQuery.UbizOIWidget.w_get_checked_rows();
+        w_delete: function (ids) {
+			if(ids == 0){
+				var ids = jQuery.UbizOIWidget.w_get_checked_rows();
+			}
             if (ids.length == 0)
                 return false;
 
@@ -146,7 +148,31 @@
                 jQuery.UbizOIWidget.w_fuzzy_search();
             }
         },
-        w_go_to_input_page: function (id) {
+        w_go_to_input_page: function (id, ele) {
+			if(id != 0){
+				var index = jQuery('input[name="pageno"]').val()*10 + jQuery(ele).index();
+				var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
+				ubizapis('v1','/customer-edit', 'get', null, {'cus_id': id}, jQuery.UbizOIWidget.w_render_data_to_input_page);
+				jQuery('.curindex').text(index+1);
+				jQuery('.prev').attr('onclick', 'jQuery.UbizOIWidget.w_go_to_input_page_paging('+ (index-1) +')');
+				jQuery('.next').attr('onclick', 'jQuery.UbizOIWidget.w_go_to_input_page_paging('+ (index+1) +')');
+				if(index == 0){
+					jQuery('.prev').removeAttr('onclick');
+					jQuery('.prev').addClass('adS');
+				}else{
+					jQuery('.prev').removeClass('adS');
+				}
+				
+				if( (index+1) == parseInt($('.totalindex').text()) ){
+					jQuery('.next').removeAttr('onclick');
+					jQuery('.next').addClass('adS');
+				}else{
+					jQuery('.next').removeClass('adS');
+				}
+			}else{
+				$('#f-input input').val('');
+				$('#avt_img').attr('src','../images/avatar.png');
+			}
             jQuery.UbizOIWidget.o_page.hide();
             jQuery.UbizOIWidget.i_page.fadeIn("slow");
             jQuery('#nicescroll-oput').getNiceScroll().remove();
@@ -161,7 +187,46 @@
                 autohidemode: false,
                 horizrailenabled: false
             });
+			
+			$(".save").click(function(){
+				jQuery.UbizOIWidget.w_save();
+			});
+			
+			$(".delete").click(function(){
+				var id = $('input[name="cus_id"]').val();
+				var ids = [];
+				ids.push(id);
+				jQuery.UbizOIWidget.w_delete(ids);
+			});
+			
+			$("#change_avt").click(function(){
+				$("#avatar").click();
+			});
+			
+			$("#avatar").change(function(){
+				jQuery.UbizOIWidget.w_preview_avatar(this);
+			});
         },
+		w_go_to_input_page_paging: function (index) {
+			var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
+			ubizapis('v1','/customer-edit', 'get', null, {'cus_id': 0, 'index': index, 'sort': sort_info.sort_name, 'order': sort_info.order_by}, jQuery.UbizOIWidget.w_render_data_to_input_page);
+			jQuery('.curindex').text(index+1);
+			jQuery('.prev').attr('onclick', 'jQuery.UbizOIWidget.w_go_to_input_page_paging('+ (index-1) +')');
+			jQuery('.next').attr('onclick', 'jQuery.UbizOIWidget.w_go_to_input_page_paging('+ (index+1) +')');
+			if(index == 0){
+				jQuery('.prev').removeAttr('onclick');
+				jQuery('.prev').addClass('adS');
+			}else{
+				jQuery('.prev').removeClass('adS');
+			}
+			
+			if( (index+1) == parseInt($('.totalindex').text()) ){
+				jQuery('.next').removeAttr('onclick');
+				jQuery('.next').addClass('adS');
+			}else{
+				jQuery('.next').removeClass('adS');
+			}
+		},
         w_go_back_to_output_page: function (self) {
             jQuery.UbizOIWidget.o_page.fadeIn("slow");
             jQuery.UbizOIWidget.i_page.hide();
@@ -206,6 +271,7 @@
         w_delete_callback: function (response) {
             if (response.data.success == true) {
                 jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
+				jQuery.UbizOIWidget.w_go_back_to_output_page(this);
                 swal(response.data.message, {
                     icon: "success",
                 });
@@ -228,7 +294,11 @@
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_phone, 3));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_fax, 3));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_mail, 3));
-					cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].address[0].cad_address, 3));
+					if(customer[i].address[0] != undefined){
+						cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].address[0].cad_address, 3));
+					}else{
+						cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, '', 3));
+					}
                     rows.push(jQuery.UbizOIWidget.w_make_row_html(customer[i].cus_id, cols));
                 }
                 table_html += rows.join("");
@@ -239,6 +309,32 @@
             jQuery.UbizOIWidget.page = response.data.paging.page;
             jQuery.UbizOIWidget.w_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
         },
+		w_render_data_to_input_page: function (response) {
+			var customer = response.data.customers[0];
+			$('.totalindex').text(response.data.totalCustomers);
+		
+			$('input[name="cus_id"]').val(customer.cus_id);
+			$('input[name="cus_code"]').val(customer.cus_code);
+			$('input[name="cus_name"]').val(customer.cus_name);
+			if(customer.avt_src != ''){
+				$('#avt_img').attr("src", customer.avt_src);
+			}else{
+				$('#avt_img').attr('src','../images/avatar.png');
+			}
+			$('input[name="cus_type"]').val(customer.cus_type);
+			$('input[name="cus_phone"]').val(customer.cus_phone);
+			$('input[name="cus_fax"]').val(customer.cus_fax);
+			$('input[name="cus_mail"]').val(customer.cus_mail);
+			$('input[name="user_id"]').val(customer.user_id);
+			
+			if(customer.address.length > 0){
+				$(".cus_address\\[\\]_container").remove();
+				for(var i = 0; i < customer.address.length; i++){
+					var html = '<div class="textfield  root_textfield rootIsUnderlined cus_address[]_container"><div class="wrapper"><label for="cus_address[]" class="ms-Label root-56">Địa chỉ '+ (i+1) +' :</label><div class="fieldGroup"><input type="text" name="cus_address[]" id="cus_address[]" value="'+ customer.address[i].cad_address +'" class="input_field"></div></div><span class="error_message hidden-content"><div class="message-container"><p class="label_errorMessage css-57 errorMessage"><span class="error-message-text"></span></p></div></span></div>';
+					$('.cus-part-2').append(html);
+				}
+			}
+		},
         w_make_row_html: function (id, cols) {
             var row_html = '';
             if (cols.length > 0) {
@@ -359,9 +455,94 @@
             jQuery("#paging-label").replaceWith(paging_label);
             jQuery("#paging-older").replaceWith(paging_older);
             jQuery("#paging-newer").replaceWith(paging_newer);
-        }
+			jQuery('input[name="pageno"]').val(page);
+        },
+		w_get_data_input_form: function () {
+			//var data = $('form').getForm2obj();
+			var data = new FormData($('#f-input')[0]);
+			return data;
+		},
+		w_save: function () {
+			var data = jQuery.UbizOIWidget.w_get_data_input_form();
+			var cus_id = jQuery('input[name="cus_id"]').val();
+			
+			swal({
+                title: "Bạn có chắc chắn muốn lưu dữ liệu?",
+                icon: "warning",
+                buttons: true,
+                buttons: {
+                    cancel: "Không",
+                    catch: {
+                        text: "Có",
+                        value: "catch",
+                    }
+                },
+                dangerMode: true,
+            }).then((value) => {
+                switch (value) {
+                    case "catch":
+                        if(cus_id != 0){
+							ubizapis('v1', '/customer-update', 'post', data, null, jQuery.UbizOIWidget.w_save_callback);
+						}else{
+							ubizapis('v1', '/customer-create', 'post', data, null, jQuery.UbizOIWidget.w_save_callback);
+						}
+                        break;
+                }
+            });
+			
+			// jQuery.UbizOIWidget.w_go_back_to_output_page();
+		},
+		w_save_callback: function (response) {
+			if (response.data.success == true) {
+                jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
+				jQuery.UbizOIWidget.w_go_back_to_output_page(this);
+                swal(response.data.message, {
+                    icon: "success",
+                });
+            } else {
+                swal(response.data.message, {
+                    icon: "error",
+                });
+            }
+		},
+		w_preview_avatar: function (input) {
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
+
+				reader.onload = function (e) {
+					$('#avt_img').attr('src', e.target.result);
+				}
+
+				reader.readAsDataURL(input.files[0]);
+			}
+		}
     });
 })(jQuery);
 jQuery(document).ready(function () {
     jQuery.UbizOIWidget.w_init();
 });
+
+(function($){
+    $.fn.getForm2obj = function(){
+        var _ = {},_t=this;
+        this.c = function(k,v){ eval("c = typeof "+k+";"); if(c == 'undefined') _t.b(k,v);}
+        this.b = function(k,v,a = 0){ if(a) eval(k+".push("+v+");"); else eval(k+"="+v+";"); };
+        $.map(this.serializeArray(),function(n){
+            if(n.name.indexOf('[') > -1 ){
+                var keys = n.name.match(/[a-zA-Z0-9_]+|(?=\[\])/g),le = Object.keys(keys).length,tmp = '_';
+                $.map(keys,function(key,i){
+                    if(key == ''){
+                        eval("ale = Object.keys("+tmp+").length;");
+                        if(!ale) _t.b(tmp,'[]');
+                        if(le == (i+1)) _t.b(tmp,"'"+n['value']+"'",1);
+                        else _t.b(tmp += "["+ale+"]",'{}');
+                    }else{
+                        _t.c(tmp += "['"+key+"']",'{}');
+                        if(le == (i+1)) _t.b(tmp,"'"+n['value']+"'");
+                    }
+                });
+            }else _t.b("_['"+n['name']+"']","'"+n['value']+"'");
+        });
+        return _;
+    }
+})(jQuery);

@@ -36,6 +36,78 @@ class CustomerController extends Controller
         }
         return response()->json(['customers' => $customers, 'paging' => $paging, 'success' => true, 'message' => ''], 200);
     }
+	
+	public function getCustomer(Request $request)
+    {
+        try {
+			if ($request->has('page')) {
+				$page = $request->page;
+			}else{
+				$page = 0;
+			}
+
+			if ($request->has('sort')) {
+				$sort = $request->sort;
+			}else{
+				$sort = '';
+			}
+			
+			if ($request->has('order')) {
+				$order = $request->order;
+			}else{
+				$order = '';
+			}
+			
+            $customer = new Customer();
+			if($request->cus_id != 0){
+				$customers = $customer->getCustomer($request->cus_id);
+			}else{
+				$customers = $customer->getCustomerPaging($request->index, $sort, $order);
+			}
+			$totalCustomers = $customer->countCustomers();
+			$customerAddress = $customer->getCustomerAddress($customers[0]->cus_id);
+			$customers[0]->address = $customerAddress;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['customers' => $customers, 'totalCustomers' => $totalCustomers, 'success' => true, 'message' => ''], 200);
+    }
+	
+	public function insertCustomer(Request $request)
+    {
+        try {
+            $customer = new Customer();
+            $customer->insertCustomer($request);
+			$customers = $customer->getCustomers(0);
+            $paging = $customer->getPagingInfo();
+            $paging['page'] = 0;
+			foreach($customers as $key => $item){
+				$customerAddress = $customer->getCustomerAddress($item->cus_id);
+				$customers[$key]->address = $customerAddress;
+			}
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['customers' => $customers, 'paging' => $paging, 'success' => true, 'message' => 'Xử lý thành công'], 200);
+    }
+	
+	public function updateCustomer(Request $request)
+    {
+        try {
+            $customer = new Customer();
+            $customer->updateCustomer($request);
+			$customers = $customer->getCustomers(0);
+            $paging = $customer->getPagingInfo();
+            $paging['page'] = 0;
+			foreach($customers as $key => $item){
+				$customerAddress = $customer->getCustomerAddress($item->cus_id);
+				$customers[$key]->address = $customerAddress;
+			}
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['customers' => $customers, 'paging' => $paging, 'success' => true, 'message' => 'Xử lý thành công'], 200);
+    }
 
     public function deleteCustomer($ids, Request $request)
     {
