@@ -14,15 +14,11 @@ class CreateMDepartmentTable extends Migration
     public function up()
     {
         Schema::create('m_department', function (Blueprint $table) {
-            $table->increments('id');
-            $table->char('dep_code', 5);
+            $table->increments('dep_id');
             $table->string('dep_name', 100);
             $table->char('dep_type', 2);
+            $table->integer('per_id');
             $table->char('delete_flg', 1)->default('0');
-            $table->timestamp('inp_date')->useCurrent();
-            $table->integer('inp_user');
-            $table->timestamp('upd_date')->useCurrent();
-            $table->integer('upd_user');
         });
     }
 

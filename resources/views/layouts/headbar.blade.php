@@ -57,24 +57,12 @@
                                             </a>
                                         </li>
                                         <li class="who">
-                                            <a class="ruo" role="button" href="#">
+                                            <a class="ruo" role="button" href="/suppliers">
                                                 <div class="pto">
                                                     <img src="{{asset('images/app_bg.png')}}">
                                                     <div class="zro">
                                                         <div class="rco">
                                                             <div class="kko">{{ __("Supplier") }}</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li class="who">
-                                            <a class="ruo" role="button" href="/currency">
-                                                <div class="pto">
-                                                    <img src="{{asset('images/app_bg.png')}}">
-                                                    <div class="zro">
-                                                        <div class="rco">
-                                                            <div class="kko">{{ __("Currency") }}</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -94,12 +82,12 @@
                                 <div class="zho">
                                     <div class="ano">
                                         <a class="yno">
-                                            <img class="pno" src="{!!  Helper::readImage($auth_user->avatar, 'usr') !!}">
+                                            <img class="pno" src="{{ asset('images/avatar.jpg') }}">
                                             <span class="wno">{{ __("Change") }}</span>
                                         </a>
                                         <div class="rho">
-                                            <div class="iho">{{ $auth_user->name }}</div>
-                                            <div class="mno">{{ $auth_user->email }}</div>
+                                            <div class="iho">ubiz</div>
+                                            <div class="mno">ubiz@gmail.com</div>
                                             <div class="jno">
                                                 <a href="#">{{ __("Privacy") }}</a>
                                             </div>
@@ -118,7 +106,7 @@
                             <img src="{{ asset('images/logo.png') }}">
                         </div>
                         <div class="vyo">
-                            <a><span><img src="{!!  Helper::readImage($auth_user->avatar, 'usr') !!}"></span></a>
+                            <a><span><img src="{{ asset('images/avatar.jpg') }}"></span></a>
                         </div>
                     </div>
                 </div>
