@@ -399,14 +399,25 @@
                     </div>
                 </div>
                 <div class="jAQ">
-                    <div class="aqI" id="nicescroll-iput">
-                        @include('components.upload_image')
-                        @include('components.input',['type'=>'disabled', 'control_id'=>'txt_sup_code', 'label'=>'Mã', 'length'=>'5'])
-                        @include('components.input',['type'=>'required', 'control_id'=>'txt_sup_name', 'label'=>'Tên nhà cung cấp', 'length'=>'100'])
-                        @include('components.input',['control_id'=>'txt_sup_website', 'label'=>'Website', 'length'=>'100'])
-                        @include('components.input',['type'=>'required', 'control_id'=>'txt_sup_phone', 'label'=>'Phone', 'length'=>'15'])
-                        @include('components.input',['control_id'=>'txt_sup_fax', 'label'=>'Fax', 'length'=>'20'])
-                        @include('components.input',['type'=>'required', 'control_id'=>'txt_sup_mail', 'label'=>'Email', 'length'=>'100'])
+                    <div class="aqI nicescroll" id="nicescroll-iput">
+                        <div class="row z-mgl z-mgr">
+                            <div class="col-sm-2 col-md-2 col-xl-2 z-pdl">
+                                @include('components.upload_image')
+                            </div>
+                            <div class="col-sm-5 col-md-5 col-xl-5">
+                                @include('components.input',['width'=>'500','type'=>'disabled', 'control_id'=>'txt_sup_code', 'label'=>__("Code"), 'length'=>5])
+                                @include('components.input',['width'=>'500','type'=>'required', 'control_id'=>'txt_sup_name', 'label'=>__("Supplier Name"), 'length'=>100])
+                                @include('components.input',['width'=>'500','control_id'=>'txt_sup_website', 'label'=>__('Website'), 'length'=>100])
+                                @include('components.input',['width'=>'500','type'=>'required', 'control_id'=>'txt_sup_phone', 'label'=>__('Phone'), 'length'=>15])
+                                @include('components.input',['width'=>'500','control_id'=>'txt_sup_fax', 'label'=>__('Fax'), 'length'=>20])
+                                @include('components.input',['width'=>'500','type'=>'required', 'control_id'=>'txt_sup_mail', 'label'=>__('E-Mail'), 'length'=>100])
+                            </div>
+                            <div class="col-sm-5 col-md-5 col-xl-5 z-pdr">
+                                @include('components.input',['class'=>'txt_address','width'=>'500','control_id'=>'txt_adr1', 'label'=>__("Address") . " 1", 'length'=>100])
+                                @include('components.input',['class'=>'txt_address','width'=>'500','control_id'=>'txt_adr2', 'label'=>__("Address") . " 2", 'length'=>100])
+                                @include('components.input',['class'=>'txt_address','width'=>'500','control_id'=>'txt_adr3', 'label'=>__("Address") . " 3", 'length'=>100])
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
