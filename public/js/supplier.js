@@ -273,7 +273,11 @@ const _NO = i18next.t("No");
             var addresses = $("#i-put .txt_address");
             var addParam = [];
             for(var i = 0; i < addresses.length; i++) {
-                addParam.put($(addresses[i]).val());
+                var addObj = {
+                    sad_id: $(addresses[i]).attr("sad_id"),
+                    address: $(addresses[i]).val()
+                }
+                addParam.push(addObj);
             }
             var data = {
                 sup_code: $("#i-put #txt_sup_code").val(),
@@ -480,13 +484,16 @@ const _NO = i18next.t("No");
             if (isEmpty(data.src)) {
                 data.src = jQuery.UbizOIWidget.defaultImage;
             }
-            for(var i = 0; i < addresses.length; i++) {
+            var addrLength = addresses.length >= 3 ? addresses.length : 3;
+            for(let i = 0; i < addrLength; i++) {
                 if (i <= 2) {
-                    $("#i-put #nicescroll-iput #txt_adr" + (i+1)).val(addresses[i].address).change(function() {inputChange(this, addresses[i])}).attr("sad_id",addresses[i].id);
+                    $($("#i-put #nicescroll-iput #txt_adr" + (i+1)).val(addresses[i] != undefined ? addresses[i].address : "" )).change(function() {
+                        inputChange(this, addresses[i] != undefined ? addresses[i].address : "" );
+                    }).attr("sad_id",addresses[i] != undefined ? addresses[i].id : "");
                 } else {
                     var address = $("#i-put #nicescroll-iput .txt_adr1_container").clone();
                     $(address).removeClass("txt_adr1_container").addClass("txt_adr"+(i+1)+"_container").addClass("clone-address");
-                    $(address).find("input").attr("id","txt_adr"+(i+1)).val(addresses[i].address).change(function() {inputChange(this, addresses[i].address)}).attr("sad_id",addresses[i].id);
+                    $($(address).find("input").attr("id","txt_adr"+(i+1)).val(addresses[i].address)).change(function() {inputChange(this, addresses[i].address)}).attr("sad_id",addresses[i].id);
                     $(address).find("label.lbl-primary").html(i18next.t("Address") + " " + (i+1));
                     $(address).insertAfter("#i-put #nicescroll-iput .txt_adr"+i+"_container");
                 }
