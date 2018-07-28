@@ -9,7 +9,7 @@
 @endsection
 @section('headbar')
     @section('search')
-        @include('users_search')
+        @include('customer_search')
         @section('headbar-icon')
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                 <path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"/>
@@ -93,7 +93,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_delete()">
+                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_delete(0)">
                                         <div class="ax7 poK utooltip" title="Xóa">
                                             <div class="asA">
                                                 <div class="asX"></div>
@@ -297,12 +297,13 @@
                                 </div>
                             </div>
                         </div>
+						<input type="hidden" id="pageno" name="pageno" value="0">
                     </div>
                     <div class="aqB nicescroll" id="nicescroll-oput">
                         <div class="yTP">
                             <div id="table-content" class="jFr">
                                 @foreach($customers as $customer)
-                                    <div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{$customer->cus_id}})">
+                                    <div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{$customer->cus_id}}, this)">
                                         <div class="tcB col-3">
                                             <div class="cbo">
                                                 <div class="jgQ" onclick="jQuery.UbizOIWidget.w_c_checkbox_click(this)">
@@ -351,8 +352,8 @@
                                         </div>
 										<div class="tcB col-3">
                                             <div class="cbo">
-                                                <div class="nCj" title="{{$customer->address[0]->cad_address}}">
-                                                    <span>{{$customer->address[0]->cad_address}}</span>
+                                                <div class="nCj" title="{{count($customer->address) ? $customer->address[0]->cad_address : ''}}">
+                                                    <span>{{count($customer->address) ? $customer->address[0]->cad_address : ''}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -377,7 +378,7 @@
                                         </div>
                                     </div>
                                     <div class="GNi">
-                                        <div class="ax7 poK utooltip" title="Lưu trữ">
+                                        <div class="ax7 poK utooltip save" title="Lưu trữ">
                                             <div class="asA">
                                                 <div class="arS"></div>
                                             </div>
@@ -391,7 +392,7 @@
                                         </div>
                                     </div>
                                     <div class="GNi">
-                                        <div class="ax7 poK utooltip" title="Xóa">
+                                        <div class="ax7 poK utooltip delete" title="Xóa">
                                             <div class="asA">
                                                 <div class="asX"></div>
                                             </div>
@@ -404,16 +405,16 @@
                                 <span class="Di">
                                     <div class="amH" style="user-select: none">
                                         <span class="Dj">
-                                            <span><span class="ts">1</span></span> / <span class="ts">229</span>
+                                            <span><span class="ts curindex"></span></span> / <span class="ts totalindex"></span>
                                         </span>
                                     </div>
                                     <div class="amD utooltip" title="Cũ hơn">
                                         <span class="amF">&nbsp;</span>
-                                        <img class="amI" src="http://ubiz.local/images/cleardot.gif" alt="">
+                                        <img class="amI prev" src="http://ubiz.local/images/cleardot.gif" alt="">
                                     </div>
                                     <div class="amD utooltip" title="Mới hơn">
                                         <span class="amF">&nbsp;</span>
-                                        <img class="amJ" src="http://ubiz.local/images/cleardot.gif" alt="">
+                                        <img class="amJ next" src="http://ubiz.local/images/cleardot.gif" alt="">
                                     </div>
                                     <div class="amD utooltip" title="Cài đặt">
                                         <span class="amF">&nbsp;</span>
@@ -427,14 +428,31 @@
                 </div>
                 <div class="jAQ">
                     <div class="aqI nicescroll" id="nicescroll-iput">
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
-                        <div style="height: 200px;">a</div>
+						<form id="f-input">
+							<div class="row z-mgl z-mgr">
+								<div class="col-sm-2 col-md-2 col-xl-2 z-pdl">
+									<a class="ato">
+										<img id="avt_img" src="{{ asset("images/avatar.png") }}">
+										<input type="file" id="avatar" name="cus_avatar" accept="image/*" style="display: none"/>
+										<span id="change_avt">{{ __("Change") }}</span>
+									</a>
+								</div>
+								<div class="col-sm-5 col-md-5 col-xl-5">
+									<input type="hidden" name="cus_id" value="0"/>
+									@include('components.input',['type'=>'required', 'control_id'=>'cus_code', 'label'=>'Mã'])
+									@include('components.input',['type'=>'required', 'control_id'=>'cus_name', 'label'=>'Tên khách hàng'])
+									@include('components.input',['type'=>'required', 'control_id'=>'cus_type', 'label'=>'Loại khách hàng'])
+									@include('components.input',['control_id'=>'cus_phone', 'label'=>'Số điện thoại'])
+								</div>
+								<div class="col-sm-5 col-md-5 col-xl-5 z-pdr cus-part-2">
+									@include('components.input',['control_id'=>'cus_fax', 'label'=>'Fax'])
+									@include('components.input',['control_id'=>'cus_mail', 'label'=>'Email'])
+									@include('components.input',['control_id'=>'user_id', 'label'=>'Nhân viên phụ trách'])
+									@include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 1'])
+									@include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 2'])
+								</div>
+							</div>
+						</form>
                     </div>
                 </div>
             </div>

@@ -1,6 +1,6 @@
 @extends('layouts.main')
-@section('title','Danh sách nhà cung cấp')
-@section('headbar-title','Nhà Cung Cấp')
+@section('title', __("Supplier") )
+@section('headbar-title',__("Supplier") )
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/headbar.css') }}">
