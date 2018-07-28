@@ -137,6 +137,27 @@ class Supplier implements JWTSubject
         }
     }
 
+    public function insertSupplierAddress($param, $sup_id) {
+        DB::beginTransaction();
+        try {
+            $id = DB::table('supplier_address')->insertGetId(
+              [
+                  'sup_id'=>$sup_id,
+                  'sad_address'=>$param['address'],
+                  'delete_flg'=> '0',
+                  'inp_date'=>date('Y-m-d H:i:s'),
+                  'upd_date'=>date('Y-m-d H:i:s'),
+                  'inp_user'=>'2',
+                  'upd_user'=>'2'
+              ]
+            );
+            DB::commit();
+        } catch(\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
     public function deleteSuppliersById($listId) {
         DB::beginTransaction();
         try {
@@ -146,10 +167,27 @@ class Supplier implements JWTSubject
                     'delete_flg'=>'1',
                     'upd_date'=>date('Y-m-d H:i:s')
                 ]);
+            $this->deleteSupplierAddress(null,$listId);
             DB::commit();
         } catch(\Throwable $e) {
             DB::rollback();
             throw $e;
+        }
+    }
+
+    public function deleteSupplierAddress($listSadId = null, $listSupId = null) {
+        if ($listSupId) {
+            DB::table('supplier_address')->whereIn("sup_id", $listSupId)
+                ->update([
+                    'delete_flg'=>'1',
+                    'upd_date'=>date('Y-m-d H:i:s')
+                ]);
+        } else if ($listSadId) {
+            DB::table('supplier_address')->whereIn("sad_id", $listSadId)
+                ->update([
+                    'delete_flg'=>'1',
+                    'upd_date'=>date('Y-m-d H:i:s')
+                ]);
         }
     }
 
@@ -174,10 +212,34 @@ class Supplier implements JWTSubject
                    'sup_website'=>$supplier['sup_website'],
                    'upd_date'=>date('Y-m-d H:i:s')
                 ]);
+            //Update Supplier Address
+            $this->updateSupplierAddress($supplier['addresses'], $supplier['sup_id']);
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollback();
             throw $e;
+        }
+    }
+
+    public function updateSupplierAddress($listAddress, $sup_id) {
+        $deleteListSadId = array();
+        foreach ($listAddress as $address) {
+            if ($address['address'] == "") {
+                $deleteListSadId[] = $address['sad_id'];
+            } else if (empty($address['sad_id']) && !empty($address['address'])) {
+                $this->insertSupplierAddress($address, $sup_id);
+            } else if (!empty($address['address'])) {
+                DB::table('supplier_address')->where('sad_id','=',$address['sad_id'])
+                    ->update(
+                        [
+                            'sad_address'=>$address['address'],
+                            'upd_date'=>date('Y-m-d H:i:s')
+                        ]
+                    );
+            }
+        }
+        if (count($deleteListSadId) > 0) {
+            $this->deleteSupplierAddress($deleteListSadId);
         }
     }
 
