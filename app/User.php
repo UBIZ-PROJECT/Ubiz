@@ -52,7 +52,7 @@ class User extends Authenticatable implements JWTSubject
     public function getAllUsers()
     {
         $users = DB::table('users')
-            ->select('users.*', 'm_department.dep_name')
+            ->select('users.*', 'm_department.dep_id', 'm_department.dep_name', 'm_department.dep_type', 'm_department.per_id')
             ->leftJoin('m_department', 'users.dep_id', '=', 'm_department.dep_id')
             ->where('users.delete_flg', '=', '0')
             ->orderBy('id', 'asc')
@@ -75,32 +75,6 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
-    public function updateUser($user = [])
-    {
-        DB::beginTransaction();
-        try {
-            DB::table('users')
-                ->where([['id', '=',  $user['id']], ['delete_flg' => '1']])
-                ->update([
-                    'code' => $user['code'],
-                    'name' => $user['name'],
-                    'avatar' => $user['avatar'],
-                    'phone' => $user['phone'],
-                    'email' => $user['email'],
-                    'address' => $user['address'],
-                    'join_date' => $user['join_date'],
-                    'salary' => $user['salary'],
-                    'bhxh' => $user['bhxh'],
-                    'bhyt' => $user['bhyt'],
-                    'dep_id' => $user['dep_id']
-                ]);
-            DB::commit();
-        } catch (\Throwable $e) {
-            DB::rollback();
-            throw $e;
-        }
-    }
-
     public function getUsers($page = 0, $sort = '', $search = [])
     {
         try {
@@ -110,7 +84,7 @@ class User extends Authenticatable implements JWTSubject
 
             $rows_per_page = env('ROWS_PER_PAGE', 10);
             $users = DB::table('users')
-                ->select('users.*', 'm_department.dep_name')
+                ->select('users.*', 'm_department.dep_id', 'm_department.dep_name', 'm_department.dep_type', 'm_department.per_id')
                 ->leftJoin('m_department', 'users.dep_id', '=', 'm_department.dep_id')
                 ->whereRaw($where_raw, $params)
                 ->orderBy($field_name, $order_by)
@@ -121,37 +95,6 @@ class User extends Authenticatable implements JWTSubject
             throw $e;
         }
         return $users;
-    }
-
-    public function getUserById($id = '')
-    {
-        $user = DB::table('users')
-            ->select('users.*', 'm_department.dep_name')
-            ->leftJoin('m_department', 'users.dep_id', '=', 'm_department.dep_id')
-            ->where([['users.delete_flg','=','0'],['users.id','=',$id]])
-            ->first();
-        return $user;
-    }
-
-    public function getUserByPos($pos = 0, $sort = '', $search = [])
-    {
-        try {
-
-            list($where_raw,$params) = $this->makeWhereRaw($search);
-            list($field_name, $order_by) = $this->makeOrderBy($sort);
-
-            $user = DB::table('users')
-                ->select('users.*', 'm_department.dep_name')
-                ->leftJoin('m_department', 'users.dep_id', '=', 'm_department.dep_id')
-                ->whereRaw($where_raw, $params)
-                ->orderBy($field_name, $order_by)
-                ->offset($pos)
-                ->limit(1)
-                ->first();
-        } catch (\Throwable $e) {
-            throw $e;
-        }
-        return $user;
     }
 
     public function countAllUsers()
@@ -280,26 +223,5 @@ class User extends Authenticatable implements JWTSubject
             $field_name = implode('_', $sort_info);
         }
         return [$field_name, $order_by];
-    }
-
-    public function getDepartments(){
-        $departments = DB::table('m_department')
-            ->select('*')
-            ->where('delete_flg', '=', '0')
-            ->orderBy('dep_id', 'asc')
-            ->get()
-            ->toArray();
-        return $departments;
-
-    }
-
-    public function getAuthUser()
-    {
-        $user = null;
-        if (\Auth::check()) {
-            $id = \Auth::user()->id;
-            $user = $this->getUserById($id);
-        }
-        return $user;
     }
 }

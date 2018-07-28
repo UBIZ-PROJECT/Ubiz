@@ -23,7 +23,7 @@
     <div class="main-content">
         <div class="l-content">
             <div class="zY">
-                <div class="yP" onclick="jQuery.UbizOIWidget.w_go_to_input_page(0, 0)">{{ __("Add new") }}</div>
+                <div class="yP" onclick="jQuery.UbizOIWidget.w_create()">{{ __("Add new") }}</div>
             </div>
             <div id="nicescroll-sidebar" class="zX nicescroll">
                 <nav role="navigation">
@@ -47,9 +47,9 @@
                                         <div class="vD">
                                             <div class="xT">
                                                 <div class="oQ">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                                        <path d="M4 14h4v-4H4v4zm0 5h4v-4H4v4zM4 9h4V5H4v4zm5 5h12v-4H9v4zm0 5h12v-4H9v4zM9 5v4h12V5H9z"/>
-                                                        <path d="M0 0h24v24H0z" fill="none"/>
+                                                    <svg width="24px" height="24px" viewBox="0 0 24 24">
+                                                        <path fill="none" d="M0 0h24v24H0V0zm0 0h24v24H0z"></path>
+                                                        <path d="M3 20.01c0 1.1.89 1.99 2 1.99h14c1.1 0 2-.9 2-1.99V18H3v2.01zM18 19c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm1-17H5c-1.1 0-2 .9-2 1.99V17h18V3.99C21 2.89 20.11 2 19 2zm-8.62 3h3.24l3.25 5.68h-3.24L10.38 5zm-3.52 6.16l3.11-5.44s1.62 2.85 1.62 2.84L8.49 14l-1.63-2.84zM15.51 14H9.3l1.62-2.84h6.21L15.51 14z"></path>
                                                     </svg>
                                                 </div>
                                             </div>
@@ -93,7 +93,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_o_delete()">
+                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_delete()">
                                         <div class="ax7 poK utooltip" title="{{ __("Delete") }}">
                                             <div class="asA">
                                                 <div class="asX"></div>
@@ -278,8 +278,8 @@
                     <div class="aqB nicescroll" id="nicescroll-oput">
                         <div class="yTP">
                             <div id="table-content" class="jFr">
-                                @foreach($users as $key => $user)
-                                    <div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{ $key + 1 }}, {{$user->id}})">
+                                @foreach($users as $user)
+                                    <div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{$user->id}})">
                                         <div class="tcB col-1">
                                             <div class="cbo">
                                                 <div class="jgQ" onclick="jQuery.UbizOIWidget.w_c_checkbox_click(this)">
@@ -339,28 +339,28 @@
                         <div class="aqK">
                             <div class="aqL">
                                 <div class="GtF">
-                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_go_back_to_output_page()">
-                                        <div class="ax7 poK utooltip" title="{{ __("Back to list page") }}">
+                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_go_back_to_output_page(this)">
+                                        <div class="ax7 poK utooltip" title="{{ __("Back") }}">
                                             <div class="asA">
                                                 <div class="arB"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_save()">
+                                    <div class="GNi">
                                         <div class="ax7 poK utooltip" title="{{ __("Save") }}">
                                             <div class="asA">
                                                 <div class="arS"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_refresh()">
+                                    <div class="GNi">
                                         <div class="ax7 poK utooltip" title="{{ __("Refresh") }}">
                                             <div class="asA">
                                                 <div class="arR"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div id="btn-delete" class="GNi" onclick="jQuery.UbizOIWidget.w_i_delete()">
+                                    <div class="GNi">
                                         <div class="ax7 poK utooltip" title="{{ __("Delete") }}">
                                             <div class="asA">
                                                 <div class="asX"></div>
@@ -372,9 +372,19 @@
                             <div class="aqJ">
                                 <div class="ar5">
                                 <span class="Di">
-                                    <div id="i-paging-label"></div>
-                                    <div id="i-paging-older"></div>
-                                    <div id="i-paging-newer"></div>
+                                    <div class="amH" style="user-select: none">
+                                        <span class="Dj">
+                                            <span><span class="ts">1</span></span> / <span class="ts">229</span>
+                                        </span>
+                                    </div>
+                                    <div class="amD utooltip" title="{{ __("Older") }}">
+                                        <span class="amF">&nbsp;</span>
+                                        <img class="amI" src="{{ asset("images/cleardot.gif") }}" alt="">
+                                    </div>
+                                    <div class="amD utooltip" title="{{ __("Newer") }}">
+                                        <span class="amF">&nbsp;</span>
+                                        <img class="amJ" src="{{ asset("images/cleardot.gif") }}" alt="">
+                                    </div>
                                     <div class="amD utooltip" title="{{ __("Setting") }}">
                                         <span class="amF">&nbsp;</span>
                                         <img class="amG" src="{{ asset("images/cleardot.gif") }}" alt="">
@@ -387,24 +397,27 @@
                 </div>
                 <div class="jAQ">
                     <div class="aqI nicescroll" id="nicescroll-iput">
-                        <input type="hidden" id="txt_id" value="0">
                         <div class="row z-mgl z-mgr">
                             <div class="col-sm-2 col-md-2 col-xl-2 z-pdl">
-                                @include('components.upload_image')
+                                <a class="ato">
+                                    <img src="{{ asset("images/avatar.jpg") }}">
+                                    <input type="file" id="avatar" accept="image/*" style="display: none"/>
+                                    <span >{{ __("Change") }}</span>
+                                </a>
                             </div>
                             <div class="col-sm-5 col-md-5 col-xl-5">
-                                @include('components.input',['control_id'=>'txt_code', 'width'=>'150', 'label'=>__('Code')])
+                                @include('components.input',['control_id'=>'txt_code', 'label'=>__('Code')])
                                 @include('components.input',['control_id'=>'txt_name', 'label'=>__('Name')])
-                                @include('components.dropdown',['control_id'=>'txt_dep_id', 'label'=>__('Department'), 'data'=> Helper::convertDataToDropdownOptions($departments, 'id', 'dep_name')])
+                                @include('components/dropdown',['control_id'=>'txt_dep_id', 'label'=>__('Department'), 'data'=>['a'=>'b']])
                                 @include('components.input',['control_id'=>'txt_phone', 'label'=>__('Phone')])
                                 @include('components.input',['control_id'=>'txt_email', 'label'=>__('E-Mail')])
                             </div>
                             <div class="col-sm-5 col-md-5 col-xl-5 z-pdr">
                                 @include('components.input',['control_id'=>'txt_address', 'label'=>__('Address')])
-                                @include('components.input',['control_id'=>'txt_join_date', 'class'=>'i-date', 'label'=>__('Join Date')])
-                                @include('components.input',['control_id'=>'txt_salary', 'class'=>'i-numeric', 'label'=>__('Salary')])
-                                @include('components.checkbox',['control_id'=>'txt_bhxh', 'width'=>'150', 'value'=>'0', 'checked' => false, 'label'=>__('Social Insurance')])
-                                @include('components.checkbox',['control_id'=>'txt_bhyt', 'width'=>'150', 'value'=>'0', 'checked' => false, 'label'=>__('Health Insurance')])
+                                @include('components.input',['control_id'=>'txt_join_date', 'label'=>__('Join Date')])
+                                @include('components.input',['control_id'=>'txt_salary', 'label'=>__('Salary')])
+                                @include('components.input',['control_id'=>'txt_bhxh', 'label'=>__('Social Insurance')])
+                                @include('components.input',['control_id'=>'txt_bhyt', 'label'=>__('Health Insurance')])
                             </div>
                         </div>
                     </div>
@@ -415,7 +428,4 @@
 @endsection
 @section('end-javascript')
     <script type="text/javascript" src="{{ asset('js/user.js') }}"></script>
-    <script type="text/javascript">
-        jQuery.UbizOIWidget.rows_num = {{ intval($paging['rows_num']) }};
-    </script>
 @endsection

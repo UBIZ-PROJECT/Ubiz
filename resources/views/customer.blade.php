@@ -310,8 +310,8 @@
                                                     <input type="checkbox" class="ckb-i" value="{{$customer->cus_id}}" style="display: none"/>
                                                     <div class="asU ckb-c"></div>
                                                 </div>
-                                                <div class="nCT" title="{{$customer->cus_id}}">
-                                                    <span>{{$customer->cus_id}}</span>
+                                                <div class="nCT" title="{{$customer->cus_code}}">
+                                                    <span>{{$customer->cus_code}}</span>
                                                 </div>
                                             </div>
                                         </div>
