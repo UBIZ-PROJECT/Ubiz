@@ -31,7 +31,7 @@ class UsersController extends Controller
         try {
             $user = new User();
             if ($request->has('pos')) {
-                list ($page, $sort, $search) = $this->getRequestData();
+                list ($page, $sort, $search) = $this->getRequestData($request);
                 $data = $user->getUserByPos($request->pos, $sort, $search);
             }else{
                 $data = $user->getUserById($id);
@@ -96,29 +96,29 @@ class UsersController extends Controller
         if ($request->has('search')) {
             $search['search'] = $request->search;
         }
-        if ($request->has('code')) {
-            $search['code'] = $request->code;
+        if ($request->has('search_code')) {
+            $search['code'] = $request->search_code;
         }
-        if ($request->has('name')) {
-            $search['name'] = $request->name;
+        if ($request->has('search_name')) {
+            $search['name'] = $request->search_name;
         }
-        if ($request->has('phone')) {
-            $search['phone'] = $request->phone;
+        if ($request->has('search_phone')) {
+            $search['phone'] = $request->search_phone;
         }
-        if ($request->has('email')) {
-            $search['email'] = $request->email;
+        if ($request->has('search_email')) {
+            $search['email'] = $request->search_email;
         }
-        if ($request->has('dep_name')) {
-            $search['dep_name'] = $request->dep_name;
+        if ($request->has('search_dep_name')) {
+            $search['dep_name'] = $request->search_dep_name;
         }
-        if ($request->has('address')) {
-            $search['address'] = $request->address;
+        if ($request->has('search_address')) {
+            $search['address'] = $request->search_address;
         }
-        if ($request->has('contain')) {
-            $search['contain'] = $request->contain;
+        if ($request->has('search_contain')) {
+            $search['contain'] = $request->search_contain;
         }
-        if ($request->has('notcontain')) {
-            $search['notcontain'] = $request->notcontain;
+        if ($request->has('search_notcontain')) {
+            $search['notcontain'] = $request->search_notcontain;
         }
         return [$page, $sort, $search];
     }

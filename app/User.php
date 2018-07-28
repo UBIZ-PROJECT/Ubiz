@@ -75,14 +75,25 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
-    public function updateUser($id = '')
+    public function updateUser($user = [])
     {
         DB::beginTransaction();
         try {
-
             DB::table('users')
-                ->whereIn('id', explode(',', $ids))
-                ->update(['delete_flg' => '1']);
+                ->where([['id', '=',  $user['id']], ['delete_flg' => '1']])
+                ->update([
+                    'code' => $user['code'],
+                    'name' => $user['name'],
+                    'avatar' => $user['avatar'],
+                    'phone' => $user['phone'],
+                    'email' => $user['email'],
+                    'address' => $user['address'],
+                    'join_date' => $user['join_date'],
+                    'salary' => $user['salary'],
+                    'bhxh' => $user['bhxh'],
+                    'bhyt' => $user['bhyt'],
+                    'dep_id' => $user['dep_id']
+                ]);
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollback();
@@ -136,7 +147,7 @@ class User extends Authenticatable implements JWTSubject
                 ->orderBy($field_name, $order_by)
                 ->offset($pos)
                 ->limit(1)
-                ->get();
+                ->first();
         } catch (\Throwable $e) {
             throw $e;
         }

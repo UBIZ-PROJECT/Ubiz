@@ -549,6 +549,10 @@
             return form_data;
         },
         w_get_detail_data: function (pos) {
+
+            if (pos >= jQuery.UbizOIWidget.rows_num || pos <= 1)
+                return false;
+
             var params = {};
             params.pos = pos;
 
@@ -563,7 +567,9 @@
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             params.sort = sort_info.sort_name + "_" + sort_info.order_by;
 
-            ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            var id = jQuery.UbizOIWidget.i_page.find("#txt_id").val();
+
+            ubizapis('v1', '/users/' + id, 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_o_paging: function (page, rows_num, rows_per_page) {
             var page = parseInt(page);
