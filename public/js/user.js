@@ -175,6 +175,12 @@
             ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_clear_search_form: function () {
+            jQuery('#fuzzy').val("");
+            jQuery.UbizOIWidget.w_clear_advance_search_form();
+            jQuery.UbizOIWidget.w_refresh_output_page();
+
+        },
+        w_clear_advance_search_form: function () {
             jQuery('#code').val("");
             jQuery('#name').val("");
             jQuery('#email').val("");
@@ -183,9 +189,9 @@
             jQuery('#address').val("");
             jQuery('#contain').val("");
             jQuery('#notcontain').val("");
-            jQuery('#fuzzy').val("");
         },
         w_update_search_form: function (search_info) {
+            jQuery.UbizOIWidget.w_clear_advance_search_form();
             jQuery.each(search_info, function (key, val) {
                 var search_item = jQuery('#' + key);
                 if (search_item.length == 1) {
@@ -215,7 +221,7 @@
                 jQuery.UbizOIWidget.w_fuzzy_search();
             }
         },
-        w_go_to_input_page: function (id, pos) {
+        w_go_to_input_page: function (pos ,id) {
             jQuery.UbizOIWidget.pos = pos;
             if (id == 0 || pos == 0) {
                 jQuery("#btn-delete").hide();
@@ -277,35 +283,35 @@
             var search_info = {};
 
             if (jQuery('#code').val().replace(/\s/g, '') != '') {
-                search_info.search_code = jQuery('#code').val();
+                search_info.code = jQuery('#code').val();
             }
 
             if (jQuery('#name').val().replace(/\s/g, '') != '') {
-                search_info.search_name = jQuery('#name').val();
+                search_info.name = jQuery('#name').val();
             }
 
             if (jQuery('#email').val().replace(/\s/g, '') != '') {
-                search_info.search_email = jQuery('#email').val();
+                search_info.email = jQuery('#email').val();
             }
 
             if (jQuery('#phone').val().replace(/\s/g, '') != '') {
-                search_info.search_phone = jQuery('#phone').val();
+                search_info.phone = jQuery('#phone').val();
             }
 
             if (jQuery('#dep_name').val().replace(/\s/g, '') != '') {
-                search_info.search_dep_name = jQuery('#dep_name').val();
+                search_info.dep_name = jQuery('#dep_name').val();
             }
 
             if (jQuery('#address').val().replace(/\s/g, '') != '') {
-                search_info.search_address = jQuery('#address').val();
+                search_info.address = jQuery('#address').val();
             }
 
             if (jQuery('#contain').val().replace(/\s/g, '') != '') {
-                search_info.search_contain = jQuery('#contain').val();
+                search_info.contain = jQuery('#contain').val();
             }
 
             if (jQuery('#notcontain').val().replace(/\s/g, '') != '') {
-                search_info.search_notcontain = jQuery('#notcontain').val();
+                search_info.notcontain = jQuery('#notcontain').val();
             }
 
             return search_info;
@@ -609,6 +615,7 @@
             var f_num = (page * rows_per_page) + 1;
             var m_num = (page + 1) * rows_per_page;
             if (m_num > rows_num) m_num = rows_num;
+            if (f_num > rows_num) f_num = rows_num;
 
             var older_page = page - 1;
             var newer_page = page + 1;

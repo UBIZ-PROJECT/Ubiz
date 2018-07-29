@@ -93,9 +93,6 @@ class UsersController extends Controller
         }
 
         $search = [];
-        if ($request->has('search')) {
-            $search['search'] = $request->search;
-        }
         if ($request->has('code')) {
             $search['code'] = $request->code;
         }

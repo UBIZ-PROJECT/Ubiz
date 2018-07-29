@@ -231,15 +231,14 @@ class User extends Authenticatable implements JWTSubject
 
     public function makeWhereRaw($search = [])
     {
-        $params = [0];
+        $params = ['0'];
         $where_raw = 'users.delete_flg = ?';
         if (sizeof($search) > 0) {
             if (isset($search['contain']) || isset($search['notcontain'])) {
-
-                $search_val = "%" . $search['search'] . "%";
                 if (isset($search['contain'])) {
+                    $search_val = "%" . $search['contain'] . "%";
                     $where_raw .= " AND (";
-                    $where_raw .= "users.code like ?'";
+                    $where_raw .= "users.code like ?";
                     $params[] = $search_val;
                     $where_raw .= " OR users.name like ?";
                     $params[] = $search_val;
@@ -254,7 +253,8 @@ class User extends Authenticatable implements JWTSubject
                     $where_raw .= " ) ";
                 }
                 if (isset($search['notcontain'])) {
-                    $where_raw .= " AND users.code not like ?'";
+                    $search_val = "%" . $search['notcontain'] . "%";
+                    $where_raw .= " AND users.code not like ?";
                     $params[] = $search_val;
                     $where_raw .= " AND users.name not like ?";
                     $params[] = $search_val;
