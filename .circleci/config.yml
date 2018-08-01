@@ -8,7 +8,8 @@ jobs:
      - run:
           name: Deploy Over SSH
           command: |
-            ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST mkdir -p /home/$CIRCLE_BRANCH
+            #ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST mkdir -p /home/$CIRCLE_BRANCH\
+            ifconfig eth0
 
 workflows:
   version: 2
