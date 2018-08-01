@@ -9,7 +9,7 @@ jobs:
           name: Deploy Over SSH
           command: |
             #ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST mkdir -p /home/$CIRCLE_BRANCH\
-            ifconfig eth0
+            ping -c 5 -q 103.1.236.235
 
 workflows:
   version: 2
