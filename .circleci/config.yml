@@ -1,8 +1,6 @@
 version: 2
 jobs:           
   development:
-    environment:
-       TZ: "/usr/share/zoneinfo/Asia/Tokyo"
     docker:
       - image: circleci/php:7.0
     steps:
@@ -10,7 +8,7 @@ jobs:
      - run:
           name: Deploy Over SSH
           command: |
-            ssh -o 'StrictHostKeyChecking=no' $SSH_USER@$SSH_HOST mkdir -p /home/$CIRCLE_BRANCH
+            ssh -o 'StrictHostKeyChecking=no' $SSH_USER@$SSH_HOST -p 21 mkdir -p /home/$CIRCLE_BRANCH
 
 workflows:
   version: 2
