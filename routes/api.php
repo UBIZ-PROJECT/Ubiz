@@ -40,5 +40,8 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::post('customer-create', ['as'=> 'insert-customer','uses'=> 'Api\CustomerController@insertCustomer']);
         Route::post('customer-update', ['as'=> 'update-customer','uses'=> 'Api\CustomerController@updateCustomer']);
         Route::delete('customers/{ids}', ['as'=> 'delete-customer','uses'=> 'Api\CustomerController@deleteCustomer']);
+
+        Route::get('product', ['as' => 'api-product', 'uses' => 'Api\ProductController@getProduct']);
+        Route::get('product/detail',['as' => 'api-product-detail', 'uses' => 'Api\ProductController@getEachProductPaging']);
     });
 });
