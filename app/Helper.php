@@ -3,8 +3,9 @@
 namespace App;
 
 use App;
+use App\User;
 use App\Libs\SimpleImage;
-
+use Illuminate\Support\Facades\DB;
 
 class Helper
 {
@@ -89,6 +90,38 @@ class Helper
             $json_based_language = file_get_contents($path);
         }
         return $json_based_language;
+    }
+
+    public static function checkScreenUserRight($screen_id)
+    {
+        try {
+
+            $user = new User();
+            $data = $user->getAuthUser();
+
+            if($data == null)
+                return false;
+
+            $user_right = DB::table('users_right')
+                ->select('screen_id', 'screen_name', 'screen_status')
+                ->where([
+                    ['user_id', '=', $data->id],
+                    ['screen_id', '=', $screen_id],
+                    ['delete_flg', '=', '0']
+                ])
+                ->first();
+
+            if($user_right == null)
+                return false;
+
+            if($user_right->screen_status == '0')
+                return false;
+
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return true;
+
     }
 
     public static function convertDataToDropdownOptions($data, $value, $option)

@@ -94,7 +94,7 @@
                                 <div class="zho">
                                     <div class="ano">
                                         <a class="yno">
-                                            <img class="pno" src="{!!  Helper::readImage($auth_user->avatar, 'usr') !!}">
+                                            <img class="pno" src="{!!  \Helper::readImage($auth_user->avatar, 'usr') !!}">
                                             <span class="wno">{{ __("Change") }}</span>
                                         </a>
                                         <div class="rho">
@@ -118,7 +118,7 @@
                             <img src="{{ asset('images/logo.png') }}">
                         </div>
                         <div class="vyo">
-                            <a><span><img src="{!!  Helper::readImage($auth_user->avatar, 'usr') !!}"></span></a>
+                            <a><span><img src="{!!  \Helper::readImage($auth_user->avatar, 'usr') !!}"></span></a>
                         </div>
                     </div>
                 </div>

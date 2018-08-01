@@ -41,12 +41,6 @@
         },
         w_sort: function (self) {
 
-            jQuery.UbizOIWidget.o_page.find('div.dWT').removeClass('dWT');
-            jQuery(self).attr('order-by', order_by);
-            jQuery(self).addClass('dWT');
-            jQuery(self).find('svg').removeClass('sVGT');
-            jQuery(self).find('svg.' + order_by).addClass('sVGT');
-
             var params = {};
             params.page = jQuery.UbizOIWidget.page;
 
@@ -57,6 +51,12 @@
             var order_by = jQuery(self).attr('order-by') == '' ? 'asc' : (jQuery(self).attr('order-by') == 'asc' ? 'desc' : 'asc');
             params.sort = sort_name + "_" + order_by;
 
+            jQuery.UbizOIWidget.o_page.find('div.dWT').removeClass('dWT');
+            jQuery(self).attr('order-by', order_by);
+            jQuery(self).addClass('dWT');
+            jQuery(self).find('svg').removeClass('sVGT');
+            jQuery(self).find('svg.' + order_by).addClass('sVGT');
+
             ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_save: function () {
@@ -65,7 +65,33 @@
             form_data.append("id", id);
             if (id == "0") {
                 form_data.append('_method', 'put');
-                ubizapis('v1', '/users', 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
+                ubizapis('v1', '/users', 'post', form_data, null, function(response){
+                    if (response.data.success == true) {
+                        swal({
+                            title: i18next.t('Successfully processed.'),
+                            text: i18next.t('Do you want to continue or go back to the list page?'),
+                            type: 'question',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#3085d6',
+                            cancelButtonText: i18next.t('Back to the list page'),
+                            confirmButtonText: i18next.t('Continue'),
+                            reverseButtons: true
+                        }).then((result) => {
+                            if (result.value) {
+                                jQuery.UbizOIWidget.w_clean_input_page();
+                            } else if (result.dismiss === swal.DismissReason.cancel) {
+                                jQuery.UbizOIWidget.w_go_back_to_output_page();
+                                jQuery.UbizOIWidget.w_refresh_output_page();
+                            }
+                        })
+                    } else {
+                        swal({
+                            type: 'error',
+                            text: response.data.message
+                        });
+                    }
+                });
             } else {
                 ubizapis('v1', '/users/' + id, 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
             }
@@ -119,7 +145,8 @@
         },
         w_save_callback: function (response) {
             if (response.data.success == true) {
-                console.log("OK");
+                jQuery.UbizOIWidget.w_go_back_to_output_page();
+                jQuery.UbizOIWidget.w_refresh_output_page();
             } else {
                 swal({
                     type: 'error',
@@ -148,6 +175,12 @@
             ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_clear_search_form: function () {
+            jQuery('#fuzzy').val("");
+            jQuery.UbizOIWidget.w_clear_advance_search_form();
+            jQuery.UbizOIWidget.w_refresh_output_page();
+
+        },
+        w_clear_advance_search_form: function () {
             jQuery('#code').val("");
             jQuery('#name').val("");
             jQuery('#email').val("");
@@ -156,9 +189,9 @@
             jQuery('#address').val("");
             jQuery('#contain').val("");
             jQuery('#notcontain').val("");
-            jQuery('#fuzzy').val("");
         },
         w_update_search_form: function (search_info) {
+            jQuery.UbizOIWidget.w_clear_advance_search_form();
             jQuery.each(search_info, function (key, val) {
                 var search_item = jQuery('#' + key);
                 if (search_item.length == 1) {
@@ -188,7 +221,7 @@
                 jQuery.UbizOIWidget.w_fuzzy_search();
             }
         },
-        w_go_to_input_page: function (id, pos) {
+        w_go_to_input_page: function (pos ,id) {
             jQuery.UbizOIWidget.pos = pos;
             if (id == 0 || pos == 0) {
                 jQuery("#btn-delete").hide();
@@ -250,35 +283,35 @@
             var search_info = {};
 
             if (jQuery('#code').val().replace(/\s/g, '') != '') {
-                search_info.search_code = jQuery('#code').val();
+                search_info.code = jQuery('#code').val();
             }
 
             if (jQuery('#name').val().replace(/\s/g, '') != '') {
-                search_info.search_name = jQuery('#name').val();
+                search_info.name = jQuery('#name').val();
             }
 
             if (jQuery('#email').val().replace(/\s/g, '') != '') {
-                search_info.search_email = jQuery('#email').val();
+                search_info.email = jQuery('#email').val();
             }
 
             if (jQuery('#phone').val().replace(/\s/g, '') != '') {
-                search_info.search_phone = jQuery('#phone').val();
+                search_info.phone = jQuery('#phone').val();
             }
 
             if (jQuery('#dep_name').val().replace(/\s/g, '') != '') {
-                search_info.search_dep_name = jQuery('#dep_name').val();
+                search_info.dep_name = jQuery('#dep_name').val();
             }
 
             if (jQuery('#address').val().replace(/\s/g, '') != '') {
-                search_info.search_address = jQuery('#address').val();
+                search_info.address = jQuery('#address').val();
             }
 
             if (jQuery('#contain').val().replace(/\s/g, '') != '') {
-                search_info.search_contain = jQuery('#contain').val();
+                search_info.contain = jQuery('#contain').val();
             }
 
             if (jQuery('#notcontain').val().replace(/\s/g, '') != '') {
-                search_info.search_notcontain = jQuery('#notcontain').val();
+                search_info.notcontain = jQuery('#notcontain').val();
             }
 
             return search_info;
@@ -343,6 +376,7 @@
                     text: response.data.message,
                     onClose: function(){
                         jQuery.UbizOIWidget.w_go_back_to_output_page();
+                        jQuery.UbizOIWidget.w_refresh_output_page();
                     }
                 });
             } else {
@@ -399,43 +433,47 @@
             });
         },
         w_clean_input_page: function () {
-            jQuery("#txt_id").val("0");
-            jQuery("#txt_code").val("");
-            jQuery("#txt_name").val("");
-            jQuery("#txt_phone").val("");
-            jQuery("#txt_email").val("");
-            jQuery("#txt_dep_id").val("");
-            jQuery("#txt_address").val("");
-            jQuery("#txt_join_date").val("");
-            jQuery("#txt_salary").val("");
-            jQuery("#txt_bhxh").prop('checked', false).prop('disabled', false);
-            jQuery("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
-            jQuery("#txt_bhyt").prop('checked', false).prop('disabled', false);
-            jQuery("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+            jQuery.UbizOIWidget.i_page.find("#txt_id").val("0");
+            jQuery.UbizOIWidget.i_page.find("#txt_code").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_name").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_phone").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_email").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_dep_id").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_address").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_join_date").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_salary").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_bhxh").prop('checked', false).prop('disabled', false);
+            jQuery.UbizOIWidget.i_page.find("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+            jQuery.UbizOIWidget.i_page.find("#txt_bhyt").prop('checked', false).prop('disabled', false);
+            jQuery.UbizOIWidget.i_page.find("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+            jQuery.UbizOIWidget.i_page.find("img.img-thumbnail").attr('src', "../images/avatar.png");
         },
         w_set_input_page: function (data) {
-            jQuery("#txt_id").val(data.id);
-            jQuery("#txt_code").val(data.code);
-            jQuery("#txt_name").val(data.name);
-            jQuery("#txt_phone").val(data.phone);
-            jQuery("#txt_email").val(data.email);
-            jQuery("#txt_dep_id").val(data.dep_id);
-            jQuery("#txt_address").val(data.address);
-            jQuery("#txt_join_date").val(format_date(data.join_date, 'YYYY/MM/DD'));
-            jQuery("#txt_salary").val(numeral(data.salary).format('0,0'));
+            jQuery.UbizOIWidget.i_page.find("#txt_id").val(data.id);
+            jQuery.UbizOIWidget.i_page.find("#txt_code").val(data.code);
+            jQuery.UbizOIWidget.i_page.find("#txt_name").val(data.name);
+            jQuery.UbizOIWidget.i_page.find("#txt_phone").val(data.phone);
+            jQuery.UbizOIWidget.i_page.find("#txt_email").val(data.email);
+            jQuery.UbizOIWidget.i_page.find("#txt_dep_id").val(data.dep_id);
+            jQuery.UbizOIWidget.i_page.find("#txt_address").val(data.address);
+            jQuery.UbizOIWidget.i_page.find("#txt_join_date").val(format_date(data.join_date, 'YYYY/MM/DD'));
+            jQuery.UbizOIWidget.i_page.find("#txt_salary").val(numeral(data.salary).format('0,0'));
             if (data.bhxh == '0') {
-                jQuery("#txt_bhxh").prop('checked', false);
-                jQuery("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+                jQuery.UbizOIWidget.i_page.find("#txt_bhxh").prop('checked', false);
+                jQuery.UbizOIWidget.i_page.find("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
             } else {
-                jQuery("#txt_bhxh").prop('checked', true);
-                jQuery("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('suc').addClass('sck');
+                jQuery.UbizOIWidget.i_page.find("#txt_bhxh").prop('checked', true);
+                jQuery.UbizOIWidget.i_page.find("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('suc').addClass('sck');
             }
             if (data.bhxh == '0') {
-                jQuery("#txt_bhyt").prop('checked', false);
-                jQuery("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+                jQuery.UbizOIWidget.i_page.find("#txt_bhyt").prop('checked', false);
+                jQuery.UbizOIWidget.i_page.find("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
             } else {
-                jQuery("#txt_bhyt").prop('checked', true);
-                jQuery("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('suc').addClass('sck');
+                jQuery.UbizOIWidget.i_page.find("#txt_bhyt").prop('checked', true);
+                jQuery.UbizOIWidget.i_page.find("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('suc').addClass('sck');
+            }
+            if(data.avatar != ''){
+                jQuery.UbizOIWidget.i_page.find("img.img-thumbnail").attr('src', data.avatar);
             }
         },
         w_make_row_html: function (id, cols) {
@@ -577,6 +615,7 @@
             var f_num = (page * rows_per_page) + 1;
             var m_num = (page + 1) * rows_per_page;
             if (m_num > rows_num) m_num = rows_num;
+            if (f_num > rows_num) f_num = rows_num;
 
             var older_page = page - 1;
             var newer_page = page + 1;
