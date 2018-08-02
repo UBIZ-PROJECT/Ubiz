@@ -588,7 +588,7 @@
         },
         w_get_detail_data: function (pos) {
 
-            if (pos >= jQuery.UbizOIWidget.rows_num || pos < 1)
+            if (pos > jQuery.UbizOIWidget.rows_num || pos < 1)
                 return false;
 
             var params = {};

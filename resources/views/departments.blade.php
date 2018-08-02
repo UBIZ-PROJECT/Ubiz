@@ -132,7 +132,7 @@
                             </div>
                             <div class="hdG">
                                 <div class="dcB col-1" role="presentation">
-                                    <div class="dWB dWT" role="button" sort-name="code" order-by="asc" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                    <div class="dWB dWT" role="button" sort-name="dep_code" order-by="asc" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">{{ __('Code') }}</div>
                                             <div class="mhH">
@@ -155,7 +155,7 @@
                                     </div>
                                 </div>
                                 <div class="dcB col-2" role="presentation">
-                                    <div class="dWB" role="button" sort-name="name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                    <div class="dWB" role="button" sort-name="dep_name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">{{ __('Department Name') }}</div>
                                             <div class="mhH">
@@ -184,7 +184,7 @@
                         <div class="yTP">
                             <div id="table-content" class="jFr">
                                 @foreach($departments as $key => $department)
-                                    <div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{ $key + 1 }}, {{$user->id}})">
+                                    <div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{ $key + 1 }}, {{$department->id}})">
                                         <div class="tcB col-1">
                                             <div class="cbo">
                                                 <div class="jgQ" onclick="jQuery.UbizOIWidget.w_c_checkbox_click(this)">
@@ -198,8 +198,8 @@
                                         </div>
                                         <div class="tcB col-2">
                                             <div class="cbo">
-                                                <div class="nCj" title="{{$user->dep_name}}">
-                                                    <span>{{$user->dep_name}}</span>
+                                                <div class="nCj" title="{{$department->dep_name}}">
+                                                    <span>{{$department->dep_name}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -266,8 +266,27 @@
                     <div class="aqI nicescroll" id="nicescroll-iput">
                         <input type="hidden" id="txt_id" value="0">
                         <div class="row z-mgl z-mgr">
-                            @include('components.input',['control_id'=>'txt_dep_code', 'width'=>'150', 'label'=>__('Code')])
-                            @include('components.input',['control_id'=>'txt_dep_name', 'label'=>__('Department Name')])
+                            <div class="col-sm-12 col-md-12 col-xl-12 z-pdl z-pdr">
+                                @include('components.input',['control_id'=>'txt_dep_code', 'width'=>'150', 'label'=>__('Code')])
+                                @include('components.input',['control_id'=>'txt_dep_name', 'label'=>__('Department Name')])
+                            </div>
+                        </div>
+                        <div class="row z-mgl z-mgr">
+                            <div class="col-sm-12 col-md-12 col-xl-12 z-pdl z-pdr">
+                                <div class="bkK">
+                                    <div class="aeH">
+                                        <div class="aqK">
+                                            <div class="ikP">
+                                                <div class="GNi">
+                                                    <div class="ax7">
+                                                        <div class="asA">aaa</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -277,4 +296,7 @@
 @endsection
 @section('end-javascript')
     <script type="text/javascript" src="{{ asset('js/department.js') }}"></script>
+    <script type="text/javascript">
+        jQuery.UbizOIWidget.rows_num = {{ intval($paging['rows_num']) }};
+    </script>
 @endsection

@@ -30,7 +30,7 @@
                         <label for="code">{{ __('Code') }}</label>
                     </span>
                     <span class="avo">
-                        <input type="text" spellcheck="false" id="code" value="" autocomplete="off">
+                        <input type="text" spellcheck="false" id="dep_code" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo">
@@ -38,7 +38,7 @@
                         <label for="name">{{ __('Department Name') }}</label>
                     </span>
                     <span class="avo">
-                        <input type="text" spellcheck="false" id="name" value="" autocomplete="off">
+                        <input type="text" spellcheck="false" id="dep_name" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo">

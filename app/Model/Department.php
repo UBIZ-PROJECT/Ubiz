@@ -1,9 +1,8 @@
 <?php
 
-namespace App;
+namespace App\Model;
 
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Support\Facades\DB;
 
@@ -12,11 +11,17 @@ class Department
 
     public function getAllDepartments()
     {
-        $department = DB::table('m_department')
-            ->select('*')
-            ->where('delete_flg', '=', '0')
-            ->orderBy('id', 'asc')
-            ->get();
+        try {
+            $department = DB::table('m_department')
+                ->select('*')
+                ->where('delete_flg', '=', '0')
+                ->orderBy('id', 'asc')
+                ->get();
+        } catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+
         return $department;
     }
 
@@ -53,7 +58,7 @@ class Department
     {
         DB::beginTransaction();
         try {
-            DB::table('users')->insert($data);
+            DB::table('m_department')->insert($data);
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollback();
@@ -69,7 +74,7 @@ class Department
             list($field_name, $order_by) = $this->makeOrderBy($sort);
 
             $rows_per_page = env('ROWS_PER_PAGE', 10);
-            $users = DB::table('m_department')
+            $departments = DB::table('m_department')
                 ->select('*')
                 ->whereRaw($where_raw, $params)
                 ->orderBy($field_name, $order_by)
@@ -79,7 +84,7 @@ class Department
         } catch (\Throwable $e) {
             throw $e;
         }
-        return $users;
+        return $departments;
     }
 
     public function getDepartmentById($id = '')
@@ -103,7 +108,7 @@ class Department
             list($where_raw, $params) = $this->makeWhereRaw($search);
             list($field_name, $order_by) = $this->makeOrderBy($sort);
 
-            $user = DB::table('m_department')
+            $department = DB::table('m_department')
                 ->select('*')
                 ->whereRaw($where_raw, $params)
                 ->orderBy($field_name, $order_by)
@@ -114,7 +119,7 @@ class Department
         } catch (\Throwable $e) {
             throw $e;
         }
-        return $user;
+        return $department;
     }
 
     public function countAllDepartments()
@@ -146,7 +151,7 @@ class Department
     {
         try {
             $rows_per_page = env('ROWS_PER_PAGE', 10);
-            $rows_num = $this->countUsers($search);
+            $rows_num = $this->countDepartments($search);
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -160,7 +165,7 @@ class Department
     public function makeWhereRaw($search = [])
     {
         $params = ['0'];
-        $where_raw = 'users.delete_flg = ?';
+        $where_raw = 'm_department.delete_flg = ?';
         if (sizeof($search) > 0) {
             if (isset($search['contain']) || isset($search['notcontain'])) {
                 if (isset($search['contain'])) {
@@ -200,7 +205,7 @@ class Department
 
     public function makeOrderBy($sort)
     {
-        $field_name = 'code';
+        $field_name = 'dep_code';
         $order_by = 'asc';
         if ($sort != '') {
             $sort_info = explode('_', $sort);
@@ -209,5 +214,32 @@ class Department
             $field_name = implode('_', $sort_info);
         }
         return [$field_name, $order_by];
+    }
+
+    public function getPermissions($dep_id)
+    {
+        try {
+            $permissions = DB::table('permission')
+                ->select(
+                    'permission.dep_id',
+                    'permission.screen_id',
+                    'permission.screen_name',
+                    'permission.screen_status',
+                    'permission_detail.function_id',
+                    'permission_detail.function_name',
+                    'permission_detail.function_status'
+                )
+                ->leftJoin('permission_detail', function ($join) {
+                    $join->on('permission.dep_id', '=', 'permission_detail.dep_id')
+                        ->andOn('permission.screen_id', '=', 'permission_detail.screen_id');
+                        ->andOn('permission.delete_flg', '=', '0');
+                })
+                ->where([['permission.delete_flg', '=', '0'], ['permission.dep_id', '=', $dep_id]])
+                ->orderBy('permission.dep_id', 'asc')
+                ->get();
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return $permissions;
     }
 }

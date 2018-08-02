@@ -1353,6 +1353,38 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
     margin: 0px;
 }
 
+.mgr-10 {
+    margin-right: 10px;
+}
+
+.mgr-20 {
+    margin-right: 20px;
+}
+
+.mgr-30 {
+    margin-right: 30px;
+}
+
+.mgr-40 {
+    margin-right: 40px;
+}
+
+.mgr-50 {
+    margin-right: 50px;
+}
+
+.mgr-60 {
+    margin-right: 60px;
+}
+
+.mgr-70 {
+    margin-right: 70px;
+}
+
+.mgr-80 {
+    margin-right: 80px;
+}
+
 .suc {
     display: inline-block;
     height: 32px;
@@ -1391,4 +1423,12 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
 
 .swal2-popup .swal2-title {
     font-size: 1.3em !important;
+}
+
+.main-content .r-content .ikP{
+    display: -webkit-box;
+    display: -moz-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
 }

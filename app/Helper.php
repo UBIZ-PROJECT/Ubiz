@@ -102,10 +102,10 @@ class Helper
             if($data == null)
                 return false;
 
-            $user_right = DB::table('users_right')
+            $user_right = DB::table('permission')
                 ->select('screen_id', 'screen_name', 'screen_status')
                 ->where([
-                    ['user_id', '=', $data->id],
+                    ['dep_id', '=', $data->dep_id],
                     ['screen_id', '=', $screen_id],
                     ['delete_flg', '=', '0']
                 ])
