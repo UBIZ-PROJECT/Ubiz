@@ -231,7 +231,7 @@ class Department
                 )
                 ->leftJoin('permission_detail', function ($join) {
                     $join->on('permission.dep_id', '=', 'permission_detail.dep_id')
-                        ->andOn('permission.screen_id', '=', 'permission_detail.screen_id');
+                        ->andOn('permission.screen_id', '=', 'permission_detail.screen_id')
                         ->andOn('permission.delete_flg', '=', '0');
                 })
                 ->where([['permission.delete_flg', '=', '0'], ['permission.dep_id', '=', $dep_id]])
