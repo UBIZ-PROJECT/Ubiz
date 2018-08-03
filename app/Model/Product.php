@@ -67,7 +67,9 @@ class Product implements JWTSubject
             WHERE $where_raw 
             ORDER BY $field_name $order_by", $params);
         foreach ($product as &$item) {
-            $item->image = $item->id . '-' . $item->image_id . '.' . $item->extension;
+            if (!empty($item->image_id)) {
+                $item->image = $item->id . '-' . $item->image_id . '.' . $item->extension;
+            }
         }
         return $product;
     }
@@ -98,8 +100,10 @@ class Product implements JWTSubject
             $data[0]->branch = $item->branch;
             $data[0]->model = $item->model;
             $data[0]->detail = $item->detail;
-            $images[] = $item->id . '-' . $item->image_id . '.' . $item->extension;
-            $data[0]->images = $images;
+            if (!empty($item->image_id)) {
+                $images[] = $item->id . '-' . $item->image_id . '.' . $item->extension;
+                $data[0]->images = $images;
+            }
         }
         return $data;
     }
@@ -181,7 +185,8 @@ class Product implements JWTSubject
     }
 
     /** Update
-    {  
+    {
+       "id":"99999",
        "seri_no":"99999",
        "name":"xxxxx",
        "branch":"xxxxx",
@@ -253,6 +258,7 @@ class Product implements JWTSubject
                         'upd_date'=>date('Y-m-d H:i:s')
                     ]);
             }
+            DB::commit();
         } catch(\Throwable $e) {
             DB::rollback();
             throw $e;
@@ -275,6 +281,17 @@ class Product implements JWTSubject
             DB::rollback();
             throw $e;
         }
+    }
+
+    public function getAllProductType() {
+        try {
+            $product_type = DB::table("product_type")
+                ->select("id","name_type")
+                ->get();
+        } catch(\Throwable $e) {
+            throw $e;
+        }
+        return $product_type;
     }
 
     public function makeWhereRaw($search = [])
@@ -345,10 +362,10 @@ class Product implements JWTSubject
         return [$where_raw, $params];
     }
 
-    public function getPagingInfo() {
+    public function getPagingInfo($sort = '', $search = []) {
         try {
             $rows_per_page = env('ROWS_PER_PAGE', 10);
-            $rows_num = $this->countAllProduct();
+            $rows_num = $this->countAllProduct($sort,$search);
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -359,37 +376,37 @@ class Product implements JWTSubject
         ];
     }
 
-    public function countAllProduct()
-    {
+    public function getPagingInfoDetailProductWithConditionSearch($sort = '', $search = []) {
         try {
-            $count = DB::table('product')
-                ->where('delete_flg', '=', '0')
-                ->count();
+            $rows_per_page = env('ROWS_PER_PAGE', 10);
+            $rows_num = $this->countAllProduct($sort,$search);
         } catch (\Throwable $e) {
             throw $e;
         }
-        return $count;
+
+        return [
+            'rows_num' => $rows_num,
+            'rows_per_page' => $rows_per_page
+        ];
     }
 
-    public function countDetailProductWithConditionSearch() {
+    public function countAllProduct($sort, $search)
+    {
         try {
             list($where_raw,$params) = $this->makeWhereRaw($search);
             list($field_name, $order_by) = $this->makeOrderBy($sort);
-            $rows_per_page = 1;
-            $product = DB::select("
-                SELECT count(*) from (
+            $count = DB::select("
+                SELECT count(*) as count from (
                     SELECT *
                     FROM product) product
                 LEFT JOIN product_type product_type ON 
                 product.type_id = product_type.id
                 LEFT JOIN product_image product_image ON
-                product_image.prd_id = product.id 
+                product_image.id = (select id from product_image as pis where product.id = pis.prd_id limit 1) 
                 WHERE $where_raw 
                 ORDER BY $field_name $order_by", $params);
-            $count = DB::select("
-                select count(*) from 
-            ")
-        } catch(\Throwable $e){
+            $count = $count[0]->count;
+        } catch (\Throwable $e) {
             throw $e;
         }
         return $count;
