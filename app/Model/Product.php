@@ -104,6 +104,28 @@ class Product implements JWTSubject
         return $data;
     }
 
+    /** INSERT
+    {  
+       "seri_no":"99999",
+       "name":"xxxxx",
+       "branch":"xxxxx",
+       "model":"xxxxx",
+       "detail":"xxxxx",
+       "type_id":"9999",
+       "images":{ 
+             "0":{  
+                "temp_name":"xxxxxxxx",
+                "extension":"xxxxxxxx"
+             },
+             "1":{  
+                "temp_name":"xxxxxxxx",
+                "extension":"xxxxxxxx"
+             }
+          }
+       }
+    }
+    */
+
     public function insertProduct($param) {
         DB::beginTransaction();
         try {
@@ -158,23 +180,33 @@ class Product implements JWTSubject
         }
     }
 
-    public function deleteProduct($id) {
-        DB::beginTransaction();
-        try {
-            if ($id && is_array($id)) {
-                DB::table('product')->whereIn('id', $id)
-                    ->update([
-                        'delete_flg'=>'1',
-                        'upd_date'=>date('Y-m-d H:i:s')
-                    ]);
-                $this->deleteProductImage(null,$id);
-            }
-            DB::commit();
-        } catch(\Throwable $e) {
-            DB::rollback();
-            throw $e;
-        }
+    /** Update
+    {  
+       "seri_no":"99999",
+       "name":"xxxxx",
+       "branch":"xxxxx",
+       "model":"xxxxx",
+       "detail":"xxxxx",
+       "type_id":"9999",
+       "images":{  
+          "delete":{  
+             "0":"image_id",
+             "1":"image_id"
+          },
+          "insert":{  
+             "0":{  
+                "temp_name":"xxxxxxxx",
+                "extension":"xxxxxxxx"
+             },
+             "1":{  
+                "temp_name":"xxxxxxxx",
+                "extension":"xxxxxxxx"
+             }
+          }
+       }
     }
+
+    */
 
     public function updateProduct($param) {
         DB::beginTransaction();
@@ -221,6 +253,24 @@ class Product implements JWTSubject
                         'upd_date'=>date('Y-m-d H:i:s')
                     ]);
             }
+        } catch(\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    public function deleteProduct($id) {
+        DB::beginTransaction();
+        try {
+            if ($id && is_array($id)) {
+                DB::table('product')->whereIn('id', $id)
+                    ->update([
+                        'delete_flg'=>'1',
+                        'upd_date'=>date('Y-m-d H:i:s')
+                    ]);
+                $this->deleteProductImage(null,$id);
+            }
+            DB::commit();
         } catch(\Throwable $e) {
             DB::rollback();
             throw $e;
@@ -316,6 +366,30 @@ class Product implements JWTSubject
                 ->where('delete_flg', '=', '0')
                 ->count();
         } catch (\Throwable $e) {
+            throw $e;
+        }
+        return $count;
+    }
+
+    public function countDetailProductWithConditionSearch() {
+        try {
+            list($where_raw,$params) = $this->makeWhereRaw($search);
+            list($field_name, $order_by) = $this->makeOrderBy($sort);
+            $rows_per_page = 1;
+            $product = DB::select("
+                SELECT count(*) from (
+                    SELECT *
+                    FROM product) product
+                LEFT JOIN product_type product_type ON 
+                product.type_id = product_type.id
+                LEFT JOIN product_image product_image ON
+                product_image.prd_id = product.id 
+                WHERE $where_raw 
+                ORDER BY $field_name $order_by", $params);
+            $count = DB::select("
+                select count(*) from 
+            ")
+        } catch(\Throwable $e){
             throw $e;
         }
         return $count;
