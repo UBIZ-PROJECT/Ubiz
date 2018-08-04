@@ -273,18 +273,16 @@
                         </div>
                         <div class="row z-mgl z-mgr">
                             <div class="col-sm-12 col-md-12 col-xl-12 z-pdl z-pdr">
-                                <div class="bkK">
-                                    <div class="aeH">
-                                        <div class="aqK">
-                                            <div class="ikP">
-                                                <div class="GNi">
-                                                    <div class="ax7">
-                                                        <div class="asA">aaa</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                <div class="utb">
+                                    <div class="tuv">
+                                        <ul>
+                                            <li><div class="active">{{ __('Employee') }}</div></li>
+                                            <li><div>{{ __('Customer') }}</div></li>
+                                            <li><div>{{ __('Supplier') }}</div></li>
+                                            <li><div>{{ __('Currency') }}</div></li>
+                                        </ul>
                                     </div>
+                                    <div class="rhb"></div>
                                 </div>
                             </div>
                         </div>
