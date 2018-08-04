@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Model\Currency;
+use App\User;
 
 class CurrencyController extends Controller
 {
@@ -44,10 +45,17 @@ class CurrencyController extends Controller
         return response()->json(['currency' => $currencies, 'paging' => $paging, 'success' => true, 'message' => ''], 200);
     }
 
-    public function getCurrencyById($id){
+    public function getCurrencyById($id, Request $request){
         try{
             $currency = new Currency();
-            $data = $currency->getCurrencyById($id);
+            if ($request->has('pos')) {
+                list ($page, $sort, $search) = $this->getRequestData($request);
+                $data = $currency->getCurrencyByPos($request->pos, $sort, $search);
+                print_r($data);
+                exit;
+            }else{
+                $data = $currency->getCurrencyById($id);
+            }
         }catch (\Throwable $e){
             throw $e;
         }
@@ -56,12 +64,19 @@ class CurrencyController extends Controller
 
     public  function insertCurrency(Request $request){
         try{
-            $param[] = '';
+            $param = [];
             $param['cur_name'] = $request->txt_name;
             $param['cur_code'] = $request->txt_code;
             $param['cur_symbol'] = $request->txt_symbol;
             $param['cur_state'] = $request->txt_state;
-            $param['cur_avatar'] = $request->avatar;
+            $param['inp_date'] = date('Y-m-d H:i:s');
+            $user = new User();
+            $data = $user->getAuthUser();
+            $param['inp_user'] = $data->id;
+            $param['upd_user'] = $data->id;
+            if ($request->hasFile('avatar')) {
+                $param['cur_avatar'] = $request->avatar;
+            }
             $currency = new Currency();
             $currency->insertCurrency($param);
         } catch (\Throwable $e){
@@ -102,5 +117,57 @@ class CurrencyController extends Controller
             throw $e;
         }
         return response()->json(['currency' => $currencies, 'paging' => $paging , 'success' => true, 'message' => __("Successfully processed.")], 200);
+    }
+
+    public function getRequestData(Request $request)
+    {
+        $page = 0;
+        if ($request->has('page')) {
+            $page = $request->page;
+        }
+
+        $sort = '';
+        if ($request->has('sort')) {
+            $sort = $request->sort;
+        }
+
+        $search = [];
+        if ($request->has('name')) {
+            $search['name'] = $request->name;
+        }
+        if ($request->has('code')) {
+            $search['code'] = $request->code;
+        }
+        if ($request->has('symbol')) {
+            $search['symbol'] = $request->symbol;
+        }
+        if ($request->has('state')) {
+            $search['state'] = $request->state;
+        }
+        if ($request->has('contain')) {
+            $search['contain'] = $request->contain;
+        }
+        if ($request->has('notcontain')) {
+            $search['notcontain'] = $request->notcontain;
+        }
+
+        $currency = [];
+        if ($request->has('txt_name')) {
+            $currency['name'] = $request->txt_name;
+        }
+        if ($request->has('txt_code')) {
+            $currency['code'] = $request->txt_code;
+        }
+        if ($request->has('txt_symbol')) {
+            $currency['symbol'] = $request->txt_symbol;
+        }
+        if ($request->has('txt_state')) {
+            $currency['state'] = $request->txt_state;
+        }
+        if ($request->hasFile('avatar')) {
+            $currency['avatar'] = $request->avatar;
+        }
+
+        return [$page, $sort, $search, $currency];
     }
 }
