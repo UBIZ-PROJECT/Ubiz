@@ -71,7 +71,7 @@ class DepartmentsController extends Controller
         try {
             $department = new Department();
             $department->deleteDepartments($ids);
-            $departments = $department->getDepartments(0);
+            $departments = $department->getDepartments();
             $paging = $department->getPagingInfo();
             $paging['page'] = 0;
         } catch (\Throwable $e) {
