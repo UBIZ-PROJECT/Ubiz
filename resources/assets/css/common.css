@@ -1425,10 +1425,41 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
     font-size: 1.3em !important;
 }
 
-.main-content .r-content .ikP{
+.main-content .r-content .ikP {
     display: -webkit-box;
     display: -moz-box;
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
+}
+
+.utb .tuv ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+}
+
+.utb .tuv ul li {
+    display: inline-flex;
+}
+
+.utb .tuv ul li div{
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 5px 15px;
+    color: #5f6368;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    margin-right: 2px;
+}
+
+.utb .tuv ul li div.active{
+    background-color: #a6a6a6;
+    padding: 5px 15px;
+    color: white;
+}
+
+.utb .rhb{
+    border-top: 3px solid #a6a6a6;
 }
