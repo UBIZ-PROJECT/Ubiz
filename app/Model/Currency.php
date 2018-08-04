@@ -54,22 +54,16 @@ class Currency implements JWTSubject
         return $currency;
     }
 
-    public function getCurrency($page = 0, $sort = '')
+    public function getCurrency($page = 0, $sort = '', $search=[])
     {
         try {
-            $sort_name = 'cur_id';
-            $order_by = 'asc';
-            if ($sort != '') {
-                $sort_info = explode('_', $sort);
-                $order_by = $sort_info[sizeof($sort_info) - 1];
-                unset($sort_info[sizeof($sort_info) - 1]);
-                $sort_name = implode('_', $sort_info);
-            }
+            list($where_raw, $params) = $this->makeWhereRaw($search);
+            list($field_name, $order_by) = $this->makeOrderBy($sort);
 
             $rows_per_page = env('ROWS_PER_PAGE', 10);
             $currency = DB::table('m_currency')
-                ->where('delete_flg', '0')
-                ->orderBy($sort_name, $order_by)
+                ->whereRaw($where_raw, $params)
+                ->orderBy($field_name, $order_by)
                 ->offset($page * $rows_per_page)
                 ->limit($rows_per_page)
                 ->get();
@@ -106,6 +100,9 @@ class Currency implements JWTSubject
                 ->offset($pos - 1)
                 ->limit(1)
                 ->first();
+            if ($currency != null && !empty($currency->cur_avatar)) {
+                $currency->cur_avatar = \Helper::readImage($currency->cur_avatar, 'cur');
+            }
 
         } catch (\Throwable $e) {
             throw $e;
@@ -200,7 +197,7 @@ class Currency implements JWTSubject
 
     public function makeOrderBy($sort)
     {
-        $field_name = 'code';
+        $field_name = 'cur_code';
         $order_by = 'asc';
         if ($sort != '') {
             $sort_info = explode('_', $sort);

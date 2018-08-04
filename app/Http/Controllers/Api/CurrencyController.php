@@ -24,19 +24,10 @@ class CurrencyController extends Controller
     public function getCurrency(Request $request)
     {
         try {
-
-            $page = 0;
-            if ($request->has('page')) {
-                $page = $request->page;
-            }
-
-            $sort = '';
-            if ($request->has('sort')) {
-                $sort = $request->sort;
-            }
+            list($page, $sort, $search) = $this->getRequestData($request);
 
             $currency = new Currency();
-            $currencies = $currency->getCurrency($page, $sort);
+            $currencies = $currency->getCurrency($page, $sort, $search);
             $paging = $currency->getPagingInfo();
             $paging['page'] = $page;
         } catch (\Throwable $e) {
@@ -51,8 +42,6 @@ class CurrencyController extends Controller
             if ($request->has('pos')) {
                 list ($page, $sort, $search) = $this->getRequestData($request);
                 $data = $currency->getCurrencyByPos($request->pos, $sort, $search);
-                print_r($data);
-                exit;
             }else{
                 $data = $currency->getCurrencyById($id);
             }
