@@ -78,7 +78,7 @@ class Supplier implements JWTSubject
         return $supplier;
     }
 
-    public function getEachSupplierByPaging($page,$sort = '', $search) {
+    public function getEachSupplierByPaging($page,$sort = '', $search =[]) {
         list($where_raw,$params) = $this->makeWhereRaw($search);
         list($field_name, $order_by) = $this->makeOrderBy($sort);
         $rows_per_page = 1;
@@ -89,9 +89,8 @@ class Supplier implements JWTSubject
                 where $where_raw
                 order by $field_name $order_by
                 limit ? offset ?) sup
-                left join supplier_address addr ON 
-                sup.sup_id = addr.sup_id
-                where addr.delete_flg='0'",$params);
+                LEFT JOIN supplier_address addr ON 
+                addr.sad_id = (select sad_id from supplier_address where delete_flg = '0' and sup.sup_id = sup_id) ",$params);
         $data = array();
         $data[0] = (object) array();
         $data[0]->sad_address = array();
@@ -104,6 +103,7 @@ class Supplier implements JWTSubject
             $data[0]->sup_fax = $sup->sup_fax;
             $data[0]->sup_mail = $sup->sup_mail;
             $data[0]->sup_website = $sup->sup_website;
+            if (empty($sup->sad_id)) continue;
             $addrObj = (object) array();
             $addrObj->address = $sup->sad_address;
             $addrObj->id = $sup->sad_id;
