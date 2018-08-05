@@ -93,7 +93,7 @@
                     }
                 });
             } else {
-                ubizapis('v1', '/users/' + id, 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
+                ubizapis('v1', '/users/' + id + '/update', 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
             }
         },
         w_o_delete: function () {
@@ -389,6 +389,7 @@
         w_render_data_to_ouput_page: function (response) {
             var table_html = "";
             var users = response.data.users;
+            var paging = response.data.paging;
             if (users.length > 0) {
                 var rows = [];
                 for (let i = 0; i < users.length; i++) {
@@ -399,7 +400,7 @@
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(users[i].id, users[i].phone, 4));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(users[i].id, users[i].dep_name, 5));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(users[i].id, users[i].address, 6));
-                    rows.push(jQuery.UbizOIWidget.w_make_row_html(users[i].id, cols));
+                    rows.push(jQuery.UbizOIWidget.w_make_row_html(users[i].id, cols, i, paging.page, paging.rows_per_page));
                 }
                 table_html += rows.join("");
             }
@@ -476,10 +477,11 @@
                 jQuery.UbizOIWidget.i_page.find("img.img-thumbnail").attr('src', data.avatar);
             }
         },
-        w_make_row_html: function (id, cols) {
+        w_make_row_html: function (id, cols, row_no, page_no, rows_per_page) {
             var row_html = '';
             if (cols.length > 0) {
-                row_html = '<div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page(' + id + ',this)">';
+                var pos = rows_per_page * page_no + row_no + 1;
+                row_html = '<div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page(' + pos + ',' + id + ')">';
                 row_html += cols.join("");
                 row_html += '</div>';
             }
@@ -588,7 +590,7 @@
         },
         w_get_detail_data: function (pos) {
 
-            if (pos >= jQuery.UbizOIWidget.rows_num || pos < 1)
+            if (pos > jQuery.UbizOIWidget.rows_num || pos < 1)
                 return false;
 
             var params = {};

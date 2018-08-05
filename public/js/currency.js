@@ -37,7 +37,6 @@
                 side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
             });
             jQuery(".i-numeric").forceNumeric();
-            TinyDatePicker('.i-date', {mode: 'dp-below'});
         },
         w_sort: function (self) {
 
@@ -57,7 +56,7 @@
             jQuery(self).find('svg').removeClass('sVGT');
             jQuery(self).find('svg.' + order_by).addClass('sVGT');
 
-            ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/currency', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_save: function () {
             var form_data = jQuery.UbizOIWidget.w_get_form_data();
@@ -65,7 +64,7 @@
             form_data.append("id", id);
             if (id == "0") {
                 form_data.append('_method', 'put');
-                ubizapis('v1', '/users', 'post', form_data, null, function(response){
+                ubizapis('v1', '/currency', 'post', form_data, null, function(response){
                     if (response.data.success == true) {
                         swal({
                             title: i18next.t('Successfully processed.'),
@@ -93,7 +92,7 @@
                     }
                 });
             } else {
-                ubizapis('v1', '/users/' + id + '/update', 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
+                ubizapis('v1', '/currency/' + id + '/update', 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
             }
         },
         w_o_delete: function () {
@@ -113,7 +112,7 @@
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
-                    ubizapis('v1', '/users/' + ids.join(',') + '/delete', 'delete', null, null, jQuery.UbizOIWidget.w_o_delete_callback);
+                    ubizapis('v1', '/currency/' + ids.join(',') + '/delete', 'delete', null, null, jQuery.UbizOIWidget.w_o_delete_callback);
                 }
             })
         },
@@ -131,7 +130,7 @@
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
-                    ubizapis('v1', '/users/' + id + '/delete', 'delete', null, null, jQuery.UbizOIWidget.w_i_delete_callback);
+                    ubizapis('v1', '/currency/' + id + '/delete', 'delete', null, null, jQuery.UbizOIWidget.w_i_delete_callback);
                 }
             })
         },
@@ -140,7 +139,7 @@
             if (id == '0') {
                 jQuery.UbizOIWidget.w_clean_input_page();
             } else {
-                ubizapis('v1', '/users/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
+                ubizapis('v1', '/currency/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
             }
         },
         w_save_callback: function (response) {
@@ -172,7 +171,7 @@
 
             var event = new CustomEvent("click");
             document.body.dispatchEvent(event);
-            ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/currency', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_clear_search_form: function () {
             jQuery('#fuzzy').val("");
@@ -183,10 +182,8 @@
         w_clear_advance_search_form: function () {
             jQuery('#code').val("");
             jQuery('#name').val("");
-            jQuery('#email').val("");
-            jQuery('#phone').val("");
-            jQuery('#dep_name').val("");
-            jQuery('#address').val("");
+            jQuery('#symbol').val("");
+            jQuery('#state').val("");
             jQuery('#contain').val("");
             jQuery('#notcontain').val("");
         },
@@ -213,7 +210,7 @@
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
             params.sort = sort;
 
-            ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/currency', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_fuzzy_search_handle_enter(e) {
             var keycode = (e.keyCode ? e.keyCode : e.which);
@@ -245,7 +242,7 @@
                 });
             } else {
                 jQuery("#btn-delete").show();
-                ubizapis('v1', '/users/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
+                ubizapis('v1', '/currency/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
             }
         },
         w_go_back_to_output_page: function () {
@@ -267,7 +264,7 @@
         w_refresh_output_page: function () {
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/users', 'get', null, {
+            ubizapis('v1', '/currency', 'get', null, {
                 'page': jQuery.UbizOIWidget.page,
                 'sort': sort
             }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
@@ -290,21 +287,14 @@
                 search_info.name = jQuery('#name').val();
             }
 
-            if (jQuery('#email').val().replace(/\s/g, '') != '') {
-                search_info.email = jQuery('#email').val();
+            if (jQuery('#symbol').val().replace(/\s/g, '') != '') {
+                search_info.symbol = jQuery('#symbol').val();
             }
 
-            if (jQuery('#phone').val().replace(/\s/g, '') != '') {
-                search_info.phone = jQuery('#phone').val();
+            if (jQuery('#state').val().replace(/\s/g, '') != '') {
+                search_info.state = jQuery('#state').val();
             }
 
-            if (jQuery('#dep_name').val().replace(/\s/g, '') != '') {
-                search_info.dep_name = jQuery('#dep_name').val();
-            }
-
-            if (jQuery('#address').val().replace(/\s/g, '') != '') {
-                search_info.address = jQuery('#address').val();
-            }
 
             if (jQuery('#contain').val().replace(/\s/g, '') != '') {
                 search_info.contain = jQuery('#contain').val();
@@ -340,7 +330,7 @@
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             jQuery.UbizOIWidget.sort = sort_info;
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/users', 'get', null, {
+            ubizapis('v1', '/currency', 'get', null, {
                 'page': page,
                 'sort': sort
             }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
@@ -350,7 +340,7 @@
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             jQuery.UbizOIWidget.sort = sort_info;
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/users', 'get', null, {
+            ubizapis('v1', '/currency', 'get', null, {
                 'page': page,
                 'sort': sort
             }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
@@ -388,19 +378,18 @@
         },
         w_render_data_to_ouput_page: function (response) {
             var table_html = "";
-            var users = response.data.users;
+            var currency = response.data.currency;
             var paging = response.data.paging;
-            if (users.length > 0) {
+            if (currency.length > 0) {
                 var rows = [];
-                for (let i = 0; i < users.length; i++) {
+                for (let i = 0; i < currency.length; i++) {
                     var cols = [];
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(users[i].id, users[i].code, 1));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(users[i].id, users[i].name, 2));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(users[i].id, users[i].email, 3));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(users[i].id, users[i].phone, 4));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(users[i].id, users[i].dep_name, 5));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(users[i].id, users[i].address, 6));
-                    rows.push(jQuery.UbizOIWidget.w_make_row_html(users[i].id, cols, i, paging.page, paging.rows_per_page));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(currency[i].cur_id, currency[i].cur_id, 1));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(currency[i].cur_id, currency[i].cur_name, 2));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(currency[i].cur_id, currency[i].cur_code, 3));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(currency[i].cur_id, currency[i].cur_symbol, 4));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(currency[i].cur_id, currency[i].cur_state, 5));
+                    rows.push(jQuery.UbizOIWidget.w_make_row_html(currency[i].cur_id, cols, i, paging.page, paging.rows_per_page));
                 }
                 table_html += rows.join("");
             }
@@ -413,9 +402,9 @@
 
         },
         w_render_data_to_input_page: function (response) {
-            var user = response.data.user;
+            var currency = response.data.currency;
             jQuery.UbizOIWidget.w_clean_input_page();
-            jQuery.UbizOIWidget.w_set_input_page(user);
+            jQuery.UbizOIWidget.w_set_input_page(currency);
             jQuery.UbizOIWidget.w_i_paging();
 
             jQuery.UbizOIWidget.o_page.hide();
@@ -437,44 +426,18 @@
             jQuery.UbizOIWidget.i_page.find("#txt_id").val("0");
             jQuery.UbizOIWidget.i_page.find("#txt_code").val("");
             jQuery.UbizOIWidget.i_page.find("#txt_name").val("");
-            jQuery.UbizOIWidget.i_page.find("#txt_phone").val("");
-            jQuery.UbizOIWidget.i_page.find("#txt_email").val("");
-            jQuery.UbizOIWidget.i_page.find("#txt_dep_id").val("");
-            jQuery.UbizOIWidget.i_page.find("#txt_address").val("");
-            jQuery.UbizOIWidget.i_page.find("#txt_join_date").val("");
-            jQuery.UbizOIWidget.i_page.find("#txt_salary").val("");
-            jQuery.UbizOIWidget.i_page.find("#txt_bhxh").prop('checked', false).prop('disabled', false);
-            jQuery.UbizOIWidget.i_page.find("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
-            jQuery.UbizOIWidget.i_page.find("#txt_bhyt").prop('checked', false).prop('disabled', false);
-            jQuery.UbizOIWidget.i_page.find("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+            jQuery.UbizOIWidget.i_page.find("#txt_symbol").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_state").val("");
             jQuery.UbizOIWidget.i_page.find("img.img-thumbnail").attr('src', "../images/avatar.png");
         },
         w_set_input_page: function (data) {
-            jQuery.UbizOIWidget.i_page.find("#txt_id").val(data.id);
-            jQuery.UbizOIWidget.i_page.find("#txt_code").val(data.code);
-            jQuery.UbizOIWidget.i_page.find("#txt_name").val(data.name);
-            jQuery.UbizOIWidget.i_page.find("#txt_phone").val(data.phone);
-            jQuery.UbizOIWidget.i_page.find("#txt_email").val(data.email);
-            jQuery.UbizOIWidget.i_page.find("#txt_dep_id").val(data.dep_id);
-            jQuery.UbizOIWidget.i_page.find("#txt_address").val(data.address);
-            jQuery.UbizOIWidget.i_page.find("#txt_join_date").val(format_date(data.join_date, 'YYYY/MM/DD'));
-            jQuery.UbizOIWidget.i_page.find("#txt_salary").val(numeral(data.salary).format('0,0'));
-            if (data.bhxh == '0') {
-                jQuery.UbizOIWidget.i_page.find("#txt_bhxh").prop('checked', false);
-                jQuery.UbizOIWidget.i_page.find("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
-            } else {
-                jQuery.UbizOIWidget.i_page.find("#txt_bhxh").prop('checked', true);
-                jQuery.UbizOIWidget.i_page.find("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('suc').addClass('sck');
-            }
-            if (data.bhxh == '0') {
-                jQuery.UbizOIWidget.i_page.find("#txt_bhyt").prop('checked', false);
-                jQuery.UbizOIWidget.i_page.find("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
-            } else {
-                jQuery.UbizOIWidget.i_page.find("#txt_bhyt").prop('checked', true);
-                jQuery.UbizOIWidget.i_page.find("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('suc').addClass('sck');
-            }
-            if(data.avatar != ''){
-                jQuery.UbizOIWidget.i_page.find("img.img-thumbnail").attr('src', data.avatar);
+            jQuery.UbizOIWidget.i_page.find("#txt_id").val(data.cur_id);
+            jQuery.UbizOIWidget.i_page.find("#txt_code").val(data.cur_code);
+            jQuery.UbizOIWidget.i_page.find("#txt_name").val(data.cur_name);
+            jQuery.UbizOIWidget.i_page.find("#txt_symbol").val(data.cur_symbol);
+            jQuery.UbizOIWidget.i_page.find("#txt_state").val(data.cur_state);
+            if(data.cur_avatar != ''){
+                jQuery.UbizOIWidget.i_page.find("img.img-thumbnail").attr('src', data.cur_avatar);
             }
         },
         w_make_row_html: function (id, cols, row_no, page_no, rows_per_page) {
@@ -567,25 +530,16 @@
         },
         w_get_form_data: function () {
             var form_data = new FormData();
-            form_data.append('txt_code', jQuery("#txt_code").val());
             form_data.append('txt_name', jQuery("#txt_name").val());
+            form_data.append('txt_code', jQuery("#txt_code").val());
 
             if (jQuery('input[name=inp-upload-image]')[0].files.length > 0) {
                 form_data.append('avatar', jQuery('input[name=inp-upload-image]')[0].files[0]);
             }
 
-            form_data.append('txt_dep_id', jQuery("#txt_dep_id").val());
-            form_data.append('txt_phone', jQuery("#txt_phone").val());
-            form_data.append('txt_email', jQuery("#txt_email").val());
-            form_data.append('txt_address', jQuery("#txt_address").val());
-            form_data.append('txt_join_date', jQuery("#txt_join_date").val());
-            form_data.append('txt_salary', numeral(jQuery("#txt_salary").val()).format('0'));
+            form_data.append('txt_symbol', jQuery("#txt_symbol").val());
+            form_data.append('txt_state', jQuery("#txt_state").val());
 
-            var txt_bhxh = jQuery("#txt_bhxh").is(':checked') ? jQuery("#txt_bhxh").val() : 0;
-            form_data.append('txt_bhxh', txt_bhxh);
-
-            var txt_bhyt = jQuery("#txt_bhyt").is(':checked') ? jQuery("#txt_bhyt").val() : 0;
-            form_data.append('txt_bhyt', txt_bhyt);
             return form_data;
         },
         w_get_detail_data: function (pos) {
@@ -610,7 +564,7 @@
 
             var id = jQuery.UbizOIWidget.i_page.find("#txt_id").val();
 
-            ubizapis('v1', '/users/' + id, 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_input_page);
+            ubizapis('v1', '/currency/' + id, 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_input_page);
         },
         w_o_paging: function (page, rows_num, rows_per_page) {
             var page = parseInt(page);

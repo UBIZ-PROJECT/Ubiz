@@ -37,7 +37,6 @@ class SupplierController extends Controller
             $supplier = new Supplier();
             list($page, $sort,$search) = $this->getPageSortSearch($request);
             $data = $supplier->getEachSupplierByPaging($page, $sort,$search);
-
             $image = Helper::readImage($data[0]->sup_avatar,'sup');
             $data[0]->src = $image;
             $paging = $supplier->getPagingInfo();

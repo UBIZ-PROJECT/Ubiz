@@ -85,7 +85,7 @@ class User extends Authenticatable implements JWTSubject
                 $path = $avatar->path();
                 $extension = $avatar->extension();
                 $avatar = $id . "." . $extension;
-                Helper::resizeImage($path, $avatar, 200, 200, 'usr');
+                \Helper::resizeImage($path, $avatar, 200, 200, 'usr');
                 $data['avatar'] = $avatar;
             }
 
@@ -110,7 +110,7 @@ class User extends Authenticatable implements JWTSubject
                 $path = $avatar->path();
                 $extension = $avatar->extension();
                 $avatar = $id . "." . $extension;
-                Helper::resizeImage($path, $avatar, 200, 200, 'usr');
+                \Helper::resizeImage($path, $avatar, 200, 200, 'usr');
                 $data['avatar'] = $avatar;
             }
             $data['password'] = bcrypt('123456');
@@ -158,7 +158,7 @@ class User extends Authenticatable implements JWTSubject
                 ->first();
 
             if ($user != null && !empty($user->avatar)) {
-                $user->avatar = Helper::readImage($user->avatar, 'usr');
+                $user->avatar = \Helper::readImage($user->avatar, 'usr');
             }
         } catch (\Throwable $e) {
             throw $e;

@@ -296,18 +296,49 @@ const _NO = i18next.t("No");
         },
         w_go_to_input_page: function (id, index) {
             if (id != 0) {
-                jQuery.UbizOIWidget.w_get_specific_supplier_by_id(id, index);
-                $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
-
+                if (id == -1) {
+                    if (jQuery.UbizOIWidget.w_is_input_changed() == true) {
+                        const ALERT_TITLE = i18next.t("Do you want to save it?");
+                        const ALERT_ICON = "warning";
+                        swal({
+                            title: ALERT_TITLE,
+                            icon: ALERT_ICON,
+                            buttons: true,
+                            buttons: {
+                                cancel: _NO,
+                                catch: {
+                                    text: _YES,
+                                    value: "catch",
+                                }
+                            },
+                            dangerMode: true,
+                        }).then((value) => {
+                            switch (value) {
+                                case "catch":
+                                    formData.append("_method","put");
+                                    ubizapis('v1','/suppliers/'+id+'/update', 'post', formData,params,jQuery.UbizOIWidget.w_reset_input_change);
+                                    jQuery.UbizOIWidget.w_get_specific_supplier_by_id(id, index);
+                                    $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
+                                    break;
+                            }
+                        });
+                    } else {
+                        jQuery.UbizOIWidget.w_get_specific_supplier_by_id(id, index);
+                        $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
+                    }
+                } else {
+                    jQuery.UbizOIWidget.w_get_specific_supplier_by_id(id, index);
+                    $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
+                }
             }
             else{
-
                 $("#i-put .GtF .delete").css("display","none").removeAttr("onclick");
             }
 
             if (isEmpty(index)) {
                 $("#i-put .GtF .save").attr("onclick", "jQuery.UbizOIWidget.w_save(0)");
             }
+
 
             jQuery.UbizOIWidget.o_page.hide();
             jQuery.UbizOIWidget.i_page.fadeIn("slow");
@@ -596,6 +627,15 @@ const _NO = i18next.t("No");
             jQuery.UbizOIWidget.sort = {'sort_name': 'sup_code', 'order_by': 'asc'};
             jQuery.UbizOIWidget.w_set_paging_for_detail_page(0,0,true);
             removeErrorInput();
+        },
+        w_reset_input_change: function() {
+            $("#i-put #nicescroll-iput #txt_sup_code").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_sup_name").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_sup_website").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_sup_phone").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_sup_fax").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_sup_mail").val("").isChange("false");
+            $("#i-put #nicescroll-iput .file-upload").isChange("false");
         },
         w_clear_search_form:function(){
             jQuery('#search-form  #sup_code').val("");

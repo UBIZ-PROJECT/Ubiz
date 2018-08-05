@@ -3,23 +3,7 @@
 }
 
 .main-content .r-content .col-2 {
-    width: 200px;
-}
-
-.main-content .r-content .col-3 {
-    width: 200px;
-}
-
-.main-content .r-content .col-4 {
-    width: 110px;
-}
-
-.main-content .r-content .col-5 {
-    width: 200px;
-}
-
-.main-content .r-content .col-6 {
-    width: 250px;
+    width: 100%;
 }
 
 #nicescroll-iput {
