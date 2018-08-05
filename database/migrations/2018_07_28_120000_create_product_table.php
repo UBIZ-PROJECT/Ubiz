@@ -20,6 +20,7 @@ class CreateProductTable extends Migration
         Schema::create('product', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('seri_no');
+            $table->char('name', 255);
             $table->char('branch', 255);
             $table->char('model', 255);
             $table->string('detail');
