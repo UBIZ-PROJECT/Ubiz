@@ -7,7 +7,7 @@
  */
 
 namespace App\Model;
-
+use App\Helper;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -56,19 +56,19 @@ class Product implements JWTSubject
         list($field_name, $order_by) = $this->makeOrderBy($sort);
         $rows_per_page = env('ROWS_PER_PAGE', 10);
         $product = DB::select("
-            SELECT product.id,product.seri_no,product.name,product_type.name_type,product.branch,product.model,product_image.extension,product_image.id as image_id from (
+            SELECT product.id,product.seri_no,product.name,product_type.id as prd_type_id,product_type.name_type,product.branch,product.model,product_image.extension,product_image.id as image_id from (
                 SELECT *
-                FROM product
+                FROM product 
                 LIMIT $rows_per_page OFFSET " . ($page * $rows_per_page)." ) product
             LEFT JOIN product_type product_type ON 
             product.type_id = product_type.id
             LEFT JOIN product_image product_image ON
-            product_image.id = (select id from product_image as pis where product.id = pis.prd_id limit 1) 
-            WHERE $where_raw 
-            ORDER BY $field_name $order_by", $params);
+            product_image.id = (select id from product_image as pis where product.id = pis.prd_id and pis.delete_flg = '0' limit 1) 
+           $where_raw 
+            ORDER BY $field_name $order_by  ", $params);
         foreach ($product as &$item) {
             if (!empty($item->image_id)) {
-                $item->image = $item->id . '-' . $item->image_id . '.' . $item->extension;
+                $item->image = Helper::readImage($item->id . '-' . $item->image_id . '.' . $item->extension, "prd");
             }
         }
         return $product;
@@ -79,20 +79,20 @@ class Product implements JWTSubject
         list($field_name, $order_by) = $this->makeOrderBy($sort);
         $rows_per_page = 1;
         $product = DB::select("
-            SELECT product.id,product.seri_no,product.name,product.detail,product_type.name_type,product.branch,product.model,product_image.extension,product_image.id as image_id from (
+            SELECT product.id,product.seri_no,product.name,product.detail,product_type.id as prd_type_id,product_type.name_type,product.branch,product.model,product_image.extension,product_image.id as image_id from (
                 SELECT *
-                FROM product
+                FROM product $where_raw 
+            ORDER BY $field_name $order_by
                 LIMIT $rows_per_page OFFSET " . ($page * $rows_per_page)." ) product
             LEFT JOIN product_type product_type ON 
             product.type_id = product_type.id
             LEFT JOIN product_image product_image ON
-            product_image.prd_id = product.id 
-            WHERE $where_raw 
-            ORDER BY $field_name $order_by", $params);
+            product_image.id in (select id from product_image as pis where product.id = pis.prd_id and pis.delete_flg = '0')
+            ", $params);
         $data = array();
         $data[0] = (object) array();
         $images = array();
-        foreach ($product as &$item) {
+        foreach ($product as $index=>&$item) {
             $data[0]->id = $item->id;
             $data[0]->seri_no = $item->seri_no;
             $data[0]->name = $item->name;
@@ -100,8 +100,11 @@ class Product implements JWTSubject
             $data[0]->branch = $item->branch;
             $data[0]->model = $item->model;
             $data[0]->detail = $item->detail;
+            $data[0]->prd_type_id = $item->prd_type_id;
             if (!empty($item->image_id)) {
-                $images[] = $item->id . '-' . $item->image_id . '.' . $item->extension;
+                $imageName = $item->id . '-' . $item->image_id . '.' . $item->extension;
+                $images[$index]['src'] = Helper::readImage($imageName, "prd");
+                $images[$index]['name'] = $imageName;
                 $data[0]->images = $images;
             }
         }
@@ -133,7 +136,7 @@ class Product implements JWTSubject
     public function insertProduct($param) {
         DB::beginTransaction();
         try {
-            $seri_no = $this->generateCode();
+//            $seri_no = $this->generateCode();
             $id = DB::table('product')->insertGetId(
                 [
                     'seri_no'=>$param['seri_no'],
@@ -176,7 +179,7 @@ class Product implements JWTSubject
                 ]
             );
             $rederImageName = $proId . '-' . $id . '.' . $extension;
-            Helper::saveOriginalImage($temp_name, $rederImageName, 'pro');
+            Helper::saveOriginalImage($temp_name, $rederImageName, 'prd');
             DB::commit();
         } catch(\Throwable $e) {
             DB::rollback();
@@ -231,7 +234,7 @@ class Product implements JWTSubject
             }
             if (!empty($param['images']['insert'])) {
                 foreach ($param['images']['insert'] as $image) {
-                    $this->insertProductImage($param['id'],$image['extenstion'],$image['temp_name']);
+                    $this->insertProductImage($param['id'],$image['extension'],$image['temp_name']);
                 }
             }
             DB::commit();
@@ -297,7 +300,7 @@ class Product implements JWTSubject
     public function makeWhereRaw($search = [])
     {
         $params = [0];
-        $where_raw = 'product.delete_flg = ?';
+        $where_raw = "where product.delete_flg = '0' ";
         if (sizeof($search) > 0) {
             if (!empty($search['contain']) || !empty($search['notcontain'])) {
                 if(!empty($search['contain'])){
@@ -311,7 +314,7 @@ class Product implements JWTSubject
                     $params[] = $search_val;
                     $where_raw .= " OR product.detail like ?";
                     $params[] = $search_val;
-                    $where_raw .= " OR product_type.name_type like ?";
+                    $where_raw .= " OR product.type_id like ?";
                     $params[] = $search_val;
                     $where_raw .= " ) ";
                 }
@@ -326,7 +329,7 @@ class Product implements JWTSubject
                     $params[] = $search_val;
                     $where_raw .= " OR product.detail not like ?";
                     $params[] = $search_val;
-                    $where_raw .= " OR product_type.name_type not like ?";
+                    $where_raw .= " OR product.type_id not like ?";
                     $params[] = $search_val;
                     $where_raw .= " ) ";
                 }
@@ -350,8 +353,8 @@ class Product implements JWTSubject
                     $where_raw_tmp[] = "product.detail = ?";
                     $params[] = $search['detail'];
                 }
-                if (!empty($search['name_type'])) {
-                    $where_raw_tmp[] = "product.name_type = ?";
+                if (!empty($search['type_id'])) {
+                    $where_raw_tmp[] = "product.type_id = ?";
                     $params[] = $search['name_type'];
                 }
                 if (sizeof($where_raw_tmp) > 0) {
@@ -378,7 +381,7 @@ class Product implements JWTSubject
 
     public function getPagingInfoDetailProductWithConditionSearch($sort = '', $search = []) {
         try {
-            $rows_per_page = env('ROWS_PER_PAGE', 10);
+            $rows_per_page = 1;
             $rows_num = $this->countAllProduct($sort,$search);
         } catch (\Throwable $e) {
             throw $e;
@@ -398,13 +401,13 @@ class Product implements JWTSubject
             $count = DB::select("
                 SELECT count(*) as count from (
                     SELECT *
-                    FROM product) product
+                    FROM product $where_raw 
+                ORDER BY $field_name $order_by ) product
                 LEFT JOIN product_type product_type ON 
                 product.type_id = product_type.id
                 LEFT JOIN product_image product_image ON
                 product_image.id = (select id from product_image as pis where product.id = pis.prd_id limit 1) 
-                WHERE $where_raw 
-                ORDER BY $field_name $order_by", $params);
+                ", $params);
             $count = $count[0]->count;
         } catch (\Throwable $e) {
             throw $e;

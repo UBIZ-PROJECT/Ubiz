@@ -206,6 +206,15 @@ function readURL(input) {
     }
 }
 
+function removeImage(self, callback) {
+    $(self).closest(".image-upload").find(".img-show").attr("src", "../images/avatar.png");
+    $(self).closest(".image-upload").find(".file-upload").val("");
+    if (typeof callback == "function") {
+        callback(self);
+    }
+
+}
+
 function inputChange(self, oldVal) {
     if ($(self).val() == oldVal) {
         $(self).isChange("false");
@@ -294,6 +303,16 @@ jQuery.fn.extend({
         } else {
             this.attr("is-change", bool);
         }
+    },
+    getImageId: function() {
+        var name = this.attr("img-name");
+        if (name == undefined || name == "" ) return "";
+        var arr = name.split('-');
+        var imageId = arr[1].substring(0,arr[1].indexOf("."));
+        return imageId;
+    },
+    setName: function(name) {
+        this.attr("img-name",name);
     }
 });
 

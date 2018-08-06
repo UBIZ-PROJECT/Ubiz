@@ -8,7 +8,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Helper;
+
 use App\Http\Controllers\Controller;
 use App\Model\Product;
 use Illuminate\Http\Request;
@@ -36,7 +36,7 @@ class ProductController extends Controller
 
             $product = new Product();
             $data = $product->getEachProductPaging($page, $sort,$search);
-            $paging = $product->getPagingInfo($sort,$search);
+            $paging = $product->getPagingInfoDetailProductWithConditionSearch($sort,$search);
             $productType = $product->getAllProductType();
             $paging['page'] = $page;
             $paging['rows_per_page'] = 1;
@@ -64,8 +64,8 @@ class ProductController extends Controller
                 $params = json_decode($request->input('product'), true);
                 if (!empty($request->file('image-upload'))) {
                     foreach ($request->file('image-upload') as $index=>$imageUpload) {
-                        $params[$index]['extension'] = $imageUpload->file('image-upload')->getClientOriginalExtension();
-                        $params[$index]['tmp_name'] = $imageUpload->file('image-upload')->getRealPath();
+                        $params['images'][$index]['extension'] = $imageUpload->getClientOriginalExtension();
+                        $params['images'][$index]['temp_name'] = $imageUpload->getRealPath();
                     }
                 }
                 $product = new Product();
@@ -83,16 +83,17 @@ class ProductController extends Controller
         return response()->json(['product' => $data, "product_type" => $productType ,'paging' => $paging,'success' => true, 'message' => $message, 'search'=>$search], 200);
     }
 
-    public function updateProduct(Request $request) {
+    public function updateProduct($id, Request $request) {
         try {
             $message = __("Successfully processed.");
             if ($request->has("product")) {
                 list($page, $sort, $search) = $this->getPageSortSearch($request);
                 $params = json_decode($request->input('product'), true);
+                $params['id'] = $id;
                 if (!empty($request->file('image-upload'))) {
                     foreach ($request->file('image-upload') as $index=>$imageUpload) {
-                        $params['images']['insert'][$index]['extension'] = $imageUpload->file('image-upload')->getClientOriginalExtension();
-                        $params['images']['insert'][$index]['tmp_name'] = $imageUpload->file('image-upload')->getRealPath();
+                        $params['images']['insert'][$index]['extension'] = $imageUpload->getClientOriginalExtension();
+                        $params['images']['insert'][$index]['temp_name'] = $imageUpload->getRealPath();
                     }
                 }
                 $product = new Product();
