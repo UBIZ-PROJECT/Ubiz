@@ -1,0 +1,69 @@
+.main-content .r-content .col-1 {
+    width: 70px;
+}
+
+.main-content .r-content .col-2 {
+    width: 100px;
+}
+
+.main-content .r-content .col-3 {
+    width: 200px;
+}
+
+.main-content .r-content .col-4 {
+    width: 200px;
+}
+
+.main-content .r-content .col-5 {
+    width: 150px;
+}
+
+.main-content .r-content .col-6 {
+    width: 250px;
+}
+
+#nicescroll-iput {
+    margin-top: 15px;
+}
+
+#nicescroll-iput .control {
+    padding: .2em .6em .3em;
+}
+
+#nicescroll-iput .label {
+    color: #605959;
+}
+
+.prd-image {
+    width: 100px;
+    height: 100px;
+}
+
+#nicescroll-oput #table-content .tcB .cbo {
+    height: 110px;
+}
+
+#nicescroll-oput #table-content .tcB .cbo .nCj {
+    position: relative;
+    top: 30px;
+}
+
+#nicescroll-oput #table-content .tcB .cbo .nCT, #nicescroll-oput #table-content .tcB .cbo .jgQ {
+    top: 30px;
+}
+#nicescroll-oput #table-content .tcB .cbo .nCji {
+    position: relative;
+    top: 4px;
+}
+.row li {
+    width: 33.3%;
+    float: left;
+    list-style-type: none;
+}
+
+.row img {
+    display: inline-block;
+    height: auto;
+    max-width: 100%;
+    vertical-align: middle;
+}

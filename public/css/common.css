@@ -1261,8 +1261,8 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
     text-align: center;
     display: none;
     color: white;
-    border-bottom-right-radius: 5px;
-    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
     vertical-align: middle;
     line-height: 30px;
     font-size: 12px;
@@ -1271,10 +1271,25 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
 
 .image-upload {
     cursor: pointer;
+    display: inline-block;
 }
 
-.image-upload:hover .label-change {
-    display: block;
+.image-upload button.close {
+    width: 20px;
+    position: relative;
+    top: -150px;
+    opacity: 0.5;
+    background-color: #080000b3;
+    display: none;
+    color: white;
+}
+
+.image-upload:hover .label-change, .image-upload:hover button.close {
+    display: inline-block;
+}
+
+.image-upload button.close:hover {
+    opacity: 1;
 }
 
 .ato {
