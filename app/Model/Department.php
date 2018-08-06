@@ -95,6 +95,9 @@ class Department
                 ->select('*')
                 ->where([['delete_flg', '=', '0'], ['id', '=', $id]])
                 ->first();
+            if ($department != null) {
+                $department->permission = $this->getPermissions($id);
+            }
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -115,7 +118,9 @@ class Department
                 ->offset($pos - 1)
                 ->limit(1)
                 ->first();
-
+            if ($department != null) {
+                $department->permission = $this->getPermissions($department->id);
+            }
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -225,21 +230,52 @@ class Department
                     'permission.screen_id',
                     'permission.screen_name',
                     'permission.screen_status',
-                    'permission_detail.function_id',
-                    'permission_detail.function_name',
-                    'permission_detail.function_status'
+                    'permission_function.function_id',
+                    'permission_function.function_name',
+                    'permission_function_status.function_status'
                 )
+                ->leftJoin('permission_function', function ($join) {
+                    $join->on('permission.dep_id', '=', 'permission_function.dep_id');
+                    $join->on('permission.screen_id', '=', 'permission_function.screen_id');
+                    $join->where('permission_function.delete_flg', '=', '0');
+                })
                 ->leftJoin('permission_detail', function ($join) {
-                    $join->on('permission.dep_id', '=', 'permission_detail.dep_id')
-                        ->andOn('permission.screen_id', '=', 'permission_detail.screen_id')
-                        ->andOn('permission.delete_flg', '=', '0');
+                    $join->on('permission.dep_id', '=', 'permission_function_status.dep_id');
+                    $join->on('permission.screen_id', '=', 'permission_function_status.screen_id');
+                    $join->on('permission_function.function_id', '=', 'permission_function_status.function_id');
+                    $join->where('permission_function_status.delete_flg', '=', '0');
                 })
                 ->where([['permission.delete_flg', '=', '0'], ['permission.dep_id', '=', $dep_id]])
                 ->orderBy('permission.dep_id', 'asc')
                 ->get();
+
+            $data = [];
+            foreach ($permissions as $permission) {
+
+                $screen_id = $permission->screen_id;
+                $screen_name = $permission->screen_name;
+                $screen_status = $permission->screen_status;
+
+                $function_id = $permission->function_id;
+                $function_name = $permission->function_name;
+                $function_status = $permission->function_status;
+
+                $data['screens'][$screen_id] = [
+                    'screen_name' => $screen_name,
+                    'screen_status' => $screen_status
+                ];
+
+                if($function_id == null)
+                    continue;
+
+                $data['functions'][$screen_id][$function_id] = [
+                    'function_name' => $function_name,
+                    'function_status' => $function_status
+                ];
+            }
         } catch (\Throwable $e) {
             throw $e;
         }
-        return $permissions;
+        return (object)$data;
     }
 }

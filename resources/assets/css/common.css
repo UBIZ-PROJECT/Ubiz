@@ -1452,14 +1452,23 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     margin-right: 2px;
+    cursor: pointer;
 }
 
 .utb .tuv ul li div.active{
-    background-color: #a6a6a6;
+    background-color: #4784d9;
     padding: 5px 15px;
     color: white;
 }
 
 .utb .rhb{
-    border-top: 3px solid #a6a6a6;
+    border-top: 3px solid #4784d9;
+}
+
+.utb .rhb > div{
+    display: none;
+}
+
+.utb .rhb > div.active{
+    display: block;
 }
