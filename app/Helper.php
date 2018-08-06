@@ -23,6 +23,19 @@ class Helper
         $image->save($target_file);
     }
 
+    public static function saveOriginalImage($img, $target_img, $img_type = '')
+    {
+        $image = new SimpleImage();
+        $target_dir = base_path() . '/resources/images/' . $img_type;
+        if ($img_type != '') {
+            $target_file = $target_dir . '/' . $target_img;
+        } else {
+            $target_file = $target_dir . $target_img;
+        }
+        $image->load($img);
+        $image->save($target_file);
+    }
+
     public static function resizeImageToHeight($img, $target_img, $new_img_height, $img_type = '')
     {
         $image = new SimpleImage();

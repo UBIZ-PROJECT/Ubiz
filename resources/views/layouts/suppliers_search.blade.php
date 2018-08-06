@@ -1,7 +1,7 @@
 <div class="search">
     <div class="tyo" role="search">
         <div class="cyo">
-            <input id="fuzzy" spellcheck="false" autocomplete="off" placeholder="Tìm kiếm tiền tệ" value="" type="text" onkeypress="jQuery.UbizOIWidget.w_fuzzy_search_handle_enter(event)">
+            <input id="fuzzy" spellcheck="false" autocomplete="off" placeholder="Tìm kiếm nhà cung cấp" value="" type="text" onkeypress="jQuery.UbizOIWidget.w_fuzzy_search_handle_enter(event)">
         </div>
         <button class="dyo" onclick="show_searh_form()">
             <svg focusable="false" height="24px" viewBox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg">
@@ -27,39 +27,56 @@
             <div class="gvo">
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="code">{{ __('Code') }}</label>
+                        <label for="sup_code">Mã</label>
                     </span>
                     <span class="avo">
-                        <input type="text" spellcheck="false" id="code" value="" autocomplete="off">
+                        <input type="text" spellcheck="false" id="sup_code" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="name">{{ __('Name') }}</label>
+                        <label for="sup_name">Tên</label>
                     </span>
                     <span class="avo">
-                        <input type="text" spellcheck="false" id="name" value="" autocomplete="off">
+                        <input type="text" spellcheck="false" id="sup_name" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="symbol">{{ __('Symbol') }}</label>
+                        <label for="sup_website">Website</label>
                     </span>
                     <span class="avo">
-                        <input type="text" id="symbol" value="" autocomplete="off">
+                        <input type="text" spellcheck="false" id="sup_website" value="" autocomplete="off">
+                    </span>
+                </div>
+
+                <div class="rvo">
+                    <span class="yvo">
+                        <label for="sup_phone">Điện thoại</label>
+                    </span>
+                    <span class="avo">
+                        <input type="text" spellcheck="false" id="sup_phone" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="state">{{ __('State') }}</label>
+                        <label for="sup_fax">Fax</label>
                     </span>
                     <span class="avo">
-                        <input type="text" spellcheck="false" id="state" value="" autocomplete="off">
+                        <input type="text" spellcheck="false" id="sup_fax" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="contain">{{ __('Includes the words') }}</label>
+                        <label for="sup_mail">E-mail</label>
+                    </span>
+                    <span class="avo">
+                        <input type="text" id="sup_mail" value="" autocomplete="off">
+                    </span>
+                </div>
+                <div class="rvo">
+                    <span class="yvo">
+                        <label for="contain">Chứa các từ</label>
                     </span>
                     <span class="avo">
                         <input type="text" spellcheck="false" spellcheck="false" id="contain" value="" autocomplete="off">
@@ -67,15 +84,15 @@
                 </div>
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="notcontain">{{ __("Doesn't have") }}</label>
+                        <label for="notcontain">Không có</label>
                     </span>
                     <span class="avo">
                         <input type="text" spellcheck="false" id="notcontain" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo fvo">
-                    <button type="button" class="btn btn-primary btn-sm" onclick="jQuery.UbizOIWidget.w_search()">{{ __("Search") }}</button>
-                    <button type="button" class="btn btn-link btn-sm text-secondary" onclick="jQuery.UbizOIWidget.w_clear_search_form()">{{ __("Clear filter") }}</button>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="jQuery.UbizOIWidget.w_search()">Tìm kiếm</button>
+                    <button type="button" class="btn btn-link btn-sm text-secondary" onclick="jQuery.UbizOIWidget.w_clear_search_form()">Xóa bộ lọc</button>
                 </div>
             </div>
         </div>

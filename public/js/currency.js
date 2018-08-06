@@ -379,6 +379,7 @@
         w_render_data_to_ouput_page: function (response) {
             var table_html = "";
             var currency = response.data.currency;
+            var paging = response.data.paging;
             if (currency.length > 0) {
                 var rows = [];
                 for (let i = 0; i < currency.length; i++) {
@@ -388,7 +389,7 @@
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(currency[i].cur_id, currency[i].cur_code, 3));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(currency[i].cur_id, currency[i].cur_symbol, 4));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(currency[i].cur_id, currency[i].cur_state, 5));
-                    rows.push(jQuery.UbizOIWidget.w_make_row_html(currency[i].cur_id, cols));
+                    rows.push(jQuery.UbizOIWidget.w_make_row_html(currency[i].cur_id, cols, i, paging.page, paging.rows_per_page));
                 }
                 table_html += rows.join("");
             }
@@ -439,10 +440,11 @@
                 jQuery.UbizOIWidget.i_page.find("img.img-thumbnail").attr('src', data.cur_avatar);
             }
         },
-        w_make_row_html: function (id, cols) {
+        w_make_row_html: function (id, cols, row_no, page_no, rows_per_page) {
             var row_html = '';
             if (cols.length > 0) {
-                row_html = '<div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page(' + id + ',this)">';
+                var pos = rows_per_page * page_no + row_no + 1;
+                row_html = '<div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page(' + pos + ',' + id + ')">';
                 row_html += cols.join("");
                 row_html += '</div>';
             }
