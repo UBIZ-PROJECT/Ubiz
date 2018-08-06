@@ -22,7 +22,7 @@ $default_label_height = $default_height / 3.8;
 ?>
 <div class='image-upload mb-1' style="max-width: {{$width}}px; max-height: {{$height}}px">
 	<img src="{{$src}}" img-name="" style="height: {{$height}}px; width:{{$width}}px" alt="{{$alt}}" class="img-thumbnail img-show {{$class}}" onclick="openFileUpload(this)">
-	<input type='file' accept="image/*" name="inp-upload-image[]" is-change='false' onchange="readURL(this);" class="file-upload" style='display:none'>
+	<input type='file' accept="image/*" name="inp-upload-image[]" is-change='false' onchange="readURL(this,jQuery.UbizOIWidget.w_callback_remove_image);" class="file-upload" style='display:none'>
     <button type="button" class="close" aria-label="Close" onclick="removeImage(this, jQuery.UbizOIWidget.w_callback_remove_image)">
         <span aria-hidden="true">&times;</span>
     </button>

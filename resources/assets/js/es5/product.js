@@ -545,8 +545,8 @@ var lst_image_delete = [];
             jQuery.UbizOIWidget.w_set_paging_for_detail_page(0,0,true);
             removeErrorInput();
             lst_image_delete = [];
-            $(".img-show").attr("src","../images/avatar.png");
-            $(".file-upload").val("");
+            $(".img-show").attr("src","../images/avatar.png").setName("");
+            $(".file-upload").val("").isChange("false");
         },
         w_clear_search_form:function(){
             jQuery('#search-form  #seri_no').val("");
