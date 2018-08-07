@@ -15,6 +15,12 @@ $html_width = "300px";
 if(isset($width)){
     $html_width = $width . "px";
 }
+
+if(!isset($label)) {
+    $label = '';
+} else {
+    $label = $label . ":";
+}
 switch ($type) {
     case 'disabled':
         $html_type = 'rootIsDisabled';
@@ -27,11 +33,12 @@ switch ($type) {
     default:
         break;
 }
+
 ?>
 
 <div class="textfield {{$html_type}} root_textfield rootIsUnderlined {{$control_id}}_container" style="width: {{ $html_width }}">
     <div class="wrapper">
-        <label for="{{$control_id}}" class="lbl-primary ms-Label root-56">{{$label}}:</label>
+        <label for="{{$control_id}}" class="lbl-primary ms-Label root-56">{{$label}}</label>
         <div class="fieldGroup">
             <select id="{{$control_id}}" {{$html_control_type}} class="dropdown_field">
                 <option value=""></option>

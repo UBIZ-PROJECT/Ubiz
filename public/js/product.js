@@ -148,37 +148,37 @@ var lst_image_delete = [];
 
             var search_info = {};
 
-            // if (jQuery('#search-form #seri_no').val().replace(/\s/g, '') != '') {
-            //     search_info.seri_no = jQuery('#search-form #seri_no').val();
-            // }
-            //
-            // if (jQuery('#search-form #name').val().replace(/\s/g, '') != '') {
-            //     search_info.name = jQuery('#search-form #name').val();
-            // }
-            //
-            // if (jQuery('#search-form #branch').val().replace(/\s/g, '') != '') {
-            //     search_info.branch = jQuery('#search-form #branch').val();
-            // }
-            //
-            // if (jQuery('#search-form #model').val().replace(/\s/g, '') != '') {
-            //     search_info.model = jQuery('#search-form #model').val();
-            // }
-            //
-            // if (jQuery('#search-form #detail').val().replace(/\s/g, '') != '') {
-            //     search_info.detail = jQuery('#search-form #detail').val();
-            // }
-            //
-            // if (jQuery('#search-form #name_type').val().replace(/\s/g, '') != '') {
-            //     search_info.name_type = jQuery('#search-form #name_type').val();
-            // }
-            //
-            // if (jQuery('#search-form #contain').val().replace(/\s/g, '') != '') {
-            //     search_info.contain = jQuery('#search-form #contain').val();
-            // }
-            //
-            // if (jQuery('#search-form #notcontain').val().replace(/\s/g, '') != '') {
-            //     search_info.notcontain = jQuery('#search-form #notcontain').val();
-            // }
+            if (jQuery('#search-form #seri_no').val().replace(/\s/g, '') != '') {
+                search_info.seri_no = jQuery('#search-form #seri_no').val();
+            }
+
+            if (jQuery('#search-form #name').val().replace(/\s/g, '') != '') {
+                search_info.name = jQuery('#search-form #name').val();
+            }
+
+            if (jQuery('#search-form #branch').val().replace(/\s/g, '') != '') {
+                search_info.branch = jQuery('#search-form #branch').val();
+            }
+
+            if (jQuery('#search-form #model').val().replace(/\s/g, '') != '') {
+                search_info.model = jQuery('#search-form #model').val();
+            }
+
+            if (jQuery('#search-form #detail').val().replace(/\s/g, '') != '') {
+                search_info.detail = jQuery('#search-form #detail').val();
+            }
+
+            if (jQuery('#search-form #type_id').val().replace(/\s/g, '') != '') {
+                search_info.type_id = jQuery('#search-form #type_id').val();
+            }
+
+            if (jQuery('#search-form #contain').val().replace(/\s/g, '') != '') {
+                search_info.contain = jQuery('#search-form #contain').val();
+            }
+
+            if (jQuery('#search-form #notcontain').val().replace(/\s/g, '') != '') {
+                search_info.notcontain = jQuery('#search-form #notcontain').val();
+            }
 
             return search_info;
         },
@@ -495,7 +495,7 @@ var lst_image_delete = [];
             jQuery.UbizOIWidget.w_set_paging_for_detail_page(response.data.paging.page, response.data.paging.rows_num);
         },
         w_is_input_changed: function() {
-            var txt_input = $("#i-put .jAQ input");
+            var txt_input = $("#i-put .jAQ input, #i-put .jAQ textarea,  #i-put .jAQ select");
             for(var i = 0; i < txt_input.length; i++) {
                 if ($(txt_input[i]).isChange() == "true") {
                     return true;
@@ -506,7 +506,7 @@ var lst_image_delete = [];
         w_validate_input: function() {
             var isValid = true;
             removeErrorInput();
-            var txt_input = $("#i-put .jAQ input.input_field");
+            var txt_input = $("#i-put .jAQ input.input_field, #i-put .jAQ textarea#txt_detail");
             // Validate Requirement
             for(var i = 0; i < txt_input.length; i++) {
                 if ($(txt_input[i]).prop("required") == true) {

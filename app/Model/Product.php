@@ -52,6 +52,7 @@ class Product implements JWTSubject
     }
 
     public function getProductPaging($page, $sort='', $search = []) {
+        DB::enableQueryLog();
         list($where_raw,$params) = $this->makeWhereRaw($search);
         list($field_name, $order_by) = $this->makeOrderBy($sort);
         $rows_per_page = env('ROWS_PER_PAGE', 10);
@@ -66,6 +67,7 @@ class Product implements JWTSubject
             product_image.id = (select id from product_image as pis where product.id = pis.prd_id and pis.delete_flg = '0' limit 1) 
            $where_raw 
             ORDER BY $field_name $order_by  ", $params);
+//        dd(DB::getQueryLog());
         foreach ($product as &$item) {
             if (!empty($item->image_id)) {
                 $item->image = Helper::readImage($item->id . '-' . $item->image_id . '.' . $item->extension, "prd");
@@ -300,7 +302,7 @@ class Product implements JWTSubject
     public function makeWhereRaw($search = [])
     {
         $params = [0];
-        $where_raw = "where product.delete_flg = '0' ";
+        $where_raw = "where product.delete_flg = ? ";
         if (sizeof($search) > 0) {
             if (!empty($search['contain']) || !empty($search['notcontain'])) {
                 if(!empty($search['contain'])){
@@ -355,7 +357,7 @@ class Product implements JWTSubject
                 }
                 if (!empty($search['type_id'])) {
                     $where_raw_tmp[] = "product.type_id = ?";
-                    $params[] = $search['name_type'];
+                    $params[] = $search['type_id'];
                 }
                 if (sizeof($where_raw_tmp) > 0) {
                     $where_raw .= " AND ( " . implode(" OR ", $where_raw_tmp) . " )";
