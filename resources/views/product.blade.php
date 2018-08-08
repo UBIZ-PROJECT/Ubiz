@@ -403,9 +403,9 @@
                         <div class="row z-mgl z-mgr">
                             <div class="col-sm-5 col-md-5 col-xl-5 z-pdl">
                                 <ul>
-                                    <li>@include('components.upload_image')</li>
-                                    <li>@include('components.upload_image')</li>
-                                    <li>@include('components.upload_image')</li>
+                                    <li>@include('components.upload_image',['multiUpload'=>true])</li>
+                                    <li>@include('components.upload_image',['multiUpload'=>true])</li>
+                                    <li>@include('components.upload_image',['multiUpload'=>true])</li>
                                 </ul>
                             </div>
                             <div class="col-sm-3 col-md-3 col-xl-3">
