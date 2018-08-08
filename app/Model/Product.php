@@ -52,7 +52,6 @@ class Product implements JWTSubject
     }
 
     public function getProductPaging($page, $sort='', $search = []) {
-        DB::enableQueryLog();
         list($where_raw,$params) = $this->makeWhereRaw($search);
         list($field_name, $order_by) = $this->makeOrderBy($sort);
         $rows_per_page = env('ROWS_PER_PAGE', 10);
@@ -67,7 +66,6 @@ class Product implements JWTSubject
             product_image.id = (select id from product_image as pis where product.id = pis.prd_id and pis.delete_flg = '0' limit 1) 
            $where_raw 
             ORDER BY $field_name $order_by  ", $params);
-//        dd(DB::getQueryLog());
         foreach ($product as &$item) {
             if (!empty($item->image_id)) {
                 $item->image = Helper::readImage($item->id . '-' . $item->image_id . '.' . $item->extension, "prd");
