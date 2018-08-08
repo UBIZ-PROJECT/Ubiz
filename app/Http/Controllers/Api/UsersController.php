@@ -46,24 +46,24 @@ class UsersController extends Controller
     {
         try {
             $user = new User();
-            list($page, $sort, $search, $user) = $this->getRequestData($request);
-            $user->updateUser($user);
+            list($page, $sort, $search, $user_data) = $this->getRequestData($request);
+            $user->updateUser($id, $user_data);
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['users' => $users, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed.")], 200);
+        return response()->json(['success' => true, 'message' => __("Successfully processed.")], 200);
     }
 
     public function insertUser(Request $request)
     {
         try {
             $user = new User();
-            $paging = $user->getPagingInfo();
-            $paging['page'] = 0;
+            list($page, $sort, $search, $user_data) = $this->getRequestData($request);
+            $user->insertUser($user_data);
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['users' => $users, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed.")], 200);
+        return response()->json(['success' => true, 'message' => __("Successfully processed.")], 200);
     }
 
     public function deleteUsers($ids, Request $request)
@@ -93,9 +93,6 @@ class UsersController extends Controller
         }
 
         $search = [];
-        if ($request->has('search')) {
-            $search['search'] = $request->search;
-        }
         if ($request->has('code')) {
             $search['code'] = $request->code;
         }
@@ -123,7 +120,7 @@ class UsersController extends Controller
 
         $user = [];
         if ($request->has('txt_code')) {
-            $user['code'] = $request->code;
+            $user['code'] = $request->txt_code;
         }
         if ($request->has('txt_name')) {
             $user['name'] = $request->txt_name;
@@ -134,8 +131,8 @@ class UsersController extends Controller
         if ($request->has('txt_email')) {
             $user['email'] = $request->txt_email;
         }
-        if ($request->has('txt_dep_name')) {
-            $user['dep_name'] = $request->txt_dep_name;
+        if ($request->has('txt_dep_id')) {
+            $user['dep_id'] = $request->txt_dep_id;
         }
         if ($request->has('txt_join_date')) {
             $user['join_date'] = $request->txt_join_date;

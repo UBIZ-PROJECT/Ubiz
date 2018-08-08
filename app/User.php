@@ -75,33 +75,49 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
-    public function updateUser($user = [])
+    public function updateUser($id, $data = [])
     {
         DB::beginTransaction();
         try {
 
-            if (isset($user['avatar'])) {
-                $avatar = $user['avatar'];
+            if (isset($data['avatar'])) {
+                $avatar = $data['avatar'];
                 $path = $avatar->path();
                 $extension = $avatar->extension();
-                Helper::resizeImage($path, $sup_ava, 200,200, 'sup');
+                $avatar = $id . "." . $extension;
+                \Helper::resizeImage($path, $avatar, 200, 200, 'usr');
+                $data['avatar'] = $avatar;
             }
 
             DB::table('users')
-                ->where([['id', '=', $user['id']], ['delete_flg' => '0']])
-                ->update([
-                    'code' => $user['code'],
-                    'name' => $user['name'],
-                    'avatar' => $user['avatar'],
-                    'phone' => $user['phone'],
-                    'email' => $user['email'],
-                    'address' => $user['address'],
-                    'join_date' => $user['join_date'],
-                    'salary' => $user['salary'],
-                    'bhxh' => $user['bhxh'],
-                    'bhyt' => $user['bhyt'],
-                    'dep_id' => $user['dep_id']
-                ]);
+                ->where([['id', '=', $id], ['delete_flg', '=', '0']])
+                ->update($data);
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    public function insertUser($data = [])
+    {
+        DB::beginTransaction();
+        try {
+
+            $id = DB::table('users')->max('id') + 1;
+            if (isset($data['avatar'])) {
+                $avatar = $data['avatar'];
+                $path = $avatar->path();
+                $extension = $avatar->extension();
+                $avatar = $id . "." . $extension;
+                \Helper::resizeImage($path, $avatar, 200, 200, 'usr');
+                $data['avatar'] = $avatar;
+            }
+            $data['password'] = bcrypt('123456');
+            $data['inp_user'] = '1';
+            $data['upd_user'] = '1';
+
+            DB::table('users')->insert($data);
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollback();
@@ -113,7 +129,7 @@ class User extends Authenticatable implements JWTSubject
     {
         try {
 
-            list($where_raw,$params) = $this->makeWhereRaw($search);
+            list($where_raw, $params) = $this->makeWhereRaw($search);
             list($field_name, $order_by) = $this->makeOrderBy($sort);
 
             $rows_per_page = env('ROWS_PER_PAGE', 10);
@@ -133,11 +149,20 @@ class User extends Authenticatable implements JWTSubject
 
     public function getUserById($id = '')
     {
-        $user = DB::table('users')
-            ->select('users.*', 'm_department.dep_name')
-            ->leftJoin('m_department', 'users.dep_id', '=', 'm_department.id')
-            ->where([['users.delete_flg', '=', '0'], ['users.id', '=', $id]])
-            ->first();
+        try {
+
+            $user = DB::table('users')
+                ->select('users.*', 'm_department.dep_name')
+                ->leftJoin('m_department', 'users.dep_id', '=', 'm_department.id')
+                ->where([['users.delete_flg', '=', '0'], ['users.id', '=', $id]])
+                ->first();
+
+            if ($user != null && !empty($user->avatar)) {
+                $user->avatar = \Helper::readImage($user->avatar, 'usr');
+            }
+        } catch (\Throwable $e) {
+            throw $e;
+        }
         return $user;
     }
 
@@ -156,6 +181,7 @@ class User extends Authenticatable implements JWTSubject
                 ->offset($pos - 1)
                 ->limit(1)
                 ->first();
+
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -177,7 +203,7 @@ class User extends Authenticatable implements JWTSubject
     public function countUsers($search = [])
     {
         try {
-            list($where_raw,$params) = $this->makeWhereRaw($search);
+            list($where_raw, $params) = $this->makeWhereRaw($search);
             $count = DB::table('users')
                 ->leftJoin('m_department', 'users.dep_id', '=', 'm_department.id')
                 ->whereRaw($where_raw, $params)
@@ -205,15 +231,14 @@ class User extends Authenticatable implements JWTSubject
 
     public function makeWhereRaw($search = [])
     {
-        $params = [0];
+        $params = ['0'];
         $where_raw = 'users.delete_flg = ?';
         if (sizeof($search) > 0) {
             if (isset($search['contain']) || isset($search['notcontain'])) {
-
-                $search_val = "%" . $search['search'] . "%";
-                if(isset($search['contain'])){
+                if (isset($search['contain'])) {
+                    $search_val = "%" . $search['contain'] . "%";
                     $where_raw .= " AND (";
-                    $where_raw .= "users.code like ?'";
+                    $where_raw .= "users.code like ?";
                     $params[] = $search_val;
                     $where_raw .= " OR users.name like ?";
                     $params[] = $search_val;
@@ -227,8 +252,9 @@ class User extends Authenticatable implements JWTSubject
                     $params[] = $search_val;
                     $where_raw .= " ) ";
                 }
-                if(isset($search['notcontain'])){
-                    $where_raw .= " AND users.code not like ?'";
+                if (isset($search['notcontain'])) {
+                    $search_val = "%" . $search['notcontain'] . "%";
+                    $where_raw .= " AND users.code not like ?";
                     $params[] = $search_val;
                     $where_raw .= " AND users.name not like ?";
                     $params[] = $search_val;

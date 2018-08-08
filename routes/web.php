@@ -18,5 +18,8 @@ Route::middleware(['api', 'cors'])->group(function () {
         Route::get('users', ['as' => 'users', 'uses' => 'Web\UsersController@index']);
         Route::get('suppliers', ['as'=>'supplier', 'uses'=>'Web\SupplierController@suppliers']);
         Route::get('customers', ['as' => 'customer', 'uses' => 'Web\CustomerController@customer']);
+        Route::get('departments', ['as' => 'departments', 'uses' => 'Web\DepartmentsController@index']);
+        Route::get('currency', ['as' => 'currency', 'uses' => 'Web\CurrencyController@index']);
+        Route::get('products', ['as'=>'supplier', 'uses'=>'Web\ProductController@products']);
     });
 });
