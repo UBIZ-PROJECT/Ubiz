@@ -1291,7 +1291,7 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
 }
 
 .image-upload:hover .label-change, .image-upload:hover button.close {
-    display: inline-block;
+    display: block;
 }
 
 .image-upload button.close:hover {
