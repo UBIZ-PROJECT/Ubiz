@@ -300,7 +300,7 @@ class Product implements JWTSubject
     public function makeWhereRaw($search = [])
     {
         $params = [0];
-        $where_raw = "where product.delete_flg = '0' ";
+        $where_raw = "where product.delete_flg = ? ";
         if (sizeof($search) > 0) {
             if (!empty($search['contain']) || !empty($search['notcontain'])) {
                 if(!empty($search['contain'])){
@@ -355,7 +355,7 @@ class Product implements JWTSubject
                 }
                 if (!empty($search['type_id'])) {
                     $where_raw_tmp[] = "product.type_id = ?";
-                    $params[] = $search['name_type'];
+                    $params[] = $search['type_id'];
                 }
                 if (sizeof($where_raw_tmp) > 0) {
                     $where_raw .= " AND ( " . implode(" OR ", $where_raw_tmp) . " )";

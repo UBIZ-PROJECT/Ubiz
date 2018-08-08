@@ -1066,7 +1066,7 @@
 /* START CSS FOR INPUT CONTROL */
 .textfield {
     margin: 0 0 5px 0;
-    max-width: 300px;
+    max-width: 500px;
 }
 
 .root_textfield.rootIsUnderlined {
@@ -1134,6 +1134,12 @@
     -ms-flex-align: stretch;
     align-items: stretch;
     position: relative;
+}
+
+.fieldGroup_area {
+    min-height: 60px;
+    height: auto;
+    display: flex;
 }
 
 .fieldGroup svg {

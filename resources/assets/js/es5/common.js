@@ -192,7 +192,7 @@ function openFileUpload(self) {
     $(self).closest('.image-upload').find(".file-upload").click();
 }
 
-function readURL(input) {
+function readURL(input, callback) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
 
@@ -203,12 +203,15 @@ function readURL(input) {
 
         reader.readAsDataURL(input.files[0]);
         $(input).attr("is-change", "true");
+        if (typeof callback == "function") {
+            callback(input);
+        }
     }
 }
 
 function removeImage(self, callback) {
     $(self).closest(".image-upload").find(".img-show").attr("src", "../images/avatar.png");
-    $(self).closest(".image-upload").find(".file-upload").val("");
+    $(self).closest(".image-upload").find(".file-upload").val("").isChange("true");
     if (typeof callback == "function") {
         callback(self);
     }
