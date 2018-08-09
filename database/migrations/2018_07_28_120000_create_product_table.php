@@ -21,10 +21,10 @@ class CreateProductTable extends Migration
             $table->increments('id');
             $table->integer('seri_no');
             $table->char('name', 255);
-            $table->char('branch', 255);
-            $table->char('model', 255);
-            $table->string('detail');
-            $table->integer("type_id");
+            $table->char('branch', 255)->nullable();
+            $table->char('model', 255)->nullable();
+            $table->string('detail')->nullable();
+            $table->integer("type_id")->nullable();
             $table->char('delete_flg', 1)->default('0');
             $table->timestamp('inp_date');
             $table->integer('inp_user');

@@ -111,6 +111,30 @@ class ProductController extends Controller
         return response()->json(['product' => $data, "product_type" => $productType ,'paging' => $paging,'success' => true, 'message' => $message, 'search'=>$search], 200);
     }
 
+    public function updateProductPaging($id, Request $request) {
+        try {
+            $message = __("Successfully processed.");
+            if ($request->has("product")) {
+                list($page, $sort, $search) = $this->getPageSortSearch($request);
+                $params = json_decode($request->input('product'), true);
+                $params['id'] = $id;
+                if (!empty($request->file('image-upload'))) {
+                    foreach ($request->file('image-upload') as $index=>$imageUpload) {
+                        $params['images']['insert'][$index]['extension'] = $imageUpload->getClientOriginalExtension();
+                        $params['images']['insert'][$index]['temp_name'] = $imageUpload->getRealPath();
+                    }
+                }
+                $product = new Product();
+                $product->updateProduct($params);
+            } else {
+                $message = '';
+            }
+        } catch(\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['success' => true, 'message' => $message, 'search'=>$search], 200);
+    }
+
     public function deleteProduct($ids, Request $request) {
         try {
             $message = __("Successfully processed.");

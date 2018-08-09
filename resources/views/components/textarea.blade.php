@@ -9,6 +9,10 @@ $html_width = "300px";
 if(isset($width)){
     $html_width = $width . "px";
 }
+$html_height = "150px";
+if(isset($height)) {
+    $html_height = $height . "px";
+}
 $html_max_length = "";
 if(isset($length)){
     $html_max_length = "maxlength=$length";
@@ -32,12 +36,11 @@ switch ($type) {
 }
 ?>
 
-<div class="textfield {{$html_type}} root_textfield rootIsUnderlined {{$control_id}}_container" style="width: {{ $html_width }}">
+<div class="textarea {{$html_type}} root_textarea rootIsUnderlined {{$control_id}}_container" style="width: {{ $html_width }}">
+    <label for="{{$control_id}}" class="ms-Label root-56 lbl-primary">{{$label}}:</label>
     <div class="wrapper">
-        <label for="{{$control_id}}" class="ms-Label root-56">{{$label}}:</label>
-        <div class="fieldGroup fieldGroup_area">
-        <!--            <input is-change="false" type="text" {{ $html_max_length }} {{$html_control_type}} id="{{$control_id}}" name="{{$control_id}}" value="" class="input_field {{ $html_class }}">-->
-            <textarea is-change="false" {{ $html_max_length }} {{$html_control_type}} id="{{$control_id}}" name="{{$control_id}}" class="input_field {{ $html_class }}"></textarea>
+        <div class="fieldGroup_area">
+            <textarea style="height: {{$html_height}};width: {{ $html_width }}" is-change="false" {{ $html_max_length }} {{$html_control_type}} id="{{$control_id}}" name="{{$control_id}}" class="input-textarea {{ $html_class }}"></textarea>
         </div>
     </div>
     <span class="error_message hidden-content">
