@@ -115,7 +115,7 @@
                                     @include('layouts/paging',['paging'=>$paging])
                                     <div class="amD utooltip" title="Cài đặt">
                                         <span class="amF">&nbsp;</span>
-                                        <img class="amG" src="http://ubiz.local/images/cleardot.gif" alt="">
+                                        <img class="amG" src="./images/cleardot.gif" alt="">
                                     </div>
                                 </span>
                                 </div>
@@ -410,15 +410,15 @@
                                     </div>
                                     <div class="amD utooltip" title="Cũ hơn">
                                         <span class="amF">&nbsp;</span>
-                                        <img class="amI prev" src="http://ubiz.local/images/cleardot.gif" alt="">
+                                        <img class="amI prev" src="./images/cleardot.gif" alt="">
                                     </div>
                                     <div class="amD utooltip" title="Mới hơn">
                                         <span class="amF">&nbsp;</span>
-                                        <img class="amJ next" src="http://ubiz.local/images/cleardot.gif" alt="">
+                                        <img class="amJ next" src="./images/cleardot.gif" alt="">
                                     </div>
                                     <div class="amD utooltip" title="Cài đặt">
                                         <span class="amF">&nbsp;</span>
-                                        <img class="amG" src="http://ubiz.local/images/cleardot.gif" alt="">
+                                        <img class="amG" src="./images/cleardot.gif" alt="">
                                     </div>
                                 </span>
                                 </div>
@@ -431,11 +431,14 @@
 						<form id="f-input">
 							<div class="row z-mgl z-mgr">
 								<div class="col-sm-2 col-md-2 col-xl-2 z-pdl">
-									<a class="ato">
-										<img id="avt_img" src="{{ asset("images/avatar.png") }}">
-										<input type="file" id="avatar" name="cus_avatar" accept="image/*" style="display: none"/>
-										<span id="change_avt">{{ __("Change") }}</span>
-									</a>
+									<div class="image-upload mb-1" style="max-width: 150px; max-height: 150px">
+										<img id="avt_img" src="{{ asset("images/avatar.png") }}" img-name="" style="height: 150px; width:150px" alt="" class="img-thumbnail img-show ">
+										<input  id="avatar" type="file" accept="image/*" name="cus_avatar" is-change="true" style="display:none">
+										<button type="button" style="top: -150px;" class="close" aria-label="Close" onclick="removeImage(this, jQuery.UbizOIWidget.w_callback_remove_image)">
+											<span aria-hidden="true">×</span>
+										</button>
+										<span id="change_avt" class="label-change" style="width: 150px;">{{ __("Change") }}</span>
+									</div>
 								</div>
 								<div class="col-sm-5 col-md-5 col-xl-5">
 									<input type="hidden" name="cus_id" value="0"/>
@@ -450,6 +453,7 @@
 									@include('components.input',['control_id'=>'user_id', 'label'=>'Nhân viên phụ trách'])
 									@include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 1'])
 									@include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 2'])
+									@include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 3'])
 								</div>
 							</div>
 						</form>
