@@ -192,14 +192,6 @@
 				ids.push(id);
 				jQuery.UbizOIWidget.w_delete(ids);
 			});
-			
-			$("#change_avt").click(function(){
-				$("#avatar").click();
-			});
-			
-			$("#avatar").change(function(){
-				jQuery.UbizOIWidget.w_preview_avatar(this);
-			});
         },
 		w_go_to_input_page_paging: function (index) {
 			var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
@@ -537,3 +529,15 @@ jQuery(document).ready(function () {
         return _;
     }
 })(jQuery);
+
+$("#change_avt").click(function(){
+	$("#avatar").click();
+});
+
+$("#avt_img").click(function(){
+	$("#avatar").click();
+});
+
+$("#avatar").change(function(){
+	jQuery.UbizOIWidget.w_preview_avatar(this);
+});
