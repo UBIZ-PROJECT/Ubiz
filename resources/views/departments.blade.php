@@ -276,13 +276,31 @@
                                 <div class="utb">
                                     <div class="tuv">
                                         <ul>
-                                            <li><div class="active">{{ __('Employee') }}</div></li>
-                                            <li><div>{{ __('Customer') }}</div></li>
-                                            <li><div>{{ __('Supplier') }}</div></li>
-                                            <li><div>{{ __('Currency') }}</div></li>
+                                                <li><div class="active" onclick="jQuery.UbizOIWidget.w_tab_click(1, this)">{{ __('Employee') }}</div>
+                                                </li>
+                                                <li>
+                                                    <div onclick="jQuery.UbizOIWidget.w_tab_click(2, this)">
+                                                        {{ __('Customer') }}
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div onclick="jQuery.UbizOIWidget.w_tab_click(3, this)">
+                                                        {{ __('Supplier') }}
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div onclick="jQuery.UbizOIWidget.w_tab_click(4, this)">
+                                                        {{ __('Currency') }}
+                                                    </div>
+                                                </li>
                                         </ul>
                                     </div>
-                                    <div class="rhb"></div>
+                                    <div class="rhb">
+                                        <div id="tab-1" class="active">tab-1</div>
+                                        <div id="tab-2">tab-2</div>
+                                        <div id="tab-3">tab-3</div>
+                                        <div id="tab-4">tab-4</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -365,13 +365,14 @@
         w_render_data_to_ouput_page: function (response) {
             var table_html = "";
             var departments = response.data.departments;
+            var paging = response.data.paging;
             if (departments.length > 0) {
                 var rows = [];
                 for (let i = 0; i < departments.length; i++) {
                     var cols = [];
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(departments[i].id, departments[i].dep_code, 1));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(departments[i].id, departments[i].dep_name, 2));
-                    rows.push(jQuery.UbizOIWidget.w_make_row_html(departments[i].id, cols));
+                    rows.push(jQuery.UbizOIWidget.w_make_row_html(departments[i].id, cols, i, paging.page, paging.rows_per_page));
                 }
                 table_html += rows.join("");
             }
@@ -414,10 +415,11 @@
             jQuery.UbizOIWidget.i_page.find("#txt_dep_code").val(data.dep_code);
             jQuery.UbizOIWidget.i_page.find("#txt_dep_name").val(data.dep_name);
         },
-        w_make_row_html: function (id, cols) {
+        w_make_row_html: function (id, cols, row_no, page_no, rows_per_page) {
             var row_html = '';
             if (cols.length > 0) {
-                row_html = '<div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page(' + id + ',this)">';
+                var pos = rows_per_page * page_no + row_no + 1;
+                row_html = '<div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page(' + pos + ',' + id + ')">';
                 row_html += cols.join("");
                 row_html += '</div>';
             }
@@ -595,6 +597,14 @@
             jQuery('.itooltip').tooltipster({
                 side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
             });
+        },
+        w_tab_click: function(tab_id, self){
+            var utb = jQuery(self).closest('div.utb');
+            utb.find('div.tuv').find('ul').find('div').removeClass('active');
+            utb.find('div.rhb').find('div.active').removeClass('active');
+
+            jQuery(self).addClass('active');
+            utb.find('div.rhb').find('div[id=tab-' + tab_id + ']').addClass('active');
         }
     });
 })(jQuery);

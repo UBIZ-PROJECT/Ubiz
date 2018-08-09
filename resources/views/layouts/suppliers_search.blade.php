@@ -27,7 +27,7 @@
             <div class="gvo">
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="sup_code">Mã</label>
+                        <label for="sup_code">{{__("Code")}}</label>
                     </span>
                     <span class="avo">
                         <input type="text" spellcheck="false" id="sup_code" value="" autocomplete="off">
@@ -35,7 +35,7 @@
                 </div>
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="sup_name">Tên</label>
+                        <label for="sup_name">{{__("Name")}}</label>
                     </span>
                     <span class="avo">
                         <input type="text" spellcheck="false" id="sup_name" value="" autocomplete="off">
@@ -43,7 +43,7 @@
                 </div>
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="sup_website">Website</label>
+                        <label for="sup_website">{{__("Website")}}</label>
                     </span>
                     <span class="avo">
                         <input type="text" spellcheck="false" id="sup_website" value="" autocomplete="off">
@@ -52,7 +52,7 @@
 
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="sup_phone">Điện thoại</label>
+                        <label for="sup_phone">{{__("Phone")}}</label>
                     </span>
                     <span class="avo">
                         <input type="text" spellcheck="false" id="sup_phone" value="" autocomplete="off">
@@ -60,7 +60,7 @@
                 </div>
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="sup_fax">Fax</label>
+                        <label for="sup_fax">{{__("Fax")}}</label>
                     </span>
                     <span class="avo">
                         <input type="text" spellcheck="false" id="sup_fax" value="" autocomplete="off">

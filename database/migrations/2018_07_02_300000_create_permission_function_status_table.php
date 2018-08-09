@@ -13,10 +13,17 @@ class CreateMPermissionTable extends Migration
      */
     public function up()
     {
-        Schema::create('m_permission', function (Blueprint $table) {
-            $table->increments('per_id');
-            $table->string('per_name', 100);
+        Schema::create('permission_function_status', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('dep_id');
+            $table->integer('screen_id');
+            $table->integer('function_id');
+            $table->integer('function_status');
             $table->char('delete_flg', 1)->default('0');
+            $table->timestamp('inp_date')->useCurrent();;
+            $table->integer('inp_user');
+            $table->timestamp('upd_date')->useCurrent();
+            $table->integer('upd_user');
         });
     }
 

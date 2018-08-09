@@ -62,23 +62,18 @@ const _NO = i18next.t("No");
             swal({
                 title: i18next.t('Do you want to delete the data?'),
                 text: i18next.t('Once deleted, you will not be able to recover this data!'),
-                icon: "warning",
-                buttons: true,
-                buttons: {
-                    cancel: _NO,
-                    catch: {
-                        text: _YES,
-                        value: "catch",
-                    }
-                },
-                dangerMode: true,
-            }).then((value) => {
-                switch (value) {
-                    case "catch":
-                        listId = JSON.stringify(listId);
-                        var params = jQuery.UbizOIWidget.w_get_param_search_sort();
-                        ubizapis('v1','/suppliers/'+listId+'/delete', 'delete',null, params,jQuery.UbizOIWidget.w_process_callback);
-                        break;
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: _NO,
+                confirmButtonText: _YES,
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    listId = JSON.stringify(listId);
+                    var params = jQuery.UbizOIWidget.w_get_param_search_sort();
+                    ubizapis('v1','/suppliers/'+listId+'/delete', 'delete',null, params,jQuery.UbizOIWidget.w_process_callback);
                 }
             });
         },
@@ -102,49 +97,39 @@ const _NO = i18next.t("No");
             if (id == 0) {
                 swal({
                     title:ALERT_TITLE,
-                    icon: ALERT_ICON,
-                    buttons: true,
-                    buttons: {
-                        cancel: _NO,
-                        catch: {
-                            text: _YES,
-                            value: "catch",
-                        }
-                    },
-                    dangerMode: true,
-                }).then((value) => {
-                    switch (value) {
-                        case "catch":
-                            ubizapis('v1','/suppliers/insert', 'post', formData, params, jQuery.UbizOIWidget.w_process_callback);
-                            break;
+                    type: ALERT_ICON,
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: _NO,
+                    confirmButtonText: _YES,
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.value) {
+                        ubizapis('v1','/suppliers/insert', 'post', formData, params, jQuery.UbizOIWidget.w_process_callback);
                     }
                 });
             } else {
                 if (jQuery.UbizOIWidget.w_is_input_changed() == false) {
                     swal({
                         title: i18next.t("Nothing change!"),
-                        icon: "error"
+                        type: "error"
                     });
                     return false;
                 }
                 swal({
                     title: ALERT_TITLE,
-                    icon: ALERT_ICON,
-                    buttons: true,
-                    buttons: {
-                        cancel: _NO,
-                        catch: {
-                            text: _YES,
-                            value: "catch",
-                        }
-                    },
-                    dangerMode: true,
-                }).then((value) => {
-                    switch (value) {
-                        case "catch":
-                            formData.append("_method","put");
-                            ubizapis('v1','/suppliers/'+id+'/update', 'post', formData,params, jQuery.UbizOIWidget.w_process_callback);
-                            break;
+                    type: ALERT_ICON,
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: _NO,
+                    confirmButtonText: _YES,
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.value) {
+                        formData.append("_method","put");
+                        ubizapis('v1','/suppliers/'+id+'/update', 'post', formData,params, jQuery.UbizOIWidget.w_process_callback);
                     }
                 });
             }
@@ -302,24 +287,19 @@ const _NO = i18next.t("No");
                         const ALERT_ICON = "warning";
                         swal({
                             title: ALERT_TITLE,
-                            icon: ALERT_ICON,
-                            buttons: true,
-                            buttons: {
-                                cancel: _NO,
-                                catch: {
-                                    text: _YES,
-                                    value: "catch",
-                                }
-                            },
-                            dangerMode: true,
-                        }).then((value) => {
-                            switch (value) {
-                                case "catch":
-                                    formData.append("_method","put");
-                                    ubizapis('v1','/suppliers/'+id+'/update', 'post', formData,params,jQuery.UbizOIWidget.w_reset_input_change);
-                                    jQuery.UbizOIWidget.w_get_specific_supplier_by_id(id, index);
-                                    $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
-                                    break;
+                            type: ALERT_ICON,
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            cancelButtonText: _NO,
+                            confirmButtonText: _YES,
+                            reverseButtons: true
+                        }).then((result) => {
+                            if (result.value) {
+                                formData.append("_method","put");
+                                ubizapis('v1','/suppliers/'+id+'/update', 'post', formData,params,jQuery.UbizOIWidget.w_reset_input_change);
+                                jQuery.UbizOIWidget.w_get_specific_supplier_by_id(id, index);
+                                $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
                             }
                         });
                     } else {
@@ -436,39 +416,33 @@ const _NO = i18next.t("No");
                 if (response.data.method == "insert") {
                     swal({
                         title:response.data.message,
-                        icon: "success",
                         text: i18next.t("Do you want to continue insert Supplier?"),
-                        buttons: true,
-                        buttons: {
-                            cancel: _NO,
-                            catch: {
-                                text: _YES,
-                                value: "catch",
-                            }
-                        },
-                        dangerMode: true,
-                    }).then((value) => {
-                        switch (value) {
-                            case "catch":
-                                jQuery.UbizOIWidget.w_clear_input_page();
-                                break;
-                            default:
-                                jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
-                                jQuery.UbizOIWidget.w_go_back_to_output_page();
-                                break;
+                        type: 'success',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        cancelButtonText: _NO,
+                        confirmButtonText: _YES,
+                        reverseButtons: true
+                    }).then((result) => {
+                        if (result.value) {
+                            jQuery.UbizOIWidget.w_clear_input_page();
+                        } else {
+                            jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
+                            jQuery.UbizOIWidget.w_go_back_to_output_page();
                         }
                     });
                 } else {
                     jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
                     jQuery.UbizOIWidget.w_go_back_to_output_page();
                     swal(response.data.message, {
-                        icon: "success",
+                        type: "success",
                     });
                 }
 
             } else {
                 swal(response.data.message, {
-                    icon: "error",
+                    type: "error",
                 });
             }
 
