@@ -265,6 +265,7 @@ const _NO = i18next.t("No");
                 addParam.push(addObj);
             }
             var data = {
+                sup_id: $("#i-put #txt_sup_id").val(),
                 sup_code: $("#i-put #txt_sup_code").val(),
                 sup_name: $("#i-put #txt_sup_name").val(),
                 sup_website: $("#i-put #txt_sup_website").val(),
@@ -296,8 +297,17 @@ const _NO = i18next.t("No");
                             reverseButtons: true
                         }).then((result) => {
                             if (result.value) {
+                                var formInput = jQuery.UbizOIWidget.w_get_data_input_form();
+                                var formData = jQuery.UbizOIWidget.w_get_images_upload();
+                                formData.append("supplier", JSON.stringify(formInput));
                                 formData.append("_method","put");
-                                ubizapis('v1','/suppliers/'+id+'/update', 'post', formData,params,jQuery.UbizOIWidget.w_reset_input_change);
+                                var params = jQuery.UbizOIWidget.w_get_param_search_sort();
+                                ubizapis('v1','/suppliers/'+formInput.sup_id+'/updatePaging', 'post', formData,params,function(){
+                                    jQuery.UbizOIWidget.w_reset_input_change();
+                                    jQuery.UbizOIWidget.w_get_specific_supplier_by_id(id, index);
+                                    $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
+                                });
+                            } else {
                                 jQuery.UbizOIWidget.w_get_specific_supplier_by_id(id, index);
                                 $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
                             }
@@ -480,6 +490,7 @@ const _NO = i18next.t("No");
             var addresses = data.sad_address;
             $("#i-put .GtF .delete").attr("onclick","jQuery.UbizOIWidget.w_delete("+data.sup_id+")");
             $("#i-put .GtF .save").attr("onclick", "jQuery.UbizOIWidget.w_save("+data.sup_id+")");
+            $("#i-put #nicescroll-iput #txt_sup_id").val(data.sup_id);
             $("#i-put #nicescroll-iput #txt_sup_code").val(data.sup_code);
             $("#i-put #nicescroll-iput #txt_sup_name").val(data.sup_name).change(function() {inputChange(this, data.sup_name)});
             $("#i-put #nicescroll-iput #txt_sup_website").val(data.sup_website).change(function() {inputChange(this, data.sup_website)});
@@ -545,7 +556,9 @@ const _NO = i18next.t("No");
                             '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
                             '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
                             '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-                        if (txt_val.length > 100) {
+                        if (txt_val.length == 0) {
+                            break;
+                        } else if (txt_val.length > 100) {
                             isValid = false;
                             showErrorInput(txt_input[i], i18next.t("invalid length",{length: "100"}));
                         } else if (regex.test(String(txt_val).toLowerCase()) == false) {
@@ -565,7 +578,9 @@ const _NO = i18next.t("No");
                         break;
                     case "txt_sup_fax":
                         var regex = /^\+?[0-9]{6,}$/;
-                        if (txt_val.length > 20) {
+                        if (txt_val.length == 0) {
+                            break;
+                        } else if (txt_val.length > 20) {
                             isValid = false;
                             showErrorInput(txt_input[i], i18next.t("invalid length",{length: "20"}));
                         } else if (regex.test(String(txt_val).toLowerCase()) == false) {

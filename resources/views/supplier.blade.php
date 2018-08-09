@@ -405,6 +405,7 @@
                                 @include('components.upload_image')
                             </div>
                             <div class="col-sm-5 col-md-5 col-xl-5">
+                                <input type='hidden' id="txt_sup_id" value=""> 
                                 @include('components.input',['width'=>'300','type'=>'disabled', 'control_id'=>'txt_sup_code', 'label'=>__("Code"), 'length'=>5])
                                 @include('components.input',['width'=>'300','type'=>'required', 'control_id'=>'txt_sup_name', 'label'=>__("Supplier Name"), 'length'=>100])
                                 @include('components.input',['width'=>'300','control_id'=>'txt_sup_website', 'label'=>__('Website'), 'length'=>100])
