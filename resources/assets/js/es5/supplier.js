@@ -312,6 +312,7 @@ const _NO = i18next.t("No");
                                     $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
                                 });
                             } else {
+                                jQuery.UbizOIWidget.w_reset_input_change();
                                 jQuery.UbizOIWidget.w_get_specific_supplier_by_id(id, index);
                                 $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
                             }
