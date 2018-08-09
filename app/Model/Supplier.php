@@ -237,11 +237,11 @@ class Supplier implements JWTSubject
     public function updateSupplierAddress($listAddress, $sup_id) {
         $deleteListSadId = array();
         foreach ($listAddress as $address) {
-            if ($address['address'] == "") {
+            if (empty($address['address']) && !empty($address['sad_id'])){
                 $deleteListSadId[] = $address['sad_id'];
             } else if (empty($address['sad_id']) && !empty($address['address'])) {
                 $this->insertSupplierAddress($address, $sup_id);
-            } else if (!empty($address['address'])) {
+            } else if (!empty($address['address']) && !empty($address['sad_id'])) {
                 DB::table('supplier_address')->where('sad_id','=',$address['sad_id'])
                     ->update(
                         [

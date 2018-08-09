@@ -109,6 +109,24 @@ class SupplierController extends Controller
         return response()->json(['supplier' => $data,'paging' => $paging, 'success' => true, 'message' => __("Successfully processed."),'method'=>'update'], 200);
     }
 
+    public function updateSupplierByPaging($id, Request $request) {
+        try {
+            $params = json_decode($request->input('supplier'), true);
+            $params['sup_id'] = $id;
+            list($page, $sort, $search) = $this->getPageSortSearch($request);
+
+            if (!empty($request->file('image-upload'))) {
+                $params['extension'] = $request->file('image-upload')->getClientOriginalExtension();
+                $params['tmp_name'] = $request->file('image-upload')->getRealPath();
+            }
+            $supplier = new Supplier();
+            $supplier->updateSupplierById($params);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['success' => true, 'message' => __("Successfully processed."),'method'=>'update'], 200);
+    }
+
     private function getPageSortSearch($request) {
         $page = 0;
         if ($request->has('page')) {
