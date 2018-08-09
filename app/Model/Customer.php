@@ -105,11 +105,11 @@ class Customer implements JWTSubject
         return $customers;
     }
 	
-	// public function countCustomers(){
-		// $totalCustomers = DB::table('customer')->where('delete_flg', '0')->count();
+	public function countCustomers(){
+		$totalCustomers = DB::table('customer')->where('delete_flg', '0')->count();
 		
-		// return $totalCustomers;
-	// }
+		return $totalCustomers;
+	}
 	
 	public function getCustomer($id) 
 	{
