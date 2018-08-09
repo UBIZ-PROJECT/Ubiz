@@ -90,7 +90,7 @@ class Supplier implements JWTSubject
                 order by $field_name $order_by
                 limit ? offset ?) sup
                 LEFT JOIN supplier_address addr ON 
-                addr.sad_id = (select sad_id from supplier_address where delete_flg = '0' and sup.sup_id = sup_id) ",$params);
+                addr.sad_id IN (select sad_id from supplier_address where delete_flg = '0' and sup.sup_id = sup_id) ",$params);
         $data = array();
         $data[0] = (object) array();
         $data[0]->sad_address = array();
@@ -140,8 +140,8 @@ class Supplier implements JWTSubject
             if (!empty($param['addresses'])) {
                 $addresses = $param['addresses'];
                 foreach ($addresses as $address) {
-                    $addrParam = array("sup_id"=>$id, "address"=>$address);
-                    $this->insertSupplierAddress($addrParam);
+                    if (empty($addressd)) continue;
+                    $this->insertSupplierAddress($id, $address);
                 }
             }
 

@@ -57,7 +57,7 @@
                                             </a>
                                         </li>
                                         <li class="who">
-                                            <a class="ruo" role="button" href="#">
+                                            <a class="ruo" role="button" href="/suppliers">
                                                 <div class="pto">
                                                     <img src="{{asset('images/app_bg.png')}}">
                                                     <div class="zro">
@@ -87,6 +87,18 @@
                                                     <div class="zro">
                                                         <div class="rco">
                                                             <div class="kko">{{ __("Department") }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="who">
+                                            <a class="ruo" role="button" href="/products">
+                                                <div class="pto">
+                                                    <img src="{{asset('images/app_bg.png')}}">
+                                                    <div class="zro">
+                                                        <div class="rco">
+                                                            <div class="kko">{{ __("Product") }}</div>
                                                         </div>
                                                     </div>
                                                 </div>

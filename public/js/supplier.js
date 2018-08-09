@@ -634,6 +634,7 @@ const _NO = i18next.t("No");
             $("#i-put #nicescroll-iput #txt_sup_phone").val("").isChange("false");
             $("#i-put #nicescroll-iput #txt_sup_fax").val("").isChange("false");
             $("#i-put #nicescroll-iput #txt_sup_mail").val("").isChange("false");
+            $("#i-put #nicescroll-iput .txt_address").val("").isChange("false");
             $("#i-put #nicescroll-iput .file-upload").isChange("false");
         },
         w_clear_search_form:function(){
