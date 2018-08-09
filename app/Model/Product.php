@@ -139,12 +139,12 @@ class Product implements JWTSubject
 //            $seri_no = $this->generateCode();
             $id = DB::table('product')->insertGetId(
                 [
-                    'seri_no'=>$param['seri_no'],
-                    'name'=>$param['name'],
-                    'branch'=>$param['branch'],
-                    'model'=>$param['model'],
-                    'detail'=>$param['detail'],
-                    'type_id'=>$param['type_id'],
+                    'seri_no'=> $param['seri_no'],
+                    'name'=> $param['name'],
+                    'branch'=>!empty($param['branch'])? $param['branch'] : null,
+                    'model'=>!empty($param['model'])? $param['model'] : null,
+                    'detail'=>!empty($param['detail'])? $param['detail'] : null,
+                    'type_id'=>!empty($param['type_id'])? $param['type_id'] : null,
                     'delete_flg'=>'0',
                     'inp_date'=>date('Y-m-d H:i:s'),
                     'upd_date'=>date('Y-m-d H:i:s'),
@@ -152,8 +152,8 @@ class Product implements JWTSubject
                     'upd_user'=>$this->CONST_USER
                 ]
             );
-
-            foreach ($param['images'] as $image) {
+            foreach ($param['images'] as $element=>$image) {
+                if ($element == "delete") continue;
                 $this->insertProductImage($id,$image['extension'], $image['temp_name']);
             }
 
@@ -223,10 +223,10 @@ class Product implements JWTSubject
                 ->update([
                     'seri_no'=>$param['seri_no'],
                     'name'=>$param['name'],
-                    'branch'=>$param['branch'],
-                    'model'=>$param['model'],
-                    'detail'=>$param['detail'],
-                    'type_id'=>$param['type_id'],
+                    'branch'=>!empty($param['branch']) ? $param['branch'] : null,
+                    'model'=>!empty($param['model']) ? $param['model'] : null,
+                    'detail'=>!empty($param['detail']) ? $param['detail'] : null,
+                    'type_id'=>!empty($param['type_id']) ? $param['type_id'] : null,
                     'upd_date'=>date('Y-m-d H:i:s')
                 ]);
             if (!empty($param['images']['delete'])) {
