@@ -80,7 +80,7 @@ class ProductController extends Controller
         } catch(\Throwable $e) {
             throw $e;
         }
-        return response()->json(['product' => $data, "product_type" => $productType ,'paging' => $paging,'success' => true, 'message' => $message, 'search'=>$search], 200);
+        return response()->json(['product' => $data, "product_type" => $productType ,'paging' => $paging,'success' => true, 'message' => $message, 'search'=>$search,'method'=>'insert'], 200);
     }
 
     public function updateProduct($id, Request $request) {
@@ -108,7 +108,7 @@ class ProductController extends Controller
         } catch(\Throwable $e) {
             throw $e;
         }
-        return response()->json(['product' => $data, "product_type" => $productType ,'paging' => $paging,'success' => true, 'message' => $message, 'search'=>$search], 200);
+        return response()->json(['product' => $data, "product_type" => $productType ,'paging' => $paging,'success' => true, 'message' => $message, 'search'=>$search,'method'=>'update'], 200);
     }
 
     public function updateProductPaging($id, Request $request) {
@@ -149,7 +149,7 @@ class ProductController extends Controller
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['product' => $data, "product_type" => $productType ,'paging' => $paging,'success' => true, 'message' => $message, 'search'=>$search], 200);
+        return response()->json(['product' => $data, "product_type" => $productType ,'paging' => $paging,'success' => true, 'message' => $message, 'search'=>$search,'method'=>'delete'], 200);
     }
 
     private function getPageSortSearch($request) {

@@ -54,27 +54,22 @@
 			}
             if (ids.length == 0)
                 return false;
-
-            swal({
-                title: "Bạn có muốn xóa dữ liệu không?",
-                text: "Một khi xóa, bạn sẽ không có khả năng khôi phục dữ liệu này!",
-                icon: "warning",
-                buttons: true,
-                buttons: {
-                    cancel: "Không",
-                    catch: {
-                        text: "Có",
-                        value: "catch",
-                    }
-                },
-                dangerMode: true,
-            }).then((value) => {
-                switch (value) {
-                    case "catch":
-                        ubizapis('v1', '/customers/' + ids.join(',') + '/delete', 'delete', null, null, jQuery.UbizOIWidget.w_delete_callback);
-                        break;
+			
+			swal({
+				title: "Bạn có muốn xóa dữ liệu không?",
+				text: "Một khi xóa, bạn sẽ không có khả năng khôi phục dữ liệu này!",
+				type: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				cancelButtonText: 'Không',
+				confirmButtonText: 'Có',
+				reverseButtons: true
+			}).then((result) => {
+				if (result.value) {
+					ubizapis('v1', '/customers/' + ids.join(',') + '/delete', 'delete', null, null, jQuery.UbizOIWidget.w_delete_callback);
                 }
-            });
+			});
         },
         w_create:function(){
             jQuery.UbizOIWidget.w_go_to_input_page(0);
@@ -196,14 +191,6 @@
 				var ids = [];
 				ids.push(id);
 				jQuery.UbizOIWidget.w_delete(ids);
-			});
-			
-			$("#change_avt").click(function(){
-				$("#avatar").click();
-			});
-			
-			$("#avatar").change(function(){
-				jQuery.UbizOIWidget.w_preview_avatar(this);
 			});
         },
 		w_go_to_input_page_paging: function (index) {
@@ -448,8 +435,8 @@
             }
 
             var paging_label = '<div id="paging-label" class="amH" style="user-select: none"><span class="Dj"><span><span class="ts">' + f_num + '</span>–<span class="ts">' + m_num + '</span></span> / <span class="ts">' + rows_num + '</span></span></div>';
-            var paging_older = '<div id="paging-older" ' + get_older_data_func + ' class="amD utooltip" title="Cũ hơn"><span class="amF">&nbsp;</span><img class="amI ' + older_css + '" src="http://ubiz.local/images/cleardot.gif" alt=""></div>';
-            var paging_newer = '<div id="paging-newer" ' + get_newer_data_func + ' class="amD utooltip" title="Mới hơn"><span class="amF">&nbsp;</span><img class="amJ ' + newer_css + '" src="http://ubiz.local/images/cleardot.gif" alt=""></div>';
+            var paging_older = '<div id="paging-older" ' + get_older_data_func + ' class="amD utooltip" title="Cũ hơn"><span class="amF">&nbsp;</span><img class="amI ' + older_css + '" src="./images/cleardot.gif" alt=""></div>';
+            var paging_newer = '<div id="paging-newer" ' + get_newer_data_func + ' class="amD utooltip" title="Mới hơn"><span class="amF">&nbsp;</span><img class="amJ ' + newer_css + '" src="./images/cleardot.gif" alt=""></div>';
 
             jQuery("#paging-label").replaceWith(paging_label);
             jQuery("#paging-older").replaceWith(paging_older);
@@ -465,29 +452,26 @@
 			var data = jQuery.UbizOIWidget.w_get_data_input_form();
 			var cus_id = jQuery('input[name="cus_id"]').val();
 			
+			
+			
 			swal({
-                title: "Bạn có chắc chắn muốn lưu dữ liệu?",
-                icon: "warning",
-                buttons: true,
-                buttons: {
-                    cancel: "Không",
-                    catch: {
-                        text: "Có",
-                        value: "catch",
-                    }
-                },
-                dangerMode: true,
-            }).then((value) => {
-                switch (value) {
-                    case "catch":
-                        if(cus_id != 0){
-							ubizapis('v1', '/customer-update', 'post', data, null, jQuery.UbizOIWidget.w_save_callback);
-						}else{
-							ubizapis('v1', '/customer-create', 'post', data, null, jQuery.UbizOIWidget.w_save_callback);
-						}
-                        break;
+				title: "Bạn có chắc chắn muốn lưu dữ liệu?",
+				type: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				cancelButtonText: 'Không',
+				confirmButtonText: 'Có',
+				reverseButtons: true
+			}).then((result) => {
+				if (result.value) {
+					if(cus_id != 0){
+						ubizapis('v1', '/customer-update', 'post', data, null, jQuery.UbizOIWidget.w_save_callback);
+					}else{
+						ubizapis('v1', '/customer-create', 'post', data, null, jQuery.UbizOIWidget.w_save_callback);
+					}
                 }
-            });
+			});
 			
 			// jQuery.UbizOIWidget.w_go_back_to_output_page();
 		},
@@ -545,3 +529,15 @@ jQuery(document).ready(function () {
         return _;
     }
 })(jQuery);
+
+$("#change_avt").click(function(){
+	$("#avatar").click();
+});
+
+$("#avt_img").click(function(){
+	$("#avatar").click();
+});
+
+$("#avatar").change(function(){
+	jQuery.UbizOIWidget.w_preview_avatar(this);
+});
