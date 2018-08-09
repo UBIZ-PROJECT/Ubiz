@@ -284,6 +284,7 @@ const _NO = i18next.t("No");
             if (id != 0) {
                 if (id == -1) {
                     if (jQuery.UbizOIWidget.w_is_input_changed() == true) {
+                        removeErrorInput();
                         const ALERT_TITLE = i18next.t("Do you want to save it?");
                         const ALERT_ICON = "warning";
                         swal({
@@ -297,6 +298,9 @@ const _NO = i18next.t("No");
                             reverseButtons: true
                         }).then((result) => {
                             if (result.value) {
+                                if (jQuery.UbizOIWidget.w_validate_input() == false) {
+                                    return;
+                                }
                                 var formInput = jQuery.UbizOIWidget.w_get_data_input_form();
                                 var formData = jQuery.UbizOIWidget.w_get_images_upload();
                                 formData.append("supplier", JSON.stringify(formInput));
@@ -544,7 +548,9 @@ const _NO = i18next.t("No");
                 var txt_val = $(txt_input[i]).val().trim();
                 switch(txt_id) {
                     case "txt_sup_name":
-                        if (txt_val.length > 100) {
+                        if (txt_val.length == 0) {
+                            break;
+                        } else if (txt_val.length > 100) {
                             isValid = false;
                             showErrorInput(txt_input[i], i18next.t("invalid length",{length: "100"}));
                         }
@@ -568,7 +574,9 @@ const _NO = i18next.t("No");
                         break;
                     case "txt_sup_phone":
                         var regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
-                        if (txt_val.length > 15) {
+                        if (txt_val.length == 0) {
+                            break;
+                        } else if (txt_val.length > 15) {
                             isValid = false;
                             showErrorInput(txt_input[i], i18next.t("invalid length",{length: "15"}));
                         } else if (regex.test(String(txt_val).toLowerCase()) == false || txt_val.length < 9) {
@@ -590,7 +598,9 @@ const _NO = i18next.t("No");
                         break;
                     case "txt_sup_mail":
                         var regex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-                        if (txt_val.length > 100) {
+                        if (txt_val.length == 0) {
+                            break;
+                        } else if (txt_val.length > 100) {
                             isValid = false;
                             showErrorInput(txt_input[i], i18next.t("invalid length",{length: "100"}));
                         } else if (regex.test(String(txt_val).toLowerCase()) == false) {
