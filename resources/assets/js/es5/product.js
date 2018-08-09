@@ -107,7 +107,7 @@ var lst_image_delete = [];
                     reverseButtons: true
                 }).then((result) => {
                     if (result.value) {
-                        ubizapis('v1','/product/insert', 'post', formData, params, jQuery.UbizOIWidget.w_process_callback);
+                        ubizapis('v1','/products/insert', 'post', formData, params, jQuery.UbizOIWidget.w_process_callback);
                     }
                 });
             } else {
@@ -271,6 +271,7 @@ var lst_image_delete = [];
             }
 
             var data = {
+                id: $("#i-put #txt_prd_id").val(),
                 seri_no: $("#i-put #txt_seri_no").val(),
                 name: $("#i-put #txt_name").val(),
                 branch: $("#i-put #txt_branch").val(),
@@ -288,12 +289,53 @@ var lst_image_delete = [];
         },
         w_go_to_input_page: function (id, index) {
             if (id != 0) {
-                jQuery.UbizOIWidget.w_get_specific_product_by_id(id, index);
-                $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
+                if (id == -1) {
+                    if (jQuery.UbizOIWidget.w_is_input_changed() == true) {
+                        removeErrorInput();
+                        const ALERT_TITLE = i18next.t("Do you want to save it?");
+                        const ALERT_ICON = "warning";
+                        swal({
+                            title: ALERT_TITLE,
+                            type: ALERT_ICON,
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            cancelButtonText: _NO,
+                            confirmButtonText: _YES,
+                            reverseButtons: true
+                        }).then((result) => {
+                            if (result.value) {
+                                //validate
+                                if (jQuery.UbizOIWidget.w_validate_input() == false) {
+                                    return;
+                                }
+                                var formInput = jQuery.UbizOIWidget.w_get_data_input_form();
+                                var formData = jQuery.UbizOIWidget.w_get_images_upload();
+                                formData.append("product", JSON.stringify(formInput));
+                                var params = jQuery.UbizOIWidget.w_get_param_search_sort();
 
+                                formData.append("_method","put");
+                                ubizapis('v1','/products/'+formInput.id+'/updatePaging', 'post', formData,params,function() {
+                                    jQuery.UbizOIWidget.w_reset_input_change();
+                                    jQuery.UbizOIWidget.w_get_specific_product_by_id(id, index);
+                                    $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
+                                });
+                            } else {
+                                jQuery.UbizOIWidget.w_reset_input_change();
+                                jQuery.UbizOIWidget.w_get_specific_product_by_id(id, index);
+                                $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
+                            }
+                        });
+                    } else {
+                        jQuery.UbizOIWidget.w_get_specific_product_by_id(id, index);
+                        $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
+                    }
+                } else {
+                    jQuery.UbizOIWidget.w_get_specific_product_by_id(id, index);
+                    $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
+                }
             }
             else{
-
                 $("#i-put .GtF .delete").css("display","none").removeAttr("onclick");
             }
 
@@ -315,6 +357,14 @@ var lst_image_delete = [];
                 autohidemode: false,
                 horizrailenabled: false
             });
+        },w_reset_input_change: function() {
+            $("#i-put #nicescroll-iput #txt_seri_no").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_name").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_branch").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_model").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_name_type").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_detail").val("").isChange("false");
+            $("#i-put #nicescroll-iput .file-upload").isChange("false");
         },
         w_set_paging_for_detail_page: function(page, totalPage, isReset = false) {
             var previous = $("#i-put .aqK .previous");
@@ -397,7 +447,7 @@ var lst_image_delete = [];
                 if (response.data.method == "insert") {
                     swal({
                         title:response.data.message,
-                        text: i18next.t("Do you want to continue insert Supplier?"),
+                        text: i18next.t("Do you want to continue insert Product?"),
                         type: "success",
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
@@ -460,6 +510,7 @@ var lst_image_delete = [];
             var data = response.data.product[0];
             $("#i-put .GtF .delete").attr("onclick","jQuery.UbizOIWidget.w_delete("+data.id+")");
             $("#i-put .GtF .save").attr("onclick", "jQuery.UbizOIWidget.w_save("+data.id+")");
+            $("#i-put #nicescroll-iput #txt_prd_id").val(data.id);
             $("#i-put #nicescroll-iput #txt_seri_no").val(data.seri_no);
             $("#i-put #nicescroll-iput #txt_name").val(data.name).change(function() {inputChange(this, data.name)});
             $("#i-put #nicescroll-iput #txt_branch").val(data.branch).change(function() {inputChange(this, data.branch)});

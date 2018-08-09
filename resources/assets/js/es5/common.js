@@ -172,19 +172,19 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
 }
 
 function showErrorInput(control, error_message) {
-    parentControl = $(control).closest(".root_textfield");
+    parentControl = $(control).closest(".root_textfield, .root_textarea");
     $(parentControl).find(".error-message-text").html(error_message);
     $(parentControl).find('.error_message').removeClass('hidden-content');
     $(parentControl).find('.wrapper').addClass('invalid');
-    $(parentControl).find('.fieldGroup').addClass('invalid');
+    $(parentControl).find('.fieldGroup, .fieldGroup_area').addClass('invalid');
 }
 
 function removeErrorInput() {
-    $('.root_textfield').each(function () {
+    $('.root_textfield, .root_textarea').each(function () {
         $(this).find('.error-message-text').html('');
         $(this).find('.error_message').addClass('hidden-content');
         $(this).find('.wrapper').removeClass('invalid');
-        $(this).find('.fieldGroup').removeClass('invalid');
+        $(this).find('.fieldGroup, .fieldGroup_area').removeClass('invalid');
     });
 }
 

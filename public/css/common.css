@@ -1168,6 +1168,10 @@
     outline: 0;
 }
 
+.input-textarea:active,.input-textarea:focus, .input-textarea:hover {
+    outline: 0;
+}
+
 .dropdown_field {
     background-color: transparent;
     color: #333333;
@@ -1187,11 +1191,13 @@
     color: #a6a6a6;
 }
 
-.root_textfield.rootIsUnderlined.rootIsDisabled .fieldGroup {
+.root_textfield.rootIsUnderlined.rootIsDisabled .fieldGroup,
+.root_textfield.rootIsUnderlined.rootIsDisabled .fieldGroup_area{
     background-color: transparent;
 }
 
-.rootIsDisabled .fieldGroup {
+.rootIsDisabled .fieldGroup,
+.rootIsDisabled .fieldGroup_area{
     background-color: #f4f4f4;
     border-color: #f4f4f4;
 }
@@ -1206,17 +1212,20 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
     cursor: not-allowed !important;
 }
 
-.input_field[disabled] {
+.input_field[disabled],
+.input-textarea[disabled]{
     background-color: transparent;
     border-color: transparent;
 }
 
-.root_textfield.rootIsRequiredLabel .ms-Label::after {
+.root_textfield.rootIsRequiredLabel .ms-Label::after,
+.root_textarea.rootIsRequiredLabel .ms-Label::after {
     content: ' *';
     color: #a80000;
 }
 
-.root_textfield.rootIsUnderlined .wrapper.invalid {
+.root_textfield.rootIsUnderlined .wrapper.invalid,
+.root_textarea.rootIsUnderlined .wrapper.invalid {
     border-bottom: 1px solid #a80000;
 }
 
