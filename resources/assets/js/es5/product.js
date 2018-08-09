@@ -291,6 +291,7 @@ var lst_image_delete = [];
             if (id != 0) {
                 if (id == -1) {
                     if (jQuery.UbizOIWidget.w_is_input_changed() == true) {
+                        removeErrorInput();
                         const ALERT_TITLE = i18next.t("Do you want to save it?");
                         const ALERT_ICON = "warning";
                         swal({
@@ -304,13 +305,23 @@ var lst_image_delete = [];
                             reverseButtons: true
                         }).then((result) => {
                             if (result.value) {
+                                //validate
+                                if (jQuery.UbizOIWidget.w_validate_input() == false) {
+                                    return;
+                                }
                                 var formInput = jQuery.UbizOIWidget.w_get_data_input_form();
                                 var formData = jQuery.UbizOIWidget.w_get_images_upload();
-                                formData.append("product", JSON.stringify());
+                                formData.append("product", JSON.stringify(formInput));
                                 var params = jQuery.UbizOIWidget.w_get_param_search_sort();
 
                                 formData.append("_method","put");
-                                ubizapis('v1','/products/'+formInput.id+'/updatePaging', 'post', formData,params,jQuery.UbizOIWidget.w_reset_input_change);
+                                ubizapis('v1','/products/'+formInput.id+'/updatePaging', 'post', formData,params,function() {
+                                    jQuery.UbizOIWidget.w_reset_input_change();
+                                    jQuery.UbizOIWidget.w_get_specific_product_by_id(id, index);
+                                    $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
+                                });
+                            } else {
+                                jQuery.UbizOIWidget.w_reset_input_change();
                                 jQuery.UbizOIWidget.w_get_specific_product_by_id(id, index);
                                 $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
                             }
@@ -346,6 +357,14 @@ var lst_image_delete = [];
                 autohidemode: false,
                 horizrailenabled: false
             });
+        },w_reset_input_change: function() {
+            $("#i-put #nicescroll-iput #txt_seri_no").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_name").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_branch").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_model").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_name_type").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_detail").val("").isChange("false");
+            $("#i-put #nicescroll-iput .file-upload").isChange("false");
         },
         w_set_paging_for_detail_page: function(page, totalPage, isReset = false) {
             var previous = $("#i-put .aqK .previous");

@@ -153,7 +153,7 @@ class Product implements JWTSubject
                 ]
             );
             foreach ($param['images'] as $element=>$image) {
-                if ($element == "delete") continue;
+                if ($element === "delete") continue;
                 $this->insertProductImage($id,$image['extension'], $image['temp_name']);
             }
 

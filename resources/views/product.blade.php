@@ -413,11 +413,11 @@
                                 @include('components.input',['width'=>'250','type'=>'required', 'control_id'=>'txt_seri_no', 'label'=>__("Seri Number"), 'length'=>5])
                                 @include('components.input',['width'=>'250','type'=>'required', 'control_id'=>'txt_name', 'label'=>__("Name"), 'length'=>100])
                                 @include('components.input',['width'=>'250','control_id'=>'txt_branch', 'label'=>__('Branch'), 'length'=>100])
-                                @include('components.input',['width'=>'250','type'=>'required', 'control_id'=>'txt_model', 'label'=>__('Model'), 'length'=>15])
+                                @include('components.input',['width'=>'250','control_id'=>'txt_model', 'label'=>__('Model'), 'length'=>15])
                                 @include('components.dropdown',['width'=>'250','control_id'=>'txt_name_type', 'label'=>__('Type'), 'data'=> Helper::convertDataToDropdownOptions($product_type, 'id', 'name_type')])
                             </div>
                             <div class="col-sm-3 col-md-3 col-xl-3 z-pdr">
-                                @include('components.textarea',['width'=>'250','type'=>'required', 'control_id'=>'txt_detail', 'label'=>__('Detail'), 'length'=>100])
+                                @include('components.textarea',['width'=>'250', 'control_id'=>'txt_detail', 'label'=>__('Detail')])
                             </div>
                         </div>
                     </div>
