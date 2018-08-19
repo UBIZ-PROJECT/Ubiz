@@ -135,6 +135,29 @@
                             </div>
                             <div class="hdG">
                                 <div class="dcB col-1" role="presentation">
+                                    <div class="dWB dWT" role="button" sort-name="seri_no" order-by="asc" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                        <div class="dvJ">
+                                            <div class="tDv">{{ __('Seri Number') }}</div>
+                                            <div class="mhH">
+                                                <div class="acD">
+                                                    <div class="huK">
+                                                        <svg class="faH asc sVGT" x="0px" y="0px" width="18px" height="18px"
+                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                        </svg>
+                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
+                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dcB col-2" role="presentation">
                                     <div class="dWB" role="button" sort-name="" order-by="">
                                         <div class="dvJ">
                                             <div class="tDv"></div>
@@ -157,31 +180,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="dcB col-2" role="presentation">
-                                    <div class="dWT" role="button" sort-name="prd_name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
-                                        <div class="dvJ">
-                                            <div class="tDv">Hình Ảnh</div>
-                                            <div class="mhH">
-                                                <div class="acD">
-                                                    <div class="huK">
-                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
-                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
-                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
-                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
-                                                        </svg>
-                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
-                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
-                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
-                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
-                                                        </svg>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="dcB col-3" role="presentation">
-                                    <div class="dWT" role="button" sort-name="prd_name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                    <div class="dWB" role="button" sort-name="name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">{{ __('Name') }}</div>
                                             <div class="mhH">
@@ -204,7 +204,7 @@
                                     </div>
                                 </div>
                                 <div class="dcB col-4" role="presentation">
-                                    <div class="dWB" role="button" sort-name="" order-by="" >
+                                    <div class="dWB" role="button" sort-name="branch" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">{{__('Brand')}}</div>
                                             <div class="mhH">
@@ -227,7 +227,7 @@
                                     </div>
                                 </div>
                                 <div class="dcB col-5" role="presentation">
-                                    <div class="dWB" role="button" sort-name="prd_model" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                    <div class="dWB" role="button" sort-name="model" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">{{ __('Model') }}</div>
                                             <div class="mhH">
@@ -287,11 +287,14 @@
                                                     <input type="checkbox" class="ckb-i" value="{{$prd->id}}" style="display: none"/>
                                                     <div class="asU ckb-c"></div>
                                                 </div>
+                                                <div class="nCT" title="{{$prd->seri_no}}">
+                                                    <span>{{$prd->seri_no}}</span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="tcB col-2">
                                             <div class="cbo">
-                                                <div class="nCji" title="{{$prd->prd_img_id}}">
+                                                <div class="nCji" title="{{$prd->image_id}}">
                                                     <img {{empty($prd->image) ? '' : 'src='.$prd->image}}  class="{{empty($prd->image) ? '' : 'img-thumbnail '}}prd-image"/>
                                                 </div>
                                             </div>
@@ -305,8 +308,8 @@
                                         </div>
                                         <div class="tcB col-4">
                                             <div class="cbo">
-                                                <div class="nCj" title="{{$prd->brd_name}}">
-                                                    <span>{{$prd->brd_name}}</span>
+                                                <div class="nCj" title="{{$prd->branch}}">
+                                                    <span>{{$prd->branch}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -374,7 +377,7 @@
                                 <span class="Di">
                                     <div class="amH" style="user-select: none">
                                         <span class="Dj">
-                                            <span><span class="current-page"></span></span> / <span class="row-numbers"></span>
+                                            <span><span class="current-page">1</span></span> / <span class="row-numbers">229</span>
                                         </span>
                                     </div>
                                     <div class="amD utooltip previous" title="{{ __("Older") }}">
@@ -407,15 +410,14 @@
                             </div>
                             <div class="col-sm-3 col-md-3 col-xl-3">
                                 <input type="hidden" value="" id="txt_prd_id">
-                                <input type="hidden" value="" id="txt_brd_id">
-                                @include('components.input',['width'=>'250','type'=>'disabled', 'control_id'=>'txt_brand_name', 'label'=>__("Brand"), 'length'=>5])
+                                @include('components.input',['width'=>'250','type'=>'required', 'control_id'=>'txt_seri_no', 'label'=>__("Seri Number"), 'length'=>5])
                                 @include('components.input',['width'=>'250','type'=>'required', 'control_id'=>'txt_name', 'label'=>__("Name"), 'length'=>100])
-                                @include('components.input',['width'=>'250','control_id'=>'txt_unit', 'label'=>__('Unit'), 'length'=>20])
-                                @include('components.input',['width'=>'250','control_id'=>'txt_model', 'label'=>__('Model'), 'length'=>100])
+                                @include('components.input',['width'=>'250','control_id'=>'txt_branch', 'label'=>__('Brand'), 'length'=>100])
+                                @include('components.input',['width'=>'250','control_id'=>'txt_model', 'label'=>__('Model'), 'length'=>15])
                                 @include('components.dropdown',['width'=>'250','control_id'=>'txt_name_type', 'label'=>__('Type'), 'data'=> Helper::convertDataToDropdownOptions($product_type, 'id', 'name_type')])
                             </div>
                             <div class="col-sm-3 col-md-3 col-xl-3 z-pdr">
-                                @include('components.textarea',['width'=>'250', 'control_id'=>'txt_prd_note', 'label'=>__('Note')])
+                                @include('components.textarea',['width'=>'250', 'control_id'=>'txt_detail', 'label'=>__('Detail')])
                             </div>
                         </div>
                     </div>

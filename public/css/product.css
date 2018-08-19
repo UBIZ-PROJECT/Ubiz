@@ -1,9 +1,9 @@
 .main-content .r-content .col-1 {
-    width: 70px;
+    width: 30px;
 }
 
 .main-content .r-content .col-2 {
-    width: 100px;
+    width: 200px;
 }
 
 .main-content .r-content .col-3 {
@@ -17,7 +17,6 @@
 .main-content .r-content .col-5 {
     width: 150px;
 }
-
 .main-content .r-content .col-6 {
     width: 250px;
 }

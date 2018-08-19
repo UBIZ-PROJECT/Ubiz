@@ -34,7 +34,7 @@ switch ($type) {
 
 <div class="textfield {{$html_type}} root_textfield rootIsUnderlined {{$control_id}}_container" style="width: {{ $html_width }}">
     <div class="wrapper">
-        <label for="{{$control_id}}" class="ms-Label root-56">{{$label}}:</label>
+        <label for="{{$control_id}}" class="ms-Label root-56 lbl-primary">{{$label}}:</label>
         <div class="fieldGroup">
             <input is-change="false" type="text" {{ $html_max_length }} {{$html_control_type}} id="{{$control_id}}" name="{{$control_id}}" value="" class="input_field {{ $html_class }}">
         </div>

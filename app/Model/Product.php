@@ -56,19 +56,22 @@ class Product implements JWTSubject
         list($field_name, $order_by) = $this->makeOrderBy($sort);
         $rows_per_page = env('ROWS_PER_PAGE', 10);
         $product = DB::select("
-            SELECT product.id,product.seri_no,product.name,product_type.id as prd_type_id,product_type.name_type,product.branch,product.model,product_image.extension,product_image.id as image_id from (
+            SELECT product.prd_id as id,product.prd_name as name,product_type.prd_type_id ,product_type.prd_type_name as name_type, 
+            product.prd_note,product.prd_unit, product.prd_model as model,product_image.extension,product_image.prd_img_id, brand.brd_name from (
                 SELECT *
                 FROM product 
                 LIMIT $rows_per_page OFFSET " . ($page * $rows_per_page)." ) product
             LEFT JOIN product_type product_type ON 
-            product.type_id = product_type.id
+            product.type_id = product_type.prd_type_id
+            LEFT JOIN brand brand ON
+            product.brd_id = brand.brd_id
             LEFT JOIN product_image product_image ON
-            product_image.id = (select id from product_image as pis where product.id = pis.prd_id and pis.delete_flg = '0' limit 1) 
+            product_image.prd_img_id = (select prd_img_id from product_image as pis where product.prd_id = pis.prd_id and pis.delete_flg = '0' limit 1) 
            $where_raw 
             ORDER BY $field_name $order_by  ", $params);
         foreach ($product as &$item) {
-            if (!empty($item->image_id)) {
-                $item->image = Helper::readImage($item->id . '-' . $item->image_id . '.' . $item->extension, "prd");
+            if (!empty($item->prd_img_id)) {
+                $item->image = Helper::readImage($item->id . '-' . $item->prd_img_id . '.' . $item->extension, "prd");
             }
         }
         return $product;
@@ -79,34 +82,45 @@ class Product implements JWTSubject
         list($field_name, $order_by) = $this->makeOrderBy($sort);
         $rows_per_page = 1;
         $product = DB::select("
-            SELECT product.id,product.seri_no,product.name,product.detail,product_type.id as prd_type_id,product_type.name_type,product.branch,product.model,product_image.extension,product_image.id as image_id from (
+            SELECT product.prd_id,product.prd_name,product_type.prd_type_id ,product_type.prd_type_name,product.prd_note,product.prd_unit, 
+            product.prd_model,brand.brd_name,brand.brd_id, brand.brd_img,product_image.extension,product_image.prd_img_id from (
                 SELECT *
                 FROM product $where_raw 
             ORDER BY $field_name $order_by
                 LIMIT $rows_per_page OFFSET " . ($page * $rows_per_page)." ) product
             LEFT JOIN product_type product_type ON 
-            product.type_id = product_type.id
+            product.type_id = product_type.prd_type_id
+            LEFT JOIN brand brand ON
+            brand.brd_id = product.brd_id
             LEFT JOIN product_image product_image ON
-            product_image.id in (select id from product_image as pis where product.id = pis.prd_id and pis.delete_flg = '0')
+            product_image.prd_img_id in (select prd_img_id from product_image as pis where product.prd_id = pis.prd_id and pis.delete_flg = '0')
             ", $params);
         $data = array();
         $data[0] = (object) array();
         $images = array();
         foreach ($product as $index=>&$item) {
-            $data[0]->id = $item->id;
-            $data[0]->seri_no = $item->seri_no;
-            $data[0]->name = $item->name;
-            $data[0]->name_type = $item->name_type;
-            $data[0]->branch = $item->branch;
-            $data[0]->model = $item->model;
-            $data[0]->detail = $item->detail;
+            $data[0]->id = $item->prd_id;
+            $data[0]->brd_name = $item->brd_name;
+            $data[0]->name = $item->prd_name;
+            $data[0]->name_type = $item->prd_type_name;
+            $data[0]->brd_id = $item->brd_id;
+            $data[0]->brd_img = $item->brd_img;
+            $data[0]->model = $item->prd_model;
+            $data[0]->prd_note = $item->prd_note;
             $data[0]->prd_type_id = $item->prd_type_id;
-            if (!empty($item->image_id)) {
-                $imageName = $item->id . '-' . $item->image_id . '.' . $item->extension;
+            $data[0]->prd_unit = $item->prd_unit;
+            if (!empty($item->prd_img_id)) {
+                $imageName = $item->prd_id . '-' . $item->prd_img_id . '.' . $item->extension;
                 $images[$index]['src'] = Helper::readImage($imageName, "prd");
                 $images[$index]['name'] = $imageName;
                 $data[0]->images = $images;
             }
+        }
+        if (!empty($data[0]->brd_img)) {
+            $brdImageName = $data[0]->brd_id . "." . $data[0]->brd_img;
+            $brdImage['src'] = Helper::readImage($brdImageName, "brd");;
+            $brdImage['name'] = $brdImageName;
+            $data[0]->brdImage = $brdImage;
         }
         return $data;
     }
@@ -135,15 +149,15 @@ class Product implements JWTSubject
 
     public function insertProduct($param) {
         DB::beginTransaction();
+        $param['brd_id'] = '1';
         try {
 //            $seri_no = $this->generateCode();
             $id = DB::table('product')->insertGetId(
                 [
-                    'seri_no'=> $param['seri_no'],
-                    'name'=> $param['name'],
-                    'branch'=>!empty($param['branch'])? $param['branch'] : null,
-                    'model'=>!empty($param['model'])? $param['model'] : null,
-                    'detail'=>!empty($param['detail'])? $param['detail'] : null,
+                    'prd_name'=> $param['name'],
+                    'brd_id'=>!empty($param['brd_id']),
+                    'prd_model'=>!empty($param['model'])? $param['model'] : null,
+                    'prd_note'=>!empty($param['prd_note'])? $param['prd_note'] : null,
                     'type_id'=>!empty($param['type_id'])? $param['type_id'] : null,
                     'delete_flg'=>'0',
                     'inp_date'=>date('Y-m-d H:i:s'),
@@ -218,14 +232,14 @@ class Product implements JWTSubject
 
     public function updateProduct($param) {
         DB::beginTransaction();
+        $param['brd_id'] = '1';
         try {
-            DB::table('product')->where('id','=',$param['id'])
+            DB::table('product')->where('prd_id','=',$param['id'])
                 ->update([
-                    'seri_no'=>$param['seri_no'],
-                    'name'=>$param['name'],
-                    'branch'=>!empty($param['branch']) ? $param['branch'] : null,
-                    'model'=>!empty($param['model']) ? $param['model'] : null,
-                    'detail'=>!empty($param['detail']) ? $param['detail'] : null,
+                    'prd_name'=>$param['name'],
+                    'brd_id'=>!empty($param['brd_id']) ,
+                    'prd_model'=>!empty($param['prd_model']) ? $param['prd_model'] : null,
+                    'prd_note'=>!empty($param['prd_note']) ? $param['prd_note'] : null,
                     'type_id'=>!empty($param['type_id']) ? $param['type_id'] : null,
                     'upd_date'=>date('Y-m-d H:i:s')
                 ]);
@@ -272,7 +286,7 @@ class Product implements JWTSubject
         DB::beginTransaction();
         try {
             if ($id && is_array($id)) {
-                DB::table('product')->whereIn('id', $id)
+                DB::table('product')->whereIn('prd_id', $id)
                     ->update([
                         'delete_flg'=>'1',
                         'upd_date'=>date('Y-m-d H:i:s')
@@ -289,7 +303,7 @@ class Product implements JWTSubject
     public function getAllProductType() {
         try {
             $product_type = DB::table("product_type")
-                ->select("id","name_type")
+                ->select("prd_type_id as id","prd_type_name as name_type")
                 ->get();
         } catch(\Throwable $e) {
             throw $e;
@@ -306,13 +320,11 @@ class Product implements JWTSubject
                 if(!empty($search['contain'])){
                     $search_val = "%" . $search['contain'] . "%";
                     $where_raw .= " AND (";
-                    $where_raw .= "product.seri_no like ?";
+//                    $where_raw .= "brand.seri_no like ?";
+//                    $params[] = $search_val;
+                    $where_raw .= " OR product.prd_model like ?";
                     $params[] = $search_val;
-                    $where_raw .= " OR product.branch like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR product.model like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR product.detail like ?";
+                    $where_raw .= " OR product.prd_note like ?";
                     $params[] = $search_val;
                     $where_raw .= " OR product.type_id like ?";
                     $params[] = $search_val;
@@ -321,13 +333,11 @@ class Product implements JWTSubject
                 if(!empty($search['notcontain'])){
                     $search_val = "%" . $search['notcontain'] . "%";
                     $where_raw .= " AND (";
-                    $where_raw .= "product.seri_no not like ?";
+//                    $where_raw .= "product.seri_no not like ?";
+//                    $params[] = $search_val;
+                    $where_raw .= " OR product.prd_model not like ?";
                     $params[] = $search_val;
-                    $where_raw .= " OR product.branch not like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR product.model not like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR product.detail not like ?";
+                    $where_raw .= " OR product.prd_note not like ?";
                     $params[] = $search_val;
                     $where_raw .= " OR product.type_id not like ?";
                     $params[] = $search_val;
@@ -337,21 +347,13 @@ class Product implements JWTSubject
             } else {
 
                 $where_raw_tmp = [];
-                if (!empty($search['seri_no'])) {
-                    $where_raw_tmp[] = "product.seri_no = ?";
-                    $params[] = $search['seri_no'];
+                if (!empty($search['prd_model'])) {
+                    $where_raw_tmp[] = "product.prd_model = ?";
+                    $params[] = $search['prd_model'];
                 }
-                if (!empty($search['branch'])) {
-                    $where_raw_tmp[] = "product.branch = ?";
-                    $params[] = $search['branch'];
-                }
-                if (!empty($search['model'])) {
-                    $where_raw_tmp[] = "product.model = ?";
-                    $params[] = $search['model'];
-                }
-                if (!empty($search['detail'])) {
-                    $where_raw_tmp[] = "product.detail = ?";
-                    $params[] = $search['detail'];
+                if (!empty($search['prd_note'])) {
+                    $where_raw_tmp[] = "product.prd_note = ?";
+                    $params[] = $search['prd_note'];
                 }
                 if (!empty($search['type_id'])) {
                     $where_raw_tmp[] = "product.type_id = ?";
@@ -404,9 +406,9 @@ class Product implements JWTSubject
                     FROM product $where_raw 
                 ORDER BY $field_name $order_by ) product
                 LEFT JOIN product_type product_type ON 
-                product.type_id = product_type.id
+                product.type_id = product_type.prd_type_id
                 LEFT JOIN product_image product_image ON
-                product_image.id = (select id from product_image as pis where product.id = pis.prd_id limit 1) 
+                product_image.prd_img_id = (select prd_img_id from product_image as pis where product.prd_id = pis.prd_id limit 1) 
                 ", $params);
             $count = $count[0]->count;
         } catch (\Throwable $e) {
@@ -417,7 +419,7 @@ class Product implements JWTSubject
 
     private function makeOrderBy($sort)
     {
-        $field_name = 'product.seri_no';
+        $field_name = 'product.prd_name';
         $order_by = 'asc';
         if ($sort != '') {
             $sort_info = explode('_', $sort);
