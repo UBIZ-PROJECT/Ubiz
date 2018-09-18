@@ -149,7 +149,6 @@ class Product implements JWTSubject
 
     public function insertProduct($param) {
         DB::beginTransaction();
-        $param['brd_id'] = '1';
         try {
 //            $seri_no = $this->generateCode();
             $id = DB::table('product')->insertGetId(
@@ -262,7 +261,7 @@ class Product implements JWTSubject
         DB::beginTransaction();
         try {
             if ($id && is_array($id)) {
-                DB::table('product_image')->whereIn('id', $id)
+                DB::table('product_image')->whereIn('prd_img_id', $id)
                     ->update([
                         'delete_flg'=>'1',
                         'upd_date'=>date('Y-m-d H:i:s')

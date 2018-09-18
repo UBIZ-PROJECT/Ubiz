@@ -14,6 +14,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class Brand implements JWTSubject
 {
+    private $CONST_USER = 1;
     use Notifiable;
     /**
      * The attributes that are mass assignable.
@@ -74,10 +75,72 @@ class Brand implements JWTSubject
         return $brands;
     }
 
+    public function insertBrand($param) {
+        DB::beginTransaction();
+        try {
+//            $seri_no = $this->generateCode();
+            $id = DB::table('product')->insertGetId(
+                [
+                    'brd_name'=> $param['brd_name'],
+                    'brd_img'=>!empty($param['brd_img']),
+                    'delete_flg'=>'0',
+                    'inp_date'=>date('Y-m-d H:i:s'),
+                    'upd_date'=>date('Y-m-d H:i:s'),
+                    'inp_user'=>$this->CONST_USER,
+                    'upd_user'=>$this->CONST_USER
+                ]
+            );
+            foreach ($param['images'] as $element=>$image) {
+                if ($element === "delete") continue;
+                $this->insertProductImage($id,$image['extension'], $image['temp_name']);
+            }
+
+            DB::commit();
+        } catch(\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    public function updateBrand($param) {
+        DB::beginTransaction();
+        $param['brd_id'] = '1';
+        try {
+            DB::table('product')->where('brd_id','=',$param['brd_id'])
+                ->update([
+                    'brd_name'=>$param['brd_name'],
+                    'brd_img'=>!empty($param['brd_img']) ,
+                    'upd_date'=>date('Y-m-d H:i:s')
+                ]);
+            DB::commit();
+        } catch(\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    public function deleteBrand($id) {
+        DB::beginTransaction();
+        try {
+            if ($id && is_array($id)) {
+                DB::table('product')->whereIn('brd_id', $id)
+                    ->update([
+                        'delete_flg'=>'1',
+                        'upd_date'=>date('Y-m-d H:i:s')
+                    ]);
+                $this->deleteProductImage(null,$id);
+            }
+            DB::commit();
+        } catch(\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
     public function makeWhereRaw($search = [])
     {
         $params = [0];
-        $where_raw = "where brand.delete_flg = ? ";
+        $where_raw = " brand.delete_flg = ? ";
         if (sizeof($search) > 0) {
             if (!empty($search['contain']) || !empty($search['notcontain'])) {
                 if(!empty($search['contain'])){
@@ -132,7 +195,7 @@ class Brand implements JWTSubject
             list($field_name, $order_by) = $this->makeOrderBy($sort);
             $count = DB::select("
                 SELECT count(*) as count
-                    FROM brand $where_raw 
+                    FROM brand where $where_raw 
                 ORDER BY $field_name $order_by
                 ", $params);
             $count = $count[0]->count;

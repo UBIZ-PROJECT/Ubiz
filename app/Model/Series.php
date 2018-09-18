@@ -61,6 +61,73 @@ class Series implements JWTSubject
         return $series;
     }
 
+
+    public function insertSeries($param) {
+        DB::beginTransaction();
+        try {
+//            $seri_no = $this->generateCode();
+            $id = DB::table('product')->insertGetId(
+                [
+                    'prd_id'=> $param['prd_id'],
+                    'serial_no'=>$param['serial_no'],
+                    'serial_sts'=>$param['serial_sts'],
+                    'serial_note'=>$param['serial_note'],
+                    'delete_flg'=>'0',
+                    'inp_date'=>date('Y-m-d H:i:s'),
+                    'upd_date'=>date('Y-m-d H:i:s'),
+                    'inp_user'=>$this->CONST_USER,
+                    'upd_user'=>$this->CONST_USER
+                ]
+            );
+            foreach ($param['images'] as $element=>$image) {
+                if ($element === "delete") continue;
+                $this->insertProductImage($id,$image['extension'], $image['temp_name']);
+            }
+
+            DB::commit();
+        } catch(\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    public function updateSeries($param) {
+        DB::beginTransaction();
+        $param['brd_id'] = '1';
+        try {
+            DB::table('product')->where('prd_series_id','=',$param['prd_series_id'])
+                ->update([
+                    'prd_id'=> $param['prd_id'],
+                    'serial_no'=>$param['serial_no'],
+                    'serial_sts'=>$param['serial_sts'],
+                    'serial_note'=>$param['serial_note'],
+                    'upd_date'=>date('Y-m-d H:i:s')
+                ]);
+            DB::commit();
+        } catch(\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    public function deleteSeries($id) {
+        DB::beginTransaction();
+        try {
+            if ($id && is_array($id)) {
+                DB::table('product')->whereIn('prd_series_id', $id)
+                    ->update([
+                        'delete_flg'=>'1',
+                        'upd_date'=>date('Y-m-d H:i:s')
+                    ]);
+                $this->deleteProductImage(null,$id);
+            }
+            DB::commit();
+        } catch(\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
     public function makeWhereRaw($search = '')
     {
         $params = [0];
