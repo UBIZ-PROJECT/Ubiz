@@ -21,5 +21,6 @@ Route::middleware(['api', 'cors'])->group(function () {
         Route::get('departments', ['as' => 'departments', 'uses' => 'Web\DepartmentsController@index']);
         Route::get('currency', ['as' => 'currency', 'uses' => 'Web\CurrencyController@index']);
         Route::get('products', ['as'=>'supplier', 'uses'=>'Web\ProductController@products']);
+		Route::get('pricing', ['as'=>'pricing', 'uses'=>'Web\PricingController@pricing']);
     });
 });
