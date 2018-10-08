@@ -418,6 +418,77 @@
                                 @include('components.textarea',['width'=>'250', 'control_id'=>'txt_prd_note', 'label'=>__('Note')])
                             </div>
                         </div>
+                        <table cellpadding="10" style="margin-top: 30px">
+                            <tr>
+                                <td>
+                                    @include('components.input',['width'=>'250','type'=>'text', 'control_id'=>'txt_keep_pro_person', 'label'=>__("Giữ hàng cho"), 'length'=>100])
+                                </td>
+                                <td>
+                                    <input type="button" onclick="keepSeries(this)" class="button btn-submit" value="Xác nhận giữ hàng">
+                                </td>
+                                <td>
+                                    @include('components.input',['width'=>'250','type'=>'text', 'control_id'=>'txt_keep_pro_person', 'label'=>__("Nhập Series"), 'length'=>100])
+                                </td>
+                                <td>
+                                    <input type="button" onclick="keepSeries(this)" class="button btn-submit" value="Thêm Series">
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div class="container-tab">
+                            <div class="tab-slider--nav">
+                                <ul class="tab-slider--tabs">
+                                    <li class="tab-slider--trigger active" rel="tab1">Số Series</li>
+                                    <li class="tab-slider--trigger" rel="tab2">Giữ Hàng</li>
+                                </ul>
+                            </div>
+                            <div class="tab-slider--container">
+                                <div id="tab1" class="tab-slider--body">
+                                    <table class="tb-series" cellpadding="20">
+                                        <?php $idx = 1;
+                                        for($i = 0; $i < 10; $i++){?>
+                                        <tr>
+                                            <?php for($j = 0; $j < 7; $j++){?>
+                                            <td>
+                                                <span class="qs">
+                                                    <input type="button" onclick="activeSeries(this)" ondblclick="addNote(<?=$idx?>)" class="button btn-keep-series" value="Series <?php echo sprintf("%05d", $idx)?>">
+                                                    <span class="popover above">
+                                                    </span>
+                                                    <input type="hidden" class="keep-full-note" value="Hey bro, cool popover!
+                                                        Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!
+                                                        Hey bro, cool popover!vHey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!
+                                                        Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!
+                                                        Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!
+                                                        Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!
+                                                        Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!">
+                                                </span>
+
+                                            </td>
+                                            <?php $idx++; }?>
+                                        </tr>
+                                        <?php }?>
+                                    </table>
+
+                                    <table class="tb-add-note" style="display: none">
+                                        <tr>
+                                            <td>
+                                                @include('components.textarea',['width'=>'700', 'control_id'=>'txt-series-note', 'label'=>__('Note')])
+                                                <input type="hidden" id="txt-series-id">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tl-r">
+                                                <input type="button" class="button btn-series-note-save" onclick="saveSeriesNote()" value="Lưu Note">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div id="tab2" class="tab-slider--body">
+                                    <h2>Second Tab</h2>
+                                    <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum. Nulla vitae elit libero, a pharetra augue. Cras mattis consectetur purus sit amet fermentum. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

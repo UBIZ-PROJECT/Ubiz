@@ -750,3 +750,80 @@ function isEmpty(str) {
     }
     return false;
 }
+
+$("document").ready(function(){
+    $(".tab-slider--body").hide();
+    $(".tab-slider--body:first").show();
+    $('.btn-keep-series').mouseleave(function() {
+        $('.qs .popover').css({'height': '110px','overflow-y':'visible'});
+        $('.qs .popover').removeClass('popover-more-detail');
+        $('.series-more-detail').html("Xem thêm");
+    })
+    $(".btn-keep-series").mouseenter(function() {
+        checkLength($(this).closest("td").find('.qs .popover'));
+    })
+});
+
+$(".tab-slider--nav li").click(function() {
+    $(".tab-slider--body").hide();
+    var activeTab = $(this).attr("rel");
+    $("#"+activeTab).fadeIn();
+    if($(this).attr("rel") == "tab2"){
+        $('.tab-slider--tabs').addClass('slide');
+    }else{
+        $('.tab-slider--tabs').removeClass('slide');
+    }
+    $(".tab-slider--nav li").removeClass("active");
+    $(this).addClass("active");
+});
+
+function activeSeries(btn) {
+    if ($(btn).hasClass("disabled")) return;
+    if ($(btn).hasClass("active"))
+        $(btn).removeClass("active");
+    else
+        $(btn).addClass("active");
+}
+
+function keepSeries() {
+    $(".btn-keep-series.active").addClass("disabled");
+    $(".btn-keep-series").removeClass("active");
+}
+
+function addNote(series) {
+    $(".tb-add-note").css("display", "block");
+    $(".tb-series").css("display", "none")
+    $(".tb-add-note #txt-series-id").val(series);
+}
+
+function saveSeriesNote() {
+    $(".tb-add-note").css("display", "none");
+    $(".tb-series").css("display", "block")
+    $(".tb-add-note #txt-series-id").val('');
+}
+
+function noteDetail(link) {
+    if ($(link).html() == "Xem thêm") {
+        var popover = $(link).closest("td").find('.qs .popover');
+        var note = $(link).closest("td").find(".keep-full-note").val();
+        if (note.length > 2000) {
+            $(popover).css('overflow-y', 'scroll');
+        } else {
+            $(popover).css('overflow-y', 'visible');
+        }
+        $(popover).addClass('popover-more-detail');
+        $(popover).css('height', '500px');
+        $(popover).html(note);
+        $(popover).closest("td").find('.series-more-detail').remove();
+    }
+}
+
+function checkLength(pop) {
+    var note = $(pop).closest("td").find(".keep-full-note").val();
+    var html = '<a href="#" class="series-more-detail" onclick="noteDetail(this)">Xem thêm</a>';
+
+    if (note.length > 420) {
+        var newNote = note.substr(0, 420) + " ... ";
+        $(pop).html(newNote).append(html);
+    }
+}

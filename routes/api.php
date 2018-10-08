@@ -58,5 +58,12 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::put('products/{id}/update', ['as' => 'product-update', 'uses' => 'Api\ProductController@updateProduct']);
         Route::put('products/{id}/updatePaging', ['as' => 'product-update', 'uses' => 'Api\ProductController@updateProductPaging']);
         Route::delete('products/{ids}/delete', ['as' => 'product-delete', 'uses' => 'Api\ProductController@deleteProduct']);
+
+        Route::get('brands', ['as' => 'api-brand', 'uses' => 'Api\BrandController@getBrand']);
+        Route::get('brands/detail', ['as' => 'api-brand-detail', 'uses' => 'Api\PBrandController@getEachBrandPaging']);
+        Route::post('brands/insert', ['as' => 'brand-insert', 'uses' => 'Api\BrandController@insertBrand']);
+        Route::put('brands/{id}/update', ['as' => 'brand-update', 'uses' => 'Api\BrandController@updateBrand']);
+        Route::put('brands/{id}/updatePaging', ['as' => 'brand-update', 'uses' => 'Api\BrandController@updateBrandPaging']);
+        Route::delete('brands/{ids}/delete', ['as' => 'brand-delete', 'uses' => 'Api\BrandController@deleteBrand']);
     });
 });

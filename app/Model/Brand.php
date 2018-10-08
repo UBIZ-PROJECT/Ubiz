@@ -65,14 +65,36 @@ class Brand implements JWTSubject
             ->get();
         foreach ($brands as &$brand) {
             if (!empty($brand->brd_img)) {
-                $brdImageName = $brand->brd_id . "." . $brand->brd_img;
+                $brdImageName = $brand->brd_img;
                 $brdImage['src'] = Helper::readImage($brdImageName, "brd");;
                 $brdImage['name'] = $brdImageName;
                 $brand->brdImage = $brdImage;
             }
         }
-
         return $brands;
+    }
+
+    public function getEachBrandPaging($page, $sort='', $search = []) {
+        list($where_raw,$params) = $this->makeWhereRaw($search);
+        list($field_name, $order_by) = $this->makeOrderBy($sort);
+        $rows_per_page = 1;
+        $brands = DB::table('brand')
+            ->select('brd_id','brd_name','brd_img')
+            ->whereRaw($where_raw, $params)
+            ->orderBy($field_name, $order_by)
+            ->offset($page * $rows_per_page)
+            ->limit($rows_per_page)
+            ->get();
+        foreach ($brands as &$brand) {
+            if (!empty($brand->brd_img)) {
+                $brdImageName = $brand->brd_id . "." . $brand->brd_img;
+                $brdImage['src'] = Helper::readImage($brdImageName, "brd_img");;
+                $brdImage['name'] = $brdImageName;
+                $brand->brdImage = $brdImage;
+            }
+        }
+
+        return $brands[0];
     }
 
     public function insertBrand($param) {
@@ -176,6 +198,20 @@ class Brand implements JWTSubject
     public function getPagingInfo($sort = '', $search = []) {
         try {
             $rows_per_page = env('ROWS_PER_PAGE', 10);
+            $rows_num = $this->countAllBrand($sort,$search);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+
+        return [
+            'rows_num' => $rows_num,
+            'rows_per_page' => $rows_per_page
+        ];
+    }
+
+    public function getPagingInfoDetailBrandWithConditionSearch($sort = '', $search = []) {
+        try {
+            $rows_per_page = 1;
             $rows_num = $this->countAllBrand($sort,$search);
         } catch (\Throwable $e) {
             throw $e;

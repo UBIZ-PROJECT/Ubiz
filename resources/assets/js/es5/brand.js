@@ -50,7 +50,7 @@ var lst_image_delete = [];
             jQuery(self).find('svg').removeClass('sVGT');
             jQuery(self).find('svg.' + order_by).addClass('sVGT');
 
-            ubizapis('v1', '/products', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/brands', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_delete: function (id) {
             var listId = jQuery.UbizOIWidget.w_get_checked_rows();
@@ -74,7 +74,7 @@ var lst_image_delete = [];
                 if (result.value) {
                     listId = JSON.stringify(listId);
                     var params = jQuery.UbizOIWidget.w_get_param_search_sort();
-                    ubizapis('v1','/products/'+listId+'/delete', 'delete',null, params,jQuery.UbizOIWidget.w_process_callback);
+                    ubizapis('v1','/brands/'+listId+'/delete', 'delete',null, params,jQuery.UbizOIWidget.w_process_callback);
                 }
             });
         },
@@ -92,7 +92,7 @@ var lst_image_delete = [];
             }
 
             var formData = jQuery.UbizOIWidget.w_get_images_upload();
-            formData.append("product", JSON.stringify(jQuery.UbizOIWidget.w_get_data_input_form()));
+            formData.append("brand", JSON.stringify(jQuery.UbizOIWidget.w_get_data_input_form()));
 
             var params = jQuery.UbizOIWidget.w_get_param_search_sort();
             if (id == 0) {
@@ -107,7 +107,7 @@ var lst_image_delete = [];
                     reverseButtons: true
                 }).then((result) => {
                     if (result.value) {
-                        ubizapis('v1','/products/insert', 'post', formData, params, jQuery.UbizOIWidget.w_process_callback);
+                        ubizapis('v1','/brands/insert', 'post', formData, params, jQuery.UbizOIWidget.w_process_callback);
                     }
                 });
             } else {
@@ -130,7 +130,7 @@ var lst_image_delete = [];
                 }).then((result) => {
                     if (result.value) {
                         formData.append("_method","put");
-                        ubizapis('v1','/products/'+id+'/update', 'post', formData,params, jQuery.UbizOIWidget.w_process_callback);
+                        ubizapis('v1','/brands/'+id+'/update', 'post', formData,params, jQuery.UbizOIWidget.w_process_callback);
                     }
                 });
             }
@@ -142,7 +142,7 @@ var lst_image_delete = [];
 
             var event = new CustomEvent("click");
             document.body.dispatchEvent(event);
-            ubizapis('v1', '/products', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/brands', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_search_info: function () {
 
@@ -219,7 +219,7 @@ var lst_image_delete = [];
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
             params.sort = sort;
 
-            ubizapis('v1', '/products', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/brands', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_fuzzy_search_handle_enter(e) {
             var keycode = (e.keyCode ? e.keyCode : e.which);
@@ -256,26 +256,11 @@ var lst_image_delete = [];
             return formData;
         },
         w_get_data_input_form: function() {
-            var addresses = $("#i-put .txt_address");
-            var addParam = [];
-            for(var i = 0; i < addresses.length; i++) {
-                var addObj = {
-                    sad_id: $(addresses[i]).attr("sad_id"),
-                    address: $(addresses[i]).val()
-                }
-                addParam.push(addObj);
-            }
 
             var data = {
-                id: $("#i-put #txt_prd_id").val(),
-                name: $("#i-put #txt_name").val(),
-                branch: $("#i-put #txt_branch").val(),
-                model: $("#i-put #txt_model").val(),
-                type_id: $("#i-put #txt_name_type").val(),
-                detail: $("#i-put #txt_detail").val(),
-                images: {
-                    "delete": lst_image_delete
-                }
+                brd_id: $("#i-put #txt_prd_id").val(),
+                brd_name: $("#i-put #txt_name").val(),
+                brd_img: $("#i-put #txt_branch").val()
             };
             return data;
         },
@@ -306,27 +291,27 @@ var lst_image_delete = [];
                                 }
                                 var formInput = jQuery.UbizOIWidget.w_get_data_input_form();
                                 var formData = jQuery.UbizOIWidget.w_get_images_upload();
-                                formData.append("product", JSON.stringify(formInput));
+                                formData.append("brand", JSON.stringify(formInput));
                                 var params = jQuery.UbizOIWidget.w_get_param_search_sort();
 
                                 formData.append("_method","put");
-                                ubizapis('v1','/products/'+formInput.id+'/updatePaging', 'post', formData,params,function() {
+                                ubizapis('v1','/brands/'+formInput.id+'/updatePaging', 'post', formData,params,function() {
                                     jQuery.UbizOIWidget.w_reset_input_change();
-                                    jQuery.UbizOIWidget.w_get_specific_product_by_id(id, index);
+                                    jQuery.UbizOIWidget.w_get_specific_brand_by_id(id, index);
                                     $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
                                 });
                             } else {
                                 jQuery.UbizOIWidget.w_reset_input_change();
-                                jQuery.UbizOIWidget.w_get_specific_product_by_id(id, index);
+                                jQuery.UbizOIWidget.w_get_specific_brand_by_id(id, index);
                                 $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
                             }
                         });
                     } else {
-                        jQuery.UbizOIWidget.w_get_specific_product_by_id(id, index);
+                        jQuery.UbizOIWidget.w_get_specific_brand_by_id(id, index);
                         $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
                     }
                 } else {
-                    jQuery.UbizOIWidget.w_get_specific_product_by_id(id, index);
+                    jQuery.UbizOIWidget.w_get_specific_brand_by_id(id, index);
                     $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
                 }
             }
@@ -414,7 +399,7 @@ var lst_image_delete = [];
         w_refresh_output_page: function () {
             var params = jQuery.UbizOIWidget.w_get_param_search_sort();
             params.page = jQuery.UbizOIWidget.page;
-            ubizapis('v1', '/products', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/brands', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_sort_info: function () {
             var sort_obj = jQuery.UbizOIWidget.o_page.find('div.dWT');
@@ -427,14 +412,14 @@ var lst_image_delete = [];
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             jQuery.UbizOIWidget.sort = sort_info;
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/products', 'get', null, {'page': page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/brands', 'get', null, {'page': page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_newer_data: function (page) {
             jQuery.UbizOIWidget.page = page;
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             jQuery.UbizOIWidget.sort = sort_info;
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/products', 'get', null, {'page': page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/brands', 'get', null, {'page': page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_process_callback: function (response) {
             if (response.data.success == true) {
@@ -474,18 +459,15 @@ var lst_image_delete = [];
         },
         w_render_data_to_ouput_page: function (response) {
             var table_html = "";
-            var products = response.data.product;
-            if (products.length > 0) {
+            var brands = response.data.brand;
+            if (brands.length > 0) {
                 var rows = [];
                 var index = 0 + (Number(response.data.paging.page) * Number(response.data.paging.rows_per_page));
-                for (let i = 0; i < products.length; i++) {
+                for (let i = 0; i < brands.length; i++) {
                     var cols = [];
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].image, 1, products[i].prd_img_id));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].name, 2));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].branch, 3));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].model, 4));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].name_type, 5));
-                    rows.push(jQuery.UbizOIWidget.w_make_row_html(products[i].id, cols, index));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(brands[i].id, brands[i].image, 1, brands[i].brd_img));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(brands[i].id, brands[i].brd_name, 2));
+                    rows.push(jQuery.UbizOIWidget.w_make_row_html(brands[i].id, cols, index));
                     index++;
                 }
                 table_html += rows.join("");
@@ -497,18 +479,14 @@ var lst_image_delete = [];
             jQuery.UbizOIWidget.w_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
         },
         w_render_data_to_input_page: function(response) {
-            if (response == undefined || response.data == undefined || response.data.product.length <= 0) {
+            if (response == undefined || response.data == undefined || response.data.brand.length <= 0) {
                 return;
             }
-            var data = response.data.product[0];
+            var data = response.data.brand[0];
             $("#i-put .GtF .delete").attr("onclick","jQuery.UbizOIWidget.w_delete("+data.id+")");
             $("#i-put .GtF .save").attr("onclick", "jQuery.UbizOIWidget.w_save("+data.id+")");
-            $("#i-put #nicescroll-iput #txt_prd_id").val(data.id);
-            $("#i-put #nicescroll-iput #txt_name").val(data.name).change(function() {inputChange(this, data.name)});
-            $("#i-put #nicescroll-iput #txt_unit").val(data.prd_unit).change(function() {inputChange(this, data.prd_unit)});
-            $("#i-put #nicescroll-iput #txt_model").val(data.model).change(function() {inputChange(this, data.model)});
-            $("#i-put #nicescroll-iput #txt_name_type").val(data.prd_type_id).change(function() {inputChange(this, data.prd_type_id)}); // THY  fix thành combobox
-            $("#i-put #nicescroll-iput #txt_prd_note").val(data.prd_note).change(function() {inputChange(this, data.prd_note)}); // THY fix thành Textarea
+            $("#i-put #nicescroll-iput #txt_prd_id").val(data.brd_id);
+            $("#i-put #nicescroll-iput #txt_name").val(data.brd_name).change(function() {inputChange(this, data.brd_name)});
             if (data.images != undefined && data.images.length > 0) {
                 var controlImages = $("#i-put .img-show");
                 for(var i = 0; i < data.images.length; i++) {
@@ -600,10 +578,10 @@ var lst_image_delete = [];
             jQuery('#search-form  #sup_notcontain').val("");
             jQuery('#search-form  #sup_fuzzy').val("");
         },
-        w_get_specific_product_by_id(id, index) {
+        w_get_specific_brand_by_id(id, index) {
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1','/products/detail', 'get', null, {'page': index, 'sort': sort},jQuery.UbizOIWidget.w_render_data_to_input_page);
+            ubizapis('v1','/brands/detail', 'get', null, {'page': index, 'sort': sort},jQuery.UbizOIWidget.w_render_data_to_input_page);
         },
         w_make_row_html: function (id, cols, index) {
             var row_html = '';
@@ -749,81 +727,4 @@ function isEmpty(str) {
         return true;
     }
     return false;
-}
-
-$("document").ready(function(){
-    $(".tab-slider--body").hide();
-    $(".tab-slider--body:first").show();
-    $('.btn-keep-series').mouseleave(function() {
-        $('.qs .popover').css({'height': '110px','overflow-y':'visible'});
-        $('.qs .popover').removeClass('popover-more-detail');
-        $('.series-more-detail').html("Xem thêm");
-    })
-    $(".btn-keep-series").mouseenter(function() {
-        checkLength($(this).closest("td").find('.qs .popover'));
-    })
-});
-
-$(".tab-slider--nav li").click(function() {
-    $(".tab-slider--body").hide();
-    var activeTab = $(this).attr("rel");
-    $("#"+activeTab).fadeIn();
-    if($(this).attr("rel") == "tab2"){
-        $('.tab-slider--tabs').addClass('slide');
-    }else{
-        $('.tab-slider--tabs').removeClass('slide');
-    }
-    $(".tab-slider--nav li").removeClass("active");
-    $(this).addClass("active");
-});
-
-function activeSeries(btn) {
-    if ($(btn).hasClass("disabled")) return;
-    if ($(btn).hasClass("active"))
-        $(btn).removeClass("active");
-    else
-        $(btn).addClass("active");
-}
-
-function keepSeries() {
-    $(".btn-keep-series.active").addClass("disabled");
-    $(".btn-keep-series").removeClass("active");
-}
-
-function addNote(series) {
-    $(".tb-add-note").css("display", "block");
-    $(".tb-series").css("display", "none")
-    $(".tb-add-note #txt-series-id").val(series);
-}
-
-function saveSeriesNote() {
-    $(".tb-add-note").css("display", "none");
-    $(".tb-series").css("display", "block")
-    $(".tb-add-note #txt-series-id").val('');
-}
-
-function noteDetail(link) {
-    if ($(link).html() == "Xem thêm") {
-        var popover = $(link).closest("td").find('.qs .popover');
-        var note = $(link).closest("td").find(".keep-full-note").val();
-        if (note.length > 2000) {
-            $(popover).css('overflow-y', 'scroll');
-        } else {
-            $(popover).css('overflow-y', 'visible');
-        }
-        $(popover).addClass('popover-more-detail');
-        $(popover).css('height', '500px');
-        $(popover).html(note);
-        $(popover).closest("td").find('.series-more-detail').remove();
-    }
-}
-
-function checkLength(pop) {
-    var note = $(pop).closest("td").find(".keep-full-note").val();
-    var html = '<a href="#" class="series-more-detail" onclick="noteDetail(this)">Xem thêm</a>';
-
-    if (note.length > 420) {
-        var newNote = note.substr(0, 420) + " ... ";
-        $(pop).html(newNote).append(html);
-    }
 }

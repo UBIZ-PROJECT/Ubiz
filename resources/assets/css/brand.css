@@ -1,0 +1,86 @@
+.main-content .r-content .col-1 {
+    width: 70px;
+}
+
+.main-content .r-content .col-2 {
+    width: 100px;
+}
+
+.main-content .r-content .col-3 {
+    width: 200px;
+}
+
+#nicescroll-iput {
+    margin-top: 15px;
+}
+
+#nicescroll-iput .control {
+    padding: .2em .6em .3em;
+}
+
+#nicescroll-iput .label {
+    color: #605959;
+}
+
+.brd-image {
+    width: 100px;
+    height: 100px;
+}
+
+#nicescroll-oput #table-content .tcB .cbo {
+    height: 110px;
+}
+
+#nicescroll-oput #table-content .tcB .cbo .nCj {
+    position: relative;
+    top: 30px;
+}
+
+#nicescroll-oput #table-content .tcB .cbo .nCT, #nicescroll-oput #table-content .tcB .cbo .jgQ {
+    top: 30px;
+}
+#nicescroll-oput #table-content .tcB .cbo .nCji {
+    position: relative;
+    top: 4px;
+}
+.row li {
+    width: 30%;
+    float: left;
+    list-style-type: none;
+}
+
+.row img {
+    display: inline-block;
+    height: auto;
+    max-width: 100%;
+    vertical-align: middle;
+}
+
+.button {
+    background-color: white; /* Green */
+    color: black;
+    border: 2px solid  #345F90;
+    padding: 8px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+.btn-submit {
+    font-size: 12px;
+    background-color: #345F90;
+    color: white;
+    padding: 1px 10px;
+    border-radius: 3px;
+}
+
+.btn-submit:hover {
+    background-color: #fff;
+    color: black;
+    border: 2px solid #345F90;
+}

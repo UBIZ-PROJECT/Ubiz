@@ -1,6 +1,6 @@
 @extends('layouts.main')
-@section('title', __("Product") )
-@section('headbar-title',__("Product") )
+@section('title', __("Brand") )
+@section('headbar-title',__("Brand") )
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/headbar.css') }}">
@@ -159,7 +159,7 @@
                                 <div class="dcB col-2" role="presentation">
                                     <div class="dWB" role="button" sort-name="" order-by="">
                                         <div class="dvJ">
-                                            <div class="tDv"></div>
+                                            <div class="tDv">{{__('Logo')}}</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -202,6 +202,52 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="dcB col-2" role="presentation">
+                                    <div class="dWB" role="button" sort-name="" order-by="">
+                                        <div class="dvJ">
+                                            <div class="tDv">{{__('Product List')}}</div>
+                                            <div class="mhH">
+                                                <div class="acD">
+                                                    <div class="huK">
+                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
+                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                        </svg>
+                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
+                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dcB col-2" role="presentation">
+                                    <div class="dWB" role="button" sort-name="" order-by="">
+                                        <div class="dvJ">
+                                            <div class="tDv">{{__('Brand Edit')}}</div>
+                                            <div class="mhH">
+                                                <div class="acD">
+                                                    <div class="huK">
+                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
+                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                        </svg>
+                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
+                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -225,7 +271,7 @@
                                         <div class="tcB col-2">
                                             <div class="cbo">
                                                 <div class="nCji" title="{{$brd->brd_img}}">
-                                                    <img {{empty($brd->brd_img) ? '' : 'src='.$brd->brd_img}}  class="{{empty($brd->brd_img) ? '' : 'img-thumbnail '}}brd-image"/>
+                                                    <img {{empty($brd->brd_img) ? '' : 'src='.$brd->brdImage['src']}}  class="{{empty($brd->brd_img) ? '' : 'img-thumbnail '}}brd-image"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -233,6 +279,20 @@
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$brd->brd_name}}">
                                                     <span>{{$brd->brd_name}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tcB col-2">
+                                            <div class="cbo">
+                                                <div class="nCj" title="product_list">
+                                                    <span><input type="submit" class="button btn-submit" value="View Product"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tcB col-2">
+                                            <div class="cbo">
+                                                <div class="nCj" title="Brand Edit">
+                                                    <span><input type="submit" class="button btn-submit" value="Brand Edit"></span>
                                                 </div>
                                             </div>
                                         </div>
