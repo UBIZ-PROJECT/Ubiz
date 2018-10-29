@@ -2,7 +2,9 @@
     width: 70px;
 }
 
-.main-content .r-content .col-2 {
+.main-content .r-content .col-2,
+.main-content .r-content .col-4,
+.main-content .r-content .col-5{
     width: 100px;
 }
 

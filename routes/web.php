@@ -21,6 +21,7 @@ Route::middleware(['api', 'cors'])->group(function () {
         Route::get('departments', ['as' => 'departments', 'uses' => 'Web\DepartmentsController@index']);
         Route::get('currency', ['as' => 'currency', 'uses' => 'Web\CurrencyController@index']);
         Route::get('products', ['as'=>'products', 'uses'=>'Web\ProductController@products']);
+        Route::get('products/{brd_id}', ['as'=>'products', 'uses'=>'Web\ProductController@productByBrand']);
         Route::get('brands', ['as'=>'brands', 'uses'=>'Web\BrandController@brands']);
     });
 });

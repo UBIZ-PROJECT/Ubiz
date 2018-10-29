@@ -282,17 +282,17 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tcB col-2">
+                                        <div class="tcB col-4">
                                             <div class="cbo">
                                                 <div class="nCj" title="product_list">
-                                                    <span><input type="submit" class="button btn-submit" value="View Product"></span>
+                                                    <span><input type="button" onclick="jQuery.UbizOIWidget.w_goto_product_by_brands_id({{$brd->brd_id}})" class="button btn-submit" value="View Product"></span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tcB col-2">
+                                        <div class="tcB col-5">
                                             <div class="cbo">
                                                 <div class="nCj" title="Brand Edit">
-                                                    <span><input type="submit" class="button btn-submit" value="Brand Edit"></span>
+                                                    <span><input type="button" onclick="jQuery.UbizOIWidget.w_go_to_input_page({{$brd->brd_id}},{{$index}})" class="button btn-submit" value="Brand Edit"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -376,7 +376,7 @@
                                 </ul>
                             </div>
                             <div class="col-sm-3 col-md-3 col-xl-3">
-                                <input type="hidden" value="" id="txt_prd_id">
+                                <input type="hidden" value="" id="txt_brd_id">
                                 @include('components.input',['width'=>'250','type'=>'disabled', 'control_id'=>'txt_brd_id', 'label'=>__("Brand No"), 'length'=>5])
                                 @include('components.input',['width'=>'250','type'=>'required', 'control_id'=>'txt_brd_name', 'label'=>__("Brand Name"), 'length'=>100])
                             </div>

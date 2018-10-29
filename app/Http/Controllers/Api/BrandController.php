@@ -16,7 +16,6 @@ class BrandController extends Controller
     public function getBrand(Request $req) {
         try {
             list($page, $sort,$search) = $this->getPageSortSearch($req);
-
             $brand = new Brand();
             $data = $brand->getBrandPaging($page, $sort,$search);
             $paging = $brand->getPagingInfo($sort,$search);
@@ -31,18 +30,18 @@ class BrandController extends Controller
         try {
             list($page, $sort,$search) = $this->getPageSortSearch($req);
 
-            $product = new Brand();
-            $data = $product->getEachBrandPaging($page, $sort,$search);
-            $paging = $product->getPagingInfoDetailBrandWithConditionSearch($sort,$search);
+            $brand = new Brand();
+            $data = $brand->getEachBrandPaging($page, $sort,$search);
+            $paging = $brand->getPagingInfoDetailBrandWithConditionSearch($sort,$search);
             $paging['page'] = $page;
             $paging['rows_per_page'] = 1;
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['product' => $data, "product_type" => $productType ,'paging' => $paging,'success' => true, 'message' => '', 'search'=>$search], 200);
+        return response()->json(['brand' => $data, 'paging' => $paging,'success' => true, 'message' => '', 'search'=>$search], 200);
     }
 
-    public function insertProduct(Request $request) {
+    public function insertBrand(Request $request) {
         try {
             $message = __("Successfully processed.");
             if ($request->has("brand")) {
@@ -63,7 +62,7 @@ class BrandController extends Controller
         return response()->json(['brand' => $data, 'paging' => $paging,'success' => true, 'message' => $message, 'search'=>$search,'method'=>'insert'], 200);
     }
 
-    public function updateProduct($id, Request $request) {
+    public function updateBrand($id, Request $request) {
         try {
             $message = __("Successfully processed.");
             if ($request->has("brand")) {
@@ -85,7 +84,7 @@ class BrandController extends Controller
         return response()->json(['brand' => $data, 'paging' => $paging,'success' => true, 'message' => $message, 'search'=>$search,'method'=>'update'], 200);
     }
 
-    public function updateProductPaging($id, Request $request) {
+    public function updateBrandPaging($id, Request $request) {
         try {
             $message = __("Successfully processed.");
             if ($request->has("brand")) {

@@ -63,9 +63,10 @@ class Brand implements JWTSubject
             ->offset($page * $rows_per_page)
             ->limit($rows_per_page)
             ->get();
+        $brands[0]->brdImage = array('src'=>'', 'name'=>'');
         foreach ($brands as &$brand) {
             if (!empty($brand->brd_img)) {
-                $brdImageName = $brand->brd_img;
+                $brdImageName = $brand->brd_id . '.' . $brand->brd_img;
                 $brdImage['src'] = Helper::readImage($brdImageName, "brd");;
                 $brdImage['name'] = $brdImageName;
                 $brand->brdImage = $brdImage;
@@ -85,10 +86,11 @@ class Brand implements JWTSubject
             ->offset($page * $rows_per_page)
             ->limit($rows_per_page)
             ->get();
+        $brands[0]->brdImage = array('src'=>'', 'name'=>'');
         foreach ($brands as &$brand) {
             if (!empty($brand->brd_img)) {
-                $brdImageName = $brand->brd_id . "." . $brand->brd_img;
-                $brdImage['src'] = Helper::readImage($brdImageName, "brd_img");;
+                $brdImageName = $brand->brd_id . '.' . $brand->brd_img;
+                $brdImage['src'] = Helper::readImage($brdImageName, "brd");;
                 $brdImage['name'] = $brdImageName;
                 $brand->brdImage = $brdImage;
             }
@@ -100,11 +102,11 @@ class Brand implements JWTSubject
     public function insertBrand($param) {
         DB::beginTransaction();
         try {
-//            $seri_no = $this->generateCode();
-            $id = DB::table('product')->insertGetId(
+            $extension = isset($param['images']) ?  $param['images']['insert'][0]['extension'] : '';
+            $id = DB::table('brand')->insertGetId(
                 [
                     'brd_name'=> $param['brd_name'],
-                    'brd_img'=>!empty($param['brd_img']),
+                    'brd_img'=> $extension,
                     'delete_flg'=>'0',
                     'inp_date'=>date('Y-m-d H:i:s'),
                     'upd_date'=>date('Y-m-d H:i:s'),
@@ -112,11 +114,8 @@ class Brand implements JWTSubject
                     'upd_user'=>$this->CONST_USER
                 ]
             );
-            foreach ($param['images'] as $element=>$image) {
-                if ($element === "delete") continue;
-                $this->insertProductImage($id,$image['extension'], $image['temp_name']);
-            }
-
+            $rederImageName = $id . '.' . $extension;
+            $this->insertBrandImage($rederImageName,$param['images']['insert'][0]['temp_name']);
             DB::commit();
         } catch(\Throwable $e) {
             DB::rollback();
@@ -126,14 +125,34 @@ class Brand implements JWTSubject
 
     public function updateBrand($param) {
         DB::beginTransaction();
-        $param['brd_id'] = '1';
+        $extension = isset($param['images']) ?  $param['images']['insert'][0]['extension'] : '';
         try {
-            DB::table('product')->where('brd_id','=',$param['brd_id'])
-                ->update([
-                    'brd_name'=>$param['brd_name'],
-                    'brd_img'=>!empty($param['brd_img']) ,
-                    'upd_date'=>date('Y-m-d H:i:s')
-                ]);
+            if ($extension) {
+                DB::table('brand')->where('brd_id','=',$param['brd_id'])
+                    ->update([
+                        'brd_name'=>$param['brd_name'],
+                        'brd_img'=> $extension,
+                        'upd_date'=>date('Y-m-d H:i:s')
+                    ]);
+                $rederImageName = $param['brd_id'] . '.' . $extension;
+                $this->insertBrandImage($rederImageName,$param['images']['insert'][0]['temp_name']);
+            } else {
+                if ($param['brd_img'] == true || $param['brd_img'] == 'true') {
+                    DB::table('brand')->where('brd_id','=',$param['brd_id'])
+                        ->update([
+                            'brd_name'=>$param['brd_name'],
+                            'brd_img'=> '',
+                            'upd_date'=>date('Y-m-d H:i:s')
+                        ]);
+                } else {
+                    DB::table('brand')->where('brd_id','=',$param['brd_id'])
+                        ->update([
+                            'brd_name'=>$param['brd_name'],
+                            'upd_date'=>date('Y-m-d H:i:s')
+                        ]);
+                }
+            }
+
             DB::commit();
         } catch(\Throwable $e) {
             DB::rollback();
@@ -145,18 +164,25 @@ class Brand implements JWTSubject
         DB::beginTransaction();
         try {
             if ($id && is_array($id)) {
-                DB::table('product')->whereIn('brd_id', $id)
+                DB::table('brand')->whereIn('brd_id', $id)
                     ->update([
                         'delete_flg'=>'1',
                         'upd_date'=>date('Y-m-d H:i:s')
                     ]);
-                $this->deleteProductImage(null,$id);
             }
             DB::commit();
         } catch(\Throwable $e) {
             DB::rollback();
             throw $e;
         }
+    }
+
+    private function insertBrandImage($rederImageName, $temp_name) {
+        Helper::saveOriginalImage($temp_name, $rederImageName, 'brd');
+    }
+
+    private function generateRandomString($length = 10) {
+        return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
     }
 
     public function makeWhereRaw($search = [])
@@ -243,7 +269,7 @@ class Brand implements JWTSubject
 
     private function makeOrderBy($sort)
     {
-        $field_name = 'brand.brd_name';
+        $field_name = 'brand.brd_id';
         $order_by = 'asc';
         if ($sort != '') {
             $sort_info = explode('_', $sort);
