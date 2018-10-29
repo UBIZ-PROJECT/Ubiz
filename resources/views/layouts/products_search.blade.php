@@ -27,26 +27,10 @@
             <div class="gvo">
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="seri_no">{{ __("Seri Number") }}</label>
-                    </span>
-                    <span class="avo">
-                        <input type="text" spellcheck="false" id="seri_no" value="" autocomplete="off">
-                    </span>
-                </div>
-                <div class="rvo">
-                    <span class="yvo">
                         <label for="name">{{__("Name")}}</label>
                     </span>
                     <span class="avo">
                         <input type="text" spellcheck="false" id="name" value="" autocomplete="off">
-                    </span>
-                </div>
-                <div class="rvo">
-                    <span class="yvo">
-                        <label for="branch">{{__("Branch")}}</label>
-                    </span>
-                    <span class="avo">
-                        <input type="text" spellcheck="false" id="branch" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo">

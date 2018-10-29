@@ -152,10 +152,6 @@ var lst_image_delete = [];
                 search_info.name = jQuery('#search-form #name').val();
             }
 
-            if (jQuery('#search-form #branch').val().replace(/\s/g, '') != '') {
-                search_info.branch = jQuery('#search-form #branch').val();
-            }
-
             if (jQuery('#search-form #model').val().replace(/\s/g, '') != '') {
                 search_info.model = jQuery('#search-form #model').val();
             }
@@ -256,23 +252,12 @@ var lst_image_delete = [];
             return formData;
         },
         w_get_data_input_form: function() {
-            var addresses = $("#i-put .txt_address");
-            var addParam = [];
-            for(var i = 0; i < addresses.length; i++) {
-                var addObj = {
-                    sad_id: $(addresses[i]).attr("sad_id"),
-                    address: $(addresses[i]).val()
-                }
-                addParam.push(addObj);
-            }
-
             var data = {
                 id: $("#i-put #txt_prd_id").val(),
                 name: $("#i-put #txt_name").val(),
-                branch: $("#i-put #txt_branch").val(),
-                model: $("#i-put #txt_model").val(),
+                prd_model: $("#i-put #txt_model").val(),
                 type_id: $("#i-put #txt_name_type").val(),
-                detail: $("#i-put #txt_detail").val(),
+                prd_note: $("#i-put #txt_prd_note").val(),
                 images: {
                     "delete": lst_image_delete
                 }
@@ -423,18 +408,17 @@ var lst_image_delete = [];
             return {'sort_name': sort_name, 'order_by': order_by};
         },
         w_get_older_data: function (page) {
+            var params = jQuery.UbizOIWidget.w_get_param_search_sort();
+            params.page = page;
             jQuery.UbizOIWidget.page = page;
-            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-            jQuery.UbizOIWidget.sort = sort_info;
-            var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/products', 'get', null, {'page': page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/products', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_newer_data: function (page) {
             jQuery.UbizOIWidget.page = page;
-            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-            jQuery.UbizOIWidget.sort = sort_info;
-            var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/products', 'get', null, {'page': page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            var params = jQuery.UbizOIWidget.w_get_param_search_sort();
+            params.page = page;
+            jQuery.UbizOIWidget.page = page;
+            ubizapis('v1', '/products', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_process_callback: function (response) {
             if (response.data.success == true) {
@@ -480,11 +464,12 @@ var lst_image_delete = [];
                 var index = 0 + (Number(response.data.paging.page) * Number(response.data.paging.rows_per_page));
                 for (let i = 0; i < products.length; i++) {
                     var cols = [];
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].image, 1, products[i].prd_img_id));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].name, 2));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].branch, 3));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].model, 4));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].name_type, 5));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].id, 1));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].image, 2, products[i].prd_img_id));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].name, 3));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].branch, 4));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].model, 5));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].name_type, 6));
                     rows.push(jQuery.UbizOIWidget.w_make_row_html(products[i].id, cols, index));
                     index++;
                 }
@@ -601,9 +586,9 @@ var lst_image_delete = [];
             jQuery('#search-form  #sup_fuzzy').val("");
         },
         w_get_specific_product_by_id(id, index) {
-            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-            var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1','/products/detail', 'get', null, {'page': index, 'sort': sort},jQuery.UbizOIWidget.w_render_data_to_input_page);
+            var params = jQuery.UbizOIWidget.w_get_param_search_sort();
+            params.page = index;
+            ubizapis('v1','/products/detail', 'get', null, params,jQuery.UbizOIWidget.w_render_data_to_input_page);
         },
         w_make_row_html: function (id, cols, index) {
             var row_html = '';
@@ -632,7 +617,9 @@ var lst_image_delete = [];
                     col_html += "<img src='"+ col_val +"' class='img-thumbnail prd-image' />";
                 }
             } else {
-                col_html += '<div class="nCj" title="' + col_val + '">';
+                var classDiv = "nCj";
+                if (col_idx == 1) classDiv = "nCT";
+                col_html += '<div class="'+classDiv+'" title="' + col_val + '">';
                 col_html += '<span>' + col_val + '</span>';
             }
 

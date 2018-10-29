@@ -287,6 +287,9 @@
                                                     <input type="checkbox" class="ckb-i" value="{{$prd->id}}" style="display: none"/>
                                                     <div class="asU ckb-c"></div>
                                                 </div>
+                                                <div class="nCT" title="{{$prd->id}}">
+                                                    <span>{{$prd->id}}</span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="tcB col-2">

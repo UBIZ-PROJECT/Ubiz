@@ -155,7 +155,7 @@ class Product implements JWTSubject
                 [
                     'prd_name'=> $param['name'],
                     'brd_id'=>!empty($param['brd_id']),
-                    'prd_model'=>!empty($param['model'])? $param['model'] : null,
+                    'prd_model'=>!empty($param['prd_model'])? $param['prd_model'] : null,
                     'prd_note'=>!empty($param['prd_note'])? $param['prd_note'] : null,
                     'type_id'=>!empty($param['type_id'])? $param['type_id'] : null,
                     'delete_flg'=>'0',
@@ -236,7 +236,7 @@ class Product implements JWTSubject
             DB::table('product')->where('prd_id','=',$param['id'])
                 ->update([
                     'prd_name'=>$param['name'],
-                    'brd_id'=>!empty($param['brd_id']) ,
+                    'brd_id'=>!empty($param['brd_id']) ? $param['brd_id'] : null,
                     'prd_model'=>!empty($param['prd_model']) ? $param['prd_model'] : null,
                     'prd_note'=>!empty($param['prd_note']) ? $param['prd_note'] : null,
                     'type_id'=>!empty($param['type_id']) ? $param['type_id'] : null,
@@ -319,8 +319,8 @@ class Product implements JWTSubject
                 if(!empty($search['contain'])){
                     $search_val = "%" . $search['contain'] . "%";
                     $where_raw .= " AND (";
-//                    $where_raw .= "brand.seri_no like ?";
-//                    $params[] = $search_val;
+                    $where_raw .= "product.prd_name like ?";
+                    $params[] = $search_val;
                     $where_raw .= " OR product.prd_model like ?";
                     $params[] = $search_val;
                     $where_raw .= " OR product.prd_note like ?";
@@ -332,8 +332,8 @@ class Product implements JWTSubject
                 if(!empty($search['notcontain'])){
                     $search_val = "%" . $search['notcontain'] . "%";
                     $where_raw .= " AND (";
-//                    $where_raw .= "product.seri_no not like ?";
-//                    $params[] = $search_val;
+                    $where_raw .= "product.prd_name not like ?";
+                    $params[] = $search_val;
                     $where_raw .= " OR product.prd_model not like ?";
                     $params[] = $search_val;
                     $where_raw .= " OR product.prd_note not like ?";
@@ -346,6 +346,10 @@ class Product implements JWTSubject
             } else {
 
                 $where_raw_tmp = [];
+                if (!empty($search['prd_name'])) {
+                    $where_raw_tmp[] = "product.prd_name = ?";
+                    $params[] = $search['prd_name'];
+                }
                 if (!empty($search['prd_model'])) {
                     $where_raw_tmp[] = "product.prd_model = ?";
                     $params[] = $search['prd_model'];
