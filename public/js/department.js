@@ -446,6 +446,17 @@
             col_html += '</div>';
             return col_html;
         },
+        w_make_tab_html: function (data) {
+            var tab_html = "";
+            var screens = data.screens;
+            if (typeof screens === 'object') {
+                jQuery.each(screens, function (screen_id, item) {
+                    tab_html += '<li><div className="active" onClick="jQuery.UbizOIWidget.w_tab_click(' + item. + ', this)">' + i18next.t(item.screen_name) + '</div>';
+                });
+            }
+            var functions = data.functions;
+            return tab_html;
+        },
         w_f_checkbox_click: function (self) {
             if (jQuery(self).find('div.ckb-f').hasClass('asU')) {
                 jQuery.UbizOIWidget.o_page.find('.ckb-f').removeClass('asU');

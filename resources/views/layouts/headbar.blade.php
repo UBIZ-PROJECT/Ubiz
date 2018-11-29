@@ -130,6 +130,7 @@
                             <img src="{{ asset('images/logo.png') }}">
                         </div>
                         <div class="vyo">
+                            <?php var_dump($auth_user)?>
                             <a><span><img src="{!!  \Helper::readImage($auth_user->avatar, 'usr') !!}"></span></a>
                         </div>
                     </div>

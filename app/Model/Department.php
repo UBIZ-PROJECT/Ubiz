@@ -239,7 +239,7 @@ class Department
                     $join->on('permission.screen_id', '=', 'permission_function.screen_id');
                     $join->where('permission_function.delete_flg', '=', '0');
                 })
-                ->leftJoin('permission_detail', function ($join) {
+                ->leftJoin('permission_function_status', function ($join) {
                     $join->on('permission.dep_id', '=', 'permission_function_status.dep_id');
                     $join->on('permission.screen_id', '=', 'permission_function_status.screen_id');
                     $join->on('permission_function.function_id', '=', 'permission_function_status.function_id');
