@@ -2,59 +2,23 @@
 
 namespace App\Model;
 
-use Illuminate\Notifications\Notifiable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Support\Facades\DB;
 
 class Currency implements JWTSubject
 {
-    use Notifiable;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'cur_name', 'cur_code', 'cur_symbol', 'cur_state', 'cur_avatar',
-    ];
-
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [
-
-    ];
-
-    /**
-     * Get the identifier that will be stored in the subject claim of the JWT.
-     *
-     * @return mixed
-     */
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-
-    /**
-     * Return a key value array, containing any custom claims to be added to the JWT.
-     *
-     * @return array
-     */
-    public function getJWTCustomClaims()
-    {
-        return [];
-    }
-
     public function getAllCurrency()
     {
-        $currency = DB::table('m_currency')->get();
+        $currency = DB::table('m_currency')
+            ->where([
+                ['cur_active_flg', '=', '1'],
+                ['delete_flg', '=', '0']
+            ])
+            ->orderBy('cur_id', 'asc')
+            ->get();
         return $currency;
     }
 
-    public function getCurrency($page = 0, $sort = '', $search=[])
+    public function getCurrency($page = 0, $sort = '', $search = [])
     {
         try {
             list($where_raw, $params) = $this->makeWhereRaw($search);
@@ -67,21 +31,19 @@ class Currency implements JWTSubject
                 ->offset($page * $rows_per_page)
                 ->limit($rows_per_page)
                 ->get();
-        }catch (\Throwable $e) {
+        } catch (\Throwable $e) {
             throw $e;
         }
         return $currency;
     }
 
-    public  function getCurrencyById($id){
-        try{
+    public function getCurrencyById($id)
+    {
+        try {
             $currency = DB::table('m_currency')
                 ->where('cur_id', $id)
                 ->first();
-            if ($currency != null && !empty($currency->cur_avatar)) {
-                $currency->cur_avatar = \Helper::readImage($currency->cur_avatar, 'cur');
-            }
-        }catch (\Throwable $e){
+        } catch (\Throwable $e) {
             throw $e;
         }
         return $currency;
@@ -100,10 +62,6 @@ class Currency implements JWTSubject
                 ->offset($pos - 1)
                 ->limit(1)
                 ->first();
-            if ($currency != null && !empty($currency->cur_avatar)) {
-                $currency->cur_avatar = \Helper::readImage($currency->cur_avatar, 'cur');
-            }
-
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -197,7 +155,7 @@ class Currency implements JWTSubject
 
     public function makeOrderBy($sort)
     {
-        $field_name = 'cur_code';
+        $field_name = 'cur_id';
         $order_by = 'asc';
         if ($sort != '') {
             $sort_info = explode('_', $sort);
@@ -208,18 +166,10 @@ class Currency implements JWTSubject
         return [$field_name, $order_by];
     }
 
-    public function insertCurrency($param) {
+    public function insertCurrency($param)
+    {
         DB::beginTransaction();
         try {
-            $id = DB::table('m_currency')->max('cur_id') + 1;
-            if (isset($param['cur_avatar'])) {
-                $avatar = $param['cur_avatar'];
-                $path = $avatar->path();
-                $extension = $avatar->extension();
-                $avatar = $id . "." . $extension;
-                \Helper::resizeImage($path, $avatar, 200, 200, 'cur');
-                $param['cur_avatar'] = $avatar;
-            }
             DB::table('m_currency')->insert($param);
             DB::commit();
         } catch (\Throwable $e) {
@@ -232,14 +182,6 @@ class Currency implements JWTSubject
     {
         DB::beginTransaction();
         try {
-            if (isset($param['cur_avatar'])) {
-                $avatar = $param['cur_avatar'];
-                $path = $avatar->path();
-                $extension = $avatar->extension();
-                $avatar = $param['cur_id'] . "." . $extension;
-                \Helper::resizeImage($path, $avatar, 200, 200, 'cur');
-                $param['cur_avatar'] = $avatar;
-            }
             DB::table('m_currency')
                 ->where('cur_id', $param['cur_id'])
                 ->update($param);

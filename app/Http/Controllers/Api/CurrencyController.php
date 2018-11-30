@@ -36,23 +36,25 @@ class CurrencyController extends Controller
         return response()->json(['currency' => $currencies, 'paging' => $paging, 'success' => true, 'message' => ''], 200);
     }
 
-    public function getCurrencyById($id, Request $request){
-        try{
+    public function getCurrencyById($id, Request $request)
+    {
+        try {
             $currency = new Currency();
             if ($request->has('pos')) {
                 list ($page, $sort, $search) = $this->getRequestData($request);
                 $data = $currency->getCurrencyByPos($request->pos, $sort, $search);
-            }else{
+            } else {
                 $data = $currency->getCurrencyById($id);
             }
-        }catch (\Throwable $e){
+        } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['currency' => $data, 'success' => true, 'message' => ''],200);
+        return response()->json(['currency' => $data, 'success' => true, 'message' => ''], 200);
     }
 
-    public  function insertCurrency(Request $request){
-        try{
+    public function insertCurrency(Request $request)
+    {
+        try {
             $param = [];
             $param['cur_name'] = $request->txt_name;
             $param['cur_code'] = $request->txt_code;
@@ -68,14 +70,15 @@ class CurrencyController extends Controller
             }
             $currency = new Currency();
             $currency->insertCurrency($param);
-        } catch (\Throwable $e){
+        } catch (\Throwable $e) {
             throw $e;
         }
         return response()->json(['success' => true, 'message' => 'Insert success'], 200);
     }
 
-    public  function updatedCurrency($id, Request $request){
-        try{
+    public function updatedCurrency($id, Request $request)
+    {
+        try {
             $param = [];
             $param['cur_id'] = $id;
             $param['cur_name'] = $request->txt_name;
@@ -87,7 +90,7 @@ class CurrencyController extends Controller
             }
             $currency = new Currency();
             $currency->updateCurrency($param);
-        } catch (\Throwable $e){
+        } catch (\Throwable $e) {
             throw $e;
         }
         return response()->json(['success' => true, 'message' => ''], 200);
@@ -105,7 +108,7 @@ class CurrencyController extends Controller
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['currency' => $currencies, 'paging' => $paging , 'success' => true, 'message' => __("Successfully processed.")], 200);
+        return response()->json(['currency' => $currencies, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed.")], 200);
     }
 
     public function getRequestData(Request $request)

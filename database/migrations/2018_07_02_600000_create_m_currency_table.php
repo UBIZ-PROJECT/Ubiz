@@ -20,8 +20,8 @@ class CreateMCurrencyTable extends Migration
             $table->string('cur_ctr_cd_alpha_3', 3);
             $table->string('cur_ctr_cd_numeric', 3);
             $table->string('cur_nm', 100);
-            $table->string('cur_cd_numeric_default', 3);
-            $table->string('cur_cd_alpha', 3);
+            $table->string('cur_cd_numeric_default', 5);
+            $table->string('cur_cd_alpha', 5);
             $table->string('cur_cd_numeric', 3);
             $table->string('cur_minor_units', 1);
             $table->char('cur_active_flg', 1)->default('1');
