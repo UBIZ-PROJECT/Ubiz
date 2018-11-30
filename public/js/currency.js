@@ -385,10 +385,11 @@
                 for (let i = 0; i < currency.length; i++) {
                     var cols = [];
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(currency[i].cur_id, currency[i].cur_id, 1));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(currency[i].cur_id, currency[i].cur_name, 2));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(currency[i].cur_id, currency[i].cur_code, 3));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(currency[i].cur_id, currency[i].cur_symbol, 4));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(currency[i].cur_id, currency[i].cur_state, 5));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html_country(currency[i].cur_id, currency[i].cur_ctr_nm, currency[i].cur_ctr_cd_alpha_2, 2));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(currency[i].cur_id, currency[i].cur_nm, 3));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(currency[i].cur_id, currency[i].cur_cd_alpha, 4));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(currency[i].cur_id, currency[i].cur_symbol, 5));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html_active(currency[i].active_flg, 6));
                     rows.push(jQuery.UbizOIWidget.w_make_row_html(currency[i].cur_id, cols, i, paging.page, paging.rows_per_page));
                 }
                 table_html += rows.join("");
@@ -467,6 +468,31 @@
             }
             col_html += '<span>' + col_val + '</span>';
             col_html += '</div>';
+            col_html += '</div>';
+            col_html += '</div>';
+            return col_html;
+        },
+        w_make_col_html_country: function (col_id, col_val, cur_ctr_cd_alpha_2, col_idx) {
+            var col_html = "";
+            col_html += '<div class="tcB col-' + col_idx + '">';
+            col_html += '<div class="cbo">';
+            col_html += '<div class="nCj" title="' + col_val + '">';
+            col_html += '<img src="/dist/flagsprites/blank.gif" class="flag flag-' + cur_ctr_cd_alpha_2 + '"/>';
+            col_html += '<span> ' + col_val + '</span>';
+            col_html += '</div>';
+            col_html += '</div>';
+            col_html += '</div>';
+            return col_html;
+        },
+        w_make_col_html_active: function (col_val, col_idx) {
+            var col_html = "";
+            col_html += '<div class="tcB col-' + col_idx + '">';
+            col_html += '<div class="cbo">';
+            if (col_val == 1) {
+                col_html += '<i class="material-icons lh-38 cl-active">check_circle</i>';
+            } else {
+                col_html += '<i class="material-icons lh-38 cl-inactive">not_interested</i>';
+            }
             col_html += '</div>';
             col_html += '</div>';
             return col_html;

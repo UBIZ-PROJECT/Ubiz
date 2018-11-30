@@ -22,6 +22,7 @@
 
     <!-- Flag-Sprites -->
     <link rel="stylesheet" type="text/css" href="{{ asset('dist/flagsprites/flags.min.css') }}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <script>
         var i18next_options = {};

@@ -47,7 +47,8 @@
                                         <div class="vD">
                                             <div class="xT">
                                                 <div class="oQ">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                         viewBox="0 0 24 24">
                                                         <path d="M4 14h4v-4H4v4zm0 5h4v-4H4v4zM4 9h4V5H4v4zm5 5h12v-4H9v4zm0 5h12v-4H9v4zM9 5v4h12V5H9z"/>
                                                         <path d="M0 0h24v24H0z" fill="none"/>
                                                     </svg>
@@ -73,7 +74,7 @@
         </div>
         <div class="m-content"></div>
         <div class="r-content">
-            <div class="jAQ" id="o-put" >
+            <div class="jAQ" id="o-put">
                 <div class="bkK">
                     <div class="aeH">
                         <div class="aqK">
@@ -132,22 +133,26 @@
                                 <div class="col-3" role="presentation"></div>
                                 <div class="col-4" role="presentation"></div>
                                 <div class="col-5" role="presentation"></div>
+                                <div class="col-6" role="presentation"></div>
                             </div>
                             <div class="hdG">
                                 <div class="dcB col-1" role="presentation">
-                                    <div class="dWB dWT" role="button" sort-name="cur_id" order-by="asc" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                    <div class="dWB dWT" role="button" sort-name="cur_id" order-by="asc"
+                                         onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">{{ __('ID') }}</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
-                                                        <svg class="faH asc sVGT" x="0px" y="0px" width="18px" height="18px"
+                                                        <svg class="faH asc sVGT" x="0px" y="0px" width="18px"
+                                                             height="18px"
                                                              viewBox="0 0 48 48" focusable="false" fill="#000000">
                                                             <path fill="none" d="M0 0h48v48H0V0z"></path>
                                                             <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
                                                         </svg>
                                                         <svg class="faH desc" x="0px" y="0px" width="18px"
-                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                             height="18px" viewBox="0 0 48 48" focusable="false"
+                                                             fill="#000000">
                                                             <path fill="none" d="M0 0h48v48H0V0z"></path>
                                                             <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
                                                         </svg>
@@ -158,9 +163,10 @@
                                     </div>
                                 </div>
                                 <div class="dcB col-2" role="presentation">
-                                    <div class="dWB" role="button" sort-name="cur_name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                    <div class="dWB" role="button" sort-name="cur_ctr_nm" order-by=""
+                                         onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">{{ __('Name') }}</div>
+                                            <div class="tDv">{{ __('Country') }}</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -170,7 +176,8 @@
                                                             <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
                                                         </svg>
                                                         <svg class="faH desc" x="0px" y="0px" width="18px"
-                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                             height="18px" viewBox="0 0 48 48" focusable="false"
+                                                             fill="#000000">
                                                             <path fill="none" d="M0 0h48v48H0V0z"></path>
                                                             <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
                                                         </svg>
@@ -181,9 +188,10 @@
                                     </div>
                                 </div>
                                 <div class="dcB col-3" role="presentation">
-                                    <div class="dWB dWT" role="button" sort-name="cur_code" order-by="asc" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                    <div class="dWB dWT" role="button" sort-name="cur_nm" order-by="asc"
+                                         onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">{{ __('Code') }}</div>
+                                            <div class="tDv">{{ __('Currency Name') }}</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -193,7 +201,8 @@
                                                             <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
                                                         </svg>
                                                         <svg class="faH desc" x="0px" y="0px" width="18px"
-                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                             height="18px" viewBox="0 0 48 48" focusable="false"
+                                                             fill="#000000">
                                                             <path fill="none" d="M0 0h48v48H0V0z"></path>
                                                             <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
                                                         </svg>
@@ -204,7 +213,33 @@
                                     </div>
                                 </div>
                                 <div class="dcB col-4" role="presentation">
-                                    <div class="dWB" role="button" sort-name="cur_symbol" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                    <div class="dWB" role="button" sort-name="cur_cd_alpha" order-by=""
+                                         onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                        <div class="dvJ">
+                                            <div class="tDv">{{ __('Currency Code') }}</div>
+                                            <div class="mhH">
+                                                <div class="acD">
+                                                    <div class="huK">
+                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
+                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                        </svg>
+                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
+                                                             height="18px" viewBox="0 0 48 48" focusable="false"
+                                                             fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dcB col-5" role="presentation">
+                                    <div class="dWB" role="button" sort-name="cur_symbol" order-by=""
+                                         onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">{{ __('Symbol') }}</div>
                                             <div class="mhH">
@@ -216,7 +251,8 @@
                                                             <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
                                                         </svg>
                                                         <svg class="faH desc" x="0px" y="0px" width="18px"
-                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                             height="18px" viewBox="0 0 48 48" focusable="false"
+                                                             fill="#000000">
                                                             <path fill="none" d="M0 0h48v48H0V0z"></path>
                                                             <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
                                                         </svg>
@@ -226,23 +262,14 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="dcB col-5" role="presentation">
-                                    <div class="dWB" role="button" sort-name="cur_state" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                <div class="dcB col-6" role="presentation">
+                                    <div class="dWB" role="button" sort-name="active_flg" order-by=""
+                                         onclick="return false;">
                                         <div class="dvJ">
-                                            <div class="tDv">{{ __('State') }}</div>
+                                            <div class="tDv">{{ __('Active') }}</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
-                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
-                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
-                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
-                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
-                                                        </svg>
-                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
-                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
-                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
-                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
-                                                        </svg>
                                                     </div>
                                                 </div>
                                             </div>
@@ -256,11 +283,13 @@
                         <div class="yTP">
                             <div id="table-content" class="jFr">
                                 @foreach($currencies as $key => $currency)
-                                    <div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{ $key + 1 }}, {{$currency->cur_id}})">
+                                    <div class="jvD"
+                                         ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{ $key + 1 }}, {{$currency->cur_id}})">
                                         <div class="tcB col-1">
                                             <div class="cbo">
                                                 <div class="jgQ" onclick="jQuery.UbizOIWidget.w_c_checkbox_click(this)">
-                                                    <input type="checkbox" class="ckb-i" value="{{$currency->cur_id}}" style="display: none"/>
+                                                    <input type="checkbox" class="ckb-i" value="{{$currency->cur_id}}"
+                                                           style="display: none"/>
                                                     <div class="asU ckb-c"></div>
                                                 </div>
                                                 <div class="nCT" title="{{$currency->cur_id}}">
@@ -270,30 +299,40 @@
                                         </div>
                                         <div class="tcB col-2">
                                             <div class="cbo">
-                                                <div class="nCj" title="{{$currency->cur_name}}">
-                                                    <span>{{$currency->cur_name}}</span>
+                                                <div class="nCj" title="{{$currency->cur_ctr_nm}}">
+                                                    <img src="{{ asset("dist/flagsprites/blank.gif") }}" class="flag flag-{{$currency->cur_ctr_cd_alpha_2}}"/>
+                                                    <span> {{$currency->cur_ctr_nm}}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="tcB col-3">
                                             <div class="cbo">
-                                                <div class="nCj" title="{{$currency->cur_code}}">
-                                                    <span>{{$currency->cur_code}}</span>
+                                                <div class="nCj" title="{{$currency->cur_nm}}">
+                                                    <span>{{$currency->cur_nm}}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="tcB col-4">
+                                            <div class="cbo">
+                                                <div class="nCj" title="{{$currency->cur_cd_alpha}}">
+                                                    <span>{{$currency->cur_cd_alpha}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tcB col-5">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$currency->cur_symbol}}">
                                                     <span>{{$currency->cur_symbol}}</span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tcB col-5">
+                                        <div class="tcB col-6">
                                             <div class="cbo">
-                                                <div class="nCj" title="{{$currency->cur_state}}">
-                                                    <span>{{$currency->cur_state}}</span>
-                                                </div>
+                                                @if($currency->active_flg == '1')
+                                                    <i class="material-icons lh-38 cl-active">check_circle</i>
+                                                @else
+                                                    <i class="material-icons lh-38 cl-inactive">not_interested</i>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -359,14 +398,20 @@
                     <div class="aqI nicescroll" id="nicescroll-iput">
                         <input type="hidden" id="txt_id" value="0">
                         <div class="row z-mgl z-mgr">
-                            <div class="col-sm-2 col-md-2 col-xl-2 z-pdl">
-                                @include('components.upload_image')
+                            <div class="col-sm-3 col-md-3 col-xl-3 z-pdl">
+                                @include('components.input',['control_id'=>'txt_cur_ctr_nm', 'label'=>__('Name')])
+                                @include('components.input',['control_id'=>'txt_cur_ctr_cd_alpha_2', 'label'=>__('Code')])
+                                @include('components.input',['control_id'=>'txt_cur_ctr_cd_alpha_3', 'label'=>__('Symbol')])
+                                @include('components.input',['control_id'=>'txt_cur_ctr_cd_numeric', 'label'=>__('State')])
+                                @include('components.input',['control_id'=>'txt_cur_nm', 'label'=>__('State')])
                             </div>
-                            <div class="col-sm-5 col-md-5 col-xl-5">
-                                @include('components.input',['control_id'=>'txt_name', 'label'=>__('Name')])
-                                @include('components.input',['control_id'=>'txt_code', 'label'=>__('Code')])
-                                @include('components.input',['control_id'=>'txt_symbol', 'label'=>__('Symbol')])
-                                @include('components.input',['control_id'=>'txt_state', 'label'=>__('State')])
+                            <div class="col-sm-3 col-md-3 col-xl-3">
+                                @include('components.input',['control_id'=>'txt_cur_cd_numeric_default ', 'label'=>__('Name')])
+                                @include('components.input',['control_id'=>'txt_cur_cd_alpha', 'label'=>__('Code')])
+                                @include('components.input',['control_id'=>'txt_cur_cd_numeric', 'label'=>__('Symbol')])
+                                @include('components.input',['control_id'=>'txt_cur_minor_units', 'label'=>__('State')])
+                                @include('components.input',['control_id'=>'txt_cur_symbol', 'label'=>__('State')])
+                                @include('components.checkbox',['control_id'=>'txt_active_flg', 'width'=>'150', 'value'=>'0', 'checked' => false, 'label'=>__('Social Insurance')])
                             </div>
                         </div>
                     </div>

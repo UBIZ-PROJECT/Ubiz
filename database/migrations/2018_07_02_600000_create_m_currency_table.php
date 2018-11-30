@@ -24,9 +24,10 @@ class CreateMCurrencyTable extends Migration
             $table->string('cur_cd_alpha', 5);
             $table->string('cur_cd_numeric', 3);
             $table->string('cur_minor_units', 1);
-            $table->char('cur_active_flg', 1)->default('1');
+            $table->string('cur_symbol', 10);
+            $table->char('active_flg', 1)->default('1');
             $table->char('delete_flg', 1)->default('0');
-            $table->timestamp('inp_date');
+            $table->timestamp('inp_date')->useCurrent();
             $table->integer('inp_user');
             $table->timestamp('upd_date')->useCurrent();
             $table->integer('upd_user');

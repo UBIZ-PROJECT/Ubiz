@@ -60,5 +60,11 @@
   "Model": "Kiểu mẫu",
   "Type": "Loại",
   "Detail": "Chi tiết",
-  "Do you want to continue insert Product?":"Bạn có muốn tiếp tục thêm sản phẩm?"
+  "Do you want to continue insert Product?":"Bạn có muốn tiếp tục thêm sản phẩm?",
+  "Country":"Quốc gia",
+  "Currency Name":"Tên tiền tệ",
+  "Currency Code":"Mã tiền tệ",
+  "Symbol":"Ký hiệu",
+  "Active":"Kích hoạt",
+  "Currency Code Numeric Default":"Mã số tiền tệ mặc định"
 }

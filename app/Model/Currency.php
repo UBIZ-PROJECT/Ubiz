@@ -4,7 +4,7 @@ namespace App\Model;
 
 use Illuminate\Support\Facades\DB;
 
-class Currency implements JWTSubject
+class Currency
 {
     public function getAllCurrency()
     {
@@ -97,32 +97,32 @@ class Currency implements JWTSubject
 
     public function makeWhereRaw($search = [])
     {
-        $params = ['0'];
-        $where_raw = 'm_currency.delete_flg = ?';
+        $params = ['1','0'];
+        $where_raw = 'm_currency.active_flg = ? AND m_currency.delete_flg = ?';
         if (sizeof($search) > 0) {
             if (isset($search['contain']) || isset($search['notcontain'])) {
                 if (isset($search['contain'])) {
                     $search_val = "%" . $search['contain'] . "%";
                     $where_raw .= " AND (";
-                    $where_raw .= "m_currency.cur_code like ?";
+                    $where_raw .= "m_currency.cur_ctr_nm like ?";
                     $params[] = $search_val;
-                    $where_raw .= " OR m_currency.cur_name like ?";
+                    $where_raw .= " OR m_currency.cur_nm like ?";
+                    $params[] = $search_val;
+                    $where_raw .= " OR m_currency.cur_cd_alpha like ?";
                     $params[] = $search_val;
                     $where_raw .= " OR m_currency.cur_symbol like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR m_currency.cur_state like ?";
                     $params[] = $search_val;
                     $where_raw .= " ) ";
                 }
                 if (isset($search['notcontain'])) {
                     $search_val = "%" . $search['notcontain'] . "%";
-                    $where_raw .= " AND m_currency.cur_code not like ?";
+                    $where_raw .= " AND m_currency.cur_ctr_nm not like ?";
                     $params[] = $search_val;
-                    $where_raw .= " AND m_currency.cur_name not like ?";
+                    $where_raw .= " AND m_currency.cur_nm not like ?";
+                    $params[] = $search_val;
+                    $where_raw .= " AND m_currency.cur_cd_alpha not like ?";
                     $params[] = $search_val;
                     $where_raw .= " AND m_currency.cur_symbol not like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " AND m_currency.cur_state not like ?";
                     $params[] = $search_val;
                 }
 
@@ -130,19 +130,19 @@ class Currency implements JWTSubject
 
                 $where_raw_tmp = [];
                 if (isset($search['code'])) {
-                    $where_raw_tmp[] = "m_currency.cur_code = ?";
+                    $where_raw_tmp[] = "m_currency.cur_ctr_nm = ?";
                     $params[] = $search['code'];
                 }
                 if (isset($search['name'])) {
-                    $where_raw_tmp[] = "m_currency.cur_name = ?";
+                    $where_raw_tmp[] = "m_currency.cur_nm = ?";
                     $params[] = $search['name'];
                 }
                 if (isset($search['symbol'])) {
-                    $where_raw_tmp[] = "m_currency.cur_symbol = ?";
+                    $where_raw_tmp[] = "m_currency.cur_cd_alpha = ?";
                     $params[] = $search['symbol'];
                 }
                 if (isset($search['state'])) {
-                    $where_raw_tmp[] = "m_currency.cur_state = ?";
+                    $where_raw_tmp[] = "m_currency.cur_symbol = ?";
                     $params[] = $search['state'];
                 }
                 if (sizeof($where_raw_tmp) > 0) {
