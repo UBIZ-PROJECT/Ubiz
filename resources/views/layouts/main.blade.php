@@ -20,6 +20,9 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('dist/tooltipster/tooltipster.bundle.css') }}">
     <script type="text/javascript" src="{{ asset('dist/tooltipster/tooltipster.bundle.js') }}"></script>
 
+    <!-- Flag-Sprites -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('dist/flagsprites/flags.min.css') }}">
+
     <script>
         var i18next_options = {};
         i18next_options.lng = document.documentElement.lang;

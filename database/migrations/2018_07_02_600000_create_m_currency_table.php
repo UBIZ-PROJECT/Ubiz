@@ -15,11 +15,16 @@ class CreateMCurrencyTable extends Migration
     {
         Schema::create('m_currency', function (Blueprint $table) {
             $table->increments('cur_id');
-            $table->string('cur_name', 50);
-            $table->char('cur_code', 3);
-            $table->char('cur_symbol', 11);
-            $table->string('cur_state', 50);
-            $table->string('cur_avatar', 250);
+            $table->string('cur_ctr_nm', 100);
+            $table->string('cur_ctr_cd_alpha_2', 2);
+            $table->string('cur_ctr_cd_alpha_3', 3);
+            $table->string('cur_ctr_cd_numeric', 3);
+            $table->string('cur_nm', 100);
+            $table->string('cur_cd_numeric_default', 3);
+            $table->string('cur_cd_alpha', 3);
+            $table->string('cur_cd_numeric', 3);
+            $table->string('cur_minor_units', 1);
+            $table->char('cur_active_flg', 1)->default('1');
             $table->char('delete_flg', 1)->default('0');
             $table->timestamp('inp_date');
             $table->integer('inp_user');
