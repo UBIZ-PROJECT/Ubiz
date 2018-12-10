@@ -180,10 +180,10 @@
 
         },
         w_clear_advance_search_form: function () {
-            jQuery('#code').val("");
-            jQuery('#name').val("");
-            jQuery('#symbol').val("");
-            jQuery('#state').val("");
+            jQuery('#cur_ctr_nm').val("");
+            jQuery('#cur_nm').val("");
+            jQuery('#cur_cd_alpha').val("");
+            jQuery('#cur_symbol').val("");
             jQuery('#contain').val("");
             jQuery('#notcontain').val("");
         },
@@ -279,20 +279,20 @@
 
             var search_info = {};
 
-            if (jQuery('#code').val().replace(/\s/g, '') != '') {
-                search_info.code = jQuery('#code').val();
+            if (jQuery('#cur_ctr_nm').val().replace(/\s/g, '') != '') {
+                search_info.cur_ctr_nm = jQuery('#cur_ctr_nm').val();
             }
 
-            if (jQuery('#name').val().replace(/\s/g, '') != '') {
-                search_info.name = jQuery('#name').val();
+            if (jQuery('#cur_nm').val().replace(/\s/g, '') != '') {
+                search_info.cur_nm = jQuery('#cur_nm').val();
             }
 
-            if (jQuery('#symbol').val().replace(/\s/g, '') != '') {
-                search_info.symbol = jQuery('#symbol').val();
+            if (jQuery('#cur_cd_alpha').val().replace(/\s/g, '') != '') {
+                search_info.cur_cd_alpha = jQuery('#cur_cd_alpha').val();
             }
 
-            if (jQuery('#state').val().replace(/\s/g, '') != '') {
-                search_info.state = jQuery('#state').val();
+            if (jQuery('#cur_symbol').val().replace(/\s/g, '') != '') {
+                search_info.cur_symbol = jQuery('#cur_symbol').val();
             }
 
 
@@ -425,20 +425,38 @@
         },
         w_clean_input_page: function () {
             jQuery.UbizOIWidget.i_page.find("#txt_id").val("0");
-            jQuery.UbizOIWidget.i_page.find("#txt_code").val("");
-            jQuery.UbizOIWidget.i_page.find("#txt_name").val("");
-            jQuery.UbizOIWidget.i_page.find("#txt_symbol").val("");
-            jQuery.UbizOIWidget.i_page.find("#txt_state").val("");
-            jQuery.UbizOIWidget.i_page.find("img.img-thumbnail").attr('src', "../images/avatar.png");
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_nm").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_cd_alpha_2").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_cd_alpha_3").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_cd_numeric").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_nm").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_cd_numeric_default").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_cd_alpha").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_cd_numeric").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_minor_units").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_symbol").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_active_flg").val("0");
         },
         w_set_input_page: function (data) {
+
             jQuery.UbizOIWidget.i_page.find("#txt_id").val(data.cur_id);
-            jQuery.UbizOIWidget.i_page.find("#txt_code").val(data.cur_code);
-            jQuery.UbizOIWidget.i_page.find("#txt_name").val(data.cur_name);
-            jQuery.UbizOIWidget.i_page.find("#txt_symbol").val(data.cur_symbol);
-            jQuery.UbizOIWidget.i_page.find("#txt_state").val(data.cur_state);
-            if(data.cur_avatar != ''){
-                jQuery.UbizOIWidget.i_page.find("img.img-thumbnail").attr('src', data.cur_avatar);
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_nm").val(data.cur_ctr_nm);
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_cd_alpha_2").val(data.cur_ctr_cd_alpha_2);
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_cd_alpha_3").val(data.cur_ctr_cd_alpha_3);
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_cd_numeric").val(data.cur_ctr_cd_numeric);
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_nm").val(data.cur_nm);
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_cd_numeric_default").val(data.cur_cd_numeric_default);
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_cd_alpha").val(data.cur_cd_alpha);
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_cd_numeric").val(data.cur_cd_numeric);
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_minor_units").val(data.cur_minor_units);
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_symbol").val(data.cur_symbol);
+            jQuery.UbizOIWidget.i_page.find("#txt_active_flg").val(data.active_flg);
+            if (data.active_flg == '1') {
+                jQuery.UbizOIWidget.i_page.find("#txt_active_flg").prev('div').addClass('sck');
+                jQuery.UbizOIWidget.i_page.find("#txt_active_flg").prev('div').removeClass('suc');
+            } else {
+                jQuery.UbizOIWidget.i_page.find("#txt_active_flg").prev('div').addClass('suc');
+                jQuery.UbizOIWidget.i_page.find("#txt_active_flg").prev('div').removeClass('sck');
             }
         },
         w_make_row_html: function (id, cols, row_no, page_no, rows_per_page) {
@@ -556,15 +574,19 @@
         },
         w_get_form_data: function () {
             var form_data = new FormData();
-            form_data.append('txt_name', jQuery("#txt_name").val());
-            form_data.append('txt_code', jQuery("#txt_code").val());
 
-            if (jQuery('input[name=inp-upload-image]')[0].files.length > 0) {
-                form_data.append('avatar', jQuery('input[name=inp-upload-image]')[0].files[0]);
-            }
-
-            form_data.append('txt_symbol', jQuery("#txt_symbol").val());
-            form_data.append('txt_state', jQuery("#txt_state").val());
+            form_data.append('txt_cur_id', jQuery("#txt_id").val());
+            form_data.append('txt_cur_ctr_nm', jQuery("#txt_cur_ctr_nm").val());
+            form_data.append('txt_cur_ctr_cd_alpha_2', jQuery("#txt_cur_ctr_cd_alpha_2").val());
+            form_data.append('txt_cur_ctr_cd_alpha_3', jQuery("#txt_cur_ctr_cd_alpha_3").val());
+            form_data.append('txt_cur_ctr_cd_numeric', jQuery("#txt_cur_ctr_cd_numeric").val());
+            form_data.append('txt_cur_nm', jQuery("#txt_cur_nm").val());
+            form_data.append('txt_cur_cd_numeric_default', jQuery("#txt_cur_cd_numeric_default").val());
+            form_data.append('txt_cur_cd_alpha', jQuery("#txt_cur_cd_alpha").val());
+            form_data.append('txt_cur_cd_numeric', jQuery("#txt_cur_cd_numeric").val());
+            form_data.append('txt_cur_minor_units', jQuery("#txt_cur_minor_units").val());
+            form_data.append('txt_cur_symbol', jQuery("#txt_cur_symbol").val());
+            form_data.append('txt_active_flg', jQuery("#txt_active_flg").val());
 
             return form_data;
         },

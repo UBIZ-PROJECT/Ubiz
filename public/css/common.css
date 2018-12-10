@@ -1514,3 +1514,7 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
 .cl-inactive {
     color: #FF3D00;
 }
+
+.cl-header{
+    color: #D1D9E4;
+}

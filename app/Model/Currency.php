@@ -72,7 +72,7 @@ class Currency
     {
         try {
             $count = DB::table('m_currency')
-                ->where('delete_flg', '0')
+                ->where([['active_flg', '=', '1'],['delete_flg', '=', '0']])
                 ->count();
         } catch (\Throwable $e) {
             throw $e;
@@ -80,11 +80,24 @@ class Currency
         return $count;
     }
 
-    public function getPagingInfo()
+    public function countCurrency($search = [])
+    {
+        try {
+            list($where_raw, $params) = $this->makeWhereRaw($search);
+            $count = DB::table('m_currency')
+                ->whereRaw($where_raw, $params)
+                ->count();
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return $count;
+    }
+
+    public function getPagingInfo($search)
     {
         try {
             $rows_per_page = env('ROWS_PER_PAGE', 10);
-            $rows_num = $this->countAllCurrency();
+            $rows_num = $this->countCurrency($search);
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -129,21 +142,21 @@ class Currency
             } else {
 
                 $where_raw_tmp = [];
-                if (isset($search['code'])) {
+                if (isset($search['cur_ctr_nm'])) {
                     $where_raw_tmp[] = "m_currency.cur_ctr_nm = ?";
-                    $params[] = $search['code'];
+                    $params[] = $search['cur_ctr_nm'];
                 }
-                if (isset($search['name'])) {
+                if (isset($search['cur_nm'])) {
                     $where_raw_tmp[] = "m_currency.cur_nm = ?";
-                    $params[] = $search['name'];
+                    $params[] = $search['cur_nm'];
                 }
-                if (isset($search['symbol'])) {
+                if (isset($search['cur_cd_alpha'])) {
                     $where_raw_tmp[] = "m_currency.cur_cd_alpha = ?";
-                    $params[] = $search['symbol'];
+                    $params[] = $search['cur_cd_alpha'];
                 }
-                if (isset($search['state'])) {
+                if (isset($search['cur_symbol'])) {
                     $where_raw_tmp[] = "m_currency.cur_symbol = ?";
-                    $params[] = $search['state'];
+                    $params[] = $search['cur_symbol'];
                 }
                 if (sizeof($where_raw_tmp) > 0) {
                     $where_raw .= " AND ( " . implode(" OR ", $where_raw_tmp) . " )";
