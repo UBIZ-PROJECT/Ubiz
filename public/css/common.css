@@ -1502,3 +1502,19 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
 .utb .rhb > div.active{
     display: block;
 }
+
+.lh-38 {
+    line-height: 38px !important;
+}
+
+.cl-active {
+    color: #00E5FF;
+}
+
+.cl-inactive {
+    color: #FF3D00;
+}
+
+.cl-header{
+    color: #D1D9E4;
+}

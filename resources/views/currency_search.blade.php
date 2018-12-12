@@ -27,34 +27,34 @@
             <div class="gvo">
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="code">{{ __('Code') }}</label>
+                        <label for="code">{{ __('Country') }}</label>
                     </span>
                     <span class="avo">
-                        <input type="text" spellcheck="false" id="code" value="" autocomplete="off">
+                        <input type="text" spellcheck="false" id="cur_ctr_nm" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="name">{{ __('Name') }}</label>
+                        <label for="name">{{ __('Currency name') }}</label>
                     </span>
                     <span class="avo">
-                        <input type="text" spellcheck="false" id="name" value="" autocomplete="off">
+                        <input type="text" spellcheck="false" id="cur_nm" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="symbol">{{ __('Symbol') }}</label>
+                        <label for="symbol">{{ __('Currency code') }}</label>
                     </span>
                     <span class="avo">
-                        <input type="text" id="symbol" value="" autocomplete="off">
+                        <input type="text" id="cur_cd_alpha" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="state">{{ __('State') }}</label>
+                        <label for="state">{{ __('Symbol') }}</label>
                     </span>
                     <span class="avo">
-                        <input type="text" spellcheck="false" id="state" value="" autocomplete="off">
+                        <input type="text" spellcheck="false" id="cur_symbol" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo">

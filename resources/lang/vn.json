@@ -26,6 +26,7 @@
   "Logout": "Đăng xuất",
   "Add new": "Thêm mới",
   "List": "Danh sách",
+  "Currency setting": "Thiết lập tiền tệ",
   "Select": "Chọn",
   "Refresh": "Làm mới",
   "Delete": "Xóa",
@@ -60,5 +61,19 @@
   "Model": "Kiểu mẫu",
   "Type": "Loại",
   "Detail": "Chi tiết",
-  "Do you want to continue insert Product?":"Bạn có muốn tiếp tục thêm sản phẩm?"
+  "Do you want to continue insert Product?":"Bạn có muốn tiếp tục thêm sản phẩm?",
+  "Country":"Quốc gia",
+  "Currency":"Tiền tệ",
+  "Currency name":"Tên tiền tệ",
+  "Currency code":"Mã tiền tệ",
+  "Currency code numeric":"Mã số tiền tệ",
+  "Country code alpha(2)":"Mã quốc gia (alpha 2)",
+  "Country code alpha(3)":"Mã quốc gia (alpha 3)",
+  "Country code numeric":"Mã số quốc gia",
+  "Symbol":"Ký hiệu",
+  "Active":"Kích hoạt",
+  "Minor units":"Đơn vị phụ",
+  "Currency code numeric default":"Mã số tiền tệ mặc định",
+  "Company info":"Thông tin công ty",
+  "Permission":"Phân quyền nhân viên"
 }
