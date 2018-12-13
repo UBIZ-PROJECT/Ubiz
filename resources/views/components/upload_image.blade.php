@@ -22,11 +22,15 @@ if (empty($class)) {
     $class = '';
 }
 
+if (empty($callback)) {
+    $callback = 'jQuery.UbizOIWidget.w_callback_remove_image';
+}
+
 ?>
-<div class='image-upload mb-1' style="max-width: {{$width}}px; max-height: {{$height}}px">
+<div class='image-upload mb-1' style="width: {{$width}}px; height: {{$height}}px">
 	<img src="{{$src}}" img-name="" style="height: {{$height}}px; width:{{$width}}px" alt="{{$alt}}" class="img-thumbnail img-show {{$class}}" onclick="openFileUpload(this)">
-	<input type='file' accept="image/*" name="inp-upload-image{{$multiUpload}}" is-change='false' onchange="readURL(this,jQuery.UbizOIWidget.w_callback_remove_image);" class="file-upload" style='display:none'>
-    <button type="button" style="top: -{{$height}}px;" class="close" aria-label="Close" onclick="removeImage(this, jQuery.UbizOIWidget.w_callback_remove_image)">
+	<input type='file' accept="image/*" name="inp-upload-image{{$multiUpload}}" is-change='false' onchange="readURL(this,{{$callback}});" class="file-upload" style='display:none'>
+    <button type="button" style="top: -{{$height}}px;" class="close" aria-label="Close" onclick="removeImage(this, {{$callback}})">
         <span aria-hidden="true">&times;</span>
     </button>
     <span class="label-change" style="width: {{$width}}px;" onclick="openFileUpload(this)">{{ __("Change") }}</span>

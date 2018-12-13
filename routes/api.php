@@ -65,5 +65,7 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::put('brands/{id}/update', ['as' => 'brand-update', 'uses' => 'Api\BrandController@updateBrand']);
         Route::put('brands/{id}/updatePaging', ['as' => 'brand-update', 'uses' => 'Api\BrandController@updateBrandPaging']);
         Route::delete('brands/{ids}/delete', ['as' => 'brand-delete', 'uses' => 'Api\BrandController@deleteBrand']);
+
+        Route::get('series', ['as' => 'api-series', 'uses' => 'Api\SeriesController@getSeries']);
     });
 });

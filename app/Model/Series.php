@@ -7,7 +7,10 @@
  */
 
 namespace App\Model;
-
+use App\Helper;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class Series implements JWTSubject
 {
@@ -47,12 +50,12 @@ class Series implements JWTSubject
         return [];
     }
 
-    public function getSeriesPaging($page, $sort = '', $search = '') {
-        list($where_raw,$params) = $this->makeWhereRaw($search);
+    public function getSeriesPaging($prd_id, $page, $sort = '', $search = '') {
+        list($where_raw,$params) = $this->makeWhereRaw($prd_id, $search);
         list($field_name, $order_by) = $this->makeOrderBy($sort);
         $rows_per_page = env('ROWS_PER_PAGE', 30);
         $series = DB::table('product_series')
-            ->select('prd_series_id','prd_id','serial_no','serial_sts','serial_note')
+            ->select('prd_series_id','prd_id','serial_no','serial_sts','serial_note', 'inp_date')
             ->whereRaw($where_raw, $params)
             ->orderBy($field_name, $order_by)
             ->offset($page * $rows_per_page)
@@ -66,7 +69,7 @@ class Series implements JWTSubject
         DB::beginTransaction();
         try {
 //            $seri_no = $this->generateCode();
-            $id = DB::table('product')->insertGetId(
+            $id = DB::table('product_series')->insertGetId(
                 [
                     'prd_id'=> $param['prd_id'],
                     'serial_no'=>$param['serial_no'],
@@ -95,7 +98,7 @@ class Series implements JWTSubject
         DB::beginTransaction();
         $param['brd_id'] = '1';
         try {
-            DB::table('product')->where('prd_series_id','=',$param['prd_series_id'])
+            DB::table('product_series')->where('prd_series_id','=',$param['prd_series_id'])
                 ->update([
                     'prd_id'=> $param['prd_id'],
                     'serial_no'=>$param['serial_no'],
@@ -114,7 +117,7 @@ class Series implements JWTSubject
         DB::beginTransaction();
         try {
             if ($id && is_array($id)) {
-                DB::table('product')->whereIn('prd_series_id', $id)
+                DB::table('product_series')->whereIn('prd_series_id', $id)
                     ->update([
                         'delete_flg'=>'1',
                         'upd_date'=>date('Y-m-d H:i:s')
@@ -128,23 +131,26 @@ class Series implements JWTSubject
         }
     }
 
-    public function makeWhereRaw($search = '')
+    public function makeWhereRaw($prd_id, $search = '')
     {
         $params = [0];
-        $where_raw = "where delete_flg = ? ";
-        if ($search != '') {
+        $where_raw = " delete_flg = ? ";
+        if ($search != '' && !empty($search)) {
             $where_raw .= " AND (";
             $where_raw .= " OR serial_no like ?";
             $params[] = $search;
             $where_raw .= " ) ";
         }
+
+        $where_raw .= " AND prd_id = ?";
+        $params[] = $prd_id;
         return [$where_raw, $params];
     }
 
-    public function getPagingInfo($sort = '', $search = []) {
+    public function getPagingInfo($prd_id, $sort = '', $search = []) {
         try {
             $rows_per_page = env('ROWS_PER_PAGE', 10);
-            $rows_num = $this->countAllBrand($sort,$search);
+            $rows_num = $this->countAllSeries($prd_id, $sort,$search);
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -156,14 +162,14 @@ class Series implements JWTSubject
     }
 
 
-    public function countAllSeries($sort, $search)
+    public function countAllSeries($prd_id, $sort, $search)
     {
         try {
-            list($where_raw,$params) = $this->makeWhereRaw($search);
+            list($where_raw,$params) = $this->makeWhereRaw($prd_id, $search);
             list($field_name, $order_by) = $this->makeOrderBy($sort);
             $count = DB::select("
                 SELECT count(*) as count
-                    FROM product_series $where_raw 
+                    FROM product_series where $where_raw 
                 ORDER BY $field_name $order_by
                 ", $params);
             $count = $count[0]->count;
@@ -177,7 +183,7 @@ class Series implements JWTSubject
     {
         $field_name = 'serial_no';
         $order_by = 'asc';
-        if ($sort != '') {
+        if ($sort != '' && !empty($sort)) {
             $sort_info = explode('_', $sort);
             $order_by = $sort_info[sizeof($sort_info) - 1];
             unset($sort_info[sizeof($sort_info) - 1]);

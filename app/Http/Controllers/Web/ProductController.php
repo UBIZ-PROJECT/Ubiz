@@ -26,16 +26,4 @@ class ProductController extends Controller
         }
     }
 
-    public function productByBrand($brd_id) {
-        try {
-            $product = new Product();
-            $data = $product->getProductPaging(0,'',array('brd_id'=>$brd_id));
-            $paging = $product->getPagingInfo();
-            $productType = $product->getAllProductType();
-            $paging['page'] = '0';
-            return view('product',['data'=>$data,'paging' => $paging,'product_type'=>$productType]);
-        } catch (\Throwable $e) {
-            throw $e;
-        }
-    }
 }

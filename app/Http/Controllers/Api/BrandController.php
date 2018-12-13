@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Model\Brand;
+use App\Model\Product;
 use Illuminate\Http\Request;
 class BrandController extends Controller
 {
@@ -28,17 +29,33 @@ class BrandController extends Controller
 
     public function getEachBrandPaging(Request $req) {
         try {
-            list($page, $sort,$search) = $this->getPageSortSearch($req);
+            $brd_id = '0';
+            if ($req->has('brd_id')) {
+                $brd_id = $req->brd_id;
+            }
 
             $brand = new Brand();
-            $data = $brand->getEachBrandPaging($page, $sort,$search);
-            $paging = $brand->getPagingInfoDetailBrandWithConditionSearch($sort,$search);
-            $paging['page'] = $page;
+            $data = $brand->getEachBrandPaging($brd_id);
+            list($data_prd, $paging_prd) = $this->productByBrand($brd_id);
             $paging['rows_per_page'] = 1;
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['brand' => $data, 'paging' => $paging,'success' => true, 'message' => '', 'search'=>$search], 200);
+        return response()->json(['brand' => $data, 'paging' => $paging, 'product'=>$data_prd, 'paging_prd'=>$paging_prd ,'success' => true, 'message' => ''], 200);
+    }
+
+    private function productByBrand($brd_id) {
+        try {
+            $search['brd_id'] = $brd_id;
+            $product = new Product();
+            $data = $product->getProductPaging(0,'',$search);
+            $paging = $product->getPagingInfo('',$search);
+//            $productType = $product->getAllProductType();
+            $paging['page'] = '0';
+            return array($data, $paging);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
     }
 
     public function insertBrand(Request $request) {

@@ -75,15 +75,11 @@ class Brand implements JWTSubject
         return $brands;
     }
 
-    public function getEachBrandPaging($page, $sort='', $search = []) {
-        list($where_raw,$params) = $this->makeWhereRaw($search);
-        list($field_name, $order_by) = $this->makeOrderBy($sort);
+    public function getEachBrandPaging($brd_id) {
         $rows_per_page = 1;
         $brands = DB::table('brand')
             ->select('brd_id','brd_name','brd_img')
-            ->whereRaw($where_raw, $params)
-            ->orderBy($field_name, $order_by)
-            ->offset($page * $rows_per_page)
+            ->where('brd_id','=', $brd_id)
             ->limit($rows_per_page)
             ->get();
         $brands[0]->brdImage = array('src'=>'', 'name'=>'');

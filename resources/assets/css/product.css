@@ -314,3 +314,24 @@ h2{
     from   { bottom: 30px; }
     to { bottom: 42px; }
 }
+
+
+#nicescroll-sidebar .sP .aW.aT{
+    padding: 20px 0;
+}
+
+#nicescroll-sidebar .sP .aW.aT a{
+    padding: 20px 0;
+    text-decoration: none;
+}
+
+#nicescroll-sidebar .sP .aW.NaT{
+    padding: 20px 0;
+    color: #757575;
+}
+
+#nicescroll-sidebar .sP .aW.NaT a{
+    padding: 20px 0;
+    color: #757575;
+    text-decoration: none;
+}
