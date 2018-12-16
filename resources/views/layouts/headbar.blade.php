@@ -139,7 +139,7 @@
                     </div>
                     <div class="wyo" role="button" onclick="show_account_form()">
                         <div class="zyo">
-                            <img src="{{ asset('images/logo.png') }}">
+                            <img src="{{asset('images/logo-' . $auth_user->com_id . '.png')}}">
                         </div>
                         <div class="vyo">
                             <a><span><img src="{!!  \Helper::readImage($auth_user->avatar, 'usr') !!}"></span></a>

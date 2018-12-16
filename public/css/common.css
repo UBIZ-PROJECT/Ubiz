@@ -921,10 +921,11 @@
     box-sizing: border-box;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 100%;
+    max-width: 90%;
     vertical-align: top;
     white-space: nowrap;
     padding-left: 2px;
+    height: 39px;
 }
 
 .main-content .r-content .nCT {
@@ -1082,10 +1083,14 @@
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    border-bottom-width: 0px;
+    border-bottom-width: 1px;
     border-bottom-style: solid;
     border-bottom-color: inherit;
     width: 100%;
+}
+
+.root_textfield.rootIsUnderlined .wrapper.ifc {
+    border-bottom-color: #1967d2;
 }
 
 .root_textfield.rootIsUnderlined .ms-Label {
@@ -1158,13 +1163,13 @@
     box-sizing: border-box;
     -webkit-box-shadow: none;
     box-shadow: none;
-    margin-left: 10px;
+    margin: 0;
     padding: 0;
     font-size: 14px;
-    border-radius: 3px;
-    border: 1px solid #ccc9c9;
+    border-radius: 0;
+    border: none;
     background: none;
-    background-color: #f1f1f1;
+    background-color: transparent;
     color: #333333;
     padding: 0 12px 0 12px;
     width: 100%;

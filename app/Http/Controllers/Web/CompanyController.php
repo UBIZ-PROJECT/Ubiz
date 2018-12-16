@@ -13,7 +13,7 @@ class CompanyController extends Controller
     {
         try {
             $company = new Company();
-            $companies = $company->getAllCompany();
+            $companies = $company->getCompany();
             $paging = $company->getPagingInfo();
             $paging['page'] = 0;
             return view('company', ['companies' => $companies, 'paging' => $paging]);

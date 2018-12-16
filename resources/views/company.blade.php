@@ -8,8 +8,13 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/company.css') }}">
 @endsection
 @section('headbar')
+@section('search')
+    @include('company_search')
 @section('headbar-icon')
-    <i class="material-icons cl-header">money</i>
+    <i class="material-icons cl-header">
+        home
+    </i>
+@endsection
 @endsection
 @include('layouts/headbar')
 @endsection
@@ -88,7 +93,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <span class="dG">{{ __("Currency setting") }}</span>
+                                    <span class="dG">{{ __("Currency") }}</span>
                                 </div>
                             </div>
                         </div>
@@ -115,6 +120,13 @@
                                         <div class="ax7 poK utooltip" title="{{ __("Refresh") }}">
                                             <div class="asA">
                                                 <div class="asF"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_o_delete()">
+                                        <div class="ax7 poK utooltip" title="{{ __("Delete") }}">
+                                            <div class="asA">
+                                                <div class="asX"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -183,7 +195,7 @@
                                     <div class="dWB" role="button" sort-name="com_nm" order-by=""
                                          onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">{{ __('Company name') }}</div>
+                                            <div class="tDv">{{ __('Company') }}</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -255,10 +267,10 @@
                                     </div>
                                 </div>
                                 <div class="dcB col-5" role="presentation">
-                                    <div class="dWB" role="button" sort-name="com_web" order-by=""
+                                    <div class="dWB" role="button" sort-name="com_mst" order-by=""
                                          onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">{{ __('Web') }}</div>
+                                            <div class="tDv">{{ __('Tax code') }}</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -328,7 +340,7 @@
                                         <div class="tcB col-2">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$company->com_nm}}">
-                                                    <img src="{{ asset("dist/flagsprites/blank.gif") }}" class="flag flag-{{$company->com_nm}}"/>
+                                                    <img src="{{asset('images/logo-' . $company->com_id . '.png')}}"/>
                                                     <span> {{$company->com_nm}}</span>
                                                 </div>
                                             </div>
@@ -349,8 +361,8 @@
                                         </div>
                                         <div class="tcB col-5">
                                             <div class="cbo">
-                                                <div class="nCj" title="{{$company->com_web}}">
-                                                    <span>{{$company->com_web}}</span>
+                                                <div class="nCj" title="{{$company->com_mst}}">
+                                                    <span>{{$company->com_mst}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -423,6 +435,29 @@
                 <div class="jAQ">
                     <div class="aqI nicescroll" id="nicescroll-iput">
                         <input type="hidden" id="txt_id" value="0">
+                        <div class="row z-mgl z-mgr">
+                            <div class="col-sm-2 col-md-2 col-xl-2 z-pdl">
+                                @include('components.upload_image')
+                            </div>
+                            <div class="col-sm-10 col-md-10 col-xl-10 z-pdl">
+                                <div class="row z-mgl z-mgr">
+                                    @include('components.input',['control_id'=>'txt_com_nm', 'width'=> '500', 'lbl_width'=> '70', 'label'=>__('Company')])
+                                </div>
+                                <div class="row z-mgl z-mgr">
+                                    @include('components.input',['control_id'=>'txt_com_address', 'width'=> '700', 'lbl_width'=> '70', 'label'=>__('Address')])
+                                </div>
+                                <div class="row z-mgl z-mgr">
+                                    <div class="col-sm-5 col-md-5 col-xl-5 z-pdl">
+                                        @include('components.input',['control_id'=>'txt_com_phone', 'lbl_width'=> '70', 'label'=>__('Phone')])
+                                        @include('components.input',['control_id'=>'txt_com_hotline', 'lbl_width'=> '70', 'label'=>__('Hotline')])
+                                    </div>
+                                    <div class="col-sm-7 col-md-7 col-xl-7">
+                                        @include('components.input',['control_id'=>'txt_com_fax', 'lbl_width'=> '90', 'label'=>__('Fax')])
+                                        @include('components.input',['control_id'=>'txt_com_mst', 'lbl_width'=> '90', 'label'=>__('Tax code')])
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

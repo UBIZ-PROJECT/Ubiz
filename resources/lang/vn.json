@@ -75,5 +75,9 @@
   "Minor units":"Đơn vị phụ",
   "Currency code numeric default":"Mã số tiền tệ mặc định",
   "Company info":"Thông tin công ty",
-  "Permission":"Phân quyền nhân viên"
+  "Company":"Công ty",
+  "Tax code":"Mã số thuế",
+  "Company search":"Tìm kiếm công ty",
+  "Hotline":"Hotline",
+  "Permission":"Phân quyền"
 }
