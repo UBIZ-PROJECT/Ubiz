@@ -21,9 +21,6 @@
 @section('content')
     <div class="main-content">
         <div class="l-content">
-            <div class="zY">
-                <div class="yP" onclick="jQuery.UbizOIWidget.w_go_to_input_page(0, 0)">{{ __("Add new") }}</div>
-            </div>
             <div id="nicescroll-sidebar" class="zX nicescroll">
                 <nav role="navigation">
                     <div class="kL"></div>

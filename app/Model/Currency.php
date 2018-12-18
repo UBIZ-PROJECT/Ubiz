@@ -72,7 +72,7 @@ class Currency
     {
         try {
             $count = DB::table('m_currency')
-                ->where([['active_flg', '=', '1'],['delete_flg', '=', '0']])
+                ->where([['active_flg', '=', '1'], ['delete_flg', '=', '0']])
                 ->count();
         } catch (\Throwable $e) {
             throw $e;
@@ -93,7 +93,7 @@ class Currency
         return $count;
     }
 
-    public function getPagingInfo($search)
+    public function getPagingInfo($search = [])
     {
         try {
             $rows_per_page = env('ROWS_PER_PAGE', 10);
@@ -110,7 +110,7 @@ class Currency
 
     public function makeWhereRaw($search = [])
     {
-        $params = ['1','0'];
+        $params = ['1', '0'];
         $where_raw = 'm_currency.active_flg = ? AND m_currency.delete_flg = ?';
         if (sizeof($search) > 0) {
             if (isset($search['contain']) || isset($search['notcontain'])) {
