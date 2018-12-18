@@ -16,6 +16,7 @@ class CreateMCompanyTable extends Migration
         Schema::create('m_company', function (Blueprint $table) {
             $table->increments('com_id');
             $table->string('com_nm', 250);
+            $table->string('com_logo',10);
             $table->text('com_address');
             $table->string('com_phone', 50);
             $table->string('com_fax', 50);

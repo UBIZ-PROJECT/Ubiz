@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\Helper;
 use Illuminate\Support\Facades\DB;
 
 class Company
@@ -9,13 +10,21 @@ class Company
 
     public function getAllCompany()
     {
-        $company = DB::table('m_company')
+        $companies = DB::table('m_company')
             ->where([
                 ['delete_flg', '=', '0']
             ])
             ->orderBy('com_id', 'asc')
             ->get();
-        return $company;
+
+        foreach ($companies as $key => $company) {
+            if (!empty($company->com_logo)) {
+                $company->com_logo = \Helper::readImage($company->com_logo, 'com');
+            }
+            $companies[$key] = $company;
+        }
+
+        return $companies;
     }
 
     public function getCompany($page = 0, $sort = '', $search = [])
@@ -25,16 +34,24 @@ class Company
             list($field_name, $order_by) = $this->makeOrderBy($sort);
 
             $rows_per_page = env('ROWS_PER_PAGE', 10);
-            $company = DB::table('m_company')
+            $companies = DB::table('m_company')
                 ->whereRaw($where_raw, $params)
                 ->orderBy($field_name, $order_by)
                 ->offset($page * $rows_per_page)
                 ->limit($rows_per_page)
                 ->get();
+
+            foreach ($companies as $key => $company) {
+                if (!empty($company->com_logo)) {
+                    $company->com_logo = \Helper::readImage($company->com_logo, 'com');
+                }
+                $companies[$key] = $company;
+            }
+
         } catch (\Throwable $e) {
             throw $e;
         }
-        return $company;
+        return $companies;
     }
 
     public function getCompanyById($id)
@@ -43,6 +60,11 @@ class Company
             $company = DB::table('m_company')
                 ->where('com_id', $id)
                 ->first();
+
+            if ($company != null && !empty($company->com_logo)) {
+                $company->com_logo = \Helper::readImage($company->com_logo, 'com');
+            }
+
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -62,6 +84,11 @@ class Company
                 ->offset($pos - 1)
                 ->limit(1)
                 ->first();
+
+            if ($company != null && !empty($company->com_logo)) {
+                $company->com_logo = \Helper::readImage($company->com_logo, 'com');
+            }
+
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -93,7 +120,7 @@ class Company
         return $count;
     }
 
-    public function getPagingInfo($search=[])
+    public function getPagingInfo($search = [])
     {
         try {
             $rows_per_page = env('ROWS_PER_PAGE', 10);
@@ -199,6 +226,17 @@ class Company
     {
         DB::beginTransaction();
         try {
+
+            if (isset($param['com_logo'])) {
+                $com_logo = $param['com_logo'];
+
+                $path = $com_logo->path();
+                $extension = $com_logo->extension();
+                $com_logo = "logo-" . $param['com_id'] . '.' . $extension;
+
+                Helper::saveOriginalImage($path, $com_logo, 'com');
+            }
+
             DB::table('m_company')->insert($param);
             DB::commit();
         } catch (\Throwable $e) {
@@ -211,9 +249,23 @@ class Company
     {
         DB::beginTransaction();
         try {
+
+            if (isset($param['com_logo'])) {
+                $com_logo = $param['com_logo'];
+
+                $path = $com_logo->path();
+                $extension = $com_logo->extension();
+                $com_logo = "logo-" . $param['com_id'] . '.' . $extension;
+
+                $param['com_logo'] = $com_logo;
+
+                Helper::saveOriginalImage($path, $com_logo, 'com');
+            }
+
             DB::table('m_company')
                 ->where('com_id', $param['com_id'])
                 ->update($param);
+
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollback();

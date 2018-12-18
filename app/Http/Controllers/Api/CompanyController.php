@@ -158,6 +158,9 @@ class CompanyController extends Controller
         if ($request->has('txt_com_mst')) {
             $company['com_mst'] = $request->txt_com_mst;
         }
+        if ($request->hasFile('com_logo')) {
+            $company['com_logo'] = $request->com_logo;
+        }
 
         return [$page, $sort, $search, $company];
     }
