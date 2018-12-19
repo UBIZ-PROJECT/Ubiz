@@ -6,7 +6,7 @@
     width: 100%;
 }
 
-.aKk > tbody{
+.aKk > tbody {
     -webkit-align-items: center;
     align-items: center;
     display: -webkit-box;
@@ -17,7 +17,7 @@
     height: 100%;
 }
 
-.aKk .aAA{
+.aKk .aAA {
     padding-top: 0;
     background: transparent;
     border-bottom: none;
@@ -38,7 +38,8 @@
     outline: none;
     width: 100%;
 }
-.aKk .aAA .aRz{
+
+.aKk .aAA .aRz {
     float: none;
     margin: 0;
     -webkit-align-items: center;
@@ -59,7 +60,7 @@
     cursor: default;
 }
 
-.aKk .aAA .aRz > span{
+.aKk .aAA .aRz > span {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -72,4 +73,78 @@
     -webkit-order: 0;
     order: 0;
     padding-left: 10px;
+}
+
+.tRE {
+    padding-top: 0;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+    max-width: 100%;
+    min-height: 80px;
+    outline: none;
+    min-width: 100%;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.tRE .lEF {
+    border: solid transparent;
+    border-width: 1px 1px 1px 0;
+    padding: 0;
+    margin-top: 5px;
+    height: 30px;
+    -webkit-border-radius: 0 66px 66px 0;
+    border-radius: 0 66px 66px 0;
+    -webkit-align-items: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.tRE .lEF.suB{
+    padding-left: 20px;
+}
+
+.tRE .lEF > div{
+    height: 28px;
+    line-height: 28px;
+}
+
+.tRE .lEF .leo{
+    width: 25px;
+}
+
+.tRE .lEF .pad{
+    width: 40px;
+}
+
+.tRE .lEF .kao{
+    width: 200px;
+}
+
+.tRE .lEF .leo > i{
+    display: none;
+}
+
+.tRE .lEF .leo > i.aT{
+    display: block;
+}
+
+.tRE .lEF .kao > span{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    white-space: nowrap;
+    cursor: pointer;
+    width: 100%;
+    color: rgba(0, 0, 0, .7);
 }

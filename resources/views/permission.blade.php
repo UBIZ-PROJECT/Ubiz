@@ -60,7 +60,7 @@
                     <div class="aqB nicescroll" id="nicescroll-oput">
                         <div class="yTP">
                             <table class="aKk">
-                                <tbody>
+                                <thead>
                                 <tr class="aAA" style="user-select: none;">
                                     <td class="aRz" role="heading" style="user-select: none; width: 300px">
                                         <i class="material-icons">
@@ -81,11 +81,110 @@
                                         <span>{{__('Function')}}</span>
                                     </td>
                                 </tr>
-                                </tbody>
+                                </thead>
                                 <tbody>
                                 <tr class="aAA" style="user-select: none;">
                                     <td class="aRz" role="heading" style="user-select: none; width: 300px">
+                                        <div class="tRE">
+                                            <div class="lEF">
+                                                <div class="leo">
+                                                    <i class="material-icons aT">
+                                                        arrow_right
+                                                    </i>
+                                                    <i class="material-icons">
+                                                        arrow_drop_down
+                                                    </i>
+                                                </div>
+                                                <div class="pad">
+                                                    <i class="material-icons">
+                                                        extension
+                                                    </i>
+                                                </div>
+                                                <div class="kao">
+                                                    <span class="qYt">AA</span>
+                                                </div>
 
+                                            </div>
+                                            <div class="lEF suB">
+                                                <div class="leo">
+                                                </div>
+                                                <div class="pad">
+                                                    <i class="material-icons">
+                                                        extension
+                                                    </i>
+                                                </div>
+                                                <div class="kao">
+                                                    <span class="qYt">AA</span>
+                                                </div>
+                                            </div>
+                                            <div class="lEF suB">
+                                                <div class="leo">
+                                                </div>
+                                                <div class="pad">
+                                                    <i class="material-icons">
+                                                        extension
+                                                    </i>
+                                                </div>
+                                                <div class="kao">
+                                                    <span class="qYt">AA</span>
+                                                </div>
+                                            </div>
+                                            <div class="lEF suB">
+                                                <div class="leo">
+                                                </div>
+                                                <div class="pad">
+                                                    <i class="material-icons">
+                                                        extension
+                                                    </i>
+                                                </div>
+                                                <div class="kao">
+                                                    <span class="qYt">AA</span>
+                                                </div>
+                                            </div>
+                                            <div class="lEF suB">
+                                                <div class="leo">
+                                                </div>
+                                                <div class="pad">
+                                                    <i class="material-icons">
+                                                        extension
+                                                    </i>
+                                                </div>
+                                                <div class="kao">
+                                                    <span class="qYt">AA</span>
+                                                </div>
+                                            </div>
+                                            <div class="lEF suB">
+                                                <div class="leo">
+                                                </div>
+                                                <div class="pad">
+                                                    <i class="material-icons">
+                                                        extension
+                                                    </i>
+                                                </div>
+                                                <div class="kao">
+                                                    <span class="qYt">AA</span>
+                                                </div>
+                                            </div>
+                                            <div class="lEF">
+                                                <div class="leo">
+                                                    <i class="material-icons aT">
+                                                        arrow_right
+                                                    </i>
+                                                    <i class="material-icons">
+                                                        arrow_drop_down
+                                                    </i>
+                                                </div>
+                                                <div class="pad">
+                                                    <i class="material-icons">
+                                                        extension
+                                                    </i>
+                                                </div>
+                                                <div class="kao">
+                                                    <span class="qYt">AA</span>
+                                                </div>
+
+                                            </div>
+                                        </div>
                                     </td>
                                     <td class="aRz" role="heading" style="user-select: none; width: 300px">
 
