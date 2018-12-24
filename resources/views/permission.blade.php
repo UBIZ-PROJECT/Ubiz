@@ -25,7 +25,7 @@
         <div class="m-content"></div>
         <div class="r-content">
             <div class="jAQ" id="o-put">
-                <div class="bkK">
+                <div class="bkK" style="margin-bottom: 5px">
                     <div class="aeH">
                         <div class="aqK">
                             <div class="aqL">
@@ -57,147 +57,397 @@
                     </div>
                 </div>
                 <div class="jAQ">
-                    <div class="aqB nicescroll" id="nicescroll-oput">
+
                         <div class="yTP">
-                            <table class="aKk">
-                                <thead>
-                                <tr class="aAA" style="user-select: none;">
-                                    <td class="aRz" role="heading" style="user-select: none; width: 300px">
-                                        <i class="material-icons">
-                                            business
-                                        </i>
-                                        <span>{{__('Department')}}</span>
-                                    </td>
-                                    <td class="aRz" role="heading" style="user-select: none; width: 300px">
-                                        <i class="material-icons">
-                                            vibration
-                                        </i>
-                                        <span>{{__('Screen')}}</span>
-                                    </td>
-                                    <td class="aRz" role="heading" style="user-select: none; width: 300px">
-                                        <i class="material-icons">
-                                            extension
-                                        </i>
-                                        <span>{{__('Function')}}</span>
-                                    </td>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr class="aAA" style="user-select: none;">
-                                    <td class="aRz" role="heading" style="user-select: none; width: 300px">
-                                        <div class="tRE">
-                                            <div class="lEF">
-                                                <div class="leo">
-                                                    <i class="material-icons aT">
-                                                        arrow_right
-                                                    </i>
-                                                    <i class="material-icons">
-                                                        arrow_drop_down
-                                                    </i>
-                                                </div>
-                                                <div class="pad">
-                                                    <i class="material-icons">
-                                                        extension
-                                                    </i>
-                                                </div>
-                                                <div class="kao">
-                                                    <span class="qYt">AA</span>
-                                                </div>
-
+                            <div class="row kuk">
+                                <div class="col lEF" style="max-width: 250px">
+                                    <i class="material-icons">
+                                        business
+                                    </i>
+                                    <span>{{__('Department')}}</span>
+                                </div>
+                                <div class="col lEF" style="max-width: 250px">
+                                    <i class="material-icons">
+                                        vibration
+                                    </i>
+                                    <span>{{__('Screen')}}</span>
+                                </div>
+                                <div class="col lEF" style="max-width: 400px">
+                                    <i class="material-icons">
+                                        extension
+                                    </i>
+                                    <span>{{__('Function')}}</span>
+                                </div>
+                            </div>
+                            <div class="row kuk">
+                                <div class="col twA" style="max-width: 250px">
+                                    <div class="mOa nicescroll" id="nicescroll-1">
+                                        <table>
+                                            <tbody>
+                                            <tr class="fck">
+                                                <td>
+                                                    <div class="klo">
+                                                        <div class="leo">
+                                                            <i class="material-icons aT">
+                                                                arrow_right
+                                                            </i>
+                                                            <i class="material-icons">
+                                                                arrow_drop_down
+                                                            </i>
+                                                        </div>
+                                                        <div class="pad">
+                                                            <i class="material-icons">
+                                                                supervised_user_circle
+                                                            </i>
+                                                        </div>
+                                                        <div class="kao">
+                                                            <span class="qYt">Nhân sự</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="oiw">
+                                                        <div class="klo">
+                                                            <div class="pad">
+                                                                <i class="material-icons">
+                                                                    account_box
+                                                                </i>
+                                                            </div>
+                                                            <div class="kao">
+                                                                <span class="qYt">Bùi Anh Tuấn</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="klo">
+                                                            <div class="pad">
+                                                                <i class="material-icons">
+                                                                    account_box
+                                                                </i>
+                                                            </div>
+                                                            <div class="kao">
+                                                                <span class="qYt">Thái Văn Lung</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="klo">
+                                                            <div class="pad">
+                                                                <i class="material-icons">
+                                                                    account_box
+                                                                </i>
+                                                            </div>
+                                                            <div class="kao">
+                                                                <span class="qYt">Đoàn Văn Hậu</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="klo">
+                                                            <div class="pad">
+                                                                <i class="material-icons">
+                                                                    account_box
+                                                                </i>
+                                                            </div>
+                                                            <div class="kao">
+                                                                <span class="qYt">Ưng Hoàng Phúc</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="klo">
+                                                            <div class="pad">
+                                                                <i class="material-icons">
+                                                                    account_box
+                                                                </i>
+                                                            </div>
+                                                            <div class="kao">
+                                                                <span class="qYt">Đinh Thị Kim Mỹ</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                            <tbody>
+                                            <tr class="fck">
+                                                <td>
+                                                    <div class="klo">
+                                                        <div class="leo">
+                                                            <i class="material-icons aT">
+                                                                arrow_right
+                                                            </i>
+                                                            <i class="material-icons">
+                                                                arrow_drop_down
+                                                            </i>
+                                                        </div>
+                                                        <div class="pad">
+                                                            <i class="material-icons">
+                                                                work
+                                                            </i>
+                                                        </div>
+                                                        <div class="kao">
+                                                            <span class="qYt">Kinh doanh</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="oiw">
+                                                        <div class="klo">
+                                                            <div class="pad">
+                                                                <i class="material-icons">
+                                                                    account_box
+                                                                </i>
+                                                            </div>
+                                                            <div class="kao">
+                                                                <span class="qYt">Nguyễn Huy Hoàng</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="klo">
+                                                            <div class="pad">
+                                                                <i class="material-icons">
+                                                                    account_box
+                                                                </i>
+                                                            </div>
+                                                            <div class="kao">
+                                                                <span class="qYt">Nguyễn Công Phượng</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="klo">
+                                                            <div class="pad">
+                                                                <i class="material-icons">
+                                                                    account_box
+                                                                </i>
+                                                            </div>
+                                                            <div class="kao">
+                                                                <span class="qYt">Trần Mai Trang</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col twA" style="max-width: 250px">
+                                    <div class="mOa nicescroll" id="nicescroll-2">
+                                        <div class="klo">
+                                            <div class="pad">
+                                                <i class="material-icons">
+                                                    supervised_user_circle
+                                                </i>
                                             </div>
-                                            <div class="lEF suB">
-                                                <div class="leo">
-                                                </div>
-                                                <div class="pad">
-                                                    <i class="material-icons">
-                                                        extension
-                                                    </i>
-                                                </div>
-                                                <div class="kao">
-                                                    <span class="qYt">AA</span>
-                                                </div>
-                                            </div>
-                                            <div class="lEF suB">
-                                                <div class="leo">
-                                                </div>
-                                                <div class="pad">
-                                                    <i class="material-icons">
-                                                        extension
-                                                    </i>
-                                                </div>
-                                                <div class="kao">
-                                                    <span class="qYt">AA</span>
-                                                </div>
-                                            </div>
-                                            <div class="lEF suB">
-                                                <div class="leo">
-                                                </div>
-                                                <div class="pad">
-                                                    <i class="material-icons">
-                                                        extension
-                                                    </i>
-                                                </div>
-                                                <div class="kao">
-                                                    <span class="qYt">AA</span>
-                                                </div>
-                                            </div>
-                                            <div class="lEF suB">
-                                                <div class="leo">
-                                                </div>
-                                                <div class="pad">
-                                                    <i class="material-icons">
-                                                        extension
-                                                    </i>
-                                                </div>
-                                                <div class="kao">
-                                                    <span class="qYt">AA</span>
-                                                </div>
-                                            </div>
-                                            <div class="lEF suB">
-                                                <div class="leo">
-                                                </div>
-                                                <div class="pad">
-                                                    <i class="material-icons">
-                                                        extension
-                                                    </i>
-                                                </div>
-                                                <div class="kao">
-                                                    <span class="qYt">AA</span>
-                                                </div>
-                                            </div>
-                                            <div class="lEF">
-                                                <div class="leo">
-                                                    <i class="material-icons aT">
-                                                        arrow_right
-                                                    </i>
-                                                    <i class="material-icons">
-                                                        arrow_drop_down
-                                                    </i>
-                                                </div>
-                                                <div class="pad">
-                                                    <i class="material-icons">
-                                                        extension
-                                                    </i>
-                                                </div>
-                                                <div class="kao">
-                                                    <span class="qYt">AA</span>
-                                                </div>
-
+                                            <div class="kao">
+                                                <span class="qYt">Thông tin công ty</span>
                                             </div>
                                         </div>
-                                    </td>
-                                    <td class="aRz" role="heading" style="user-select: none; width: 300px">
+                                        <div class="klo">
+                                            <div class="pad">
+                                                <i class="material-icons">
+                                                    supervised_user_circle
+                                                </i>
+                                            </div>
+                                            <div class="kao">
+                                                <span class="qYt">Phân quyền</span>
+                                            </div>
+                                        </div>
+                                        <div class="klo">
+                                            <div class="pad">
+                                                <i class="material-icons">
+                                                    supervised_user_circle
+                                                </i>
+                                            </div>
+                                            <div class="kao">
+                                                <span class="qYt">Tiền tệ</span>
+                                            </div>
+                                        </div>
+                                        <div class="klo">
+                                            <div class="pad">
+                                                <i class="material-icons">
+                                                    supervised_user_circle
+                                                </i>
+                                            </div>
+                                            <div class="kao">
+                                                <span class="qYt">Nhân viên</span>
+                                            </div>
+                                        </div>
+                                        <div class="klo">
+                                            <div class="pad">
+                                                <i class="material-icons">
+                                                    supervised_user_circle
+                                                </i>
+                                            </div>
+                                            <div class="kao">
+                                                <span class="qYt">Khách hàng</span>
+                                            </div>
+                                        </div>
+                                        <div class="klo">
+                                            <div class="pad">
+                                                <i class="material-icons">
+                                                    supervised_user_circle
+                                                </i>
+                                            </div>
+                                            <div class="kao">
+                                                <span class="qYt">Nhà cung cấp</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col twA" style="max-width: 400px">
+                                    <div class="mOa nicescroll" id="nicescroll-3">
+                                        <table class="ngv">
+                                            <tbody>
+                                            <tr>
+                                                <td style="width: 240px">&nbsp;</td>
+                                                <td style="width: 50px">
+                                                    <span>Allow</span>
+                                                </td>
+                                                <td style="width: 90px">
+                                                    <span>Inherited</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="klo">
+                                                        <div class="pad">
+                                                            <i class="material-icons">
+                                                                supervised_user_circle
+                                                            </i>
+                                                        </div>
+                                                        <div class="kao">
+                                                            <span class="qYt">Danh sách</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <i class="material-icons">
+                                                        check_box_outline_blank
+                                                    </i>
+                                                </td>
+                                                <td>
+                                                    <i class="material-icons">
+                                                        check_box
+                                                    </i>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="klo">
+                                                        <div class="pad">
+                                                            <i class="material-icons">
+                                                                supervised_user_circle
+                                                            </i>
+                                                        </div>
+                                                        <div class="kao">
+                                                            <span class="qYt">Tìm kiếm</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <i class="material-icons">
+                                                        check_box_outline_blank
+                                                    </i>
+                                                </td>
+                                                <td>
+                                                    <i class="material-icons">
+                                                        check_box
+                                                    </i>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="klo">
+                                                        <div class="pad">
+                                                            <i class="material-icons">
+                                                                supervised_user_circle
+                                                            </i>
+                                                        </div>
+                                                        <div class="kao">
+                                                            <span class="qYt">Sắp xếp</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <i class="material-icons">
+                                                        check_box_outline_blank
+                                                    </i>
+                                                </td>
+                                                <td>
+                                                    <i class="material-icons">
+                                                        check_box
+                                                    </i>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="klo">
+                                                        <div class="pad">
+                                                            <i class="material-icons">
+                                                                supervised_user_circle
+                                                            </i>
+                                                        </div>
+                                                        <div class="kao">
+                                                            <span class="qYt">Thêm</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <i class="material-icons">
+                                                        check_box_outline_blank
+                                                    </i>
+                                                </td>
+                                                <td>
+                                                    <i class="material-icons">
+                                                        check_box
+                                                    </i>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="klo">
+                                                        <div class="pad">
+                                                            <i class="material-icons">
+                                                                supervised_user_circle
+                                                            </i>
+                                                        </div>
+                                                        <div class="kao">
+                                                            <span class="qYt">Xóa</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <i class="material-icons">
+                                                        check_box_outline_blank
+                                                    </i>
+                                                </td>
+                                                <td>
+                                                    <i class="material-icons">
+                                                        check_box
+                                                    </i>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="klo">
+                                                        <div class="pad">
+                                                            <i class="material-icons">
+                                                                supervised_user_circle
+                                                            </i>
+                                                        </div>
+                                                        <div class="kao">
+                                                            <span class="qYt">Sửa</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <i class="material-icons">
+                                                        check_box_outline_blank
+                                                    </i>
+                                                </td>
+                                                <td>
+                                                    <i class="material-icons">
+                                                        check_box
+                                                    </i>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
 
-                                    </td>
-                                    <td class="aRz" role="heading" style="user-select: none; width: 300px">
-
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
                         </div>
                     </div>
-                </div>
+
             </div>
         </div>
     </div>

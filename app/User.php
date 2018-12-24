@@ -60,6 +60,29 @@ class User extends Authenticatable implements JWTSubject
         return $users;
     }
 
+    public function getAllUserByDepId($dep_id = '')
+    {
+        try {
+            $cur_user = $this->getAuthUser();
+            $users = DB::table('users')
+                ->where([
+                    ['delete_flg', '=', '0'],
+                    ['dep_id', '=', $dep_id],
+                    ['com_id', '=', $cur_user->com_id]
+                ])
+                ->orderBy('id', 'asc')
+                ->get();
+
+            foreach ($users as &$user) {
+                $user->avatar = \Helper::readImage($user->avatar, 'usr');
+            }
+
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return $users;
+    }
+
     public function deleteUsers($ids = '')
     {
         DB::beginTransaction();

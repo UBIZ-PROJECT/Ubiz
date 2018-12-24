@@ -12,6 +12,8 @@ class PermissionController extends Controller
     public function index(Request $request)
     {
         try {
+            $permission = new Permission();
+            $permission->getData();
             return view('permission');
         } catch (\Throwable $e) {
             throw $e;

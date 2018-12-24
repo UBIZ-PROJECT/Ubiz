@@ -1,102 +1,7 @@
-.aKk {
-    display: block;
-    height: 100%;
-    table-layout: fixed;
-    border-spacing: 0;
-    width: 100%;
-}
-
-.aKk > tbody {
-    -webkit-align-items: center;
-    align-items: center;
-    display: -webkit-box;
-    display: -moz-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    height: 100%;
-}
-
-.aKk .aAA {
-    padding-top: 0;
-    background: transparent;
-    border-bottom: none;
-    white-space: nowrap;
-    -webkit-align-items: center;
-    align-items: center;
-    display: -webkit-box;
-    display: -moz-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    height: 100%;
-    margin: 0;
-    border: 0;
-    padding: 0;
-    list-style: none;
-    cursor: default;
-    outline: none;
-    width: 100%;
-}
-
-.aKk .aAA .aRz {
-    float: none;
-    margin: 0;
-    -webkit-align-items: center;
-    align-items: center;
-    display: -webkit-box;
-    display: -moz-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    height: 100%;
-    border: 0;
-    padding: 0;
-    background: transparent;
-    position: relative;
-    padding: 4px 8px;
-    color: #333;
-    background: #ddd;
-    cursor: default;
-}
-
-.aKk .aAA .aRz > span {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: .875rem;
-    letter-spacing: .25px;
-    color: #5f6368;
-    font-weight: 500;
-    letter-spacing: 0;
-    -webkit-box-ordinal-group: 0;
-    -webkit-order: 0;
-    order: 0;
-    padding-left: 10px;
-}
-
-.tRE {
-    padding-top: 0;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    display: block;
-    max-width: 100%;
-    min-height: 80px;
-    outline: none;
-    min-width: 100%;
-    position: relative;
-    overflow-x: hidden;
-    overflow-y: hidden;
-}
-
-.tRE .lEF {
+.lEF {
     border: solid transparent;
     border-width: 1px 1px 1px 0;
-    padding: 0;
-    margin-top: 5px;
     height: 30px;
-    -webkit-border-radius: 0 66px 66px 0;
-    border-radius: 0 66px 66px 0;
     -webkit-align-items: center;
     align-items: center;
     display: -webkit-box;
@@ -108,43 +13,96 @@
     box-sizing: border-box;
     cursor: pointer;
     white-space: nowrap;
+    background-color: #cccccc54;
+    border-right: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+    color: #1967d2;
+    padding-left: 3px;
 }
 
-.tRE .lEF.suB{
-    padding-left: 20px;
+.twA {
+    border: solid transparent;
+    border-width: 1px 1px 1px 0;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    cursor: pointer;
+    white-space: nowrap;
+    border-right: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+    background-color: #cccccc54;
+    padding-left: 3px;
+    height: calc(100vh - 150px);
 }
 
-.tRE .lEF > div{
-    height: 28px;
-    line-height: 28px;
+.twA .klo {
+    border: solid transparent;
+    border-width: 1px 1px 1px 0;
+    height: 30px;
+    line-height: 24px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    cursor: pointer;
+    white-space: nowrap;
+    padding-left: 3px;
+    color: rgba(0, 0, 0, .7);
 }
 
-.tRE .lEF .leo{
-    width: 25px;
+.lEF span {
+    padding-left: 10px;
 }
 
-.tRE .lEF .pad{
-    width: 40px;
+.kuk {
+    margin: 0px;
 }
 
-.tRE .lEF .kao{
-    width: 200px;
-}
-
-.tRE .lEF .leo > i{
+.twA .klo .leo i {
     display: none;
 }
 
-.tRE .lEF .leo > i.aT{
+.twA .klo .leo i.aT {
     display: block;
 }
 
-.tRE .lEF .kao > span{
+.twA .klo span {
     overflow: hidden;
     text-overflow: ellipsis;
     display: inline-block;
     white-space: nowrap;
     cursor: pointer;
     width: 100%;
-    color: rgba(0, 0, 0, .7);
+    padding-left: 10px;
+}
+
+.oiw {
+    padding-left: 40px;
+}
+
+.oiw .klo {
+    width: 200px;
+}
+
+.mOa {
+    height: 100%;
+    overflow-x: hidden;
+    width: 100%;
+}
+
+.ngv {
+    width: 100%;
+}
+
+.ngv i.fs-40{
+    font-size: 40px;
 }
