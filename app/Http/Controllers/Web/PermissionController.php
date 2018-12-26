@@ -13,8 +13,12 @@ class PermissionController extends Controller
     {
         try {
             $permission = new Permission();
-            $permission->getData();
-            return view('permission');
+            list($departments, $screens, $functions) = $permission->getData();
+            return view('permission', [
+                'departments' => $departments,
+                'screens' => $screens,
+                'functions' => $functions
+            ]);
         } catch (\Throwable $e) {
             throw $e;
         }

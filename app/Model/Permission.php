@@ -10,9 +10,15 @@ class Permission
 
     public function getData()
     {
-        $departments = $this->getAllDepartment();
-        $screens = $this->getAllScreen();
-        $functions = $this->getAllFunction($departments[0]->id, $screens[0]->scr_id);
+        try {
+            $departments = $this->getAllDepartment();
+            $screens = $this->getAllScreen();
+            $functions = $this->getAllFunction($departments[0]->id, $screens[0]->scr_id);
+            return [$departments, $screens, $functions];
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+
     }
 
     public function getAllDepartment()
@@ -29,10 +35,10 @@ class Permission
                 $department->users = $user->getAllUserByDepId($department->id);
             }
 
+            return $departments;
         } catch (\Throwable $e) {
             throw $e;
         }
-        return $departments;
     }
 
     public function getAllScreen()
@@ -42,10 +48,11 @@ class Permission
                 ->where('delete_flg', '=', '0')
                 ->orderBy('scr_id', 'asc')
                 ->get();
+
+            return $screens;
         } catch (\Throwable $e) {
             throw $e;
         }
-        return $screens;
     }
 
     public function getAllFunction($dep_id, $scr_id)
@@ -74,9 +81,10 @@ class Permission
                 ])
                 ->orderBy('m_screen_function.scr_id', 'asc')
                 ->get();
+
+            return $functions;
         } catch (\Throwable $e) {
             throw $e;
         }
-        return $functions;
     }
 }
