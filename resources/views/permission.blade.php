@@ -83,11 +83,13 @@
                             <div class="col twA" style="max-width: 250px">
                                 <div class="mOa nicescroll" id="nicescroll-1">
                                     <table>
+                                        <?php $sel_class = "selected";?>
                                         @foreach($departments as $department)
                                             <tbody>
                                             <tr class="fck">
                                                 <td>
-                                                    <div class="klo">
+                                                    <div onclick="jQuery.Permission.select_department({{ $department->id }}, this)"
+                                                         class="klo {{ $sel_class }}">
                                                         <div class="leo">
                                                             <i class="material-icons aT">
                                                                 arrow_right
@@ -107,7 +109,8 @@
                                                     </div>
                                                     <div class="oiw">
                                                         @foreach($department->users as $user)
-                                                            <div class="klo">
+                                                            <div onclick="jQuery.Permission.select_user({{ $user->dep_id }}, {{ $user->id }}, this)"
+                                                                 class="klo">
                                                                 <div class="pad">
                                                                     <i class="material-icons">
                                                                         account_box
@@ -122,14 +125,17 @@
                                                 </td>
                                             </tr>
                                             </tbody>
+                                            <?php $sel_class = "";?>
                                         @endforeach
                                     </table>
                                 </div>
                             </div>
                             <div class="col twA" style="max-width: 250px">
                                 <div class="mOa nicescroll" id="nicescroll-2">
+                                    <?php $sel_class = "selected";?>
                                     @foreach($screens as $screen)
-                                        <div class="klo">
+                                        <div onclick="jQuery.Permission.select_screen({{ $user->dep_id }}, this)"
+                                             class="klo {{ $sel_class }}">
                                             <div class="pad">
                                                 <i class="material-icons">
                                                     supervised_user_circle
@@ -139,6 +145,7 @@
                                                 <span class="qYt">{{ $screen->scr_name }}</span>
                                             </div>
                                         </div>
+                                        <?php $sel_class = "";?>
                                     @endforeach
                                 </div>
                             </div>
@@ -170,26 +177,10 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    @if($function->user_allow == '1')
-                                                        <i class="material-icons">
-                                                            check_box
-                                                        </i>
-                                                    @else
-                                                        <i class="material-icons">
-                                                            check_box_outline_blank
-                                                        </i>
-                                                    @endif
+                                                    <input name="user_allow" class="chk" type="checkbox" {{ $function->user_allow == '1'? 'checked' : ''}}>
                                                 </td>
                                                 <td>
-                                                    @if($function->dep_allow == '1')
-                                                        <i class="material-icons">
-                                                            check_box
-                                                        </i>
-                                                    @else
-                                                        <i class="material-icons">
-                                                            check_box_outline_blank
-                                                        </i>
-                                                    @endif
+                                                    <input name="dep_allow" class="chk" type="checkbox" {{ $function->dep_allow == '1'? 'checked' : ''}}>
                                                 </td>
                                             </tr>
                                         @endforeach

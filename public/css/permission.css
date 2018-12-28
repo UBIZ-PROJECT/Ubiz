@@ -35,7 +35,8 @@
     border-right: 1px solid #fff;
     border-bottom: 1px solid #fff;
     background-color: #cccccc54;
-    padding-left: 3px;
+    padding-left: 0px;
+    padding-right: 0px;
     height: calc(100vh - 150px);
 }
 
@@ -57,6 +58,14 @@
     white-space: nowrap;
     padding-left: 3px;
     color: rgba(0, 0, 0, .7);
+}
+
+.twA .klo.selected {
+    background-color: bisque;
+}
+
+.twA .klo:hover {
+    background-color: #ccccccad;
 }
 
 .lEF span {
@@ -103,6 +112,7 @@
     width: 100%;
 }
 
-.ngv i.fs-40{
-    font-size: 40px;
+.chk {
+    width: 20px;
+    height: 20px;
 }
