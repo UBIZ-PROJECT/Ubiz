@@ -23,6 +23,7 @@ class Series implements JWTSubject
     protected $fillable = [
 
     ];
+    private $CONST_USER = 1;
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -82,12 +83,9 @@ class Series implements JWTSubject
                     'upd_user'=>$this->CONST_USER
                 ]
             );
-            foreach ($param['images'] as $element=>$image) {
-                if ($element === "delete") continue;
-                $this->insertProductImage($id,$image['extension'], $image['temp_name']);
-            }
 
             DB::commit();
+            return $id;
         } catch(\Throwable $e) {
             DB::rollback();
             throw $e;
@@ -96,11 +94,9 @@ class Series implements JWTSubject
 
     public function updateSeries($param) {
         DB::beginTransaction();
-        $param['brd_id'] = '1';
         try {
             DB::table('product_series')->where('prd_series_id','=',$param['prd_series_id'])
                 ->update([
-                    'prd_id'=> $param['prd_id'],
                     'serial_no'=>$param['serial_no'],
                     'serial_sts'=>$param['serial_sts'],
                     'serial_note'=>$param['serial_note'],
@@ -116,13 +112,12 @@ class Series implements JWTSubject
     public function deleteSeries($id) {
         DB::beginTransaction();
         try {
-            if ($id && is_array($id)) {
-                DB::table('product_series')->whereIn('prd_series_id', $id)
+            if ($id) {
+                DB::table('product_series')->where('prd_series_id', $id)
                     ->update([
                         'delete_flg'=>'1',
                         'upd_date'=>date('Y-m-d H:i:s')
                     ]);
-                $this->deleteProductImage(null,$id);
             }
             DB::commit();
         } catch(\Throwable $e) {

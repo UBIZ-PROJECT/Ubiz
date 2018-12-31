@@ -67,5 +67,8 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::delete('brands/{ids}/delete', ['as' => 'brand-delete', 'uses' => 'Api\BrandController@deleteBrand']);
 
         Route::get('series', ['as' => 'api-series', 'uses' => 'Api\SeriesController@getSeries']);
+        Route::post('series/insert', ['as' => 'api-series-insert', 'uses' => 'Api\SeriesController@insertSeries']);
+        Route::put('series/{id}/update', ['as' => 'api-series-update', 'uses' => 'Api\SeriesController@updateSeries']);
+        Route::delete('series/{ids}/delete', ['as' => 'api-series-delete', 'uses' => 'Api\SeriesController@deleteSeries']);
     });
 });

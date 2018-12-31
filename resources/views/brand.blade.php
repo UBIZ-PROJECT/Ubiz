@@ -538,11 +538,17 @@
                             </div>
                         </div>
                         <div>
-                            <div class="d-lg-inline float-left">Series</div>
-                            <div><input type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSeriesModal" value="+"></div>
+
+
                         </div>
-                        <table class="table tb-series" border="1">
+                        <table class="table tb-series">
                             <thead>
+                                <tr>
+                                    <th colspan="5" class="text-left pl-0 border-0"><div class="lbl-primary font-weight-bold">Series</div></th>
+                                    <th class="text-right pr-0 border-0">
+                                        <div><input type="button" class="btn btn-primary" onclick="openSeriesModal()" data-target="#addSeriesModal" value="+"></div>
+                                    </th>
+                                </tr>
                                 <tr class="table-primary">
                                     <th scope="col" class="col1">STT</th>
                                     <th scope="col" class="col2">Số Series</th>
@@ -577,7 +583,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                    <button type="button" class="btn btn-primary">Lưu</button>
+                    <button type="button" class="btn btn-primary btn-save" onclick="seriesSave(0)">Lưu</button>
                 </div>
             </div>
         </div>

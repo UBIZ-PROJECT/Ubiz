@@ -57,7 +57,7 @@ class Product implements JWTSubject
         $rows_per_page = env('ROWS_PER_PAGE', 10);
         $product = DB::select("
             SELECT product.prd_id as id,product.prd_name as name,product_type.prd_type_id ,product_type.prd_type_name as name_type, 
-            product.prd_note,product.prd_unit, product.prd_model as model,product_image.extension,product_image.prd_img_id, brand.brd_name from (
+            product.prd_note,product.prd_unit, product.prd_model as model,product_image.extension,product_image.prd_img_id, brand.brd_name, brand.brd_id from (
                 SELECT *
                 FROM product 
                 LIMIT $rows_per_page OFFSET " . ($page * $rows_per_page)." ) product
@@ -154,7 +154,7 @@ class Product implements JWTSubject
             $id = DB::table('product')->insertGetId(
                 [
                     'prd_name'=> $param['name'],
-                    'brd_id'=>!empty($param['brd_id']),
+                    'brd_id'=>$param['brd_id'],
                     'prd_model'=>!empty($param['prd_model'])? $param['prd_model'] : null,
                     'prd_note'=>!empty($param['prd_note'])? $param['prd_note'] : null,
                     'type_id'=>!empty($param['type_id'])? $param['type_id'] : null,
@@ -231,7 +231,6 @@ class Product implements JWTSubject
 
     public function updateProduct($param) {
         DB::beginTransaction();
-        $param['brd_id'] = '1';
         try {
             DB::table('product')->where('prd_id','=',$param['id'])
                 ->update([
@@ -426,7 +425,7 @@ class Product implements JWTSubject
 
     private function makeOrderBy($sort)
     {
-        $field_name = 'product.prd_name';
+        $field_name = 'product.prd_id';
         $order_by = 'asc';
         if ($sort != '') {
             $sort_info = explode('_', $sort);

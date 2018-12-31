@@ -35,6 +35,38 @@ class SeriesController extends Controller
         return response()->json(['series' => $data ,'paging' => $paging,'success' => true, 'message' => '', 'search'=>$search], 200);
     }
 
+    public function insertSeries(Request $req) {
+        $params = json_decode($req['series'], true);
+//        print_r($params); exit;
+        list($page, $sort, $search) = $this->getPageSortSearch($req);
+        $series = new Series();
+        $id = $series->insertSeries($params);
+
+        $paging = $series->getPagingInfo($sort,$search);
+        $paging['page'] = $page;
+        return response()->json(['paging' => $paging,'success' => true, 'prd_series_id'=>$id, 'message' => '', 'search'=>$search], 200);
+    }
+
+    public function updateSeries(Request $req, $id) {
+        $params = json_decode($req['series'], true);
+
+        if (empty($params['prd_series_id'])) {
+            $params['prd_series_id'] = $id;
+        }
+        list($page, $sort, $search) = $this->getPageSortSearch($req);
+        $series = new Series();
+        $series->updateSeries($params);
+        $paging = $series->getPagingInfo($sort,$search);
+        $paging['page'] = $page;
+        return response()->json(['paging' => $paging,'success' => true, 'message' => '', 'search'=>$search], 200);
+    }
+
+    public function deleteSeries($ids) {
+        $series = new Series();
+        $series->deleteSeries($ids);
+        return response()->json(['message' => ''], 200);
+    }
+
     private function getPageSortSearch($request) {
         $page = 0;
         if ($request->has('page')) {

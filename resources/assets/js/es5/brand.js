@@ -1455,6 +1455,9 @@ function isEmpty(str) {
 jQuery(document).ready(function () {
     jQuery.UbizOIWidgetPrd.w_init();
     jQuery.UbizOIWidget.w_init();
+    $('#addSeriesModal').on('hide.bs.modal', function (e) {
+        clearSeriesModal();
+    })
 });
 
 function initProduct(data) {
@@ -1559,30 +1562,178 @@ function changeCreateFunction(screen) {
 }
 
 function writeSeriesToTable(series) {
-    var html = "<tr ondblclick='openSeriesModal(this)'>";
-    var copyButton = '<i class="fa fa-files-o"></i>';
-    var deleteButton = '<i class="fa fa-trash-o"></i>';
+
+    var copyButton = '<i class="fa fa-files-o" onclick="copySeries(this)"></i>';
+    var deleteButton = '<i class="fa fa-trash-o" onclick="deleteSeries(this)"></i>';
+    var html = '';
     for(var i = 0; i < series.length; i++) {
         var seri = series[i];
-        html += "<td>" + (i+1) +"</td>";
+        html += "<tr ondblclick='openSeriesModal(this)'>";
+        html += "<td class='txt-stt'>" + (i + 1) +"</td>";
         html += "<td class='series_no'>" + seri.serial_no +"</td>";
         html += "<td class='series_inp_date'>" + seri.inp_date +"</td>";
         html += "<td class='series_kepper'>" + seri.serial_sts +"</td>";
         html += "<td class='series_note'>" + seri.serial_note +"</td>";
-        html += "<td class='text-center'>"+copyButton+ " " +deleteButton+"</td>";
+        html += "<td class='text-center'><input type='hidden' value='"+seri.prd_series_id+"' class='prd_series_id'>"+copyButton+ " " +deleteButton+"</td>";
+        html+= "</tr>";
     }
-    html+= "</tr>";
+
     $(".tb-series").find("tbody").append(html);
 }
 
+var series_row_selected;
+
 function openSeriesModal(row) {
+    series_row_selected = undefined;
+    $("#addSeriesModal .btn-save").attr("onclick","seriesSave(0)");
     if (!isEmpty(row)) {
+        series_row_selected = row;
         var series_no =$(row).find(".series_no").html();
         var keeper =$(row).find(".series_kepper").html();
         var series_note=$(row).find(".series_note").html();
         $("#addSeriesModal #txt_series_no").val(series_no);
         $("#addSeriesModal #txt_keep_person").val(keeper);
         $("#addSeriesModal #txt_series_note").val(series_note);
+        $("#addSeriesModal .btn-save").attr("onclick","seriesSave(1)");
     }
     $("#addSeriesModal").modal();
+}
+
+function clearSeriesModal() {
+    $("#addSeriesModal #txt_series_no").val("");
+    $("#addSeriesModal #txt_keep_person").val("");
+    $("#addSeriesModal #txt_series_note").val("");
+    series_row_selected = null;
+}
+
+function seriesSave(flg) {
+
+    var series_no = $("#addSeriesModal #txt_series_no").val();
+    var keeper  = $("#addSeriesModal #txt_keep_person").val();
+    var series_note = $("#addSeriesModal #txt_series_note").val();
+    var params = {
+        prd_series_id: getProductSeriID(),
+        prd_id: getProductId(),
+        serial_no : series_no,
+        serial_sts: isEmpty(keeper) ? "0" : "1",
+        serial_note: series_note
+    };
+    if (flg == 0) {
+        createNewSeries(params);
+    } else {
+        updateSeries(params);
+    }
+    updateTableSeries(series_row_selected);
+    $("#addSeriesModal").modal('hide');
+    reOrderStt();
+}
+
+function createNewSeries(param) {
+    if (!checkDuplicateSeries()) {
+        // show notification
+        return false;
+    }
+    // var formData = new FormData();
+    // formData.append('series',JSON.stringify(param));
+    var params = {
+        series:JSON.stringify(param)
+    };
+    ubizapis('v1', '/series/insert', 'post', null, params, function(response) {
+        setTimeout(function() {
+            var prd_series_id = response.data.prd_series_id;
+            var listTr = $(".tb-series tbody tr");
+            var lastTr = listTr[listTr.length - 1];
+            $(lastTr).find(".prd_series_id").val(prd_series_id);
+        }, 1000);
+    });
+}
+
+function updateSeries(param) {
+    if (!checkDuplicateSeries()) {
+        // show notification
+        return false;
+    }
+    var params = {
+        series:JSON.stringify(param),
+        _method: "put"
+    };
+    ubizapis('v1', '/series/'+ param.prd_series_id +'/update', 'post', null, params, function() {});
+}
+
+function checkDuplicateSeries() {
+    // Check duplicate in same product
+    return true;
+}
+
+function updateTableSeries(row) {
+    var today = getCurrentDate();
+    var series_no = $("#addSeriesModal #txt_series_no").val();
+    var keeper  = $("#addSeriesModal #txt_keep_person").val();
+    var series_note = $("#addSeriesModal #txt_series_note").val();
+    var prd_series_id = getProductId();
+    var seri = {
+        prd_series_id: getProductSeriID(),
+        prd_id:getProductId(),
+        serial_no : series_no,
+        serial_sts: keeper,
+        serial_note: series_note,
+        inp_date: today
+    };
+    if (!isEmpty(row)) {
+        $(row).find(".series_no").html(series_no);
+        $(row).find(".series_kepper").html(keeper);
+        $(row).find(".series_note").html(series_note);
+        $(row).find(".prd_series_id").val(prd_series_id);
+    } else {
+        var series = [];
+        series.push(seri);
+        writeSeriesToTable(series);
+    }
+}
+
+function copySeries(row) {
+    var cloneNewRow = $(row).closest("tr").clone();
+    var today = getCurrentDate();
+    $(cloneNewRow).find(".series_inp_date").html(today);
+    $(".tb-series").find("tbody").append(cloneNewRow);
+    reOrderStt();
+    var series_no =$(row).find(".series_no").html();
+    var keeper =$(row).find(".series_kepper").html();
+    var series_note=$(row).find(".series_note").html();
+    var params = {
+        prd_series_id: getProductSeriID(),
+        prd_id:getProductId(),
+        series_no : series_no,
+        keeper: keeper,
+        series_note: series_note
+    };
+    createNewSeries(params);
+}
+
+function deleteSeries(row) {
+    ubizapis('v1', '/series/'+ $(row).closest("tr").find(".prd_series_id").val() +'/delete', 'delete', null, null);
+    $(row).closest("tr").remove();
+    reOrderStt();
+}
+
+function getCurrentDate() {
+    var date = new Date();
+    var today = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+    return today;
+}
+
+function reOrderStt() {
+    var stt = $(".txt-stt");
+    var sttLength = $(".txt-stt").length + 1;
+    for(i = 0; i < sttLength; i++) {
+        $(stt[i]).html(i + 1);
+    }
+}
+
+function getProductId() {
+    return $("#nicescroll-iput-2 #txt_prd_id").val();
+}
+
+function getProductSeriID() {
+    return  $(series_row_selected).find(".prd_series_id").val();
 }
