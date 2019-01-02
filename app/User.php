@@ -75,6 +75,9 @@ class User extends Authenticatable implements JWTSubject
 
             foreach ($users as &$user) {
                 $user->avatar = \Helper::readImage($user->avatar, 'usr');
+                if ($user->avatar == "") {
+                    $user->avatar = \Helper::readImage("no_avatar.png", 'gen');
+                }
             }
 
         } catch (\Throwable $e) {

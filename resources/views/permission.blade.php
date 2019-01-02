@@ -10,7 +10,7 @@
 @section('headbar')
 @section('headbar-icon')
     <i class="material-icons cl-header">
-        verified_user
+        security
     </i>
 @endsection
 @include('layouts/headbar')
@@ -82,110 +82,140 @@
                         <div class="row kuk">
                             <div class="col twA" style="max-width: 250px">
                                 <div class="mOa nicescroll" id="nicescroll-1">
-                                    <table>
-                                        <?php $sel_class = "selected";?>
-                                        @foreach($departments as $department)
-                                            <tbody>
-                                            <tr class="fck">
-                                                <td>
-                                                    <div onclick="jQuery.Permission.select_department({{ $department->id }}, this)"
-                                                         class="klo {{ $sel_class }}">
-                                                        <div class="leo">
-                                                            <i class="material-icons aT">
-                                                                arrow_right
-                                                            </i>
-                                                            <i class="material-icons">
-                                                                arrow_drop_down
-                                                            </i>
-                                                        </div>
-                                                        <div class="pad">
-                                                            <i class="material-icons">
-                                                                supervised_user_circle
-                                                            </i>
-                                                        </div>
-                                                        <div class="kao">
-                                                            <span class="qYt">{{ $department->dep_name }}</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="oiw">
-                                                        @foreach($department->users as $user)
-                                                            <div onclick="jQuery.Permission.select_user({{ $user->dep_id }}, {{ $user->id }}, this)"
-                                                                 class="klo">
-                                                                <div class="pad">
-                                                                    <i class="material-icons">
-                                                                        account_box
-                                                                    </i>
-                                                                </div>
-                                                                <div class="kao">
-                                                                    <span class="qYt">{{ $user->name }}</span>
-                                                                </div>
+                                    <div id="dep-ctn">
+                                        <table>
+                                            <?php $sel_class = "dep-sel";?>
+                                            @foreach($departments as $department)
+                                                <tbody>
+                                                <tr class="fck clp">
+                                                    <td>
+                                                        <div dep_id="{{ $department->id }}"
+                                                             onclick="jQuery.Permission.department_click({{ $department->id }}, this)"
+                                                             class="dep klo {{ $sel_class }}">
+                                                            <div class="leo">
+                                                                <i onclick="jQuery.Permission.collapse_click(this, event)"
+                                                                   class="material-icons">
+                                                                    arrow_right
+                                                                </i>
+                                                                <i onclick="jQuery.Permission.expand_click(this, event)"
+                                                                   class="material-icons">
+                                                                    arrow_drop_down
+                                                                </i>
                                                             </div>
-                                                        @endforeach
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                            <?php $sel_class = "";?>
-                                        @endforeach
-                                    </table>
+                                                            <div class="pad">
+                                                                <i class="material-icons">
+                                                                    {{ $department->dep_icon }}
+                                                                </i>
+                                                            </div>
+                                                            <div class="kao">
+                                                                <span class="qYt">{{ $department->dep_name }}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="oiw">
+                                                            @foreach($department->users as $user)
+                                                                <div usr_id="{{ $user->id }}"
+                                                                     dep_id="{{ $user->dep_id }}"
+                                                                     onclick="jQuery.Permission.user_click({{ $user->dep_id }},{{ $user->id }},this)"
+                                                                     class="user klo">
+                                                                    <div class="pad">
+                                                                        <img src="{{ $user->avatar }}"/>
+                                                                    </div>
+                                                                    <div class="kao">
+                                                                        <span class="qYt">{{ $user->name }}</span>
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                                <?php $sel_class = "";?>
+                                            @endforeach
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col twA" style="max-width: 250px">
                                 <div class="mOa nicescroll" id="nicescroll-2">
-                                    <?php $sel_class = "selected";?>
-                                    @foreach($screens as $screen)
-                                        <div onclick="jQuery.Permission.select_screen({{ $user->dep_id }}, this)"
-                                             class="klo {{ $sel_class }}">
-                                            <div class="pad">
-                                                <i class="material-icons">
-                                                    supervised_user_circle
-                                                </i>
+                                    <div id="scr-ctn">
+                                        <?php $sel_class = "scr-sel";?>
+                                        @foreach($screens as $screen)
+                                            <div scr_id="{{ $screen->scr_id }}"
+                                                 onclick="jQuery.Permission.screen_click({{ $screen->scr_id }}, this)"
+                                                 class="scr klo {{ $sel_class }}">
+                                                <div class="pad">
+                                                    <i class="material-icons">
+                                                        {{ $screen->scr_icon }}
+                                                    </i>
+                                                </div>
+                                                <div class="kao">
+                                                    <span class="qYt">{{ $screen->scr_name }}</span>
+                                                </div>
                                             </div>
-                                            <div class="kao">
-                                                <span class="qYt">{{ $screen->scr_name }}</span>
-                                            </div>
-                                        </div>
-                                        <?php $sel_class = "";?>
-                                    @endforeach
+                                            <?php $sel_class = "";?>
+                                        @endforeach
+                                    </div>
                                 </div>
                             </div>
                             <div class="col twA" style="max-width: 400px">
                                 <div class="mOa nicescroll" id="nicescroll-3">
-                                    <table class="ngv">
-                                        <tbody>
-                                        <tr>
-                                            <td style="width: 240px">&nbsp;</td>
-                                            <td style="width: 50px">
-                                                <span>Allow</span>
-                                            </td>
-                                            <td style="width: 90px">
-                                                <span>Inherited</span>
-                                            </td>
-                                        </tr>
-                                        @foreach($functions as $function)
+                                    <div id="fnc-ctn">
+                                        <table class="ngv">
+                                            <thead>
                                             <tr>
-                                                <td>
-                                                    <div class="klo">
-                                                        <div class="pad">
-                                                            <i class="material-icons">
-                                                                supervised_user_circle
-                                                            </i>
-                                                        </div>
-                                                        <div class="kao">
-                                                            <span class="qYt">{{ $function->fn_name }}</span>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <input name="user_allow" class="chk" type="checkbox" {{ $function->user_allow == '1'? 'checked' : ''}}>
-                                                </td>
-                                                <td>
-                                                    <input name="dep_allow" class="chk" type="checkbox" {{ $function->dep_allow == '1'? 'checked' : ''}}>
-                                                </td>
+                                                <th class="cst-col-1">&nbsp</th>
+                                                @if($for == 'user')
+                                                    <th class="cst-col-2">
+                                                        <span class="qYt">{{ __("Allow") }}</span>
+                                                    </th>
+                                                    <th class="cst-col-3">
+                                                        <span class="qYt">{{ __("Inherited") }}</span>
+                                                    </th>
+                                                @else
+                                                    <th class="cst-col-2">
+                                                        <span class="qYt">{{ __("Allow") }}</span>
+                                                    </th>
+                                                    <th  class="cst-col-3"></th>
+                                                @endif
                                             </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                            @foreach($permissions as $permission)
+                                                <tr>
+                                                    <td class="cst-col-1">
+                                                        <div class="klk">
+                                                            <div class="pad">
+                                                                <i class="material-icons">
+                                                                    {{ $permission->fnc_icon }}
+                                                                </i>
+                                                            </div>
+                                                            <div class="kao">
+                                                                <span class="qYt">{{ $permission->fnc_name }}</span>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    @if($for == 'user')
+                                                        <td class="cst-col-2">
+                                                            <input name="usr_allow" class="chk"
+                                                                   type="checkbox" {{ $permission->usr_allow == '1'? 'checked' : ''}}>
+                                                        </td>
+                                                        <td class="cst-col-3">
+                                                            <input disabled name="dep_allow" class="chk"
+                                                                   type="checkbox" {{ $permission->dep_allow == '1'? 'checked' : ''}}>
+                                                        </td>
+                                                    @else
+                                                        <td class="cst-col-2">
+                                                            <input name="dep_allow" class="chk"
+                                                                   type="checkbox" {{ $permission->dep_allow == '1'? 'checked' : ''}}>
+                                                        </td>
+                                                        <td class="cst-col-3"></td>
+                                                    @endif
+
+                                                </tr>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
