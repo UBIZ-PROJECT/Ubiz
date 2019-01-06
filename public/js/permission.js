@@ -198,11 +198,17 @@
                     if (permissions[i].dep_allow == '1') {
                         dep_allow_checked = 'checked';
                     }
+
+                    dep_id = "{{ $permission->dep_id }}"
+                    scr_id = "{{ $permission->scr_id }}"
+                    fnc_id = "{{ $permission->fnc_id }}"
+                    usr_id = "{{ $permission->usr_id }}"
+
                     tbl_tbody += "<td class='cst-col-2'>";
-                    tbl_tbody += "<input name='usr_allow' class='chk' type='checkbox' " + usr_allow_checked + ">";
+                    tbl_tbody += "<input name='usr_allow' class='chk' dep_id='" + permissions[i].dep_id + "' scr_id='" + permissions[i].scr_id + "' fnc_id='" + permissions[i].fnc_id + "' usr_id='" + permissions[i].usr_id + "' type='checkbox' " + usr_allow_checked + ">";
                     tbl_tbody += "</td>";
                     tbl_tbody += "<td class='cst-col-3'>";
-                    tbl_tbody += "<input disabled name='dep_allow' class='chk' type='checkbox' " + dep_allow_checked + ">";
+                    tbl_tbody += "<input disabled name='dep_allow' class='chk' dep_id='" + permissions[i].dep_id + "' scr_id='" + permissions[i].scr_id + "' fnc_id='" + permissions[i].fnc_id + "' type='checkbox'" + dep_allow_checked + ">";
                     tbl_tbody += "</td>";
                 } else {
                     var dep_allow_checked = '';
@@ -210,7 +216,7 @@
                         dep_allow_checked = 'checked';
                     }
                     tbl_tbody += "<td class='cst-col-2'>";
-                    tbl_tbody += "<input name='dep_allow' class='chk' type='checkbox' " + dep_allow_checked + ">";
+                    tbl_tbody += "<input name='dep_allow' class='chk' dep_id='" + permissions[i].dep_id + "' scr_id='" + permissions[i].scr_id + "' fnc_id='" + permissions[i].fnc_id + "' type='checkbox'" + dep_allow_checked + ">";
                     tbl_tbody += "</td>";
                     tbl_tbody += "<td class='cst-col-3'>&nbsp;</td>";
                 }
@@ -226,32 +232,51 @@
         },
         collect_permission_data: function () {
 
-            var form_data = new FormData();
-            form_data.append('txt_com_id', jQuery("#txt_id").val());
-            form_data.append('txt_com_nm', jQuery("#txt_com_nm").val());
-            form_data.append('txt_com_address', jQuery("#txt_com_address").val());
-            form_data.append('txt_com_phone', jQuery("#txt_com_phone").val());
-            form_data.append('txt_com_fax', jQuery("#txt_com_fax").val());
-            form_data.append('txt_com_web', jQuery("#txt_com_web").val());
-            form_data.append('txt_com_email', jQuery("#txt_com_email").val());
-            form_data.append('txt_com_mst', jQuery("#txt_com_mst").val());
+            var form_data = new Array();
+            var fnc_ctn = jQuery('div[id=fnc-ctn]');
+            var usr_allows = fnc_ctn.find('input[name=usr_allow]');
+            if (usr_allows.length > 0) {
+                usr_allows.each(function (index) {
+                    var dep_id = $(this).attr('dep_id');
+                    var scr_id = $(this).attr('scr_id');
+                    var fnc_id = $(this).attr('fnc_id');
+                    var usr_id = $(this).attr('usr_id');
+                    var usr_allow = $(this).is(':checked') ? '1' : '0';
+                    form_data.push({
+                        'dep_id': dep_id,
+                        'scr_id': scr_id,
+                        'fnc_id': fnc_id,
+                        'usr_id': usr_id,
+                        'usr_allow': usr_allow
+                    });
+                });
+            } else {
+                var dep_allows = fnc_ctn.find('input[name=dep_allow]');
+                if (dep_allows.length > 0) {
+                    dep_allows.each(function (index) {
+                        var dep_id = $(this).attr('dep_id');
+                        var scr_id = $(this).attr('scr_id');
+                        var fnc_id = $(this).attr('fnc_id');
+                        var dep_allow = $(this).is(':checked') ? '1' : '0';
+                        form_data.push({
+                            'dep_id': dep_id,
+                            'scr_id': scr_id,
+                            'fnc_id': fnc_id,
+                            'dep_allow': dep_allow
+                        });
+                    });
+                }
+            }
 
             return form_data;
         },
         save: function (self) {
-            var form_data = jQuery.Permission.get_permission_form_data();
+            var form_data = jQuery.Permission.collect_permission_data();
             ubizapis('v1', '/permission', 'post', form_data, null, function (response) {
                 if (response.data.success == true) {
                     swal({
-                        title: i18next.t('Successfully processed.'),
-                        text: i18next.t('Do you want to continue or go back to the list page?'),
-                        type: 'question',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#3085d6',
-                        cancelButtonText: i18next.t('Back to the list page'),
-                        confirmButtonText: i18next.t('Continue'),
-                        reverseButtons: true
+                        type: 'success',
+                        text: i18next.t('Successfully processed.')
                     });
                 } else {
                     swal({

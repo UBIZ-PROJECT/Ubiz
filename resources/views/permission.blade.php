@@ -30,7 +30,7 @@
                         <div class="aqK">
                             <div class="aqL">
                                 <div class="GtF">
-                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_save()">
+                                    <div class="GNi" onclick="jQuery.Permission.save()">
                                         <div class="ax7 poK utooltip" title="{{ __("Save") }}">
                                             <div class="asA">
                                                 <div class="arS"></div>
@@ -197,15 +197,25 @@
                                                     @if($for == 'user')
                                                         <td class="cst-col-2">
                                                             <input name="usr_allow" class="chk"
+                                                                   dep_id="{{ $permission->dep_id }}"
+                                                                   scr_id="{{ $permission->scr_id }}"
+                                                                   fnc_id="{{ $permission->fnc_id }}"
+                                                                   usr_id="{{ $permission->usr_id }}"
                                                                    type="checkbox" {{ $permission->usr_allow == '1'? 'checked' : ''}}>
                                                         </td>
                                                         <td class="cst-col-3">
                                                             <input disabled name="dep_allow" class="chk"
+                                                                   dep_id="{{ $permission->dep_id }}"
+                                                                   scr_id="{{ $permission->scr_id }}"
+                                                                   fnc_id="{{ $permission->fnc_id }}"
                                                                    type="checkbox" {{ $permission->dep_allow == '1'? 'checked' : ''}}>
                                                         </td>
                                                     @else
                                                         <td class="cst-col-2">
                                                             <input name="dep_allow" class="chk"
+                                                                   dep_id="{{ $permission->dep_id }}"
+                                                                   scr_id="{{ $permission->scr_id }}"
+                                                                   fnc_id="{{ $permission->fnc_id }}"
                                                                    type="checkbox" {{ $permission->dep_allow == '1'? 'checked' : ''}}>
                                                         </td>
                                                         <td class="cst-col-3"></td>

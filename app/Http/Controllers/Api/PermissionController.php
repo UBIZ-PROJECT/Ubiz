@@ -10,6 +10,12 @@ use App\User;
 
 class PermissionController extends Controller
 {
+    public function setPermissions(Request $request)
+    {
+        $b = $request->getContent();
+        $a='';
+    }
+
     public function getDepPermissions($dep_id, $scr_id, Request $request)
     {
         try {
