@@ -1,44 +1,17 @@
 version: 2
 jobs:     
-  #master:
-  #  docker:
-  #    - image: circleci/php:7.0
-  #  steps:
-  #   - checkout
-  #   - run:
-  #        name: Deploy Over SSH
-  #        command: |
-  #          ssh -o 'StrictHostKeyChecking=no' $SSH_USER@$SSH_HOST mkdir -p /home/$CIRCLE_BRANCH
-  #          rsync -r ./html $SSH_USER@$SSH_HOST:/home/$CIRCLE_BRANCH/
-  #  
-  #staging:
-  #  docker:
-  #    - image: circleci/php:7.0
-  #  steps:
-  #   - checkout
-  #   - run:
-  #        name: Deploy Over SSH
-  #        command: |
-  #          ssh -o 'StrictHostKeyChecking=no' $SSH_USER@$SSH_HOST mkdir -p /home/$CIRCLE_BRANCH
-  #          rsync -r ./html $SSH_USER@$SSH_HOST:/home/$CIRCLE_BRANCH/
-           
-  development:
-    docker:
-      - image: circleci/php:7.0
-    steps:
-     - checkout
+  master:
+   docker:
+     - image: circleci/php:5.6
+   steps:
+    - checkout
+   
 
 workflows:
   version: 2
   deployment:
     jobs:
-      #- master:
-      #   filters:
-      #     branches:
-      #       only: master
-      #- staging:
-      #   filters:
-      #     branches:
-      #       only: staging
-      - development
-        
+      - master:
+        filters:
+          branches:
+            only: master
