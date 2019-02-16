@@ -1,0 +1,30 @@
+.pro-table, th, td{
+	border: 1px solid grey;
+	text-align: center;
+}
+
+.pro-table th{
+	background: #194078;
+	color: #D1D9E4;
+}
+
+.pro-table td{
+	padding: 10px;
+}
+
+.inp70{
+	width: 70px;
+}
+
+.inp100{
+	width: 100px;
+}
+
+.inp130{
+	width: 130px;
+}
+
+.inp-specs{
+	width: 200px;
+	height: 100px;
+}

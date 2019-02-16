@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/headbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/common.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/customer.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ asset('css/pricing.css') }}">
 @endsection
 @section('headbar')
     @section('search')
@@ -388,35 +389,74 @@
 									@include('components.input',['type'=>'disabled', 'control_id'=>'cus_mail', 'label'=>'Email'])
 								</div>
 							</div>
-		
+								
 							<div class="row z-mgl z-mgr" style="margin-top:30px;border:1px solid #f1f1f1;width:98%; padding:10px">
-								<div class="col-sm-2 col-md-2 col-xl-2 z-pdl">
-									<div class="image-upload mb-1" style="max-width: 150px; max-height: 150px">
-										<img id="pro_img" src="{{ asset("images/avatar.png") }}" img-name="" style="height: 150px; width:150px" alt="" class="img-thumbnail img-show ">
-										<input  id="avatar" type="file" accept="image/*" name="pro_img" is-change="true" style="display:none">
-									</div>
-								</div>
-								<div class="col-sm-3 col-md-3 col-xl-3">
-									<input type="hidden" name="pro_id" value="0"/>
-									@include('components.input',['type'=>'disabled', 'control_id'=>'seri_no', 'label'=>'Mã sản phẩm'])
-									@include('components.input',['type'=>'disabled', 'control_id'=>'pro_name', 'label'=>'Tên sản phẩm'])
-									@include('components.input',['type'=>'disabled', 'control_id'=>'pro_brand', 'label'=>'Thương hiệu'])
-									@include('components.input',['type'=>'disabled', 'control_id'=>'pro_type', 'label'=>'Loại sản phẩm'])
-								</div>
-								<div class="col-sm-3 col-md-3 col-xl-3">
-									<label for="pro_detail" class="ms-Label root-56">Chi tiết:</label>
-									<textarea name="pro_detail" rows="5" cols="40"></textarea>
-								</div>
-								<div class="col-sm-3 col-md-3 col-xl-3">
-									@include('components.input',['type'=>'required', 'control_id'=>'pro_amount', 'label'=>'Số lượng'])
-									@include('components.input',['type'=>'disabled', 'control_id'=>'pro_price', 'label'=>'Giá tiền'])
-								</div>
-								<div class="col-sm-1 col-md-1 col-xl-1 z-pdr">
-									<img id="pro_delete" src="{{ asset("images/delete.gif") }}" img-name="" alt="" style="margin-top:60px">
-								</div>
+								<h3 style="color:#194078"><b>Bơm:<b></h3>
+								<table class="pro-table">
+									<tr>
+										<th>STT</th>
+										<th>Thông số kĩ thuật</th>
+										<th>Đơn vị</th>
+										<th>Số lượng</th>
+										<th>Thời gian giao hàng</th>
+										<th>Trạng thái</th>
+										<th>Đơn giá (VNĐ)</th>
+										<th>Thành tiền (VNĐ)</th>
+									</tr>
+									<tr>
+										<td>1</td>
+										<td><textarea size="5" name="specs" class="inp-specs"></textarea></td>
+										<td><input type="text" name="unit" class="inp70"/></td>
+										<td><input type="text" name="amount" class="inp70"/></td>
+										<td><input type="text" name="delivery_date" class="inp100"/></td>
+										<td>
+											<select name="status" class="inp100">
+												<option selected>Sẵn có</option>
+												<option>Order</option>
+											</select>
+										</td>
+										<td><input type="text" name="price" class="inp150"/></td>
+										<td><input type="text" name="total" class="inp150"/></td>
+									</tr>
+								</table>
 							</div>
 							
-							<div id="add-product" style="margin-top:50px" class="btn-a" onclick="">Thêm sản phẩm</div>
+							<div id="add-pump" style="margin-top:30px" class="btn-a" onclick="">Thêm bơm</div>
+						
+							<div class="row z-mgl z-mgr" style="margin-top:30px;border:1px solid #f1f1f1;width:98%; padding:10px">
+								<h3 style="color:#194078"><b>Phụ tùng:<b></h3>
+								<table class="pro-table">
+									<tr>
+										<th>STT</th>
+										<th>Mã</th>
+										<th>Tên</th>
+										<th>Đơn vị</th>
+										<th>Số lượng</th>
+										<th>Thời gian giao hàng</th>
+										<th>Trạng thái</th>
+										<th>Đơn giá (VNĐ)</th>
+										<th>Thành tiền (VNĐ)</th>
+									</tr>
+									<tr>
+										<td>1</td>
+										<td><input type="text" name="as_id" class="inp70"/></td>
+										<td><input type="text" name="as_name" class="inp130"/></td>
+										<td><input type="text" name="as_unit" class="inp70"/></td>
+										<td><input type="text" name="as_amount" class="inp70"/></td>
+										<td><input type="text" name="as_delivery_date" class="inp100"/></td>
+										<td>
+											<select name="status" class="inp100">
+												<option selected>Sẵn có</option>
+												<option>Order</option>
+											</select>
+										</td>
+										<td><input type="text" name="price" class="inp150"/></td>
+										<td><input type="text" name="total" class="inp150"/></td>
+									</tr>
+								</table>
+								
+								<div id="add-accessory" style="margin-top:30px" class="btn-a" onclick="">Thêm phụ tùng</div>
+							</div>
 						</form>
                     </div>
                 </div>
