@@ -15,17 +15,17 @@
                     <div class="pyo">
                         <div class="nyo">
                             <a role="button" tabindex="0" onclick="show_apps_form()">
-                                <svg class="utooltip" title="{{ __("Ubiz apps") }}" focusable="false" viewBox="0 0 24 24">
-                                    <path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"></path>
-                                </svg>
+								<svg class="utooltip" title="{{ __("Ubiz apps") }}" focusable="false" viewBox="0 0 512 512" style="width:20px">
+									<path fill="currentColor" d="M149.333 56v80c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V56c0-13.255 10.745-24 24-24h101.333c13.255 0 24 10.745 24 24zm181.334 240v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm32-240v80c0 13.255 10.745 24 24 24H488c13.255 0 24-10.745 24-24V56c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24zm-32 80V56c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm-205.334 56H24c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24zM0 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H24c-13.255 0-24 10.745-24 24zm386.667-56H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zm0 160H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zM181.333 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24z"></path>
+								</svg>
                             </a>
                         </div>
                         <div class="nyo">
                             <a role="button" tabindex="0" onclick="show_notify_form()">
                                 <div class="qyo">0</div>
-                                <svg class="utooltip" title="{{ __("Notifications") }}" focusable="false" viewBox="0 0 24 24">
-                                    <path d="M12,2C6.5,2,2,6.5,2,12c0,5.5,4.5,10,10,10s10-4.5,10-10C22,6.5,17.5,2,12,2z M12,18c-0.6,0-1-0.5-1-1h2 C13,17.5,12.5,18,12,18z M17,16H7v-0.6l1.2-1.2v-3c0-1.9,1-3.4,2.8-3.8V6.9C11.1,6.4,11.5,6,12,6s0.9,0.4,0.9,0.9v0.4 c1.8,0.4,2.8,2,2.8,3.8v3l1.2,1.2V16z"></path>
-                                </svg>
+								<svg class="utooltip" title="{{ __("Notifications") }}" focusable="false"  viewBox="0 0 448 512" style="width:18px">
+									<path fill="currentColor" d="M439.39 362.29c-19.32-20.76-55.47-51.99-55.47-154.29 0-77.7-54.48-139.9-127.94-155.16V32c0-17.67-14.32-32-31.98-32s-31.98 14.33-31.98 32v20.84C118.56 68.1 64.08 130.3 64.08 208c0 102.3-36.15 133.53-55.47 154.29-6 6.45-8.66 14.16-8.61 21.71.11 16.4 12.98 32 32.1 32h383.8c19.12 0 32-15.6 32.1-32 .05-7.55-2.61-15.27-8.61-21.71zM67.53 368c21.22-27.97 44.42-74.33 44.53-159.42 0-.2-.06-.38-.06-.58 0-61.86 50.14-112 112-112s112 50.14 112 112c0 .2-.06.38-.06.58.11 85.1 23.31 131.46 44.53 159.42H67.53zM224 512c35.32 0 63.97-28.65 63.97-64H160.03c0 35.35 28.65 64 63.97 64z"></path>
+								</svg>
                             </a>
                         </div>
                         <div id="apps-form" class="mvo">
@@ -118,12 +118,12 @@
                                 <div class="zho">
                                     <div class="ano">
                                         <a class="yno">
-                                            <img class="pno" src="{!!  \Helper::readImage($auth_user->avatar, 'usr') !!}">
+                                            <img class="pno" src="{!!  \Helper::readImage($cps_user->avatar, 'usr') !!}">
                                             <span class="wno">{{ __("Change") }}</span>
                                         </a>
                                         <div class="rho">
-                                            <div class="iho">{{ $auth_user->name }}</div>
-                                            <div class="mno">{{ $auth_user->email }}</div>
+                                            <div class="iho">{{ $cps_user->name }}</div>
+                                            <div class="mno">{{ $cps_user->email }}</div>
                                             <div class="jno">
                                                 <a href="#">{{ __("Privacy") }}</a>
                                             </div>
@@ -139,10 +139,10 @@
                     </div>
                     <div class="wyo" role="button" onclick="show_account_form()">
                         <div class="zyo">
-                            <img src="{{ asset('images/logo.png') }}">
+                            <img src="{{$cps_company->com_logo}}">
                         </div>
                         <div class="vyo">
-                            <a><span><img src="{!!  \Helper::readImage($auth_user->avatar, 'usr') !!}"></span></a>
+                            <a><span><img src="{!!  \Helper::readImage($cps_user->avatar, 'usr') !!}"></span></a>
                         </div>
                     </div>
                 </div>

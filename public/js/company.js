@@ -56,7 +56,7 @@
             jQuery(self).find('svg').removeClass('sVGT');
             jQuery(self).find('svg.' + order_by).addClass('sVGT');
 
-            ubizapis('v1', '/currency', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/company', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_save: function () {
             var form_data = jQuery.UbizOIWidget.w_get_form_data();
@@ -64,7 +64,7 @@
             form_data.append("id", id);
             if (id == "0") {
                 form_data.append('_method', 'put');
-                ubizapis('v1', '/currency', 'post', form_data, null, function(response){
+                ubizapis('v1', '/company', 'post', form_data, null, function(response){
                     if (response.data.success == true) {
                         swal({
                             title: i18next.t('Successfully processed.'),
@@ -92,7 +92,7 @@
                     }
                 });
             } else {
-                ubizapis('v1', '/currency/' + id + '/update', 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
+                ubizapis('v1', '/company/' + id + '/update', 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
             }
         },
         w_o_delete: function () {
@@ -112,7 +112,7 @@
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
-                    ubizapis('v1', '/currency/' + ids.join(',') + '/delete', 'delete', null, null, jQuery.UbizOIWidget.w_o_delete_callback);
+                    ubizapis('v1', '/company/' + ids.join(',') + '/delete', 'delete', null, null, jQuery.UbizOIWidget.w_o_delete_callback);
                 }
             })
         },
@@ -130,7 +130,7 @@
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
-                    ubizapis('v1', '/currency/' + id + '/delete', 'delete', null, null, jQuery.UbizOIWidget.w_i_delete_callback);
+                    ubizapis('v1', '/company/' + id + '/delete', 'delete', null, null, jQuery.UbizOIWidget.w_i_delete_callback);
                 }
             })
         },
@@ -139,7 +139,7 @@
             if (id == '0') {
                 jQuery.UbizOIWidget.w_clean_input_page();
             } else {
-                ubizapis('v1', '/currency/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
+                ubizapis('v1', '/company/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
             }
         },
         w_save_callback: function (response) {
@@ -171,7 +171,7 @@
 
             var event = new CustomEvent("click");
             document.body.dispatchEvent(event);
-            ubizapis('v1', '/currency', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/company', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_clear_search_form: function () {
             jQuery('#fuzzy').val("");
@@ -180,10 +180,12 @@
 
         },
         w_clear_advance_search_form: function () {
-            jQuery('#cur_ctr_nm').val("");
-            jQuery('#cur_nm').val("");
-            jQuery('#cur_cd_alpha').val("");
-            jQuery('#cur_symbol').val("");
+
+            jQuery('#com_nm').val("");
+            jQuery('#com_address').val("");
+            jQuery('#com_fax').val("");
+            jQuery('#com_mst').val("");
+            jQuery('#com_email').val("");
             jQuery('#contain').val("");
             jQuery('#notcontain').val("");
         },
@@ -210,7 +212,7 @@
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
             params.sort = sort;
 
-            ubizapis('v1', '/currency', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/company', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_fuzzy_search_handle_enter(e) {
             var keycode = (e.keyCode ? e.keyCode : e.which);
@@ -242,7 +244,7 @@
                 });
             } else {
                 jQuery("#btn-delete").show();
-                ubizapis('v1', '/currency/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
+                ubizapis('v1', '/company/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
             }
         },
         w_go_back_to_output_page: function () {
@@ -264,7 +266,7 @@
         w_refresh_output_page: function () {
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/currency', 'get', null, {
+            ubizapis('v1', '/company', 'get', null, {
                 'page': jQuery.UbizOIWidget.page,
                 'sort': sort
             }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
@@ -279,20 +281,24 @@
 
             var search_info = {};
 
-            if (jQuery('#cur_ctr_nm').val().replace(/\s/g, '') != '') {
-                search_info.cur_ctr_nm = jQuery('#cur_ctr_nm').val();
+            if (jQuery('#com_nm').val().replace(/\s/g, '') != '') {
+                search_info.com_nm = jQuery('#com_nm').val();
             }
 
-            if (jQuery('#cur_nm').val().replace(/\s/g, '') != '') {
-                search_info.cur_nm = jQuery('#cur_nm').val();
+            if (jQuery('#com_address').val().replace(/\s/g, '') != '') {
+                search_info.com_address = jQuery('#com_address').val();
             }
 
-            if (jQuery('#cur_cd_alpha').val().replace(/\s/g, '') != '') {
-                search_info.cur_cd_alpha = jQuery('#cur_cd_alpha').val();
+            if (jQuery('#com_fax').val().replace(/\s/g, '') != '') {
+                search_info.com_fax = jQuery('#com_fax').val();
             }
 
-            if (jQuery('#cur_symbol').val().replace(/\s/g, '') != '') {
-                search_info.cur_symbol = jQuery('#cur_symbol').val();
+            if (jQuery('#com_mst').val().replace(/\s/g, '') != '') {
+                search_info.com_mst = jQuery('#com_mst').val();
+            }
+
+            if (jQuery('#com_email').val().replace(/\s/g, '') != '') {
+                search_info.com_email = jQuery('#com_email').val();
             }
 
 
@@ -330,7 +336,7 @@
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             jQuery.UbizOIWidget.sort = sort_info;
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/currency', 'get', null, {
+            ubizapis('v1', '/company', 'get', null, {
                 'page': page,
                 'sort': sort
             }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
@@ -340,7 +346,7 @@
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             jQuery.UbizOIWidget.sort = sort_info;
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/currency', 'get', null, {
+            ubizapis('v1', '/company', 'get', null, {
                 'page': page,
                 'sort': sort
             }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
@@ -378,19 +384,19 @@
         },
         w_render_data_to_ouput_page: function (response) {
             var table_html = "";
-            var currency = response.data.currency;
+            var company = response.data.company;
             var paging = response.data.paging;
-            if (currency.length > 0) {
+            if (company.length > 0) {
                 var rows = [];
-                for (let i = 0; i < currency.length; i++) {
+                for (let i = 0; i < company.length; i++) {
                     var cols = [];
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(currency[i].cur_id, currency[i].cur_id, 1));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html_country(currency[i].cur_id, currency[i].cur_ctr_nm, currency[i].cur_ctr_cd_alpha_2, 2));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(currency[i].cur_id, currency[i].cur_nm, 3));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(currency[i].cur_id, currency[i].cur_cd_alpha, 4));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(currency[i].cur_id, currency[i].cur_symbol, 5));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html_active(currency[i].active_flg, 6));
-                    rows.push(jQuery.UbizOIWidget.w_make_row_html(currency[i].cur_id, cols, i, paging.page, paging.rows_per_page));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(company[i].com_id, company[i].com_id, 1));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html_company(company[i].com_id, company[i].com_nm, company[i].com_logo, 2));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(company[i].com_id, company[i].com_phone, 3));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(company[i].com_id, company[i].com_fax, 4));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(company[i].com_id, company[i].com_mst, 5));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(company[i].com_id, company[i].com_email, 6));
+                    rows.push(jQuery.UbizOIWidget.w_make_row_html(company[i].com_id, cols, i, paging.page, paging.rows_per_page));
                 }
                 table_html += rows.join("");
             }
@@ -403,9 +409,9 @@
 
         },
         w_render_data_to_input_page: function (response) {
-            var currency = response.data.currency;
+            var company = response.data.company;
             jQuery.UbizOIWidget.w_clean_input_page();
-            jQuery.UbizOIWidget.w_set_input_page(currency);
+            jQuery.UbizOIWidget.w_set_input_page(company);
             jQuery.UbizOIWidget.w_i_paging();
 
             jQuery.UbizOIWidget.o_page.hide();
@@ -425,39 +431,29 @@
         },
         w_clean_input_page: function () {
             jQuery.UbizOIWidget.i_page.find("#txt_id").val("0");
-            jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_nm").val("");
-            jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_cd_alpha_2").val("");
-            jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_cd_alpha_3").val("");
-            jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_cd_numeric").val("");
-            jQuery.UbizOIWidget.i_page.find("#txt_cur_nm").val("");
-            jQuery.UbizOIWidget.i_page.find("#txt_cur_cd_numeric_default").val("");
-            jQuery.UbizOIWidget.i_page.find("#txt_cur_cd_alpha").val("");
-            jQuery.UbizOIWidget.i_page.find("#txt_cur_cd_numeric").val("");
-            jQuery.UbizOIWidget.i_page.find("#txt_cur_minor_units").val("");
-            jQuery.UbizOIWidget.i_page.find("#txt_cur_symbol").val("");
-            jQuery.UbizOIWidget.i_page.find("#txt_active_flg").val("0");
+            jQuery.UbizOIWidget.i_page.find("#txt_com_nm").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_com_address").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_com_phone").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_com_fax").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_com_web").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_com_email").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_com_mst").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_com_hotline").val("");
+            $("#i-put #nicescroll-iput .image-upload .img-show").attr("src", "../images/avatar.png");
+            $("#i-put #nicescroll-iput .image-upload .img-show").attr("img-name", 'com_logo');
         },
         w_set_input_page: function (data) {
-
-            jQuery.UbizOIWidget.i_page.find("#txt_id").val(data.cur_id);
-            jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_nm").val(data.cur_ctr_nm);
-            jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_cd_alpha_2").val(data.cur_ctr_cd_alpha_2);
-            jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_cd_alpha_3").val(data.cur_ctr_cd_alpha_3);
-            jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_cd_numeric").val(data.cur_ctr_cd_numeric);
-            jQuery.UbizOIWidget.i_page.find("#txt_cur_nm").val(data.cur_nm);
-            jQuery.UbizOIWidget.i_page.find("#txt_cur_cd_numeric_default").val(data.cur_cd_numeric_default);
-            jQuery.UbizOIWidget.i_page.find("#txt_cur_cd_alpha").val(data.cur_cd_alpha);
-            jQuery.UbizOIWidget.i_page.find("#txt_cur_cd_numeric").val(data.cur_cd_numeric);
-            jQuery.UbizOIWidget.i_page.find("#txt_cur_minor_units").val(data.cur_minor_units);
-            jQuery.UbizOIWidget.i_page.find("#txt_cur_symbol").val(data.cur_symbol);
-            jQuery.UbizOIWidget.i_page.find("#txt_active_flg").val(data.active_flg);
-            if (data.active_flg == '1') {
-                jQuery.UbizOIWidget.i_page.find("#txt_active_flg").prev('div').addClass('sck');
-                jQuery.UbizOIWidget.i_page.find("#txt_active_flg").prev('div').removeClass('suc');
-            } else {
-                jQuery.UbizOIWidget.i_page.find("#txt_active_flg").prev('div').addClass('suc');
-                jQuery.UbizOIWidget.i_page.find("#txt_active_flg").prev('div').removeClass('sck');
-            }
+            jQuery.UbizOIWidget.i_page.find("#txt_id").val(data.com_id);
+            jQuery.UbizOIWidget.i_page.find("#txt_com_nm").val(data.com_nm);
+            jQuery.UbizOIWidget.i_page.find("#txt_com_address").val(data.com_address);
+            jQuery.UbizOIWidget.i_page.find("#txt_com_phone").val(data.com_phone);
+            jQuery.UbizOIWidget.i_page.find("#txt_com_fax").val(data.com_fax);
+            jQuery.UbizOIWidget.i_page.find("#txt_com_web").val(data.com_web);
+            jQuery.UbizOIWidget.i_page.find("#txt_com_email").val(data.com_email);
+            jQuery.UbizOIWidget.i_page.find("#txt_com_mst").val(data.com_mst);
+            jQuery.UbizOIWidget.i_page.find("#txt_com_hotline").val(data.com_hotline);
+            $("#i-put #nicescroll-iput .image-upload .img-show").attr("src", data.com_logo);
+            $("#i-put #nicescroll-iput .image-upload .img-show").attr("img-name", 'com_logo');
         },
         w_make_row_html: function (id, cols, row_no, page_no, rows_per_page) {
             var row_html = '';
@@ -490,27 +486,14 @@
             col_html += '</div>';
             return col_html;
         },
-        w_make_col_html_country: function (col_id, col_val, cur_ctr_cd_alpha_2, col_idx) {
+        w_make_col_html_company: function (col_id, col_val, col_logo, col_idx) {
             var col_html = "";
             col_html += '<div class="tcB col-' + col_idx + '">';
             col_html += '<div class="cbo">';
             col_html += '<div class="nCj" title="' + col_val + '">';
-            col_html += '<img src="/dist/flagsprites/blank.gif" class="flag flag-' + cur_ctr_cd_alpha_2 + '"/>';
+            col_html += '<img src="' + col_logo + '"/>';
             col_html += '<span> ' + col_val + '</span>';
             col_html += '</div>';
-            col_html += '</div>';
-            col_html += '</div>';
-            return col_html;
-        },
-        w_make_col_html_active: function (col_val, col_idx) {
-            var col_html = "";
-            col_html += '<div class="tcB col-' + col_idx + '">';
-            col_html += '<div class="cbo">';
-            if (col_val == 1) {
-                col_html += '<i class="material-icons lh-38 cl-active">check_circle</i>';
-            } else {
-                col_html += '<i class="material-icons lh-38 cl-inactive">not_interested</i>';
-            }
             col_html += '</div>';
             col_html += '</div>';
             return col_html;
@@ -575,18 +558,18 @@
         w_get_form_data: function () {
             var form_data = new FormData();
 
-            form_data.append('txt_cur_id', jQuery("#txt_id").val());
-            form_data.append('txt_cur_ctr_nm', jQuery("#txt_cur_ctr_nm").val());
-            form_data.append('txt_cur_ctr_cd_alpha_2', jQuery("#txt_cur_ctr_cd_alpha_2").val());
-            form_data.append('txt_cur_ctr_cd_alpha_3', jQuery("#txt_cur_ctr_cd_alpha_3").val());
-            form_data.append('txt_cur_ctr_cd_numeric', jQuery("#txt_cur_ctr_cd_numeric").val());
-            form_data.append('txt_cur_nm', jQuery("#txt_cur_nm").val());
-            form_data.append('txt_cur_cd_numeric_default', jQuery("#txt_cur_cd_numeric_default").val());
-            form_data.append('txt_cur_cd_alpha', jQuery("#txt_cur_cd_alpha").val());
-            form_data.append('txt_cur_cd_numeric', jQuery("#txt_cur_cd_numeric").val());
-            form_data.append('txt_cur_minor_units', jQuery("#txt_cur_minor_units").val());
-            form_data.append('txt_cur_symbol', jQuery("#txt_cur_symbol").val());
-            form_data.append('txt_active_flg', jQuery("#txt_active_flg").val());
+            if (jQuery('input[name=inp-upload-image]')[0].files.length > 0) {
+                form_data.append('com_logo', jQuery('input[name=inp-upload-image]')[0].files[0]);
+            }
+
+            form_data.append('txt_com_id', jQuery("#txt_id").val());
+            form_data.append('txt_com_nm', jQuery("#txt_com_nm").val());
+            form_data.append('txt_com_address', jQuery("#txt_com_address").val());
+            form_data.append('txt_com_phone', jQuery("#txt_com_phone").val());
+            form_data.append('txt_com_fax', jQuery("#txt_com_fax").val());
+            form_data.append('txt_com_web', jQuery("#txt_com_web").val());
+            form_data.append('txt_com_email', jQuery("#txt_com_email").val());
+            form_data.append('txt_com_mst', jQuery("#txt_com_mst").val());
 
             return form_data;
         },
@@ -612,7 +595,7 @@
 
             var id = jQuery.UbizOIWidget.i_page.find("#txt_id").val();
 
-            ubizapis('v1', '/currency/' + id, 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_input_page);
+            ubizapis('v1', '/company/' + id, 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_input_page);
         },
         w_o_paging: function (page, rows_num, rows_per_page) {
             var page = parseInt(page);

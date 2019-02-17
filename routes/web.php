@@ -23,5 +23,8 @@ Route::middleware(['api', 'cors'])->group(function () {
         Route::get('products', ['as'=>'products', 'uses'=>'Web\AccessoryController@accessories']);
         Route::get('products/{brd_id}', ['as'=>'products', 'uses'=>'Web\ProductController@productByBrand']);
         Route::get('brands', ['as'=>'brands', 'uses'=>'Web\BrandController@brands']);
+        Route::get('setting/currency', ['as' => 'currency', 'uses' => 'Web\CurrencyController@index']);
+        Route::get('setting/company', ['as' => 'company', 'uses' => 'Web\CompanyController@index']);
+        Route::get('setting/permission', ['as' => 'permission', 'uses' => 'Web\PermissionController@index']);
     });
 });

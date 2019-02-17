@@ -1,0 +1,2 @@
+INSERT INTO `users` (`id`, `code`, `name`, `avatar`, `password`, `phone`, `email`, `address`, `join_date`, `salary`, `bhxh`, `bhyt`, `dep_id`, `remember_token`) VALUES
+('1', '00001', 'admin', '', '$2y$10$zqU.9Oml9dU/pTY8.zUipOm8RhVWFk5JNtNTzvGzLUxFiMxhzYaRO', '', 'tkp@gmail.com', '', '', '', '1', '1', '1', '');

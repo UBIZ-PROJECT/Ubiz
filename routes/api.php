@@ -52,6 +52,13 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::post('currency/{id}/update', ['as' => 'update-currency', 'uses' => 'Api\CurrencyController@updatedCurrency']);
         Route::put('currency', ['as' => 'insert-currency', 'uses' => 'Api\CurrencyController@insertCurrency']);
 
+        Route::get('company', ['as' => 'get-company', 'uses' => 'Api\CompanyController@getCompany']);
+        Route::get('companies', ['as' => 'get-all-company', 'uses' => 'Api\CompanyController@getAllCompany']);
+        Route::get('company/{id}', ['as' => 'get-company', 'uses' => 'Api\CompanyController@getCompanyById']);
+        Route::delete('company/{ids}/delete', ['as' => 'delete-company', 'uses' => 'Api\CompanyController@deleteCompany']);
+        Route::post('company/{id}/update', ['as' => 'update-company', 'uses' => 'Api\CompanyController@updatedCompany']);
+        Route::put('company', ['as' => 'insert-company', 'uses' => 'Api\CompanyController@insertCompany']);
+
         Route::get('products', ['as' => 'api-product', 'uses' => 'Api\ProductController@getProduct']);
         Route::get('products/detail', ['as' => 'api-product-detail', 'uses' => 'Api\ProductController@getEachProductPaging']);
         Route::post('products/insert', ['as' => 'product-insert', 'uses' => 'Api\ProductController@insertProduct']);

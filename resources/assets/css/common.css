@@ -174,8 +174,8 @@
     align-items: center;
     background-color: #fff;
     background-image: none;
-    -webkit-border-radius: 24px;
-    border-radius: 24px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
     color: #5f6368;
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
@@ -1501,6 +1501,18 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
 
 .utb .rhb > div.active{
     display: block;
+}
+
+.lh-38 {
+    line-height: 38px !important;
+}
+
+.cl-active {
+    color: #00E5FF;
+}
+
+.cl-inactive {
+    color: #FF3D00;
 }
 
 /*left side bar*/

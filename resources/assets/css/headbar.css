@@ -11,7 +11,7 @@
 
 .headbar .banner {
     position: relative;
-    background: transparent;
+    background: #194078;
     margin-bottom: 0;
 }
 
@@ -134,15 +134,15 @@
 
 .headbar .ayo svg {
     fill: currentColor;
-    color: black;
-    opacity: .54;
+    color: white;
+    opacity: .8;
 }
 
 .headbar .ayo .title {
     font-size: 1.5em;
     position: relative;
     top: -4px;
-    color: #5f6368;
+    color: #D1D9E4;
 }
 
 .headbar .pyo {
@@ -195,8 +195,8 @@
 
 .headbar .nyo svg {
     fill: currentColor;
-    color: black;
-    opacity: .54;
+    color: white;
+    opacity: .8;
 }
 
 .headbar .qyo {
@@ -302,7 +302,7 @@
 .headbar .search .tyo {
     margin-left: 0;
     margin-right: 0;
-    background: rgba(0, 0, 0, 0.04);
+    background: #fff;
     border: 1px solid rgba(0, 0, 0, 0);
     -webkit-border-radius: 4px;
     border-radius: 4px;

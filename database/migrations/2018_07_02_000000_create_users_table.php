@@ -26,6 +26,7 @@ class CreateUsersTable extends Migration
             $table->decimal('salary', 10, 2);
             $table->char('bhxh', 1)->default('0');
             $table->char('bhyt', 1)->default('0');
+            $table->integer('com_id');
             $table->integer('dep_id');
             $table->rememberToken();
             $table->char('delete_flg', 1)->default('0');
