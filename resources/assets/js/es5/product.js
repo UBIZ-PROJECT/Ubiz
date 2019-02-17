@@ -50,7 +50,7 @@ var lst_image_delete = [];
             jQuery(self).find('svg').removeClass('sVGT');
             jQuery(self).find('svg.' + order_by).addClass('sVGT');
 
-            ubizapis('v1', '/products', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/accessories', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_delete: function (id) {
             var listId = jQuery.UbizOIWidget.w_get_checked_rows();
@@ -74,7 +74,7 @@ var lst_image_delete = [];
                 if (result.value) {
                     listId = JSON.stringify(listId);
                     var params = jQuery.UbizOIWidget.w_get_param_search_sort();
-                    ubizapis('v1','/products/'+listId+'/delete', 'delete',null, params,jQuery.UbizOIWidget.w_process_callback);
+                    ubizapis('v1','/accessories/'+listId+'/delete', 'delete',null, params,jQuery.UbizOIWidget.w_process_callback);
                 }
             });
         },
@@ -92,7 +92,7 @@ var lst_image_delete = [];
             }
 
             var formData = jQuery.UbizOIWidget.w_get_images_upload();
-            formData.append("product", JSON.stringify(jQuery.UbizOIWidget.w_get_data_input_form()));
+            formData.append("accessory", JSON.stringify(jQuery.UbizOIWidget.w_get_data_input_form()));
 
             var params = jQuery.UbizOIWidget.w_get_param_search_sort();
             if (id == 0) {
@@ -107,7 +107,7 @@ var lst_image_delete = [];
                     reverseButtons: true
                 }).then((result) => {
                     if (result.value) {
-                        ubizapis('v1','/products/insert', 'post', formData, params, jQuery.UbizOIWidget.w_process_callback);
+                        ubizapis('v1','/accessories/insert', 'post', formData, params, jQuery.UbizOIWidget.w_process_callback);
                     }
                 });
             } else {
@@ -130,7 +130,7 @@ var lst_image_delete = [];
                 }).then((result) => {
                     if (result.value) {
                         formData.append("_method","put");
-                        ubizapis('v1','/products/'+id+'/update', 'post', formData,params, jQuery.UbizOIWidget.w_process_callback);
+                        ubizapis('v1','/accessories/'+id+'/update', 'post', formData,params, jQuery.UbizOIWidget.w_process_callback);
                     }
                 });
             }
@@ -142,7 +142,7 @@ var lst_image_delete = [];
 
             var event = new CustomEvent("click");
             document.body.dispatchEvent(event);
-            ubizapis('v1', '/products', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/accessories', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_search_info: function () {
 
@@ -215,7 +215,7 @@ var lst_image_delete = [];
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
             params.sort = sort;
 
-            ubizapis('v1', '/products', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/accessories', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_fuzzy_search_handle_enter(e) {
             var keycode = (e.keyCode ? e.keyCode : e.which);
@@ -253,11 +253,12 @@ var lst_image_delete = [];
         },
         w_get_data_input_form: function() {
             var data = {
-                id: $("#i-put #txt_prd_id").val(),
-                name: $("#i-put #txt_name").val(),
-                prd_model: $("#i-put #txt_model").val(),
-                type_id: $("#i-put #txt_name_type").val(),
-                prd_note: $("#i-put #txt_prd_note").val(),
+                id: $("#i-put #txt_acs_id").val(),
+                acs_name: $("#i-put #txt_name").val(),
+                acs_unit: $("#i-put #txt_unit").val(),
+                acs_type_id: $("#i-put #txt_name_type").val(),
+                acs_note: $("#i-put #txt_acs_note").val(),
+                acs_quantity: $("#i-put #txt_quantity").val(),
                 images: {
                     "delete": lst_image_delete
                 }
@@ -291,11 +292,11 @@ var lst_image_delete = [];
                                 }
                                 var formInput = jQuery.UbizOIWidget.w_get_data_input_form();
                                 var formData = jQuery.UbizOIWidget.w_get_images_upload();
-                                formData.append("product", JSON.stringify(formInput));
+                                formData.append("accessory", JSON.stringify(formInput));
                                 var params = jQuery.UbizOIWidget.w_get_param_search_sort();
 
                                 formData.append("_method","put");
-                                ubizapis('v1','/products/'+formInput.id+'/updatePaging', 'post', formData,params,function() {
+                                ubizapis('v1','/accessories/'+formInput.id+'/updatePaging', 'post', formData,params,function() {
                                     jQuery.UbizOIWidget.w_reset_input_change();
                                     jQuery.UbizOIWidget.w_get_specific_product_by_id(id, index);
                                     $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
@@ -339,10 +340,10 @@ var lst_image_delete = [];
             });
         },w_reset_input_change: function() {
             $("#i-put #nicescroll-iput #txt_name").val("").isChange("false");
-            $("#i-put #nicescroll-iput #txt_branch").val("").isChange("false");
-            $("#i-put #nicescroll-iput #txt_model").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_unit").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_acs_note").val("").isChange("false");
             $("#i-put #nicescroll-iput #txt_name_type").val("").isChange("false");
-            $("#i-put #nicescroll-iput #txt_detail").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_quantity").val("").isChange("false");
             $("#i-put #nicescroll-iput .file-upload").isChange("false");
         },
         w_set_paging_for_detail_page: function(page, totalPage, isReset = false) {
@@ -399,7 +400,7 @@ var lst_image_delete = [];
         w_refresh_output_page: function () {
             var params = jQuery.UbizOIWidget.w_get_param_search_sort();
             params.page = jQuery.UbizOIWidget.page;
-            ubizapis('v1', '/products', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/accessories', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_sort_info: function () {
             var sort_obj = jQuery.UbizOIWidget.o_page.find('div.dWT');
@@ -411,14 +412,14 @@ var lst_image_delete = [];
             var params = jQuery.UbizOIWidget.w_get_param_search_sort();
             params.page = page;
             jQuery.UbizOIWidget.page = page;
-            ubizapis('v1', '/products', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/accessories', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_newer_data: function (page) {
             jQuery.UbizOIWidget.page = page;
             var params = jQuery.UbizOIWidget.w_get_param_search_sort();
             params.page = page;
             jQuery.UbizOIWidget.page = page;
-            ubizapis('v1', '/products', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/accessories', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_process_callback: function (response) {
             if (response.data.success == true) {
@@ -467,9 +468,9 @@ var lst_image_delete = [];
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].id, 1));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].image, 2, products[i].prd_img_id));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].name, 3));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].branch, 4));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].model, 5));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].name_type, 6));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].name_type, 4));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].acs_unit, 5));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].acs_quantity, 6));
                     rows.push(jQuery.UbizOIWidget.w_make_row_html(products[i].id, cols, index));
                     index++;
                 }
@@ -488,21 +489,22 @@ var lst_image_delete = [];
             var data = response.data.product[0];
             $("#i-put .GtF .delete").attr("onclick","jQuery.UbizOIWidget.w_delete("+data.id+")");
             $("#i-put .GtF .save").attr("onclick", "jQuery.UbizOIWidget.w_save("+data.id+")");
-            $("#i-put #nicescroll-iput #txt_prd_id").val(data.id);
+            $("#i-put #nicescroll-iput #txt_acs_id").val(data.id);
+            $("#i-put #nicescroll-iput #txt_code").val(data.id);
             $("#i-put #nicescroll-iput #txt_name").val(data.name).change(function() {inputChange(this, data.name)});
-            $("#i-put #nicescroll-iput #txt_unit").val(data.prd_unit).change(function() {inputChange(this, data.prd_unit)});
-            $("#i-put #nicescroll-iput #txt_model").val(data.model).change(function() {inputChange(this, data.model)});
-            $("#i-put #nicescroll-iput #txt_name_type").val(data.prd_type_id).change(function() {inputChange(this, data.prd_type_id)}); // THY  fix thành combobox
-            $("#i-put #nicescroll-iput #txt_prd_note").val(data.prd_note).change(function() {inputChange(this, data.prd_note)}); // THY fix thành Textarea
+            $("#i-put #nicescroll-iput #txt_unit").val(data.acs_unit).change(function() {inputChange(this, data.acs_unit)});
+            $("#i-put #nicescroll-iput #txt_acs_note").val(data.acs_note).change(function() {inputChange(this, data.acs_note)});
+            $("#i-put #nicescroll-iput #txt_name_type").val(data.acs_type_id).change(function() {inputChange(this, data.acs_type_id)}); // THY  fix thành combobox
+            $("#i-put #nicescroll-iput #txt_quantity").val(data.acs_quantity).change(function() {inputChange(this, data.acs_quantity)}); // THY fix thành Textarea
             if (data.images != undefined && data.images.length > 0) {
                 var controlImages = $("#i-put .img-show");
                 for(var i = 0; i < data.images.length; i++) {
                     $(controlImages[i]).attr("src",data.images[i].src).setName(data.images[i].name);
                 }
             }
-            // if (isEmpty(data.images)) {
-            //     data.src = jQuery.UbizOIWidget.defaultImage;  // THY Fix image
-            // }
+            if (isEmpty(data.images)) {
+                data.src = jQuery.UbizOIWidget.defaultImage;  // THY Fix image
+            }
             // var addrLength = addresses.length >= 3 ? addresses.length : 3;
             // for(let i = 0; i < addrLength; i++) {
             //     if (i <= 2) {
@@ -517,10 +519,11 @@ var lst_image_delete = [];
             //         $(address).insertAfter("#i-put #nicescroll-iput .txt_adr"+i+"_container");
             //     }
             // }
-            // $("#i-put #nicescroll-iput .image-upload .img-show").attr("src", data.src);
+            $("#i-put #nicescroll-iput .image-upload .img-show").attr("src", data.src);
             // $("#i-put #nicescroll-iput .image-upload .img-show").attr("img-name", data.sup_avatar);
 
             jQuery.UbizOIWidget.w_set_paging_for_detail_page(response.data.paging.page, response.data.paging.rows_num);
+            getKeeper();
         },
         w_is_input_changed: function() {
             var txt_input = $("#i-put .jAQ input, #i-put .jAQ textarea,  #i-put .jAQ select");
@@ -564,10 +567,11 @@ var lst_image_delete = [];
         },
         w_clear_input_page: function() {
             $("#i-put #nicescroll-iput #txt_name").val("").isChange("false");
-            $("#i-put #nicescroll-iput #txt_branch").val("").isChange("false");
-            $("#i-put #nicescroll-iput #txt_model").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_quantity").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_code").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_unit").val("").isChange("false");
             $("#i-put #nicescroll-iput #txt_name_type").val("").isChange("false");
-            $("#i-put #nicescroll-iput #txt_detail").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_acs_note").val("").isChange("false");
             jQuery.UbizOIWidget.sort = {'sort_name': 'prd_name', 'order_by': 'asc'};
             jQuery.UbizOIWidget.w_set_paging_for_detail_page(0,0,true);
             removeErrorInput();
@@ -586,9 +590,11 @@ var lst_image_delete = [];
             jQuery('#search-form  #sup_fuzzy').val("");
         },
         w_get_specific_product_by_id(id, index) {
+            jQuery.UbizOIWidget.i_page.find(".tb-keeper").css("display",'');
+            jQuery.UbizOIWidget.i_page.find(".tb-keeper").find("tbody").empty();
             var params = jQuery.UbizOIWidget.w_get_param_search_sort();
             params.page = index;
-            ubizapis('v1','/products/detail', 'get', null, params,jQuery.UbizOIWidget.w_render_data_to_input_page);
+            ubizapis('v1','/accessories/detail', 'get', null, params,jQuery.UbizOIWidget.w_render_data_to_input_page);
         },
         w_make_row_html: function (id, cols, index) {
             var row_html = '';
@@ -729,6 +735,10 @@ var lst_image_delete = [];
 })(jQuery);
 jQuery(document).ready(function () {
     jQuery.UbizOIWidget.w_init();
+    $('#dtVerticalScrollExample').DataTable({
+        "scrollY": "200px",
+        "scrollCollapse": true,
+    });
 });
 
 function isEmpty(str) {
@@ -738,79 +748,155 @@ function isEmpty(str) {
     return false;
 }
 
-$("document").ready(function(){
-    $(".tab-slider--body").hide();
-    $(".tab-slider--body:first").show();
-    $('.btn-keep-series').mouseleave(function() {
-        $('.qs .popover').css({'height': '110px','overflow-y':'visible'});
-        $('.qs .popover').removeClass('popover-more-detail');
-        $('.series-more-detail').html("Xem thêm");
-    })
-    $(".btn-keep-series").mouseenter(function() {
-        checkLength($(this).closest("td").find('.qs .popover'));
-    })
-});
+function getKeeper() {
+    var acs_id = $("#txt_code").val();
+    var params = {};
+    params.page = 0;
+    params.search = {};
+    params.sort = "";
+    params.acs_id = acs_id;
+    ubizapis('v1','/keeper', 'get',null, params,function(response) {
+        var acs_keeper = response.data.acs_keeper;
+        writeKeeperToTable(acs_keeper);
+    });
+}
 
-$(".tab-slider--nav li").click(function() {
-    $(".tab-slider--body").hide();
-    var activeTab = $(this).attr("rel");
-    $("#"+activeTab).fadeIn();
-    if($(this).attr("rel") == "tab2"){
-        $('.tab-slider--tabs').addClass('slide');
-    }else{
-        $('.tab-slider--tabs').removeClass('slide');
+function writeKeeperToTable(accessoryKeeper) {
+    var copyButton = '<i class="fa fa-files-o" onclick="copySeries(this)"></i>';
+    var deleteButton = '<i class="fa fa-trash-o" onclick="deleteSeries(this)"></i>';
+    var html = '';
+    for(var i = 0; i < accessoryKeeper.length; i++) {
+        var acsKeeper = accessoryKeeper[i];
+        html += "<tr ondblclick='openKeeperModal(this)'>";
+        html += "<td class='txt-stt text-center'>" + (i + 1) +"</td>";
+        html += "<td class='keeper'>" + acsKeeper.keeper +"</td>";
+        html += "<td class='quantity'>" + acsKeeper.quantity +"</td>";
+        html += "<td class='note'>" + acsKeeper.note +"</td>";
+        html += "<td class='text-center'><input type='hidden' value='"+acsKeeper.acs_keeper_id+"' class='acs_keeper_id'>"+copyButton+ " " +deleteButton+"</td>";
+        html+= "</tr>";
     }
-    $(".tab-slider--nav li").removeClass("active");
-    $(this).addClass("active");
-});
 
-function activeSeries(btn) {
-    if ($(btn).hasClass("disabled")) return;
-    if ($(btn).hasClass("active"))
-        $(btn).removeClass("active");
-    else
-        $(btn).addClass("active");
+    $(".tb-keeper").find("tbody").append(html);
 }
 
-function keepSeries() {
-    $(".btn-keep-series.active").addClass("disabled");
-    $(".btn-keep-series").removeClass("active");
-}
-
-function addNote(series) {
-    $(".tb-add-note").css("display", "block");
-    $(".tb-series").css("display", "none")
-    $(".tb-add-note #txt-series-id").val(series);
-}
-
-function saveSeriesNote() {
-    $(".tb-add-note").css("display", "none");
-    $(".tb-series").css("display", "block")
-    $(".tb-add-note #txt-series-id").val('');
-}
-
-function noteDetail(link) {
-    if ($(link).html() == "Xem thêm") {
-        var popover = $(link).closest("td").find('.qs .popover');
-        var note = $(link).closest("td").find(".keep-full-note").val();
-        if (note.length > 2000) {
-            $(popover).css('overflow-y', 'scroll');
-        } else {
-            $(popover).css('overflow-y', 'visible');
-        }
-        $(popover).addClass('popover-more-detail');
-        $(popover).css('height', '500px');
-        $(popover).html(note);
-        $(popover).closest("td").find('.series-more-detail').remove();
+function getKeeperFromModal() {
+    return {
+        keeper : $("#addAcsKeeperModal #txt_keeper").val(),
+        quantity : $("#addAcsKeeperModal #txt_quantity").val(),
+        note : $("#addAcsKeeperModal #txt_note").val()
     }
 }
 
-function checkLength(pop) {
-    var note = $(pop).closest("td").find(".keep-full-note").val();
-    var html = '<a href="#" class="series-more-detail" onclick="noteDetail(this)">Xem thêm</a>';
+function insertKeeper(keeper) {
+    var params = {
+        keeper:JSON.stringify(keeper)
+    };
+    ubizapis('v1', '/keeper/insert', 'post', null, params, function(response) {
+        setTimeout(function() {
+            var acs_keeper_id = response.data.acs_keeper_id;
+            var listTr = $(".tb-keeper tbody tr");
+            var lastTr = listTr[listTr.length - 1];
+            $(lastTr).find(".acs_keeper_id").val(acs_keeper_id);
+        }, 1000);
+    });
+}
 
-    if (note.length > 420) {
-        var newNote = note.substr(0, 420) + " ... ";
-        $(pop).html(newNote).append(html);
+function updateKeeper(keeper) {
+    var params = {
+        keeper:JSON.stringify(keeper),
+        _method: "put"
+    };
+    ubizapis('v1', '/keeper/'+ keeper.acs_keeper_id +'/update', 'post', null, params, function() {});
+}
+
+function updateTableKeeper(row) {
+    var today = getCurrentDate();
+    var quantity = $("#addAcsKeeperModal #txt_quantity").val();
+    var keeper  = $("#addAcsKeeperModal #txt_keeper").val();
+    var note = $("#addAcsKeeperModal #txt_note").val();
+    var acs_keeper_id = getAcsKeeperID();
+    var keeperObj = {
+        acs_keeper_id: acs_keeper_id,
+        acs_id:getAccessoryId(),
+        quantity: quantity,
+        keeper: keeper,
+        note: note,
+        inp_date: today
+    };
+    if (!isEmpty(row)) {
+        $(row).find(".quantity").html(quantity);
+        $(row).find(".keeper").html(keeper);
+        $(row).find(".note").html(note);
+        $(row).find(".acs_keeper_id").val(acs_keeper_id);
+    } else {
+        var keepers = [];
+        keepers.push(keeperObj);
+        writeKeeperToTable(keepers);
+    }
+}
+
+function getCurrentDate() {
+    var date = new Date();
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var year = date.getFullYear();
+    if (month < 10) month = "0" + month;
+    var today = day + "/" + month + "/" + year;
+    return today;
+}
+
+function getAccessoryId() {
+    return $("#nicescroll-iput #txt_code").val();
+}
+
+function getAcsKeeperID() {
+    return  $(keeper_row_selected).find(".acs_keeper_id").val();
+}
+
+var keeper_row_selected;
+
+function openKeeperModal(row) {
+    keeper_row_selected = undefined;
+    $("#addAcsKeeperModal .btn-save").attr("onclick","keeperSave(0)");
+    if (!isEmpty(row)) {
+        keeper_row_selected = row;
+        var quantity =$(row).find(".quantity").html();
+        var keeper =$(row).find(".keeper").html();
+        var note=$(row).find(".note").html();
+        $("#addAcsKeeperModal #txt_quantity").val(quantity);
+        $("#addAcsKeeperModal #txt_keeper").val(keeper);
+        $("#addAcsKeeperModal #txt_note").val(note);
+        $("#addAcsKeeperModal .btn-save").attr("onclick","keeperSave(1)");
+    }
+    $("#addAcsKeeperModal").modal();
+}
+
+function clearSeriesModal() {
+    $("#addAcsKeeperModal #txt_quantity").val("");
+    $("#addAcsKeeperModal #txt_keeper").val("");
+    $("#addAcsKeeperModal #txt_note").val("");
+    keeper_row_selected = null;
+}
+
+function keeperSave(flg) {
+    var params = getKeeperFromModal();
+    params.acs_keeper_id= getAcsKeeperID();
+    params.acs_id= getAccessoryId();
+
+    if (flg == 0) {
+        insertKeeper(params);
+    } else {
+        updateKeeper(params);
+    }
+    updateTableKeeper(keeper_row_selected);
+    $("#addAcsKeeperModal").modal('hide');
+    reOrderStt();
+}
+
+function reOrderStt() {
+    var stt = $(".txt-stt");
+    var sttLength = $(".txt-stt").length + 1;
+    for(i = 0; i < sttLength; i++) {
+        $(stt[i]).html(i + 1);
     }
 }

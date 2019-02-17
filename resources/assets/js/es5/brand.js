@@ -510,7 +510,7 @@ var is_image_delete = false;
         },
         w_render_product_data_to_input: function(response) {
             var product_data = response.data.product;
-            initProduct(product_data);
+            initProduct(product_data, response.data.paging.page);
             jQuery.UbizOIWidget.page = response.data.paging.page;
             jQuery.UbizOIWidget.w_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
         },
@@ -520,7 +520,7 @@ var is_image_delete = false;
             }
             var data = response.data.brand;
             var product_data = response.data.product;
-            initProduct(product_data);
+            initProduct(product_data, response.data.paging.page);
             jQuery.UbizOIWidget.page = response.data.paging_prd.page;
             jQuery.UbizOIWidget.w_paging(response.data.paging_prd.page, response.data.paging_prd.rows_num, response.data.paging_prd.rows_per_page);
 
@@ -1188,7 +1188,7 @@ var lst_image_delete = [];
         w_render_data_to_ouput_page: function (response) {
             var table_html = "";
             var products = response.data.product;
-            initProduct(products);
+            initProduct(products, response.data.paging.page);
             jQuery.UbizOIWidgetPrd.page = response.data.paging.page;
             jQuery.UbizOIWidgetPrd.w_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
         },
@@ -1460,9 +1460,10 @@ jQuery(document).ready(function () {
     })
 });
 
-function initProduct(data) {
+function initProduct(data, page) {
     var html = "";
-    var index = 0;
+    var index = page * 10 -1;
+    if (index < 0) index = 0;
     $(".product-content .product-content-detail").html("");
     html+='<div class="yTP">';
     html+='<div id="table-content" class="jFr">\n';
@@ -1572,7 +1573,7 @@ function writeSeriesToTable(series) {
         html += "<td class='txt-stt'>" + (i + 1) +"</td>";
         html += "<td class='series_no'>" + seri.serial_no +"</td>";
         html += "<td class='series_inp_date'>" + seri.inp_date +"</td>";
-        html += "<td class='series_kepper'>" + seri.serial_sts +"</td>";
+        html += "<td class='series_kepper'>" + seri.serial_keeper +"</td>";
         html += "<td class='series_note'>" + seri.serial_note +"</td>";
         html += "<td class='text-center'><input type='hidden' value='"+seri.prd_series_id+"' class='prd_series_id'>"+copyButton+ " " +deleteButton+"</td>";
         html+= "</tr>";
@@ -1616,6 +1617,7 @@ function seriesSave(flg) {
         prd_id: getProductId(),
         serial_no : series_no,
         serial_sts: isEmpty(keeper) ? "0" : "1",
+        serial_keeper: keeper,
         serial_note: series_note
     };
     if (flg == 0) {
@@ -1675,7 +1677,8 @@ function updateTableSeries(row) {
         prd_series_id: getProductSeriID(),
         prd_id:getProductId(),
         serial_no : series_no,
-        serial_sts: keeper,
+        serial_sts: isEmpty(keeper) ? "0" : "1",
+        serial_keeper: keeper,
         serial_note: series_note,
         inp_date: today
     };
@@ -1697,15 +1700,16 @@ function copySeries(row) {
     $(cloneNewRow).find(".series_inp_date").html(today);
     $(".tb-series").find("tbody").append(cloneNewRow);
     reOrderStt();
-    var series_no =$(row).find(".series_no").html();
-    var keeper =$(row).find(".series_kepper").html();
-    var series_note=$(row).find(".series_note").html();
+    var series_no =$(cloneNewRow).find(".series_no").html();
+    var keeper =$(cloneNewRow).find(".series_kepper").html();
+    var series_note=$(cloneNewRow).find(".series_note").html();
     var params = {
         prd_series_id: getProductSeriID(),
         prd_id:getProductId(),
-        series_no : series_no,
-        keeper: keeper,
-        series_note: series_note
+        serial_no : series_no,
+        serial_sts: isEmpty(keeper) ? "0" : "1",
+        serial_keeper: keeper,
+        serial_note: series_note
     };
     createNewSeries(params);
 }
@@ -1718,7 +1722,11 @@ function deleteSeries(row) {
 
 function getCurrentDate() {
     var date = new Date();
-    var today = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var year = date.getFullYear();
+    if (month < 10) month = "0" + month;
+    var today = day + "/" + month + "/" + year;
     return today;
 }
 

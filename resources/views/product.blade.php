@@ -234,7 +234,7 @@
                                     </div>
                                 </div>
                                 <div class="dcB col-2" role="presentation">
-                                    <div class="dWT" role="button" sort-name="prd_name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                    <div class="dWT" role="button" sort-name="acs_name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Hình Ảnh</div>
                                             <div class="mhH">
@@ -257,7 +257,7 @@
                                     </div>
                                 </div>
                                 <div class="dcB col-3" role="presentation">
-                                    <div class="dWT" role="button" sort-name="prd_name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                    <div class="dWT" role="button" sort-name="acs_name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">{{ __('Name') }}</div>
                                             <div class="mhH">
@@ -282,7 +282,7 @@
                                 <div class="dcB col-4" role="presentation">
                                     <div class="dWB" role="button" sort-name="" order-by="" >
                                         <div class="dvJ">
-                                            <div class="tDv">{{__('Brand')}}</div>
+                                            <div class="tDv">{{__('Type')}}</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -303,9 +303,9 @@
                                     </div>
                                 </div>
                                 <div class="dcB col-5" role="presentation">
-                                    <div class="dWB" role="button" sort-name="prd_model" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                    <div class="dWB" role="button" sort-name="acs_unit" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">{{ __('Model') }}</div>
+                                            <div class="tDv">{{ __('Unit') }}</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -326,9 +326,9 @@
                                     </div>
                                 </div>
                                 <div class="dcB col-6" role="presentation">
-                                    <div class="dWB" role="button" sort-name="type_id" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                    <div class="dWB" role="button" sort-name="acs_quantity" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">{{__("Type")}}</div>
+                                            <div class="tDv">{{__("Quantity")}}</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -384,22 +384,22 @@
                                         </div>
                                         <div class="tcB col-4">
                                             <div class="cbo">
-                                                <div class="nCj" title="{{$prd->brd_name}}">
-                                                    <span>{{$prd->brd_name}}</span>
+                                                <div class="nCj" title="{{$prd->name_type}}">
+                                                    <span>{{$prd->name_type}}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="tcB col-5">
                                             <div class="cbo">
-                                                <div class="nCj" title="{{$prd->model}}">
-                                                    <span>{{$prd->model}}</span>
+                                                <div class="nCj" title="{{$prd->acs_unit}}">
+                                                    <span>{{$prd->acs_unit}}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="tcB col-6">
                                             <div class="cbo">
-                                                <div class="nCj" title="{{$prd->name_type}}">
-                                                    <span>{{$prd->name_type}}</span>
+                                                <div class="nCj" title="{{$prd->acs_quantity}}">
+                                                    <span>{{$prd->acs_quantity}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -485,90 +485,67 @@
                                 </ul>
                             </div>
                             <div class="col-sm-3 col-md-3 col-xl-3">
-                                <input type="hidden" value="" id="txt_prd_id">
-                                <input type="hidden" value="" id="txt_brd_id">
-                                @include('components.input',['width'=>'250','type'=>'disabled', 'control_id'=>'txt_brand_name', 'label'=>__("Brand"), 'length'=>5])
+                                <input type="hidden" value="" id="txt_acs_id">
+                                @include('components.input',['width'=>'250','type'=>'disabled','control_id'=>'txt_code', 'label'=>__('Code'), 'length'=>100])
                                 @include('components.input',['width'=>'250','type'=>'required', 'control_id'=>'txt_name', 'label'=>__("Name"), 'length'=>100])
                                 @include('components.input',['width'=>'250','control_id'=>'txt_unit', 'label'=>__('Unit'), 'length'=>20])
-                                @include('components.input',['width'=>'250','control_id'=>'txt_model', 'label'=>__('Model'), 'length'=>100])
                                 @include('components.dropdown',['width'=>'250','control_id'=>'txt_name_type', 'label'=>__('Type'), 'data'=> Helper::convertDataToDropdownOptions($product_type, 'id', 'name_type')])
                             </div>
                             <div class="col-sm-3 col-md-3 col-xl-3 z-pdr">
-                                @include('components.textarea',['width'=>'250', 'control_id'=>'txt_prd_note', 'label'=>__('Note')])
+                                @include('components.textarea',['width'=>'250', 'height'=>'80', 'control_id'=>'txt_acs_note', 'label'=>__('Note')])
+                                @include('components.input',['width'=>'250','control_id'=>'txt_quantity', 'label'=>__('Quantity'), 'length'=>20])
                             </div>
                         </div>
-                        <table cellpadding="10" style="margin-top: 30px">
+                        <table width="90%" class="mt-5">
                             <tr>
-                                <td>
-                                    @include('components.input',['width'=>'250','type'=>'text', 'control_id'=>'txt_keep_pro_person', 'label'=>__("Giữ hàng cho"), 'length'=>100])
-                                </td>
-                                <td>
-                                    <input type="button" onclick="keepSeries(this)" class="button btn-submit" value="Xác nhận giữ hàng">
-                                </td>
-                                <td>
-                                    @include('components.input',['width'=>'250','type'=>'text', 'control_id'=>'txt_keep_pro_person', 'label'=>__("Nhập Series"), 'length'=>100])
-                                </td>
-                                <td>
-                                    <input type="button" onclick="keepSeries(this)" class="button btn-submit" value="Thêm Series">
-                                </td>
+                                <th class="text-left pl-0 border-0"><div class="lbl-primary font-weight-bold">Danh sách giữ hàng</div></th>
+                                <th class="text-right pr-0 border-0 float-right">
+                                    <div><input type="button" class="btn btn-primary" onclick="openKeeperModal()" data-target="#addAcsKeeperModal" value="+"></div>
+                                </th>
                             </tr>
                         </table>
-
-                        <div class="container-tab">
-                            <div class="tab-slider--nav">
-                                <ul class="tab-slider--tabs">
-                                    <li class="tab-slider--trigger active" rel="tab1">Số Series</li>
-                                    <li class="tab-slider--trigger" rel="tab2">Giữ Hàng</li>
-                                </ul>
-                            </div>
-                            <div class="tab-slider--container">
-                                <div id="tab1" class="tab-slider--body">
-                                    <table class="tb-series" cellpadding="20">
-                                        <?php $idx = 1;
-                                        for($i = 0; $i < 10; $i++){?>
-                                        <tr>
-                                            <?php for($j = 0; $j < 7; $j++){?>
-                                            <td>
-                                                <span class="qs">
-                                                    <input type="button" onclick="activeSeries(this)" ondblclick="addNote(<?=$idx?>)" class="button btn-keep-series" value="Series <?php echo sprintf("%05d", $idx)?>">
-                                                    <span class="popover above">
-                                                    </span>
-                                                    <input type="hidden" class="keep-full-note" value="Hey bro, cool popover!
-                                                        Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!
-                                                        Hey bro, cool popover!vHey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!
-                                                        Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!
-                                                        Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!
-                                                        Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!
-                                                        Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!Hey bro, cool popover!">
-                                                </span>
-
-                                            </td>
-                                            <?php $idx++; }?>
+                        <div class="list-keep-accessory mt-4">
+                            <div class="table-responsive">
+                                <table id="dtVerticalScrollExample" class="table tb-keeper table-fixed">
+                                    <thead>
+                                        <tr class="table-primary">
+                                            <th class="keep-col-1 text-center">STT</th>
+                                            <th class="keep-col-3 ">Nhân Viên</th>
+                                            <th class="keep-col-1 ">Số lượng</th>
+                                            <th class="keep-col-2 ">Note</th>
+                                            <th class="keep-col-4 "></th>
                                         </tr>
-                                        <?php }?>
-                                    </table>
+                                    </thead>
+                                    <tbody>
 
-                                    <table class="tb-add-note" style="display: none">
-                                        <tr>
-                                            <td>
-                                                @include('components.textarea',['width'=>'700', 'control_id'=>'txt-series-note', 'label'=>__('Note')])
-                                                <input type="hidden" id="txt-series-id">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="tl-r">
-                                                <input type="button" class="button btn-series-note-save" onclick="saveSeriesNote()" value="Lưu Note">
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                                <div id="tab2" class="tab-slider--body">
-                                    <h2>Second Tab</h2>
-                                    <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras mattis consectetur purus sit amet fermentum. Nulla vitae elit libero, a pharetra augue. Cras mattis consectetur purus sit amet fermentum. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
-                                </div>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="addAcsKeeperModal" tabindex="-1" role="dialog" aria-labelledby="addAcsKeeperModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addAcsKeeperModalTitle">Người giữ phụ tùng</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @include('components.input',['width'=>'250', 'control_id'=>'txt_keeper', 'label'=>__("Keeper"), 'length'=>100])
+                    @include('components.input',['width'=>'250','type'=>'required', 'control_id'=>'txt_quantity', 'label'=>__("Số Lượng"), 'length'=>10])
+                    @include('components.textarea',['width'=>'250', 'control_id'=>'txt_note', 'label'=>__('Note')])
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary btn-save" onclick="keeperSave(0)">Lưu</button>
                 </div>
             </div>
         </div>

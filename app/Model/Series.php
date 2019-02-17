@@ -56,7 +56,7 @@ class Series implements JWTSubject
         list($field_name, $order_by) = $this->makeOrderBy($sort);
         $rows_per_page = env('ROWS_PER_PAGE', 30);
         $series = DB::table('product_series')
-            ->select('prd_series_id','prd_id','serial_no','serial_sts','serial_note', 'inp_date')
+            ->select('prd_series_id','prd_id','serial_no','serial_sts','serial_keeper','serial_note', 'inp_date')
             ->whereRaw($where_raw, $params)
             ->orderBy($field_name, $order_by)
             ->offset($page * $rows_per_page)
@@ -75,6 +75,7 @@ class Series implements JWTSubject
                     'prd_id'=> $param['prd_id'],
                     'serial_no'=>$param['serial_no'],
                     'serial_sts'=>$param['serial_sts'],
+                    'serial_keeper'=>$param['serial_keeper'],
                     'serial_note'=>$param['serial_note'],
                     'delete_flg'=>'0',
                     'inp_date'=>date('Y-m-d H:i:s'),
@@ -99,6 +100,7 @@ class Series implements JWTSubject
                 ->update([
                     'serial_no'=>$param['serial_no'],
                     'serial_sts'=>$param['serial_sts'],
+                    'serial_keeper'=>$param['serial_keeper'],
                     'serial_note'=>$param['serial_note'],
                     'upd_date'=>date('Y-m-d H:i:s')
                 ]);

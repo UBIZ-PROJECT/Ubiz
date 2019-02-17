@@ -78,26 +78,6 @@ body {
     border: 2px solid #345F90;
 }
 
-#nicescroll-sidebar .sP .aW.aT{
-    padding: 20px 0;
-}
-
-#nicescroll-sidebar .sP .aW.aT a{
-    padding: 20px 0;
-    text-decoration: none;
-}
-
-#nicescroll-sidebar .sP .aW.NaT{
-    padding: 20px 0;
-    color: #757575;
-}
-#nicescroll-sidebar .sP .aW.NaT a{
-    padding: 20px 0;
-    color: #757575;
-    text-decoration: none;
-}
-
-
 .r-content #o-put .brd-content {
     width: 97%;
     height: 100%;

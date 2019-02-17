@@ -12,7 +12,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Product implements JWTSubject
+class Accessory implements JWTSubject
 {
     private $CONST_USER = 1;
     use Notifiable;
@@ -51,113 +51,100 @@ class Product implements JWTSubject
         return [];
     }
 
-    public function getProductPaging($page, $sort='', $search = []) {
+    public function getAccessoryPaging($page, $sort='', $search = []) {
         list($where_raw,$params) = $this->makeWhereRaw($search);
         list($field_name, $order_by) = $this->makeOrderBy($sort);
         $rows_per_page = env('ROWS_PER_PAGE', 10);
-        $product = DB::select("
-            SELECT product.prd_id as id,product.prd_name as name,product_type.prd_type_id ,product_type.prd_type_name as name_type, 
-            product.prd_note,product.prd_unit, product.prd_model as model,product_image.extension,product_image.prd_img_id, brand.brd_name, brand.brd_id from (
+        $accessory = DB::select("
+            SELECT accessory.acs_id as id,accessory.acs_name as name,product_type.prd_type_id ,product_type.prd_type_name as name_type, 
+            accessory.acs_note,accessory.acs_unit, product_image.extension,product_image.prd_img_id, accessory.acs_quantity from (
                 SELECT *
-                FROM product 
-                LIMIT $rows_per_page OFFSET " . ($page * $rows_per_page)." ) product
+                FROM accessory 
+                LIMIT $rows_per_page OFFSET " . ($page * $rows_per_page)." ) accessory
             LEFT JOIN product_type product_type ON 
-            product.type_id = product_type.prd_type_id
-            LEFT JOIN brand brand ON
-            product.brd_id = brand.brd_id
+            accessory.acs_type_id = product_type.prd_type_id
             LEFT JOIN product_image product_image ON
-            product_image.prd_img_id = (select prd_img_id from product_image as pis where product.prd_id = pis.prd_id and pis.delete_flg = '0' limit 1) 
-           $where_raw
+            product_image.prd_img_id = (select prd_img_id from product_image as pis where accessory.acs_id = pis.acs_id and pis.delete_flg = '0' and pis.prd_id is null limit 1) 
+           $where_raw AND product_type.prd_type_flg = '2'
             ORDER BY $field_name $order_by  ", $params);
-        foreach ($product as &$item) {
+        foreach ($accessory as &$item) {
             if (!empty($item->prd_img_id)) {
-                $item->image = Helper::readImage($item->id . '-' . $item->prd_img_id . '.' . $item->extension, "prd");
+                $item->image = Helper::readImage($item->id . '-' . $item->prd_img_id . '.' . $item->extension, "acs");
             }
         }
-        return $product;
+        return $accessory;
     }
 
-    public function getEachProductPaging($page, $sort='', $search = []) {
+    public function getEachAccessoryPaging($page, $sort='', $search = []) {
         list($where_raw,$params) = $this->makeWhereRaw($search);
         list($field_name, $order_by) = $this->makeOrderBy($sort);
         $rows_per_page = 1;
         $product = DB::select("
-            SELECT product.prd_id,product.prd_name,product_type.prd_type_id ,product_type.prd_type_name,product.prd_note,product.prd_unit, 
-            product.prd_model,brand.brd_name,brand.brd_id, brand.brd_img,product_image.extension,product_image.prd_img_id from (
+            SELECT accessory.acs_id,accessory.acs_name,product_type.prd_type_id ,product_type.prd_type_name,accessory.acs_note,accessory.acs_unit, 
+            product_image.extension,product_image.prd_img_id, accessory.acs_quantity from (
                 SELECT *
-                FROM product $where_raw 
+                FROM accessory $where_raw 
             ORDER BY $field_name $order_by
-                LIMIT $rows_per_page OFFSET " . ($page * $rows_per_page)." ) product
+                LIMIT $rows_per_page OFFSET " . ($page * $rows_per_page)." ) accessory
             LEFT JOIN product_type product_type ON 
-            product.type_id = product_type.prd_type_id
-            LEFT JOIN brand brand ON
-            brand.brd_id = product.brd_id
+            accessory.acs_type_id = product_type.prd_type_id
             LEFT JOIN product_image product_image ON
-            product_image.prd_img_id in (select prd_img_id from product_image as pis where product.prd_id = pis.prd_id and pis.delete_flg = '0')
+            product_image.prd_img_id in (select prd_img_id from product_image as pis where accessory.acs_id = pis.acs_id and pis.delete_flg = '0' and pis.prd_id is null)
             ", $params);
         $data = array();
         $data[0] = (object) array();
         $images = array();
         foreach ($product as $index=>&$item) {
-            $data[0]->id = $item->prd_id;
-            $data[0]->brd_name = $item->brd_name;
-            $data[0]->name = $item->prd_name;
+            $data[0]->id = $item->acs_id;
+            $data[0]->name = $item->acs_name;
             $data[0]->name_type = $item->prd_type_name;
-            $data[0]->brd_id = $item->brd_id;
-            $data[0]->brd_img = $item->brd_img;
-            $data[0]->model = $item->prd_model;
-            $data[0]->prd_note = $item->prd_note;
-            $data[0]->prd_type_id = $item->prd_type_id;
-            $data[0]->prd_unit = $item->prd_unit;
+            $data[0]->acs_note = $item->acs_note;
+            $data[0]->acs_type_id = $item->prd_type_id;
+            $data[0]->acs_unit = $item->acs_unit;
+            $data[0]->acs_quantity = $item->acs_quantity;
             if (!empty($item->prd_img_id)) {
-                $imageName = $item->prd_id . '-' . $item->prd_img_id . '.' . $item->extension;
-                $images[$index]['src'] = Helper::readImage($imageName, "prd");
+                $imageName = $item->acs_id . '-' . $item->prd_img_id . '.' . $item->extension;
+                $images[$index]['src'] = Helper::readImage($imageName, "acs");
                 $images[$index]['name'] = $imageName;
                 $data[0]->images = $images;
             }
-        }
-        if (!empty($data[0]->brd_img)) {
-            $brdImageName = $data[0]->brd_id . "." . $data[0]->brd_img;
-            $brdImage['src'] = Helper::readImage($brdImageName, "brd");;
-            $brdImage['name'] = $brdImageName;
-            $data[0]->brdImage = $brdImage;
         }
         return $data;
     }
 
     /** INSERT
-    {  
-       "seri_no":"99999",
-       "name":"xxxxx",
-       "branch":"xxxxx",
-       "model":"xxxxx",
-       "detail":"xxxxx",
-       "type_id":"9999",
-       "images":{ 
-             "0":{  
-                "temp_name":"xxxxxxxx",
-                "extension":"xxxxxxxx"
-             },
-             "1":{  
-                "temp_name":"xxxxxxxx",
-                "extension":"xxxxxxxx"
-             }
-          }
-       }
+    {
+    "seri_no":"99999",
+    "name":"xxxxx",
+    "branch":"xxxxx",
+    "model":"xxxxx",
+    "detail":"xxxxx",
+    "type_id":"9999",
+    "images":{
+    "0":{
+    "temp_name":"xxxxxxxx",
+    "extension":"xxxxxxxx"
+    },
+    "1":{
+    "temp_name":"xxxxxxxx",
+    "extension":"xxxxxxxx"
     }
-    */
+    }
+    }
+    }
+     */
 
-    public function insertProduct($param) {
+    public function insertAccessory($param) {
         DB::beginTransaction();
         try {
 //            $seri_no = $this->generateCode();
-            $id = DB::table('product')->insertGetId(
+            $id = DB::table('accessory')->insertGetId(
                 [
-                    'prd_name'=> $param['name'],
-                    'brd_id'=>$param['brd_id'],
-                    'prd_model'=>!empty($param['prd_model'])? $param['prd_model'] : null,
-                    'prd_note'=>!empty($param['prd_note'])? $param['prd_note'] : null,
-                    'type_id'=>!empty($param['type_id'])? $param['type_id'] : null,
+                    'acs_name'=> $param['acs_name'],
+                    'acs_quantity'=>!empty($param['acs_quantity'])? $param['acs_quantity'] : '0',
+                    'acs_note'=>!empty($param['acs_note'])? $param['acs_note'] : null,
+                    'acs_type_id'=>!empty($param['acs_type_id'])? $param['acs_type_id'] : null,
+                    'acs_unit'=>!empty($param['acs_unit'])? $param['acs_unit'] : null,
                     'delete_flg'=>'0',
                     'inp_date'=>date('Y-m-d H:i:s'),
                     'upd_date'=>date('Y-m-d H:i:s'),
@@ -167,7 +154,7 @@ class Product implements JWTSubject
             );
             foreach ($param['images'] as $element=>$image) {
                 if ($element === "delete") continue;
-                $this->insertProductImage($id,$image['extension'], $image['temp_name']);
+                $this->insertAccessoryImage($id,$image['extension'], $image['temp_name']);
             }
 
             DB::commit();
@@ -177,12 +164,12 @@ class Product implements JWTSubject
         }
     }
 
-    public function insertProductImage($proId, $extension, $temp_name) {
+    public function insertAccessoryImage($acsId, $extension, $temp_name) {
         DB::beginTransaction();
         try {
             $id = DB::table('product_image')->insertGetId(
                 [
-                    'prd_id'=>$proId,
+                    'acs_id'=>$acsId,
                     'extension'=>$extension,
                     'delete_flg'=>'0',
                     'inp_date'=>date('Y-m-d H:i:s'),
@@ -191,8 +178,8 @@ class Product implements JWTSubject
                     'upd_user'=>$this->CONST_USER
                 ]
             );
-            $rederImageName = $proId . '-' . $id . '.' . $extension;
-            Helper::saveOriginalImage($temp_name, $rederImageName, 'prd');
+            $rederImageName = $acsId . '-' . $id . '.' . $extension;
+            Helper::saveOriginalImage($temp_name, $rederImageName, 'acs');
             DB::commit();
         } catch(\Throwable $e) {
             DB::rollback();
@@ -202,51 +189,51 @@ class Product implements JWTSubject
 
     /** Update
     {
-       "id":"99999",
-       "seri_no":"99999",
-       "name":"xxxxx",
-       "branch":"xxxxx",
-       "model":"xxxxx",
-       "detail":"xxxxx",
-       "type_id":"9999",
-       "images":{  
-          "delete":{  
-             "0":"image_id",
-             "1":"image_id"
-          },
-          "insert":{  
-             "0":{  
-                "temp_name":"xxxxxxxx",
-                "extension":"xxxxxxxx"
-             },
-             "1":{  
-                "temp_name":"xxxxxxxx",
-                "extension":"xxxxxxxx"
-             }
-          }
-       }
+    "id":"99999",
+    "seri_no":"99999",
+    "name":"xxxxx",
+    "branch":"xxxxx",
+    "model":"xxxxx",
+    "detail":"xxxxx",
+    "type_id":"9999",
+    "images":{
+    "delete":{
+    "0":"image_id",
+    "1":"image_id"
+    },
+    "insert":{
+    "0":{
+    "temp_name":"xxxxxxxx",
+    "extension":"xxxxxxxx"
+    },
+    "1":{
+    "temp_name":"xxxxxxxx",
+    "extension":"xxxxxxxx"
+    }
+    }
+    }
     }
 
-    */
+     */
 
-    public function updateProduct($param) {
+    public function updateAccessory($param) {
         DB::beginTransaction();
         try {
-            DB::table('product')->where('prd_id','=',$param['id'])
+            DB::table('accessory')->where('acs_id','=',$param['id'])
                 ->update([
-                    'prd_name'=>$param['name'],
-                    'brd_id'=>!empty($param['brd_id']) ? $param['brd_id'] : null,
-                    'prd_model'=>!empty($param['prd_model']) ? $param['prd_model'] : null,
-                    'prd_note'=>!empty($param['prd_note']) ? $param['prd_note'] : null,
-                    'type_id'=>!empty($param['type_id']) ? $param['type_id'] : null,
+                    'acs_name'=>$param['acs_name'],
+                    'acs_note'=>!empty($param['acs_note']) ? $param['acs_note'] : null,
+                    'acs_type_id'=>!empty($param['acs_type_id']) ? $param['acs_type_id'] : null,
+                    'acs_quantity'=>!empty($param['acs_quantity']) ? $param['acs_quantity'] : 0,
+                    'acs_unit'=>!empty($param['acs_unit']) ? $param['acs_unit'] : null,
                     'upd_date'=>date('Y-m-d H:i:s')
                 ]);
             if (!empty($param['images']['delete'])) {
-                $this->deleteProductImage($param['images']['delete']);
+                $this->deleteAccessoryImage($param['images']['delete']);
             }
             if (!empty($param['images']['insert'])) {
                 foreach ($param['images']['insert'] as $image) {
-                    $this->insertProductImage($param['id'],$image['extension'],$image['temp_name']);
+                    $this->insertAccessoryImage($param['id'],$image['extension'],$image['temp_name']);
                 }
             }
             DB::commit();
@@ -256,18 +243,18 @@ class Product implements JWTSubject
         }
     }
 
-    public function deleteProductImage($id = null, $prdId = null) {
+    public function deleteAccessoryImage($id = null, $acsId = null) {
         DB::beginTransaction();
         try {
             if ($id && is_array($id)) {
-                DB::table('product_image')->whereIn('prd_img_id', $id)
+                DB::table('product_image')->whereIn('acs_img_id', $id)
                     ->update([
                         'delete_flg'=>'1',
                         'upd_date'=>date('Y-m-d H:i:s')
                     ]);
             }
-            if ($prdId && is_array($prdId)) {
-                DB::table('product_image')->whereIn('prd_id', $prdId)
+            if ($acsId && is_array($acsId)) {
+                DB::table('product_image')->whereIn('acs_id', $acsId)
                     ->update([
                         'delete_flg'=>'1',
                         'upd_date'=>date('Y-m-d H:i:s')
@@ -280,16 +267,16 @@ class Product implements JWTSubject
         }
     }
 
-    public function deleteProduct($id) {
+    public function deleteAccessory($id) {
         DB::beginTransaction();
         try {
             if ($id && is_array($id)) {
-                DB::table('product')->whereIn('prd_id', $id)
+                DB::table('accessory')->whereIn('acs_id', $id)
                     ->update([
                         'delete_flg'=>'1',
                         'upd_date'=>date('Y-m-d H:i:s')
                     ]);
-                $this->deleteProductImage(null,$id);
+                $this->deleteAccessoryImage(null,$id);
             }
             DB::commit();
         } catch(\Throwable $e) {
@@ -298,11 +285,11 @@ class Product implements JWTSubject
         }
     }
 
-    public function getAllProductType() {
+    public function getAllAccessoryType() {
         try {
             $product_type = DB::table("product_type")
                 ->select("prd_type_id as id","prd_type_name as name_type")
-                ->where("prd_type_flg",'=','1')
+                ->where("prd_type_flg",'=','2')
                 ->get();
         } catch(\Throwable $e) {
             throw $e;
@@ -313,57 +300,45 @@ class Product implements JWTSubject
     public function makeWhereRaw($search = [])
     {
         $params = [0];
-        $where_raw = "where product.delete_flg = ? ";
+        $where_raw = "where accessory.delete_flg = ? ";
         if (sizeof($search) > 0) {
             if (!empty($search['contain']) || !empty($search['notcontain'])) {
                 if(!empty($search['contain'])){
                     $search_val = "%" . $search['contain'] . "%";
                     $where_raw .= " AND (";
-                    $where_raw .= "product.prd_name like ?";
+                    $where_raw .= "accessory.acs_name like ?";
                     $params[] = $search_val;
-                    $where_raw .= " OR product.prd_model like ?";
+                    $where_raw .= " OR accessory.acs_note like ?";
                     $params[] = $search_val;
-                    $where_raw .= " OR product.prd_note like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR product.type_id like ?";
+                    $where_raw .= " OR accessory.acs_type_id like ?";
                     $params[] = $search_val;
                     $where_raw .= " ) ";
                 }
                 if(!empty($search['notcontain'])){
                     $search_val = "%" . $search['notcontain'] . "%";
                     $where_raw .= " AND (";
-                    $where_raw .= "product.prd_name not like ?";
+                    $where_raw .= "accessory.acs_name not like ?";
                     $params[] = $search_val;
-                    $where_raw .= " OR product.prd_model not like ?";
+                    $where_raw .= " OR accessory.acs_note not like ?";
                     $params[] = $search_val;
-                    $where_raw .= " OR product.prd_note not like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR product.type_id not like ?";
+                    $where_raw .= " OR accessory.acs_type_id not like ?";
                     $params[] = $search_val;
                     $where_raw .= " ) ";
                 }
 
             } else {
                 $where_raw_tmp = [];
-                if (!empty($search['prd_name'])) {
-                    $where_raw_tmp[] = "product.prd_name = ?";
-                    $params[] = $search['prd_name'];
+                if (!empty($search['acs_name'])) {
+                    $where_raw_tmp[] = "accessory.acs_name = ?";
+                    $params[] = $search['acs_name'];
                 }
-                if (!empty($search['prd_model'])) {
-                    $where_raw_tmp[] = "product.prd_model = ?";
-                    $params[] = $search['prd_model'];
-                }
-                if (!empty($search['prd_note'])) {
-                    $where_raw_tmp[] = "product.prd_note = ?";
-                    $params[] = $search['prd_note'];
+                if (!empty($search['acs_note'])) {
+                    $where_raw_tmp[] = "accessory.acs_note = ?";
+                    $params[] = $search['acs_note'];
                 }
                 if (!empty($search['type_id'])) {
-                    $where_raw_tmp[] = "product.type_id = ?";
+                    $where_raw_tmp[] = "accessory.acs_type_id = ?";
                     $params[] = $search['type_id'];
-                }
-                if (!empty($search['brd_id'])) {
-                    $where_raw_tmp[] = "product.brd_id = ?";
-                    $params[] = $search['brd_id'];
                 }
                 if (sizeof($where_raw_tmp) > 0) {
                     $where_raw .= " AND ( " . implode(" OR ", $where_raw_tmp) . " )";
@@ -376,7 +351,7 @@ class Product implements JWTSubject
     public function getPagingInfo($sort = '', $search = []) {
         try {
             $rows_per_page = env('ROWS_PER_PAGE', 10);
-            $rows_num = $this->countAllProduct($sort,$search);
+            $rows_num = $this->countAllAccessory($sort,$search);
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -387,10 +362,10 @@ class Product implements JWTSubject
         ];
     }
 
-    public function getPagingInfoDetailProductWithConditionSearch($sort = '', $search = []) {
+    public function getPagingInfoDetailAccessoryWithConditionSearch($sort = '', $search = []) {
         try {
             $rows_per_page = 1;
-            $rows_num = $this->countAllProduct($sort,$search);
+            $rows_num = $this->countAllAccessory($sort,$search);
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -401,7 +376,7 @@ class Product implements JWTSubject
         ];
     }
 
-    public function countAllProduct($sort, $search)
+    public function countAllAccessory($sort, $search)
     {
         try {
             list($where_raw,$params) = $this->makeWhereRaw($search);
@@ -409,12 +384,12 @@ class Product implements JWTSubject
             $count = DB::select("
                 SELECT count(*) as count from (
                     SELECT *
-                    FROM product $where_raw 
-                ORDER BY $field_name $order_by ) product
+                    FROM accessory $where_raw 
+                ORDER BY $field_name $order_by ) accessory
                 LEFT JOIN product_type product_type ON 
-                product.type_id = product_type.prd_type_id
+                accessory.acs_type_id = product_type.prd_type_id
                 LEFT JOIN product_image product_image ON
-                product_image.prd_img_id = (select prd_img_id from product_image as pis where product.prd_id = pis.prd_id limit 1) 
+                product_image.prd_img_id = (select prd_img_id from product_image as pis where accessory.acs_id = pis.acs_id limit 1) 
                 ", $params);
             $count = $count[0]->count;
         } catch (\Throwable $e) {
@@ -425,7 +400,7 @@ class Product implements JWTSubject
 
     private function makeOrderBy($sort)
     {
-        $field_name = 'product.prd_id';
+        $field_name = 'accessory.acs_name';
         $order_by = 'asc';
         if ($sort != '') {
             $sort_info = explode('_', $sort);
