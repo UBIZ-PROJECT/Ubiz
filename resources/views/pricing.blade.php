@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/common.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/customer.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('css/pricing.css') }}">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 @endsection
 @section('headbar')
     @section('search')
@@ -392,7 +393,7 @@
 								
 							<div class="row z-mgl z-mgr" style="margin-top:30px;border:1px solid #f1f1f1;width:98%; padding:10px">
 								<h3 style="color:#194078"><b>Bơm:<b></h3>
-								<table class="pro-table">
+								<table class="pro-table" id="p_tab">
 									<tr>
 										<th>STT</th>
 										<th>Thông số kĩ thuật</th>
@@ -402,9 +403,10 @@
 										<th>Trạng thái</th>
 										<th>Đơn giá (VNĐ)</th>
 										<th>Thành tiền (VNĐ)</th>
+										<th>Xóa</th>
 									</tr>
 									<tr>
-										<td>1</td>
+										<td class="index_no">1</td>
 										<td><textarea size="5" name="specs" class="inp-specs"></textarea></td>
 										<td><input type="text" name="unit" class="inp70"/></td>
 										<td><input type="text" name="amount" class="inp70"/></td>
@@ -415,17 +417,18 @@
 												<option>Order</option>
 											</select>
 										</td>
-										<td><input type="text" name="price" class="inp150"/></td>
-										<td><input type="text" name="total" class="inp150"/></td>
+										<td><input type="text" name="price" class="inp100"/></td>
+										<td><input type="text" name="total" class="inp130"/></td>
+										<td><a href="#" class="delete_p_row"><i class="far fa-trash-alt" style="color:red"></i></a></td>
 									</tr>
 								</table>
 							</div>
 							
-							<div id="add-pump" style="margin-top:30px" class="btn-a" onclick="">Thêm bơm</div>
+							<div id="add-pump" style="margin-top:30px" class="btn-a" onclick="jQuery.UbizOIWidget.w_add_p_row()">Thêm bơm</div>
 						
 							<div class="row z-mgl z-mgr" style="margin-top:30px;border:1px solid #f1f1f1;width:98%; padding:10px">
 								<h3 style="color:#194078"><b>Phụ tùng:<b></h3>
-								<table class="pro-table">
+								<table class="pro-table" id="f_tab">
 									<tr>
 										<th>STT</th>
 										<th>Mã</th>
@@ -436,9 +439,10 @@
 										<th>Trạng thái</th>
 										<th>Đơn giá (VNĐ)</th>
 										<th>Thành tiền (VNĐ)</th>
+										<th>Xóa</th>
 									</tr>
 									<tr>
-										<td>1</td>
+										<td class="index_f_no">1</td>
 										<td><input type="text" name="as_id" class="inp70"/></td>
 										<td><input type="text" name="as_name" class="inp130"/></td>
 										<td><input type="text" name="as_unit" class="inp70"/></td>
@@ -450,12 +454,13 @@
 												<option>Order</option>
 											</select>
 										</td>
-										<td><input type="text" name="price" class="inp150"/></td>
-										<td><input type="text" name="total" class="inp150"/></td>
+										<td><input type="text" name="price" class="inp100"/></td>
+										<td><input type="text" name="total" class="inp110"/></td>
+										<td><a href="#" class="delete_f_row"><i class="far fa-trash-alt" style="color:red"></i></a></td>
 									</tr>
 								</table>
 								
-								<div id="add-accessory" style="margin-top:30px" class="btn-a" onclick="">Thêm phụ tùng</div>
+								<div id="add-accessory" style="margin-top:30px" class="btn-a" onclick="jQuery.UbizOIWidget.w_add_f_row()">Thêm phụ tùng</div>
 							</div>
 						</form>
                     </div>

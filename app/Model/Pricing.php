@@ -62,22 +62,23 @@ class Pricing implements JWTSubject
     public function getPricingProduct($pri_id)
     {
         $pricingProduct = DB::table('pricing_product')
-							->leftJoin('product', 'pricing_product.pro_id', '=', 'product.id')
-							->select('pricing_product.*', 'product.*')
+							//->leftJoin('product', 'pricing_product.pro_id', '=', 'product.id')
+							//->select('pricing_product.*', 'product.*')
+                            ->select('pricing_product.*')
 							->where('pri_id', $pri_id)
 							->where('pricing_product.delete_flg', '0')
-							->where('product.delete_flg', '0')
+// 							->where('product.delete_flg', '0')
 							->get();
 
-		foreach($pricingProduct as $key => $product){
-			$productImgData = DB::table('product_image')
-							->where('prd_id', $product->id)
-							->where('delete_flg', '0')
-							->limit(1)
-							->get();
-			$productImg = $productImgData[0]->prd_id.'-'.$productImgData[0]->id.'.'.$productImgData[0]->extension;
-			$pricingProduct[$key]->pro_img = Helper::readImage($productImg, 'prd');
-		}
+// 		foreach($pricingProduct as $key => $product){
+// 			$productImgData = DB::table('product_image')
+// 							->where('prd_id', $product->id)
+// 							->where('delete_flg', '0')
+// 							->limit(1)
+// 							->get();
+// 			$productImg = $productImgData[0]->prd_id.'-'.$productImgData[0]->id.'.'.$productImgData[0]->extension;
+// 			$pricingProduct[$key]->pro_img = Helper::readImage($productImg, 'prd');
+// 		}
         return $pricingProduct;
     }
 	

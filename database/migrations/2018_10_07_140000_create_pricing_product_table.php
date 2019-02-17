@@ -14,10 +14,17 @@ class CreatePricingProductTable extends Migration
     public function up()
     {
         Schema::create('pricing_product', function (Blueprint $table) {
-            $table->integer('pro_id');
+            $table->increments('pro_id');
 			$table->integer('pri_id');
+			$table->char('type', 1);
+			$table->string('code', 5);
+			$table->string('name', 100);
+			$table->integer('price');
+			$table->string('unit', 20);
 			$table->integer('amount');
 			$table->string('detail');
+			$table->timestamp('delivery_date');
+			$table->char('status', 1);
             $table->char('delete_flg', 1)->default('0');
             $table->timestamp('inp_date');
             $table->integer('inp_user');

@@ -20,6 +20,10 @@
 	width: 100px;
 }
 
+.inp110{
+	width: 110px;
+}
+
 .inp130{
 	width: 130px;
 }
@@ -27,4 +31,8 @@
 .inp-specs{
 	width: 200px;
 	height: 100px;
+}
+
+.pro-table{
+	width: 800px;
 }
