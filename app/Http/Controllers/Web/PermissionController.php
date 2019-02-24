@@ -12,7 +12,16 @@ class PermissionController extends Controller
     public function index(Request $request)
     {
         try {
-            return view('permission');
+            $permission = new Permission();
+            $departments = $permission->getAllDepartment();
+            $screens = $permission->getAllScreen();
+            $permissions = $permission->getDepPermissions($departments[0]->id, $screens[0]->scr_id);
+            return view('permission', [
+                'departments' => $departments,
+                'screens' => $screens,
+                'permissions' => $permissions,
+                'for' => 'department'
+            ]);
         } catch (\Throwable $e) {
             throw $e;
         }

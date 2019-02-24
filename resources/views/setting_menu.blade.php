@@ -50,7 +50,7 @@ if (!isset($currency)) {
                             <div class="xT">
                                 <div class="oQ">
                                     <i class="material-icons">
-                                        verified_user
+                                        security
                                     </i>
                                 </div>
                             </div>
