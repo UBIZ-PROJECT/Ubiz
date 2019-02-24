@@ -253,14 +253,6 @@ function format_date(val, format){
     return f_date;
 }
 
-function i_focus(self){
-    jQuery(self).closest('div.wrapper').addClass('ifc');
-}
-
-function i_blur(self){
-    jQuery(self).closest('div.wrapper').removeClass('ifc');
-}
-
 jQuery.fn.forceNumeric = function () {
     return this.each(function () {
         $(this).keydown(function (e) {
