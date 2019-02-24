@@ -197,6 +197,7 @@
                                                     @if($for == 'user')
                                                         <td class="cst-col-2">
                                                             <input name="usr_allow" class="chk"
+                                                                   pkey="{{ $permission->pkey }}"
                                                                    dep_id="{{ $permission->dep_id }}"
                                                                    scr_id="{{ $permission->scr_id }}"
                                                                    fnc_id="{{ $permission->fnc_id }}"
@@ -213,6 +214,7 @@
                                                     @else
                                                         <td class="cst-col-2">
                                                             <input name="dep_allow" class="chk"
+                                                                   pkey="{{ $permission->pkey }}"
                                                                    dep_id="{{ $permission->dep_id }}"
                                                                    scr_id="{{ $permission->scr_id }}"
                                                                    fnc_id="{{ $permission->fnc_id }}"

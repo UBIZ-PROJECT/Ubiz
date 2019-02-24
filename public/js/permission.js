@@ -199,13 +199,8 @@
                         dep_allow_checked = 'checked';
                     }
 
-                    dep_id = "{{ $permission->dep_id }}"
-                    scr_id = "{{ $permission->scr_id }}"
-                    fnc_id = "{{ $permission->fnc_id }}"
-                    usr_id = "{{ $permission->usr_id }}"
-
                     tbl_tbody += "<td class='cst-col-2'>";
-                    tbl_tbody += "<input name='usr_allow' class='chk' dep_id='" + permissions[i].dep_id + "' scr_id='" + permissions[i].scr_id + "' fnc_id='" + permissions[i].fnc_id + "' usr_id='" + permissions[i].usr_id + "' type='checkbox' " + usr_allow_checked + ">";
+                    tbl_tbody += "<input name='usr_allow' class='chk' pkey='" + permissions[i].pkey + "' dep_id='" + permissions[i].dep_id + "' scr_id='" + permissions[i].scr_id + "' fnc_id='" + permissions[i].fnc_id + "' usr_id='" + permissions[i].usr_id + "' type='checkbox' " + usr_allow_checked + ">";
                     tbl_tbody += "</td>";
                     tbl_tbody += "<td class='cst-col-3'>";
                     tbl_tbody += "<input disabled name='dep_allow' class='chk' dep_id='" + permissions[i].dep_id + "' scr_id='" + permissions[i].scr_id + "' fnc_id='" + permissions[i].fnc_id + "' type='checkbox'" + dep_allow_checked + ">";
@@ -216,7 +211,7 @@
                         dep_allow_checked = 'checked';
                     }
                     tbl_tbody += "<td class='cst-col-2'>";
-                    tbl_tbody += "<input name='dep_allow' class='chk' dep_id='" + permissions[i].dep_id + "' scr_id='" + permissions[i].scr_id + "' fnc_id='" + permissions[i].fnc_id + "' type='checkbox'" + dep_allow_checked + ">";
+                    tbl_tbody += "<input name='dep_allow' class='chk' pkey='" + permissions[i].pkey + "' dep_id='" + permissions[i].dep_id + "' scr_id='" + permissions[i].scr_id + "' fnc_id='" + permissions[i].fnc_id + "' type='checkbox'" + dep_allow_checked + ">";
                     tbl_tbody += "</td>";
                     tbl_tbody += "<td class='cst-col-3'>&nbsp;</td>";
                 }
@@ -237,12 +232,14 @@
             var usr_allows = fnc_ctn.find('input[name=usr_allow]');
             if (usr_allows.length > 0) {
                 usr_allows.each(function (index) {
+                    var id = $(this).attr('pkey');
                     var dep_id = $(this).attr('dep_id');
                     var scr_id = $(this).attr('scr_id');
                     var fnc_id = $(this).attr('fnc_id');
                     var usr_id = $(this).attr('usr_id');
                     var usr_allow = $(this).is(':checked') ? '1' : '0';
                     form_data.push({
+                        'id': id,
                         'dep_id': dep_id,
                         'scr_id': scr_id,
                         'fnc_id': fnc_id,
@@ -254,11 +251,13 @@
                 var dep_allows = fnc_ctn.find('input[name=dep_allow]');
                 if (dep_allows.length > 0) {
                     dep_allows.each(function (index) {
+                        var id = $(this).attr('pkey');
                         var dep_id = $(this).attr('dep_id');
                         var scr_id = $(this).attr('scr_id');
                         var fnc_id = $(this).attr('fnc_id');
                         var dep_allow = $(this).is(':checked') ? '1' : '0';
                         form_data.push({
+                            'id': id,
                             'dep_id': dep_id,
                             'scr_id': scr_id,
                             'fnc_id': fnc_id,

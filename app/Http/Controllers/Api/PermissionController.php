@@ -12,8 +12,16 @@ class PermissionController extends Controller
 {
     public function setPermissions(Request $request)
     {
-        $b = $request->getContent();
-        $a='';
+        try {
+
+            $data = $request->json()->all();
+
+            $permission = new Permission();
+            $permission->setPermissions($data);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['permissions' => $permissions, 'success' => true, 'message' => ''], 200);
     }
 
     public function getDepPermissions($dep_id, $scr_id, Request $request)

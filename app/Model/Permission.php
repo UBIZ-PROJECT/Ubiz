@@ -8,6 +8,46 @@ use App\User;
 class Permission
 {
 
+    public function setPermissions($data)
+    {
+        DB::beginTransaction();
+        try {
+
+            $user_id = \Auth::user()->id;
+            foreach ($data as $permission) {
+                if (isset($permission['dep_allow']) && !isset($permission['usr_allow'])) {
+                    DB::select(
+                        DB::raw("call proc_setDepPermission(?,?,?,?,?,?)"),
+                        [
+                            $permission['id'],
+                            $permission['dep_id'],
+                            $permission['scr_id'],
+                            $permission['fnc_id'],
+                            $user_id,
+                            $permission['dep_allow']
+                        ]
+                    );
+                } else {
+                    DB::select(
+                        DB::raw("call proc_setUsrPermission(?,?,?,?,?,?)"),
+                        [
+                            $permission['id'],
+                            $permission['dep_id'],
+                            $permission['scr_id'],
+                            $permission['fnc_id'],
+                            $permission['usr_id'],
+                            $permission['dep_allow']
+                        ]
+                    );
+                }
+            }
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
     public function getAllDepartment()
     {
         try {
