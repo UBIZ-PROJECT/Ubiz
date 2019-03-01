@@ -383,6 +383,7 @@
 									@include('components.input',['type'=>'disabled', 'control_id'=>'cus_code', 'label'=>'Mã'])
 									@include('components.input',['type'=>'disabled', 'control_id'=>'cus_name', 'label'=>'Tên khách hàng'])
 									@include('components.input',['type'=>'disabled', 'control_id'=>'cus_type', 'label'=>'Loại khách hàng'])
+									@include('components.input',['type'=>'required', 'control_id'=>'exp_date', 'label'=>'Ngày hết hạn', 'length'=>10])
 								</div>
 								<div class="col-sm-5 col-md-5 col-xl-5 z-pdr cus-part-2">
 									@include('components.input',['type'=>'disabled', 'control_id'=>'cus_phone', 'label'=>'Số điện thoại'])
@@ -392,7 +393,7 @@
 							</div>
 								
 							<div class="row z-mgl z-mgr" style="margin-top:30px;border:1px solid #f1f1f1;width:98%; padding:10px">
-								<h3 style="color:#194078"><b>Bơm:<b></h3>
+								<h3 style="color:#194078;width:100%"><b>Bơm:<b></h3>
 								<table class="pro-table" id="p_tab">
 									<tr>
 										<th>STT</th>
@@ -407,18 +408,18 @@
 									</tr>
 									<tr>
 										<td class="index_no">1</td>
-										<td><textarea size="5" name="specs" class="inp-specs"></textarea></td>
-										<td><input type="text" name="unit" class="inp70"/></td>
-										<td><input type="text" name="amount" class="inp70"/></td>
-										<td><input type="text" name="delivery_date" class="inp100"/></td>
+										<td><textarea size="5" name="new_p_specs[]" class="inp-specs"></textarea></td>
+										<td><input type="text" name="new_p_unit[]" class="inp70"/></td>
+										<td><input type="text" name="new_p_amount[]" class="inp70"/></td>
+										<td><input type="text" name="new_p_delivery_date[]" class="inp100"/></td>
 										<td>
 											<select name="status" class="inp100">
-												<option selected>Sẵn có</option>
-												<option>Order</option>
+												<option value="1" selected>Sẵn có</option>
+												<option value="0">Order</option>
 											</select>
 										</td>
-										<td><input type="text" name="price" class="inp100"/></td>
-										<td><input type="text" name="total" class="inp130"/></td>
+										<td><input type="text" name="new_p_price[]" class="inp100"/></td>
+										<td><input type="text" name="new_p_total[]" class="inp130"/></td>
 										<td><a href="#" class="delete_p_row"><i class="far fa-trash-alt" style="color:red"></i></a></td>
 									</tr>
 								</table>
@@ -427,7 +428,7 @@
 							<div id="add-pump" style="margin-top:30px" class="btn-a" onclick="jQuery.UbizOIWidget.w_add_p_row()">Thêm bơm</div>
 						
 							<div class="row z-mgl z-mgr" style="margin-top:30px;border:1px solid #f1f1f1;width:98%; padding:10px">
-								<h3 style="color:#194078"><b>Phụ tùng:<b></h3>
+								<h3 style="color:#194078;width:100%"><b>Phụ tùng:<b></h3>
 								<table class="pro-table" id="f_tab">
 									<tr>
 										<th>STT</th>
@@ -443,25 +444,26 @@
 									</tr>
 									<tr>
 										<td class="index_f_no">1</td>
-										<td><input type="text" name="as_id" class="inp70"/></td>
-										<td><input type="text" name="as_name" class="inp130"/></td>
-										<td><input type="text" name="as_unit" class="inp70"/></td>
-										<td><input type="text" name="as_amount" class="inp70"/></td>
-										<td><input type="text" name="as_delivery_date" class="inp100"/></td>
+										<td><input type="text" name="new_f_code[]" class="inp70"/></td>
+										<td><input type="text" name="new_f_name[]" class="inp130"/></td>
+										<td><input type="text" name="new_f_unit[]" class="inp70"/></td>
+										<td><input type="text" name="new_f_amount[]" class="inp70"/></td>
+										<td><input type="text" name="new_f_delivery_date[]" class="inp100"/></td>
 										<td>
-											<select name="status" class="inp100">
-												<option selected>Sẵn có</option>
-												<option>Order</option>
+											<select name="new_f_status[]" class="inp100">
+												<option value="1" selected>Sẵn có</option>
+												<option value="0">Order</option>
 											</select>
 										</td>
-										<td><input type="text" name="price" class="inp100"/></td>
-										<td><input type="text" name="total" class="inp110"/></td>
+										<td><input type="text" name="new_f_price[]" class="inp100"/></td>
+										<td><input type="text" name="new_f_total[]" class="inp110"/></td>
 										<td><a href="#" class="delete_f_row"><i class="far fa-trash-alt" style="color:red"></i></a></td>
 									</tr>
 								</table>
 								
 								<div id="add-accessory" style="margin-top:30px" class="btn-a" onclick="jQuery.UbizOIWidget.w_add_f_row()">Thêm phụ tùng</div>
 							</div>
+							<input type="hidden" name="pri_id" value=""/>
 						</form>
                     </div>
                 </div>

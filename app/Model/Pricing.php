@@ -68,6 +68,7 @@ class Pricing implements JWTSubject
 							->where('pri_id', $pri_id)
 							->where('pricing_product.delete_flg', '0')
 // 							->where('product.delete_flg', '0')
+                            ->orderBy('pricing_product.pro_id')
 							->get();
 
 // 		foreach($pricingProduct as $key => $product){
@@ -240,17 +241,47 @@ class Pricing implements JWTSubject
     }
 	
 	public function updatePricing($param) {
+// 	    print_r($param->request);exit;
 		try {
-			DB::table('pricing')->where('cus_id', $param['cus_id'])->update(
+			DB::table('pricing')->where('pri_id', $param['pri_id'])->update(
 			  [
-				  'cus_id'=>$param['cus_id'],
-				  'user_id'=>$param['user_id'],
-				  'pri_date'=>$param['pri_date'],
+				  'user_id'=>'1',
 				  'exp_date'=>$param['exp_date'],
 				  'upd_date'=>now(),
 				  'upd_user'=>'1'
 			  ]
 			);
+			
+			foreach($param->pro_id as $key => $pro_id){
+			    if($param->type[$key] == '1'){
+			        DB::table('pricing_product')->where('pro_id', $param['pro_id'][$key])->update(
+			            [
+			                'price'=>str_replace('.','',$param['price'][$key]),
+			                'unit'=>$param['unit'][$key],
+			                'amount'=>$param['amount'][$key],
+			                'delivery_date'=>$param['delivery_date'][$key],
+			                'status'=>$param['status'][$key],
+			                'specs'=>$param['specs'][$key],
+			                'upd_date'=>now(),
+			                'upd_user'=>'1'
+			            ]
+			        );
+			    }else{
+			        DB::table('pricing_product')->where('pro_id', $param['pro_id'][$key])->update(
+			            [
+			                'price'=>str_replace('.','',$param['price'][$key]),
+			                'code'=>$param['code'][$key],
+			                'name'=>$param['name'][$key],
+			                'unit'=>$param['unit'][$key],
+			                'amount'=>$param['amount'][$key],
+			                'delivery_date'=>$param['delivery_date'][$key],
+			                'status'=>$param['status'][$key],
+			                'upd_date'=>now(),
+			                'upd_user'=>'1'
+			            ]
+			            );
+			    }
+			}
 			
 		} catch (\Throwable $e) {
             throw $e;

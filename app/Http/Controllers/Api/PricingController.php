@@ -67,17 +67,18 @@ class PricingController extends Controller
         try {
             $pricing = new Pricing();
             $pricing->insertPricing($request);
-			$pricings = $pricing->getPricing(0);
+            list($page, $sort, $search) = $this->getRequestData($request);
+            $pricingList = $pricing->getPricingList($page, $sort, $search);
             $paging = $pricing->getPagingInfo();
-            $paging['page'] = 0;
-			foreach($pricings as $key => $item){
-				$pricingProduct = $pricing->getPricingProduct($item->pri_id);
-				$pricings[$key]->product = $pricingProduct;
-			}
+            $paging['page'] = $page;
+            foreach($pricingList as $key => $item){
+                $pricingProducts = $pricing->getPricingProduct($item->cus_id);
+                $pricingList[$key]->product = $pricingProducts;
+            }
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['pricings' => $pricings, 'paging' => $paging, 'success' => true, 'message' => 'Xử lý thành công'], 200);
+        return response()->json(['pricingList' => $pricingList, 'paging' => $paging, 'success' => true, 'message' => 'Xử lý thành công'], 200);
     }
 	
 	public function updatePricing(Request $request)
@@ -85,17 +86,18 @@ class PricingController extends Controller
         try {
             $pricing = new Pricing();
             $pricing->updatePricing($request);
-			$pricings = $pricing->getPricing(0);
+            list($page, $sort, $search) = $this->getRequestData($request);
+            $pricingList = $pricing->getPricingList($page, $sort, $search);
             $paging = $pricing->getPagingInfo();
-            $paging['page'] = 0;
-			foreach($pricings as $key => $item){
-				$pricingProducts = $pricing->getCustomerAddress($item->cus_id);
-				$pricings[$key]->product = $pricingProducts;
-			}
+            $paging['page'] = $page;
+            foreach($pricingList as $key => $item){
+                $pricingProducts = $pricing->getPricingProduct($item->cus_id);
+                $pricingList[$key]->product = $pricingProducts;
+            }
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['pricings' => $pricings, 'paging' => $paging, 'success' => true, 'message' => 'Xử lý thành công'], 200);
+        return response()->json(['pricingList' => $pricingList, 'paging' => $paging, 'success' => true, 'message' => 'Xử lý thành công'], 200);
     }
 
     public function deletePricing($ids, Request $request)
@@ -103,7 +105,7 @@ class PricingController extends Controller
         try {
             $pricing = new Pricing();
             $pricing->deletePricing($ids);
-            $pricings = $pricing->getPricing(0);
+            $pricings = $pricing->getPricing($request->pri_id);
             $paging = $pricing->getPagingInfo();
             $paging['page'] = 0;
 			foreach($pricings as $key => $item){
