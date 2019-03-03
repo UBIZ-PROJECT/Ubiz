@@ -25,6 +25,9 @@ if (empty($class)) {
 if (empty($callback)) {
     $callback = 'jQuery.UbizOIWidget.w_callback_remove_image';
 }
+if (empty($label_class)) {
+    $label_class = "label-change";
+}
 
 ?>
 <div class='image-upload mb-1' style="width: {{$width}}px; height: {{$height}}px">
@@ -33,5 +36,5 @@ if (empty($callback)) {
     <button type="button" style="top: -{{$height}}px;" class="close" aria-label="Close" onclick="removeImage(this, {{$callback}})">
         <span aria-hidden="true">&times;</span>
     </button>
-    <span class="label-change" style="width: {{$width}}px;" onclick="openFileUpload(this)">{{ __("Change") }}</span>
+    <span class="{{$label_class}}" style="width: {{$width}}px;" onclick="openFileUpload(this)">{{ __("Change") }}</span>
 </div>

@@ -79,6 +79,8 @@ var lst_image_delete = [];
             });
         },
         w_create:function(){
+            jQuery.UbizOIWidget.i_page.find(".tb-keeper").css("display",'');
+            jQuery.UbizOIWidget.i_page.find(".tb-keeper").find("tbody").empty();
             jQuery.UbizOIWidget.w_clear_input_page();
             jQuery.UbizOIWidget.w_go_to_input_page(0);
         },
@@ -483,6 +485,7 @@ var lst_image_delete = [];
             jQuery.UbizOIWidget.w_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
         },
         w_render_data_to_input_page: function(response) {
+            jQuery.UbizOIWidget.w_clear_input_page();
             if (response == undefined || response.data == undefined || response.data.product.length <= 0) {
                 return;
             }
@@ -735,10 +738,9 @@ var lst_image_delete = [];
 })(jQuery);
 jQuery(document).ready(function () {
     jQuery.UbizOIWidget.w_init();
-    $('#dtVerticalScrollExample').DataTable({
-        "scrollY": "200px",
-        "scrollCollapse": true,
-    });
+    $('#addAcsKeeperModal').on('hide.bs.modal', function (e) {
+        clearKeeperModal();
+    })
 });
 
 function isEmpty(str) {
@@ -761,9 +763,32 @@ function getKeeper() {
     });
 }
 
+function copyKeeper(row) { /// chưa làm xong
+    var cloneNewRow = $(row).closest("tr").clone();
+    $(".tb-keeper").find("tbody").append(cloneNewRow);
+    reOrderStt();
+    var quantity =$(cloneNewRow).find(".quantity").html();
+    var keeper =$(cloneNewRow).find(".keeper").html();
+    var note=$(cloneNewRow).find(".note").html();
+    var params = {
+        quantity : quantity,
+        keeper: keeper,
+        note: note
+    };
+    params.acs_keeper_id= getAcsKeeperID();
+    params.acs_id= getAccessoryId();
+    insertKeeper(params);
+}
+
+function deleteKeeper(row) {
+    ubizapis('v1', '/keeper/'+ $(row).closest("tr").find(".acs_keeper_id").val() +'/delete', 'delete', null, null);
+    $(row).closest("tr").remove();
+    reOrderStt();
+}
+
 function writeKeeperToTable(accessoryKeeper) {
-    var copyButton = '<i class="fa fa-files-o" onclick="copySeries(this)"></i>';
-    var deleteButton = '<i class="fa fa-trash-o" onclick="deleteSeries(this)"></i>';
+    var copyButton = '<i class="fa fa-files-o" onclick="copyKeeper(this)"></i>';
+    var deleteButton = '<i class="fa fa-trash-o" onclick="deleteKeeper(this)"></i>';
     var html = '';
     for(var i = 0; i < accessoryKeeper.length; i++) {
         var acsKeeper = accessoryKeeper[i];
@@ -871,7 +896,7 @@ function openKeeperModal(row) {
     $("#addAcsKeeperModal").modal();
 }
 
-function clearSeriesModal() {
+function clearKeeperModal() {
     $("#addAcsKeeperModal #txt_quantity").val("");
     $("#addAcsKeeperModal #txt_keeper").val("");
     $("#addAcsKeeperModal #txt_note").val("");

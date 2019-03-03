@@ -101,7 +101,7 @@
 }
 
 #nicescroll-iput .list-keep-accessory {
-    height: 50%;
+    height: 40%;
     display: block;
     overflow-y: auto;
     -ms-overflow-style: -ms-autohiding-scrollbar;

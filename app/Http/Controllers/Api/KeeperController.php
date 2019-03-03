@@ -47,7 +47,7 @@ class KeeperController extends Controller
             $keeper = new Keeper();
             $keeper->updateKeeper($params);
         }
-        return response()->json(['message' => $message, 'method'=>'insert'], 200);
+        return response()->json(['message' => $message, 'method'=>'update'], 200);
     }
 
     public function deleteKeeper($id) {
@@ -56,6 +56,6 @@ class KeeperController extends Controller
             $keeper = new Keeper();
             $keeper->deleteKeeper($id);
         }
-        return response()->json(['message' => $message, 'method'=>'insert'], 200);
+        return response()->json(['message' => $message, 'method'=>'delete'], 200);
     }
 }

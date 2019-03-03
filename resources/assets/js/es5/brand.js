@@ -520,7 +520,7 @@ var is_image_delete = false;
             }
             var data = response.data.brand;
             var product_data = response.data.product;
-            initProduct(product_data, response.data.paging.page);
+            initProduct(product_data, response.data.paging_prd.page);
             jQuery.UbizOIWidget.page = response.data.paging_prd.page;
             jQuery.UbizOIWidget.w_paging(response.data.paging_prd.page, response.data.paging_prd.rows_num, response.data.paging_prd.rows_per_page);
 
@@ -1504,8 +1504,8 @@ function initProduct(data, page) {
         html+= '                                            </div>';
         html+= '                                            <div class="tcB col-5">';
         html+= '                                                <div class="cbo">';
-        html+= '                                                    <div class="nCj" title="'+prd.model+'">';
-        html+= '                                                        <span>'+prd.model+'</span>';
+        html+= '                                                    <div class="nCj" title="'+(isEmpty(prd.model) ? "" : prd.model) +'">';
+        html+= '                                                        <span>'+ (isEmpty(prd.model) ? "" : prd.model) +'</span>';
         html+= '                                                    </div>';
         html+= '                                                </div>';
         html+= '                                            </div>';

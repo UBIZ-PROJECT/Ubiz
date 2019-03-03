@@ -519,9 +519,9 @@
                         <div class="row z-mgl z-mgr">
                             <div class="col-sm-5 col-md-5 col-xl-5 z-pdl">
                                 <ul>
-                                    <li>@include('components.upload_image',['multiUpload'=>true,'width'=>'200', 'height'=>'200','callback'=> 'jQuery.UbizOIWidgetPrd.w_callback_remove_image'])</li>
-                                    <li>@include('components.upload_image',['multiUpload'=>true,'width'=>'200', 'height'=>'200','callback'=> 'jQuery.UbizOIWidgetPrd.w_callback_remove_image'])</li>
-                                    <li>@include('components.upload_image',['multiUpload'=>true,'width'=>'200', 'height'=>'200','callback'=> 'jQuery.UbizOIWidgetPrd.w_callback_remove_image'])</li>
+                                    <li>@include('components.upload_image',['label_class'=>'label-change-prd','multiUpload'=>true,'width'=>'120', 'height'=>'120','callback'=> 'jQuery.UbizOIWidgetPrd.w_callback_remove_image'])</li>
+                                    <li>@include('components.upload_image',['label_class'=>'label-change-prd','multiUpload'=>true,'width'=>'120', 'height'=>'120','callback'=> 'jQuery.UbizOIWidgetPrd.w_callback_remove_image'])</li>
+                                    <li>@include('components.upload_image',['label_class'=>'label-change-prd','multiUpload'=>true,'width'=>'120', 'height'=>'120','callback'=> 'jQuery.UbizOIWidgetPrd.w_callback_remove_image'])</li>
                                 </ul>
                             </div>
                             <div class="col-sm-3 col-md-3 col-xl-3">
@@ -541,27 +541,31 @@
 
 
                         </div>
-                        <table class="table tb-series">
-                            <thead>
-                                <tr>
-                                    <th colspan="5" class="text-left pl-0 border-0"><div class="lbl-primary font-weight-bold">Series</div></th>
-                                    <th class="text-right pr-0 border-0">
-                                        <div><input type="button" class="btn btn-primary" onclick="openSeriesModal()" data-target="#addSeriesModal" value="+"></div>
-                                    </th>
-                                </tr>
-                                <tr class="table-primary">
-                                    <th scope="col" class="col1">STT</th>
-                                    <th scope="col" class="col2">Số Series</th>
-                                    <th scope="col" class="col3">Ngày Nhập</th>
-                                    <th scope="col" class="col4">Giữ Hàng</th>
-                                    <th scope="col" class="col5">Ghi Chú</th>
-                                    <th scope="col" class="col6"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                            </tbody>
+                        <table class="title-series mt-5">
+                            <tr>
+                                <th class="text-left pl-0 border-0"><div class="lbl-primary font-weight-bold">Series</div></th>
+                                <th class="text-right pr-0 border-0 float-right">
+                                    <div><input type="button" class="btn btn-primary" onclick="openKeeperModal()" data-target="#addSeriesModal" value="+"></div>
+                                </th>
+                            </tr>
                         </table>
+                        <div class="tb-series-container mt-4">
+                            <table class="table tb-series">
+                                <thead>
+                                    <tr class="table-primary">
+                                        <th scope="col" class="col1">STT</th>
+                                        <th scope="col" class="col2">Số Series</th>
+                                        <th scope="col" class="col3">Ngày Nhập</th>
+                                        <th scope="col" class="col4">Giữ Hàng</th>
+                                        <th scope="col" class="col5">Ghi Chú</th>
+                                        <th scope="col" class="col6"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/headbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/common.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/product.css') }}">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 @endsection
 @section('headbar')
 @section('search')
@@ -539,7 +540,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    @include('components.input',['width'=>'250', 'control_id'=>'txt_keeper', 'label'=>__("Keeper"), 'length'=>100])
+                    @include('components.input',['width'=>'250', 'control_id'=>'txt_keeper', 'label'=>__("Nhân Viên"), 'length'=>100])
                     @include('components.input',['width'=>'250','type'=>'required', 'control_id'=>'txt_quantity', 'label'=>__("Số Lượng"), 'length'=>10])
                     @include('components.textarea',['width'=>'250', 'control_id'=>'txt_note', 'label'=>__('Note')])
                 </div>
