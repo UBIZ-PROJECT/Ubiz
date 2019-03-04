@@ -35,6 +35,22 @@
                 </div>
                 <div class="rvo">
                     <span class="yvo">
+                        <label for="code">Khách hàng</label>
+                    </span>
+                    <span class="avo">
+                        <input type="text" spellcheck="false" id="cus_name" value="" autocomplete="off">
+                    </span>
+                </div>
+                <div class="rvo">
+                    <span class="yvo">
+                        <label for="code">Sale</label>
+                    </span>
+                    <span class="avo">
+                        <input type="text" spellcheck="false" id="name" value="" autocomplete="off">
+                    </span>
+                </div>
+                <div class="rvo">
+                    <span class="yvo">
                         <label for="name">Ngày tạo<label>
                     </span>
                     <span class="avo">

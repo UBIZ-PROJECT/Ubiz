@@ -465,6 +465,14 @@
 							</div>
 							<input type="hidden" name="pri_id" value=""/>
 						</form>
+						
+						<div id="total_price" style="float:right; margin-right: 50px; color: #195BA8; font-weight: 500">
+                    		<p>Bơm A: 5.700.000 x 3 = 17.100.000 VNĐ</p>
+                    		<p>Phụ tùng 3: 1.300.000 x 2 = 2.600.000 VNĐ</p>
+                    		<h2 style="width:300px;border-bottom: 1px solid black"></h2>
+                    		<p>Tổng cộng: 19.700.000 VNĐ</p>
+                    		<div id="export_pdf" style="margin-top:30px" class="btn-a" onclick="">Xuất báo giá</div>
+                    	</div>
                     </div>
                 </div>
             </div>

@@ -252,35 +252,83 @@ class Pricing implements JWTSubject
 			  ]
 			);
 			
-			foreach($param->pro_id as $key => $pro_id){
-			    if($param->type[$key] == '1'){
-			        DB::table('pricing_product')->where('pro_id', $param['pro_id'][$key])->update(
-			            [
-			                'price'=>str_replace('.','',$param['price'][$key]),
-			                'unit'=>$param['unit'][$key],
-			                'amount'=>$param['amount'][$key],
-			                'delivery_date'=>$param['delivery_date'][$key],
-			                'status'=>$param['status'][$key],
-			                'specs'=>$param['specs'][$key],
-			                'upd_date'=>now(),
-			                'upd_user'=>'1'
-			            ]
-			        );
-			    }else{
-			        DB::table('pricing_product')->where('pro_id', $param['pro_id'][$key])->update(
-			            [
-			                'price'=>str_replace('.','',$param['price'][$key]),
-			                'code'=>$param['code'][$key],
-			                'name'=>$param['name'][$key],
-			                'unit'=>$param['unit'][$key],
-			                'amount'=>$param['amount'][$key],
-			                'delivery_date'=>$param['delivery_date'][$key],
-			                'status'=>$param['status'][$key],
-			                'upd_date'=>now(),
-			                'upd_user'=>'1'
-			            ]
-			            );
-			    }
+			if( !empty($param->pro_id) ){
+    			foreach($param->pro_id as $key => $pro_id){
+    			    if($param->type[$key] == '1'){
+    			        DB::table('pricing_product')->where('pro_id', $param['pro_id'][$key])->update(
+    			            [
+    			                'price'=>str_replace('.','',$param['price'][$key]),
+    			                'unit'=>$param['unit'][$key],
+    			                'amount'=>$param['amount'][$key],
+    			                'delivery_date'=>$param['delivery_date'][$key],
+    			                'status'=>$param['status'][$key],
+    			                'specs'=>$param['specs'][$key],
+    			                'upd_date'=>now(),
+    			                'upd_user'=>'1'
+    			            ]
+    			        );
+    			    }else{
+    			        DB::table('pricing_product')->where('pro_id', $param['pro_id'][$key])->update(
+    			            [
+    			                'price'=>str_replace('.','',$param['price'][$key]),
+    			                'code'=>$param['code'][$key],
+    			                'name'=>$param['name'][$key],
+    			                'unit'=>$param['unit'][$key],
+    			                'amount'=>$param['amount'][$key],
+    			                'delivery_date'=>$param['delivery_date'][$key],
+    			                'status'=>$param['status'][$key],
+    			                'upd_date'=>now(),
+    			                'upd_user'=>'1'
+    			            ]
+    			            );
+    			    }
+    			}
+			}
+			
+			//insert new product
+			$productArrInsert = array();
+			if( !empty($param->new_p_specs) ){
+    			foreach($param->new_p_specs as $key => $new_p_specs){
+    			    $productArrInsert[] = ['pri_id' => $param['pri_id'],
+    			                           'code'   => null,
+    			                           'name'   => null,
+    			                           'type'   => 1, 
+    			                           'price'  => str_replace('.','',$param['new_p_price'][$key]),
+    			                           'unit'   => $param['new_p_unit'][$key],
+    			                           'amount' => $param['new_p_amount'][$key],
+    			                           'delivery_date' => $param['new_p_delivery_date'][$key],
+    			                           'status' => $param['new_p_status'][$key],
+    			                           'specs'  => $new_p_specs,
+    			                           'inp_user' => 1,
+    			                           'inp_date' => date('Y-m-d'),
+                        			       'upd_user' => 1,
+    			                           'upd_date' => date('Y-m-d')
+    			    ];
+    			}
+			}
+			
+			if( !empty($param->new_f_code) ){
+    			foreach($param->new_f_code as $key => $new_f_code){
+    			    $productArrInsert[] = ['pri_id' => $param['pri_id'],
+    			                           'code'   => $param['new_f_code'][$key],
+    			                           'name'   => $param['new_f_name'][$key],
+                        			       'type'   => 2,
+    			                           'price'  => str_replace('.','',$param['new_f_price'][$key]),
+                        			       'unit'   => $param['new_f_unit'][$key],
+                        			       'amount' => $param['new_f_amount'][$key],
+                        			       'delivery_date' => $param['new_f_delivery_date'][$key],
+                        			       'status' => $param['new_f_status'][$key],
+                        			       'specs'  => null,
+    			                           'inp_user' => 1,
+    			                           'inp_date' => date('Y-m-d'),
+                        			       'upd_user' => 1,
+    			                           'upd_date' => date('Y-m-d')
+    			    ];
+    			}
+			}
+			
+			if( !empty($productArrInsert) ){
+			 DB::table('pricing_product')->insert($productArrInsert);
 			}
 			
 		} catch (\Throwable $e) {
@@ -291,76 +339,63 @@ class Pricing implements JWTSubject
 	public function makeWhereRaw($search = [])
     {
         $params = [0];
-        $where_raw = 'customer.delete_flg = ?';
+        $where_raw = 'pricing.delete_flg = ?';
         if (sizeof($search) > 0) {
             if (isset($search['contain']) || isset($search['notcontain'])) {
 
-                $search_val = "%" . $search['search'] . "%";
                 if(isset($search['contain'])){
+                    $search_val = "%" . $search['contain'] . "%";
                     $where_raw .= " AND (";
-                    $where_raw .= "customer.cus_code like ?'";
+                    $where_raw .= "pricing.pri_code like ?";
+                    $params[] = $search_val;
+                    $where_raw .= " OR pricing.pri_date like ?";
+                    $params[] = $search_val;
+					$where_raw .= " OR pricing.exp_date like ?";
                     $params[] = $search_val;
                     $where_raw .= " OR customer.cus_name like ?";
                     $params[] = $search_val;
-					$where_raw .= " OR customer.cus_type like ?";
-                    $params[] = $search_val;
-					$where_raw .= " OR customer.cus_fax like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR customer.cus_mail like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR customer.cus_phone like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR customer_address.address like ?";
+                    $where_raw .= " OR users.name like ?";
                     $params[] = $search_val;
                     $where_raw .= " ) ";
                 }
                 if(isset($search['notcontain'])){
-                    $where_raw .= "customer.cus_code not like ?'";
+                    $search_val = "%" . $search['notcontain'] . "%";
+                    $where_raw .= " AND (";
+                    $where_raw .= "pricing.pri_code not like ?";
+                    $params[] = $search_val;
+                    $where_raw .= " OR pricing.pri_date not like ?";
+                    $params[] = $search_val;
+                    $where_raw .= " OR pricing.exp_date not like ?";
                     $params[] = $search_val;
                     $where_raw .= " OR customer.cus_name not like ?";
                     $params[] = $search_val;
-					$where_raw .= " OR customer.cus_type not like ?";
+                    $where_raw .= " OR users.name not like ?";
                     $params[] = $search_val;
-					$where_raw .= " OR customer.cus_fax not like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR customer.cus_mail not like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR customer.cus_phone not like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR customer_address.cad_address not like ?";
-                    $params[] = $search_val;
+                    $where_raw .= " ) ";
                 }
 
             } else {
 
                 $where_raw_tmp = [];
-                if (isset($search['cus_code'])) {
-                    $where_raw_tmp[] = "customer.cus_code = ?";
-                    $params[] = $search['cus_code'];
+                if (isset($search['pri_code'])) {
+                    $where_raw_tmp[] = "pricing.pri_code = ?";
+                    $params[] = $search['pri_code'];
                 }
-                if (isset($search['cus_name'])) {
+                if (isset($search['pri_date'])) {
+                    $where_raw_tmp[] = "pricing.pri_date = ?";
+                    $params[] = $search['pri_date'];
+                }
+                if (isset($search['cus_mail'])) {
+                    $where_raw_tmp[] = "pricing.exp_date = ?";
+                    $params[] = $search['exp_date'];
+                }
+				if (isset($search['cus_type'])) {
                     $where_raw_tmp[] = "customer.cus_name = ?";
                     $params[] = $search['cus_name'];
                 }
-                if (isset($search['cus_mail'])) {
-                    $where_raw_tmp[] = "customer.cus_mail = ?";
-                    $params[] = $search['cus_mail'];
-                }
-				if (isset($search['cus_type'])) {
-                    $where_raw_tmp[] = "customer.cus_type = ?";
-                    $params[] = $search['cus_type'];
-                }
 				if (isset($search['cus_fax'])) {
-                    $where_raw_tmp[] = "customer.cus_fax = ?";
-                    $params[] = $search['cus_fax'];
-                }
-                if (isset($search['cus_phone'])) {
-                    $where_raw_tmp[] = "customer.cus_phone = ?";
-                    $params[] = $search['cus_phone'];
-                }
-                if (isset($search['address'])) {
-                    $where_raw_tmp[] = "customer_address.cad_address = ?";
-                    $params[] = $search['address'];
+                    $where_raw_tmp[] = "users.name = ?";
+                    $params[] = $search['name'];
                 }
                 if (sizeof($where_raw_tmp) > 0) {
                     $where_raw .= " AND ( " . implode(" OR ", $where_raw_tmp) . " )";

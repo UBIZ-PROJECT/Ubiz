@@ -107,16 +107,36 @@ var del_list = new Array();
             jQuery.UbizOIWidget.page = '0';
             jQuery.UbizOIWidget.w_search();
         },
+        w_update_search_form: function (search_info) {
+            jQuery.UbizOIWidget.w_clear_advance_search_form();
+            jQuery.each(search_info, function (key, val) {
+                var search_item = jQuery('#' + key);
+                if (search_item.length == 1) {
+                    search_item.val(val);
+                }
+            });
+        },
+        w_clear_advance_search_form: function () {
+            jQuery('#pri_code').val("");
+            jQuery('#cus_name').val("");
+            jQuery('#name').val("");
+            jQuery('#pri_date').val("");
+            jQuery('#exp_date').val("");
+            jQuery('#contain').val("");
+            jQuery('#notcontain').val("");
+        },
         w_fuzzy_search: function () {
-            var params = {};
+        	var params = {};
             params.page = '0';
             jQuery.UbizOIWidget.page = '0';
 
-            var fuzzy_val = jQuery('#fuzzy').val();
+            var fuzzy = jQuery('#fuzzy').val();
+            var search_info = jQuery.UbizOIWidget.w_convert_fuzzy_to_search_info(fuzzy);
+            jQuery.UbizOIWidget.w_update_search_form(search_info);
+            Object.assign(params, search_info);
+
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-
-            params.search = fuzzy_val;
             params.sort = sort;
 
             ubizapis('v1', '/pricing', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
@@ -126,6 +146,25 @@ var del_list = new Array();
             if (keycode == '13') {
                 jQuery.UbizOIWidget.w_fuzzy_search();
             }
+        },
+        w_convert_search_info_to_fuzzy: function (search_info) {
+            var fuzzy = JSON.stringify(search_info);
+            return fuzzy;
+        },
+        w_convert_fuzzy_to_search_info: function (fuzzy) {
+            var search_info = {};
+            try {
+                search_info = JSON.parse(fuzzy);
+            } catch (e) {
+                var fuzzy_info = fuzzy.split('-');
+                if (fuzzy_info.length == 1) {
+                    search_info.contain = fuzzy;
+                } else {
+                    fuzzy_info.shift();
+                    search_info.notcontain = fuzzy_info.join('-');
+                }
+            }
+            return search_info;
         },
         w_go_to_input_page: function (id, ele) {
 			if(id != 0){
@@ -297,10 +336,10 @@ var del_list = new Array();
 			
 //			console.log(pricing)
 			
+			$(".index_no").parent().remove();
+			$(".index_f_no").parent().remove();
 			if(pricing.product.length > 0){
 //				$(".pri_product\\[\\]_container").remove();
-				$(".index_no").parent().remove();
-				$(".index_f_no").parent().remove();
 				
 				var p_no = 0;
 				var f_no = 0;
@@ -341,6 +380,10 @@ var del_list = new Array();
 		    });
 		    
 		    $('input[name^="price["]').keyup(function(){
+		    	$(this).val(commaSeparateNumber($(this).val().replace(/\./g,'')));
+		    });
+		    
+		    $('input[name^="price["]').keyup(function(){
 		    	var key = $(this).attr('name').substring(6, 7);
 		    	var total = $('input[name="price['+key+']"]').val().replace(/\./g,'') * $('input[name="amount['+key+']"]').val();
 		    	$('input[name="total['+key+']"]').val(commaSeparateNumber(total));
@@ -351,6 +394,20 @@ var del_list = new Array();
 		    	var total = $('input[name="price['+key+']"]').val().replace(/\./g,'') * $('input[name="amount['+key+']"]').val();
 		    	$('input[name="total['+key+']"]').val(commaSeparateNumber(total));
 		    });
+		    
+		    
+		    //validate number
+		    $('input[name^="amount["]').inputFilter(function(value) {
+		    	  return /^-?\d*$/.test(value); 
+		    });
+		    
+//		    $('input[name^="price["]').inputFilter(function(value) {
+//		    	  return /^-?\d*$/.test(value); 
+//		    });
+//		    
+//		    $('input[name^="total["]').inputFilter(function(value) {
+//		    	  return /^-?\d*$/.test(value); 
+//		    });
 		    
 		    jQuery('#nicescroll-iput').getNiceScroll().resize();
 		},
@@ -545,7 +602,35 @@ var del_list = new Array();
 				});
 			});
 			
-			jQuery('#nicescroll-iput').getNiceScroll().resize();
+			$('input[name="new_p_price[]"]').keyup(function(){
+		    	$(this).val(commaSeparateNumber($(this).val().replace(/\./g,'')));
+		    });
+		    
+		    $('input[name="new_p_price[]"]').keyup(function(){
+		    	var total = $(this).val().replace(/\./g,'') * $(this).parent().parent().find('input[name="new_p_amount[]"]').val();
+		    	$(this).parent().parent().find('input[name="new_p_total[]"]').val(commaSeparateNumber(total));
+		    });
+		    
+		    $('input[name="new_p_amount[]"]').keyup(function(){
+		    	var total = $(this).parent().parent().find('input[name="new_p_price[]"]').val().replace(/\./g,'') * $(this).val();
+		    	$(this).parent().parent().find('input[name="new_p_total[]"]').val(commaSeparateNumber(total));
+		    });
+		    
+		    
+		    //validate number
+		    $('input[name="new_p_amount[]"]').inputFilter(function(value) {
+		    	  return /^-?\d*$/.test(value); 
+		    });
+		    
+//		    $('input[name="new_p_price[]"]').inputFilter(function(value) {
+//		    	  return /^-?\d*$/.test(value); 
+//		    });
+//		    
+//		    $('input[name="new_p_total[]"]').inputFilter(function(value) {
+//		    	  return /^-?\d*$/.test(value); 
+//		    });
+		    
+		    jQuery('#nicescroll-iput').getNiceScroll().resize();
 		},
 		w_add_f_row: function () {
 			$("#f_tab").append('<tr><td class="index_f_no">1</td><td><input type="text" name="new_f_code[]" class="inp70"/></td><td><input type="text" name="new_f_name[]" class="inp130"/></td><td><input type="text" name="new_f_unit[]" class="inp70"/></td><td><input type="text" name="new_f_amount[]" class="inp70"/></td><td><input type="text" name="new_f_delivery_date[]" class="inp100"/></td><td> <select name="new_f_status[]" class="inp100"><option value="1" selected>Sẵn có</option><option value="0">Order</option> </select></td><td><input type="text" name="new_f_price[]" class="inp100"/></td><td><input type="text" name="new_f_total[]" class="inp110"/></td><td><a href="#" class="delete_f_row"><i class="far fa-trash-alt" style="color:red"></i></a></td></tr>');
@@ -560,7 +645,35 @@ var del_list = new Array();
 				});
 			});
 			
-			jQuery('#nicescroll-iput').getNiceScroll().resize();
+			$('input[name="new_f_price[]"]').keyup(function(){
+		    	$(this).val(commaSeparateNumber($(this).val().replace(/\./g,'')));
+		    });
+		    
+		    $('input[name="new_f_price[]"]').keyup(function(){
+		    	var total = $(this).val().replace(/\./g,'') * $(this).parent().parent().find('input[name="new_f_amount[]"]').val();
+		    	$(this).parent().parent().find('input[name="new_f_total[]"]').val(commaSeparateNumber(total));
+		    });
+		    
+		    $('input[name="new_f_amount[]"]').keyup(function(){
+		    	var total = $(this).parent().parent().find('input[name="new_f_price[]"]').val().replace(/\./g,'') * $(this).val();
+		    	$(this).parent().parent().find('input[name="new_f_total[]"]').val(commaSeparateNumber(total));
+		    });
+		    
+		    
+		    //validate number
+		    $('input[name="new_f_amount[]"]').inputFilter(function(value) {
+		    	  return /^-?\d*$/.test(value); 
+		    });
+		    
+//		    $('input[name="new_f_price[]"]').inputFilter(function(value) {
+//		    	  return /^-?\d*$/.test(value); 
+//		    });
+//		    
+//		    $('input[name="new_f_total[]"]').inputFilter(function(value) {
+//		    	  return /^-?\d*$/.test(value); 
+//		    });
+		    
+		    jQuery('#nicescroll-iput').getNiceScroll().resize();
 		}
     });
 })(jQuery);
@@ -591,6 +704,20 @@ jQuery(document).ready(function () {
         });
         return _;
     }
+    
+    //validate number
+    $.fn.inputFilter = function(inputFilter) {
+        return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
+          if (inputFilter(this.value)) {
+            this.oldValue = this.value;
+            this.oldSelectionStart = this.selectionStart;
+            this.oldSelectionEnd = this.selectionEnd;
+          } else if (this.hasOwnProperty("oldValue")) {
+            this.value = this.oldValue;
+            this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+          }
+        });
+      };
 })(jQuery);
 
 function commaSeparateNumber(val){
