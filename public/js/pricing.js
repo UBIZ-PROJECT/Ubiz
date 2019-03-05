@@ -376,7 +376,7 @@ var del_list = new Array();
 				    			+'<td>'
 									+'<h2 style="width:300px;border-bottom: 1px solid black"></h2>'
 					        		+'<p>Tổng cộng: '+ commaSeparateNumber(total_price + vat_tax) +' VNĐ</p>'
-									+'<div id="export_pdf" style="margin-top:30px" class="btn-a" onclick="">Xuất báo giá</div>'
+									+'<div id="export_pdf" style="margin-top:30px" class="btn-a" onclick="jQuery.UbizOIWidget.w_export_pdf()">Xuất báo giá</div>'
 								+'<td>'
 							+'</tr>';
 			$('#total-table').empty();
@@ -560,7 +560,7 @@ var del_list = new Array();
 		},
 		w_save: function () {
 			var data = jQuery.UbizOIWidget.w_get_data_input_form();
-			var cus_id = jQuery('input[name="pri_id"]').val();
+			var pri_id = jQuery('input[name="pri_id"]').val();
 			
 			
 			
@@ -575,7 +575,7 @@ var del_list = new Array();
 				reverseButtons: true
 			}).then((result) => {
 				if (result.value) {
-					if(cus_id != 0){
+					if(pri_id != 0){
 						ubizapis('v1', '/pricing-update', 'post', data, null, jQuery.UbizOIWidget.w_save_callback);
 					}else{
 						ubizapis('v1', '/pricing-create', 'post', data, null, jQuery.UbizOIWidget.w_save_callback);
@@ -694,6 +694,32 @@ var del_list = new Array();
 //		    });
 		    
 		    jQuery('#nicescroll-iput').getNiceScroll().resize();
+		},
+		w_export_pdf: function () {
+			var data = jQuery.UbizOIWidget.w_get_data_input_form();
+			
+			swal({
+				title: "Bạn có muốn xuất báo giá?",
+				type: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				cancelButtonText: 'Không',
+				confirmButtonText: 'Có',
+				reverseButtons: true
+			}).then((result) => {
+				if (result.value) {
+					ubizapis('v1', '/pricing-pdf', 'post', data, null, jQuery.UbizOIWidget.w_export_pdf_callback);
+                }
+			});
+		},
+		w_export_pdf_callback: function (response) {
+			var a = document.createElement('a');
+            var url = window.URL.createObjectURL(response);
+            a.href = url;
+            a.download = 'baogia.pdf';
+            a.click();
+            window.URL.revokeObjectURL(url);
 		}
     });
 })(jQuery);

@@ -66,5 +66,8 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::post('pricing-create', ['as' => 'insert-pricing', 'uses' => 'Api\PricingController@insertPricing']);
         Route::post('pricing-update', ['as' => 'update-pricing', 'uses' => 'Api\PricingController@updatePricing']);
         Route::delete('pricing/{ids}/delete', ['as' => 'delete-pricing', 'uses' => 'Api\PricingController@deletePricing']);
+        
+//         Route::post('pricing-pdf','Api\PdfController@exportPdf');
+        Route::post('pricing-pdf', ['as' => 'export-pdf', 'uses' => 'Api\PdfController@exportPdf']);
     });
 });
