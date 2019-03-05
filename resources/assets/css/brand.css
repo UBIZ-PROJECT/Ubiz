@@ -359,3 +359,12 @@ body {
 .image-upload:hover .label-change-prd {
     display: block;
 }
+
+.ubiz-search {
+    display: none;
+}
+
+.ubiz-search.active {
+    display: block;
+    width: 100%;
+}

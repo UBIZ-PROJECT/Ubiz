@@ -8,7 +8,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-class CreateProductKeeperTable extends Migration
+class CreateAccessoryKeeperTable extends Migration
 {
     /**
      * Run the migrations.
@@ -20,7 +20,7 @@ class CreateProductKeeperTable extends Migration
         Schema::create('accessory_keeper', function (Blueprint $table) {
             $table->increments('acs_keeper_id');
             $table->integer('acs_id');
-            $table->char('keeper', 100);
+            $table->integer('keeper');
             $table->integer('quantity')->nullable();
             $table->char('delete_flg', 1)->default('0');
             $table->timestamp('inp_date');

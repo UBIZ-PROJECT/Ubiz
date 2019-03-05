@@ -54,9 +54,10 @@ class Keeper implements JWTSubject
     public function getKeeperPaging($acs_id, $page = 0) {
         $rows_per_page = env('ROWS_PER_PAGE', 10);
         $keeper = DB::table('accessory_keeper')
-            ->select('acs_keeper_id','acs_id','note','keeper', 'quantity')
-            ->where([['acs_id', '=', $acs_id],
-                    ['delete_flg', '=' ,'0']])
+            ->leftJoin('users', 'users.id', '=', 'accessory_keeper.keeper')
+            ->select('accessory_keeper.acs_keeper_id','accessory_keeper.acs_id','accessory_keeper.note','accessory_keeper.keeper', 'accessory_keeper.quantity', 'users.name')
+            ->where([['accessory_keeper.acs_id', '=', $acs_id],
+                    ['accessory_keeper.delete_flg', '=' ,'0']])
             ->offset($page * $rows_per_page)
             ->limit($rows_per_page)
             ->get();

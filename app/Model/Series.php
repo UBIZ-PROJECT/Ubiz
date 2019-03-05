@@ -56,7 +56,9 @@ class Series implements JWTSubject
         list($field_name, $order_by) = $this->makeOrderBy($sort);
         $rows_per_page = env('ROWS_PER_PAGE', 30);
         $series = DB::table('product_series')
-            ->select('prd_series_id','prd_id','serial_no','serial_sts','serial_keeper','serial_note', 'inp_date')
+            ->leftJoin("users", "users.id","=","product_series.serial_keeper")
+            ->select('product_series.prd_series_id','product_series.prd_id','product_series.serial_no','product_series.serial_sts',
+                'product_series.serial_keeper','product_series.serial_note', 'product_series.inp_date',"users.name")
             ->whereRaw($where_raw, $params)
             ->orderBy($field_name, $order_by)
             ->offset($page * $rows_per_page)
@@ -131,15 +133,15 @@ class Series implements JWTSubject
     public function makeWhereRaw($prd_id, $search = '')
     {
         $params = [0];
-        $where_raw = " delete_flg = ? ";
+        $where_raw = " product_series.delete_flg = ? ";
         if ($search != '' && !empty($search)) {
             $where_raw .= " AND (";
-            $where_raw .= " OR serial_no like ?";
+            $where_raw .= " OR product_series.serial_no like ?";
             $params[] = $search;
             $where_raw .= " ) ";
         }
 
-        $where_raw .= " AND prd_id = ?";
+        $where_raw .= " AND product_series.prd_id = ?";
         $params[] = $prd_id;
         return [$where_raw, $params];
     }
@@ -178,7 +180,7 @@ class Series implements JWTSubject
 
     private function makeOrderBy($sort)
     {
-        $field_name = 'serial_no';
+        $field_name = 'product_series.serial_no';
         $order_by = 'asc';
         if ($sort != '' && !empty($sort)) {
             $sort_info = explode('_', $sort);

@@ -60,6 +60,7 @@ class Product implements JWTSubject
             product.prd_note,product.prd_unit, product.prd_model as model,product_image.extension,product_image.prd_img_id, brand.brd_name, brand.brd_id from (
                 SELECT *
                 FROM product 
+                $where_raw
                 LIMIT $rows_per_page OFFSET " . ($page * $rows_per_page)." ) product
             LEFT JOIN product_type product_type ON 
             product.type_id = product_type.prd_type_id
@@ -67,7 +68,7 @@ class Product implements JWTSubject
             product.brd_id = brand.brd_id
             LEFT JOIN product_image product_image ON
             product_image.prd_img_id = (select prd_img_id from product_image as pis where product.prd_id = pis.prd_id and pis.delete_flg = '0' limit 1) 
-           $where_raw
+           
             ORDER BY $field_name $order_by  ", $params);
         foreach ($product as &$item) {
             if (!empty($item->prd_img_id)) {
@@ -361,12 +362,18 @@ class Product implements JWTSubject
                     $where_raw_tmp[] = "product.type_id = ?";
                     $params[] = $search['type_id'];
                 }
-                if (!empty($search['brd_id'])) {
-                    $where_raw_tmp[] = "product.brd_id = ?";
-                    $params[] = $search['brd_id'];
-                }
+
                 if (sizeof($where_raw_tmp) > 0) {
-                    $where_raw .= " AND ( " . implode(" OR ", $where_raw_tmp) . " )";
+                    $where_raw .= " AND ( " . implode(" OR ", $where_raw_tmp) ;
+                }
+                if (!empty($search['brd_id'])) {
+                    if (sizeof($where_raw_tmp) > 0)
+                        $where_raw .= " AND product.brd_id = ? )";
+                    else
+                        $where_raw .= " AND product.brd_id = ? ";
+                    $params[] = $search['brd_id'];
+                } else {
+                    $where_raw .= " )";
                 }
             }
         }

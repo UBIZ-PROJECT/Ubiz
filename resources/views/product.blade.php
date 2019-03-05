@@ -540,7 +540,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    @include('components.input',['width'=>'250', 'control_id'=>'txt_keeper', 'label'=>__("Nhân Viên"), 'length'=>100])
+                    @include('components.dropdown',['width'=>'250','control_id'=>'txt_keeper', 'label'=>__("Nhân Viên"), 'data'=> Helper::convertDataToDropdownOptions($users, 'id', 'name')])
                     @include('components.input',['width'=>'250','type'=>'required', 'control_id'=>'txt_quantity', 'label'=>__("Số Lượng"), 'length'=>10])
                     @include('components.textarea',['width'=>'250', 'control_id'=>'txt_note', 'label'=>__('Note')])
                 </div>

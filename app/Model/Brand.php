@@ -63,15 +63,18 @@ class Brand implements JWTSubject
             ->offset($page * $rows_per_page)
             ->limit($rows_per_page)
             ->get();
-        $brands[0]->brdImage = array('src'=>'', 'name'=>'');
-        foreach ($brands as &$brand) {
-            if (!empty($brand->brd_img)) {
-                $brdImageName = $brand->brd_id . '.' . $brand->brd_img;
-                $brdImage['src'] = Helper::readImage($brdImageName, "brd");;
-                $brdImage['name'] = $brdImageName;
-                $brand->brdImage = $brdImage;
+        if (count($brands) > 0) {
+            $brands[0]->brdImage = array('src'=>'', 'name'=>'');
+            foreach ($brands as &$brand) {
+                if (!empty($brand->brd_img)) {
+                    $brdImageName = $brand->brd_id . '.' . $brand->brd_img;
+                    $brdImage['src'] = Helper::readImage($brdImageName, "brd");;
+                    $brdImage['name'] = $brdImageName;
+                    $brand->brdImage = $brdImage;
+                }
             }
         }
+
         return $brands;
     }
 
@@ -185,19 +188,20 @@ class Brand implements JWTSubject
     {
         $params = [0];
         $where_raw = " brand.delete_flg = ? ";
+//        print_r($search); exit;
         if (sizeof($search) > 0) {
             if (!empty($search['contain']) || !empty($search['notcontain'])) {
                 if(!empty($search['contain'])){
                     $search_val = "%" . $search['contain'] . "%";
                     $where_raw .= " AND (";
-                    $where_raw .= " OR brand.brd_name like ?";
+                    $where_raw .= " brand.brd_name like ?";
                     $params[] = $search_val;
                     $where_raw .= " ) ";
                 }
                 if(!empty($search['notcontain'])){
                     $search_val = "%" . $search['notcontain'] . "%";
                     $where_raw .= " AND (";
-                    $where_raw .= " OR brand.brd_name not like ?";
+                    $where_raw .= " brand.brd_name not like ?";
                     $params[] = $search_val;
                     $where_raw .= " ) ";
                 }
@@ -205,9 +209,9 @@ class Brand implements JWTSubject
             } else {
 
                 $where_raw_tmp = [];
-                if (!empty($search['brd_name'])) {
+                if (!empty($search['name'])) {
                     $where_raw_tmp[] = " brand.brd_name = ?";
-                    $params[] = $search['brd_name'];
+                    $params[] = $search['name'];
                 }
                 if (sizeof($where_raw_tmp) > 0) {
                     $where_raw .= " AND ( " . implode(" OR ", $where_raw_tmp) . " )";

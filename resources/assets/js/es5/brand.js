@@ -185,10 +185,10 @@ var is_image_delete = false;
 
             var search_info = {};
             //
-            // if (jQuery('#search-form #name').val().replace(/\s/g, '') != '') {
-            //     search_info.name = jQuery('#search-form #name').val();
-            // }
-            //
+            if (jQuery('#search-form #name').val().replace(/\s/g, '') != '') {
+                search_info.name = jQuery('#search-form #name').val();
+            }
+
             // if (jQuery('#search-form #branch').val().replace(/\s/g, '') != '') {
             //     search_info.branch = jQuery('#search-form #branch').val();
             // }
@@ -205,13 +205,13 @@ var is_image_delete = false;
             //     search_info.type_id = jQuery('#search-form #type_id').val();
             // }
             //
-            // if (jQuery('#search-form #contain').val().replace(/\s/g, '') != '') {
-            //     search_info.contain = jQuery('#search-form #contain').val();
-            // }
-            //
-            // if (jQuery('#search-form #notcontain').val().replace(/\s/g, '') != '') {
-            //     search_info.notcontain = jQuery('#search-form #notcontain').val();
-            // }
+            if (jQuery('#search-form #contain').val().replace(/\s/g, '') != '') {
+                search_info.contain = jQuery('#search-form #contain').val();
+            }
+
+            if (jQuery('#search-form #notcontain').val().replace(/\s/g, '') != '') {
+                search_info.notcontain = jQuery('#search-form #notcontain').val();
+            }
             //
             return search_info;
         },
@@ -598,7 +598,9 @@ var is_image_delete = false;
             jQuery('#search-form  #sup_fuzzy').val("");
         },
         w_get_specific_brand_by_id(id) {
-            changeCreateFunction(_ADD_BRANDS);
+            $(".ubiz-search.ubiz-search-brand").remove();
+            $(".ubiz-search.ubiz-search-product").addClass("active");
+            changeCreateFunction(_ADD_PRODUCT);
             ubizapis('v1','/brands/detail', 'get', null, {'brd_id': id},jQuery.UbizOIWidget.w_render_data_to_input_page);
         },
         w_callback_remove_image: function(self) {
@@ -870,16 +872,16 @@ var lst_image_delete = [];
 
             var search_info = {};
 
-            if (jQuery('#search-form #name').val().replace(/\s/g, '') != '') {
-                search_info.name = jQuery('#search-form #name').val();
+            if (jQuery('#search-form #prd_name').val().replace(/\s/g, '') != '') {
+                search_info.prd_name = jQuery('#search-form #prd_name').val();
             }
 
-            if (jQuery('#search-form #model').val().replace(/\s/g, '') != '') {
-                search_info.model = jQuery('#search-form #model').val();
+            if (jQuery('#search-form #prd_model').val().replace(/\s/g, '') != '') {
+                search_info.prd_model = jQuery('#search-form #prd_model').val();
             }
 
-            if (jQuery('#search-form #detail').val().replace(/\s/g, '') != '') {
-                search_info.detail = jQuery('#search-form #detail').val();
+            if (jQuery('#search-form #prd_note').val().replace(/\s/g, '') != '') {
+                search_info.prd_note = jQuery('#search-form #prd_note').val();
             }
 
             if (jQuery('#search-form #type_id').val().replace(/\s/g, '') != '') {
@@ -1105,7 +1107,7 @@ var lst_image_delete = [];
             }
         },
         w_go_back_to_output_page: function (self) {
-            changeCreateFunction(_ADD_BRANDS);
+            changeCreateFunction(_ADD_PRODUCT);
             jQuery.UbizOIWidgetPrd.i_page.fadeIn("slow");
             jQuery.UbizOIWidgetPrd.i_page_2.hide();
             jQuery('#nicescroll-oput').getNiceScroll().remove();
@@ -1573,7 +1575,7 @@ function writeSeriesToTable(series) {
         html += "<td class='txt-stt'>" + (i + 1) +"</td>";
         html += "<td class='series_no'>" + seri.serial_no +"</td>";
         html += "<td class='series_inp_date'>" + seri.inp_date +"</td>";
-        html += "<td class='series_kepper'>" + seri.serial_keeper +"</td>";
+        html += "<td > <input type='hidden' class='series_kepper' value='"+seri.serial_keeper+"'><span>" + seri.name +"</span></td>";
         html += "<td class='series_note'>" + seri.serial_note +"</td>";
         html += "<td class='text-center'><input type='hidden' value='"+seri.prd_series_id+"' class='prd_series_id'>"+copyButton+ " " +deleteButton+"</td>";
         html+= "</tr>";
@@ -1590,7 +1592,7 @@ function openSeriesModal(row) {
     if (!isEmpty(row)) {
         series_row_selected = row;
         var series_no =$(row).find(".series_no").html();
-        var keeper =$(row).find(".series_kepper").html();
+        var keeper =$(row).find(".series_kepper").val();
         var series_note=$(row).find(".series_note").html();
         $("#addSeriesModal #txt_series_no").val(series_no);
         $("#addSeriesModal #txt_keep_person").val(keeper);
@@ -1671,6 +1673,7 @@ function updateTableSeries(row) {
     var today = getCurrentDate();
     var series_no = $("#addSeriesModal #txt_series_no").val();
     var keeper  = $("#addSeriesModal #txt_keep_person").val();
+    var keeper_txt = $("#addSeriesModal #txt_keep_person option:selected").text();
     var series_note = $("#addSeriesModal #txt_series_note").val();
     var prd_series_id = getProductId();
     var seri = {
@@ -1679,12 +1682,14 @@ function updateTableSeries(row) {
         serial_no : series_no,
         serial_sts: isEmpty(keeper) ? "0" : "1",
         serial_keeper: keeper,
+        name: keeper_txt,
         serial_note: series_note,
         inp_date: today
     };
     if (!isEmpty(row)) {
         $(row).find(".series_no").html(series_no);
-        $(row).find(".series_kepper").html(keeper);
+        $(row).find(".series_kepper").val(keeper);
+        $(row).find(".series_kepper").parent().find("span").html(keeper_txt);
         $(row).find(".series_note").html(series_note);
         $(row).find(".prd_series_id").val(prd_series_id);
     } else {
@@ -1701,7 +1706,7 @@ function copySeries(row) {
     $(".tb-series").find("tbody").append(cloneNewRow);
     reOrderStt();
     var series_no =$(cloneNewRow).find(".series_no").html();
-    var keeper =$(cloneNewRow).find(".series_kepper").html();
+    var keeper =$(cloneNewRow).find(".series_kepper").val();
     var series_note=$(cloneNewRow).find(".series_note").html();
     var params = {
         prd_series_id: getProductSeriID(),

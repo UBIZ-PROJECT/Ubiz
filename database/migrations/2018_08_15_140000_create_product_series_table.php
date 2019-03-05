@@ -22,7 +22,7 @@ class CreateProductSeriesTable extends Migration
             $table->char('prd_id', 2);
             $table->char('serial_no',50)->nullable();
             $table->char('serial_sts', 1);
-            $table->char('serial_keeper', 100);
+            $table->integer('serial_keeper')->nullable();
             $table->string('serial_note')->nullable();
             $table->char('delete_flg', 1)->default('0');
             $table->timestamp('inp_date');

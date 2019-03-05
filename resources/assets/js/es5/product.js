@@ -768,7 +768,7 @@ function copyKeeper(row) { /// chưa làm xong
     $(".tb-keeper").find("tbody").append(cloneNewRow);
     reOrderStt();
     var quantity =$(cloneNewRow).find(".quantity").html();
-    var keeper =$(cloneNewRow).find(".keeper").html();
+    var keeper =$(cloneNewRow).find(".keeper").val();
     var note=$(cloneNewRow).find(".note").html();
     var params = {
         quantity : quantity,
@@ -794,7 +794,7 @@ function writeKeeperToTable(accessoryKeeper) {
         var acsKeeper = accessoryKeeper[i];
         html += "<tr ondblclick='openKeeperModal(this)'>";
         html += "<td class='txt-stt text-center'>" + (i + 1) +"</td>";
-        html += "<td class='keeper'>" + acsKeeper.keeper +"</td>";
+        html += "<td ><input type='hidden' class='keeper' value='"+acsKeeper.keeper+"' ><span>" + acsKeeper.name +"</span></td>";
         html += "<td class='quantity'>" + acsKeeper.quantity +"</td>";
         html += "<td class='note'>" + acsKeeper.note +"</td>";
         html += "<td class='text-center'><input type='hidden' value='"+acsKeeper.acs_keeper_id+"' class='acs_keeper_id'>"+copyButton+ " " +deleteButton+"</td>";
@@ -807,6 +807,7 @@ function writeKeeperToTable(accessoryKeeper) {
 function getKeeperFromModal() {
     return {
         keeper : $("#addAcsKeeperModal #txt_keeper").val(),
+        keeper_txt: $("#addAcsKeeperModal #txt_keeper option:selected").text(),
         quantity : $("#addAcsKeeperModal #txt_quantity").val(),
         note : $("#addAcsKeeperModal #txt_note").val()
     }
@@ -838,6 +839,7 @@ function updateTableKeeper(row) {
     var today = getCurrentDate();
     var quantity = $("#addAcsKeeperModal #txt_quantity").val();
     var keeper  = $("#addAcsKeeperModal #txt_keeper").val();
+    var keeper_txt = $("#addAcsKeeperModal #txt_keeper option:selected").text();
     var note = $("#addAcsKeeperModal #txt_note").val();
     var acs_keeper_id = getAcsKeeperID();
     var keeperObj = {
@@ -845,12 +847,14 @@ function updateTableKeeper(row) {
         acs_id:getAccessoryId(),
         quantity: quantity,
         keeper: keeper,
+        name: keeper_txt,
         note: note,
         inp_date: today
     };
     if (!isEmpty(row)) {
         $(row).find(".quantity").html(quantity);
-        $(row).find(".keeper").html(keeper);
+        $(row).find(".keeper").val(keeper);
+        $(row).find(".keeper").parent().find("span").html(keeper_txt);
         $(row).find(".note").html(note);
         $(row).find(".acs_keeper_id").val(acs_keeper_id);
     } else {
@@ -886,7 +890,7 @@ function openKeeperModal(row) {
     if (!isEmpty(row)) {
         keeper_row_selected = row;
         var quantity =$(row).find(".quantity").html();
-        var keeper =$(row).find(".keeper").html();
+        var keeper =$(row).find(".keeper").val();
         var note=$(row).find(".note").html();
         $("#addAcsKeeperModal #txt_quantity").val(quantity);
         $("#addAcsKeeperModal #txt_keeper").val(keeper);
