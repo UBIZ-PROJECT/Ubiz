@@ -36,3 +36,7 @@
 .pro-table{
 	width: 800px;
 }
+
+#total-table td{
+	border: none;
+}

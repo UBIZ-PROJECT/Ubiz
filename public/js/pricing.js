@@ -343,6 +343,8 @@ var del_list = new Array();
 				
 				var p_no = 0;
 				var f_no = 0;
+				var total_html = '';
+				var total_price = 0;
 				for(var i = 0; i < pricing.product.length; i++){
 					//to-do append html
 					if(pricing.product[i].status == '1'){
@@ -360,9 +362,27 @@ var del_list = new Array();
 						f_no++;
 						$('#f_tab').append('<tr><input type="hidden" name="pro_id[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].pro_id + '"/><input type="hidden" name="type[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].type + '"/><td class="index_f_no">' + f_no + '</td><td><input type="text" name="code[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].code + '"/></td><td><input type="text" name="name[' + pricing.product[i].pro_id + ']" class="inp130" value="' + pricing.product[i].name + '"/></td><td><input type="text" name="unit[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].unit + '"/></td><td><input type="text" name="amount[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].amount + '"/></td><td><input type="text" name="delivery_date[' + pricing.product[i].pro_id + ']" class="inp100" value="' + pricing.product[i].delivery_date + '"/></td><td> <select name="status[' + pricing.product[i].pro_id + ']" class="inp100"><option value="1" '+selected_instock+'>Sẵn có</option><option value="0" '+selected_order+'>Order</option> </select></td><td><input type="text" name="price[' + pricing.product[i].pro_id + ']" class="inp100" value="' + commaSeparateNumber(pricing.product[i].price) + '"/></td><td><input type="text" name="total[' + pricing.product[i].pro_id + ']" class="inp110" value="' + commaSeparateNumber(pricing.product[i].price * pricing.product[i].amount) + '"/></td><td><a href="#" class="delete_f_row"><i class="far fa-trash-alt" style="color:red"></i></a></td></tr>');					
 					}
+					
+					//for total table
+					total_html += '<tr><td>' + commaSeparateNumber(pricing.product[i].price) + ' x ' + pricing.product[i].amount + ' = ' + commaSeparateNumber(pricing.product[i].price * pricing.product[i].amount) + ' VNĐ</td></tr>'; 
+					total_price += pricing.product[i].price * pricing.product[i].amount;
 				}
 			}
 			
+			var vat_tax = (total_price*10)/100;
+			
+			total_html += 	'<tr><td>Thuế VAT 10%: '+ commaSeparateNumber(vat_tax) +' VNĐ</td></tr>'
+							+'<tr>'
+				    			+'<td>'
+									+'<h2 style="width:300px;border-bottom: 1px solid black"></h2>'
+					        		+'<p>Tổng cộng: '+ commaSeparateNumber(total_price + vat_tax) +' VNĐ</p>'
+									+'<div id="export_pdf" style="margin-top:30px" class="btn-a" onclick="">Xuất báo giá</div>'
+								+'<td>'
+							+'</tr>';
+			$('#total-table').empty();
+			$('#total-table').append(total_html);
+			
+			//bind event
 		    $(".delete_p_row").click(function(){
 		    	del_list.push($(this).parent().parent().find('input[name^="pro_id["]').val());
 		    	$(this).parent().parent().remove();
