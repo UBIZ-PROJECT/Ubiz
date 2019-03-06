@@ -53,23 +53,9 @@
     padding: 0;
     background: transparent;
     position: relative;
+    border: 1px solid #369;
     padding: 4px 8px;
     color: #333;
     background: #ddd;
     cursor: default;
-}
-
-.aKk .aAA .aRz > span{
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: .875rem;
-    letter-spacing: .25px;
-    color: #5f6368;
-    font-weight: 500;
-    letter-spacing: 0;
-    -webkit-box-ordinal-group: 0;
-    -webkit-order: 0;
-    order: 0;
-    padding-left: 10px;
 }

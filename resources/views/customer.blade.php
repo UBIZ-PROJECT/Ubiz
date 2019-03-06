@@ -456,6 +456,8 @@
 									@include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 3'])
 								</div>
 							</div>
+							
+							<div class="btn-a price-report" onclick="">Tạo báo giá</div>
 						</form>
                     </div>
                 </div>
