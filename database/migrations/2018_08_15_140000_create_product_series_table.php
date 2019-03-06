@@ -2,13 +2,13 @@
 /**
  * Created by PhpStorm.
  * User: User
- * Date: 7/28/2018
- * Time: 11:45 AM
+ * Date: 8/15/2018
+ * Time: 8:34 PM
  */
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-class CreateProductTable extends Migration
+class CreateProductSeriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -17,14 +17,13 @@ class CreateProductTable extends Migration
      */
     public function up()
     {
-        Schema::create('product', function (Blueprint $table) {
-            $table->increments('prd_id');
-            $table->integer('type_id');
-            $table->integer('brd_id');
-            $table->char('prd_name', 255);
-            $table->char('prd_model', 255)->nullable();
-            $table->string('prd_note')->nullable();
-            $table->char("prd_unit", 5)->nullable();
+        Schema::create('product_series', function (Blueprint $table) {
+            $table->increments('prd_series_id');
+            $table->char('prd_id', 2);
+            $table->char('serial_no',50)->nullable();
+            $table->char('serial_sts', 1);
+            $table->integer('serial_keeper')->nullable();
+            $table->string('serial_note')->nullable();
             $table->char('delete_flg', 1)->default('0');
             $table->timestamp('inp_date');
             $table->integer('inp_user');
@@ -40,6 +39,6 @@ class CreateProductTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('product');
+        Schema::dropIfExists('product_series');
     }
 }

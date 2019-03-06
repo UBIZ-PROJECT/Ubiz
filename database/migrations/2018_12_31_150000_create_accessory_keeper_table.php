@@ -2,13 +2,13 @@
 /**
  * Created by PhpStorm.
  * User: User
- * Date: 7/28/2018
- * Time: 11:45 AM
+ * Date: 12/31/2018
+ * Time: 8:34 PM
  */
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-class CreateProductTable extends Migration
+class CreateAccessoryKeeperTable extends Migration
 {
     /**
      * Run the migrations.
@@ -17,14 +17,11 @@ class CreateProductTable extends Migration
      */
     public function up()
     {
-        Schema::create('product', function (Blueprint $table) {
-            $table->increments('prd_id');
-            $table->integer('type_id');
-            $table->integer('brd_id');
-            $table->char('prd_name', 255);
-            $table->char('prd_model', 255)->nullable();
-            $table->string('prd_note')->nullable();
-            $table->char("prd_unit", 5)->nullable();
+        Schema::create('accessory_keeper', function (Blueprint $table) {
+            $table->increments('acs_keeper_id');
+            $table->integer('acs_id');
+            $table->integer('keeper');
+            $table->integer('quantity')->nullable();
             $table->char('delete_flg', 1)->default('0');
             $table->timestamp('inp_date');
             $table->integer('inp_user');
@@ -40,6 +37,6 @@ class CreateProductTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('product');
+        Schema::dropIfExists('accessory_keeper');
     }
 }

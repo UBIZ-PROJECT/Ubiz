@@ -148,16 +148,8 @@ var lst_image_delete = [];
 
             var search_info = {};
 
-            if (jQuery('#search-form #seri_no').val().replace(/\s/g, '') != '') {
-                search_info.seri_no = jQuery('#search-form #seri_no').val();
-            }
-
             if (jQuery('#search-form #name').val().replace(/\s/g, '') != '') {
                 search_info.name = jQuery('#search-form #name').val();
-            }
-
-            if (jQuery('#search-form #branch').val().replace(/\s/g, '') != '') {
-                search_info.branch = jQuery('#search-form #branch').val();
             }
 
             if (jQuery('#search-form #model').val().replace(/\s/g, '') != '') {
@@ -260,24 +252,12 @@ var lst_image_delete = [];
             return formData;
         },
         w_get_data_input_form: function() {
-            var addresses = $("#i-put .txt_address");
-            var addParam = [];
-            for(var i = 0; i < addresses.length; i++) {
-                var addObj = {
-                    sad_id: $(addresses[i]).attr("sad_id"),
-                    address: $(addresses[i]).val()
-                }
-                addParam.push(addObj);
-            }
-
             var data = {
                 id: $("#i-put #txt_prd_id").val(),
-                seri_no: $("#i-put #txt_seri_no").val(),
                 name: $("#i-put #txt_name").val(),
-                branch: $("#i-put #txt_branch").val(),
-                model: $("#i-put #txt_model").val(),
+                prd_model: $("#i-put #txt_model").val(),
                 type_id: $("#i-put #txt_name_type").val(),
-                detail: $("#i-put #txt_detail").val(),
+                prd_note: $("#i-put #txt_prd_note").val(),
                 images: {
                     "delete": lst_image_delete
                 }
@@ -358,7 +338,6 @@ var lst_image_delete = [];
                 horizrailenabled: false
             });
         },w_reset_input_change: function() {
-            $("#i-put #nicescroll-iput #txt_seri_no").val("").isChange("false");
             $("#i-put #nicescroll-iput #txt_name").val("").isChange("false");
             $("#i-put #nicescroll-iput #txt_branch").val("").isChange("false");
             $("#i-put #nicescroll-iput #txt_model").val("").isChange("false");
@@ -429,18 +408,17 @@ var lst_image_delete = [];
             return {'sort_name': sort_name, 'order_by': order_by};
         },
         w_get_older_data: function (page) {
+            var params = jQuery.UbizOIWidget.w_get_param_search_sort();
+            params.page = page;
             jQuery.UbizOIWidget.page = page;
-            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-            jQuery.UbizOIWidget.sort = sort_info;
-            var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/products', 'get', null, {'page': page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/products', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_newer_data: function (page) {
             jQuery.UbizOIWidget.page = page;
-            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-            jQuery.UbizOIWidget.sort = sort_info;
-            var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/products', 'get', null, {'page': page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            var params = jQuery.UbizOIWidget.w_get_param_search_sort();
+            params.page = page;
+            jQuery.UbizOIWidget.page = page;
+            ubizapis('v1', '/products', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_process_callback: function (response) {
             if (response.data.success == true) {
@@ -486,8 +464,8 @@ var lst_image_delete = [];
                 var index = 0 + (Number(response.data.paging.page) * Number(response.data.paging.rows_per_page));
                 for (let i = 0; i < products.length; i++) {
                     var cols = [];
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].seri_no, 1));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].image, 2, products[i].image_id));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].id, 1));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].image, 2, products[i].prd_img_id));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].name, 3));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].branch, 4));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].model, 5));
@@ -511,12 +489,11 @@ var lst_image_delete = [];
             $("#i-put .GtF .delete").attr("onclick","jQuery.UbizOIWidget.w_delete("+data.id+")");
             $("#i-put .GtF .save").attr("onclick", "jQuery.UbizOIWidget.w_save("+data.id+")");
             $("#i-put #nicescroll-iput #txt_prd_id").val(data.id);
-            $("#i-put #nicescroll-iput #txt_seri_no").val(data.seri_no);
             $("#i-put #nicescroll-iput #txt_name").val(data.name).change(function() {inputChange(this, data.name)});
-            $("#i-put #nicescroll-iput #txt_branch").val(data.branch).change(function() {inputChange(this, data.branch)});
+            $("#i-put #nicescroll-iput #txt_unit").val(data.prd_unit).change(function() {inputChange(this, data.prd_unit)});
             $("#i-put #nicescroll-iput #txt_model").val(data.model).change(function() {inputChange(this, data.model)});
             $("#i-put #nicescroll-iput #txt_name_type").val(data.prd_type_id).change(function() {inputChange(this, data.prd_type_id)}); // THY  fix thành combobox
-            $("#i-put #nicescroll-iput #txt_detail").val(data.detail).change(function() {inputChange(this, data.detail)}); // THY fix thành Textarea
+            $("#i-put #nicescroll-iput #txt_prd_note").val(data.prd_note).change(function() {inputChange(this, data.prd_note)}); // THY fix thành Textarea
             if (data.images != undefined && data.images.length > 0) {
                 var controlImages = $("#i-put .img-show");
                 for(var i = 0; i < data.images.length; i++) {
@@ -586,13 +563,12 @@ var lst_image_delete = [];
             return isValid;
         },
         w_clear_input_page: function() {
-            $("#i-put #nicescroll-iput #txt_seri_no").val("").isChange("false");
             $("#i-put #nicescroll-iput #txt_name").val("").isChange("false");
             $("#i-put #nicescroll-iput #txt_branch").val("").isChange("false");
             $("#i-put #nicescroll-iput #txt_model").val("").isChange("false");
             $("#i-put #nicescroll-iput #txt_name_type").val("").isChange("false");
             $("#i-put #nicescroll-iput #txt_detail").val("").isChange("false");
-            jQuery.UbizOIWidget.sort = {'sort_name': 'seri_no', 'order_by': 'asc'};
+            jQuery.UbizOIWidget.sort = {'sort_name': 'prd_name', 'order_by': 'asc'};
             jQuery.UbizOIWidget.w_set_paging_for_detail_page(0,0,true);
             removeErrorInput();
             lst_image_delete = [];
@@ -600,20 +576,19 @@ var lst_image_delete = [];
             $(".file-upload").val("").isChange("false");
         },
         w_clear_search_form:function(){
-            jQuery('#search-form  #seri_no').val("");
             jQuery('#search-form  #name').val("");
             jQuery('#search-form  #branch').val("");
             jQuery('#search-form  #model').val("");
             jQuery('#search-form  #name_type').val("");
-            jQuery('#search-form  #detail').val("");
+            jQuery('#search-form  #note').val("");
             jQuery('#search-form  #sup_contain').val("");
             jQuery('#search-form  #sup_notcontain').val("");
             jQuery('#search-form  #sup_fuzzy').val("");
         },
         w_get_specific_product_by_id(id, index) {
-            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-            var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1','/products/detail', 'get', null, {'page': index, 'sort': sort},jQuery.UbizOIWidget.w_render_data_to_input_page);
+            var params = jQuery.UbizOIWidget.w_get_param_search_sort();
+            params.page = index;
+            ubizapis('v1','/products/detail', 'get', null, params,jQuery.UbizOIWidget.w_render_data_to_input_page);
         },
         w_make_row_html: function (id, cols, index) {
             var row_html = '';
@@ -634,24 +609,17 @@ var lst_image_delete = [];
                 col_html += '<div class="asU ckb-c"></div>';
                 col_html += '</div>';
             }
-            if (col_idx == 1) {
-                col_html += '<div class="nCT" title="' + col_val + '">';
-            } else {
-                if (isImage) {
-                    col_html += '<div class="nCji" title="' + isImage + '">';
-                } else {
-                    col_html += '<div class="nCj" title="' + col_val + '">';
-                }
-
-            }
-
             if (isImage) {
+                col_html += '<div class="nCji" title="' + isImage + '">';
                 if (isEmpty(col_val)) {
                     col_html += "<img  />";
                 } else {
                     col_html += "<img src='"+ col_val +"' class='img-thumbnail prd-image' />";
                 }
             } else {
+                var classDiv = "nCj";
+                if (col_idx == 1) classDiv = "nCT";
+                col_html += '<div class="'+classDiv+'" title="' + col_val + '">';
                 col_html += '<span>' + col_val + '</span>';
             }
 
@@ -768,4 +736,81 @@ function isEmpty(str) {
         return true;
     }
     return false;
+}
+
+$("document").ready(function(){
+    $(".tab-slider--body").hide();
+    $(".tab-slider--body:first").show();
+    $('.btn-keep-series').mouseleave(function() {
+        $('.qs .popover').css({'height': '110px','overflow-y':'visible'});
+        $('.qs .popover').removeClass('popover-more-detail');
+        $('.series-more-detail').html("Xem thêm");
+    })
+    $(".btn-keep-series").mouseenter(function() {
+        checkLength($(this).closest("td").find('.qs .popover'));
+    })
+});
+
+$(".tab-slider--nav li").click(function() {
+    $(".tab-slider--body").hide();
+    var activeTab = $(this).attr("rel");
+    $("#"+activeTab).fadeIn();
+    if($(this).attr("rel") == "tab2"){
+        $('.tab-slider--tabs').addClass('slide');
+    }else{
+        $('.tab-slider--tabs').removeClass('slide');
+    }
+    $(".tab-slider--nav li").removeClass("active");
+    $(this).addClass("active");
+});
+
+function activeSeries(btn) {
+    if ($(btn).hasClass("disabled")) return;
+    if ($(btn).hasClass("active"))
+        $(btn).removeClass("active");
+    else
+        $(btn).addClass("active");
+}
+
+function keepSeries() {
+    $(".btn-keep-series.active").addClass("disabled");
+    $(".btn-keep-series").removeClass("active");
+}
+
+function addNote(series) {
+    $(".tb-add-note").css("display", "block");
+    $(".tb-series").css("display", "none")
+    $(".tb-add-note #txt-series-id").val(series);
+}
+
+function saveSeriesNote() {
+    $(".tb-add-note").css("display", "none");
+    $(".tb-series").css("display", "block")
+    $(".tb-add-note #txt-series-id").val('');
+}
+
+function noteDetail(link) {
+    if ($(link).html() == "Xem thêm") {
+        var popover = $(link).closest("td").find('.qs .popover');
+        var note = $(link).closest("td").find(".keep-full-note").val();
+        if (note.length > 2000) {
+            $(popover).css('overflow-y', 'scroll');
+        } else {
+            $(popover).css('overflow-y', 'visible');
+        }
+        $(popover).addClass('popover-more-detail');
+        $(popover).css('height', '500px');
+        $(popover).html(note);
+        $(popover).closest("td").find('.series-more-detail').remove();
+    }
+}
+
+function checkLength(pop) {
+    var note = $(pop).closest("td").find(".keep-full-note").val();
+    var html = '<a href="#" class="series-more-detail" onclick="noteDetail(this)">Xem thêm</a>';
+
+    if (note.length > 420) {
+        var newNote = note.substr(0, 420) + " ... ";
+        $(pop).html(newNote).append(html);
+    }
 }

@@ -2,25 +2,25 @@
 /**
  * Created by PhpStorm.
  * User: User
- * Date: 7/30/2018
- * Time: 10:42 PM
+ * Date: 1/7/2019
+ * Time: 2:36 AM
  */
 
 namespace App\Http\Controllers\Api;
 
-
 use App\Http\Controllers\Controller;
+use App\Model\Accessory;
 use App\Model\Product;
 use Illuminate\Http\Request;
-class ProductController extends Controller
+class AccessoryController extends Controller
 {
-    public function getProduct(Request $req) {
+    public function getAccessory(Request $req) {
         try {
             list($page, $sort,$search) = $this->getPageSortSearch($req);
-            $product = new Product();
-            $data = $product->getProductPaging($page, $sort,$search);
-            $paging = $product->getPagingInfo($sort,$search);
-            $productType = $product->getAllProductType();
+            $acs = new Accessory();
+            $data = $acs->getAccessoryPaging($page, $sort,$search);
+            $paging = $acs->getPagingInfo($sort,$search);
+            $productType = $acs->getAllAccessoryType();
             $paging['page'] = $page;
         } catch (\Throwable $e) {
             throw $e;
@@ -28,13 +28,13 @@ class ProductController extends Controller
         return response()->json(['product' => $data, "product_type" => $productType ,'paging' => $paging,'success' => true, 'message' => '', 'search'=>$search], 200);
     }
 
-    public function getEachProductPaging(Request $req) {
+    public function getEachAccessoryPaging(Request $req) {
         try {
             list($page, $sort,$search) = $this->getPageSortSearch($req);
-            $product = new Product();
-            $data = $product->getEachProductPaging($page, $sort,$search);
-            $paging = $product->getPagingInfoDetailProductWithConditionSearch($sort,$search);
-            $productType = $product->getAllProductType();
+            $acs = new Accessory();
+            $data = $acs->getEachAccessoryPaging($page, $sort,$search);
+            $paging = $acs->getPagingInfoDetailAccessoryWithConditionSearch($sort,$search);
+            $productType = $acs->getAllAccessoryType();
             $paging['page'] = $page;
             $paging['rows_per_page'] = 1;
         } catch (\Throwable $e) {
@@ -43,33 +43,33 @@ class ProductController extends Controller
         return response()->json(['product' => $data, "product_type" => $productType ,'paging' => $paging,'success' => true, 'message' => '', 'search'=>$search], 200);
     }
 
-    public function getProductType() {
+    public function getAccessoryType() {
         try {
-            $product = new Product();
-            $productType = $product->getAllProductType();
+            $acs = new Accessory();
+            $productType = $acs->getAllAccessoryType();
         } catch (\Throwable $e) {
             throw $e;
         }
         return response()->json(["product_type" => $productType, 'success' => true, 'message' => ''], 200);
     }
 
-    public function insertProduct(Request $request) {
+    public function insertAccessory(Request $request) {
         try {
             $message = __("Successfully processed.");
-            if ($request->has("product")) {
+            if ($request->has("accessory")) { //accessory
                 list($page, $sort, $search) = $this->getPageSortSearch($request);
-                $params = json_decode($request->input('product'), true);
+                $params = json_decode($request->input('accessory'), true);
                 if (!empty($request->file('image-upload'))) {
                     foreach ($request->file('image-upload') as $index=>$imageUpload) {
                         $params['images'][$index]['extension'] = $imageUpload->getClientOriginalExtension();
                         $params['images'][$index]['temp_name'] = $imageUpload->getRealPath();
                     }
                 }
-                $product = new Product();
-                $product->insertProduct($params);
-                $data = $product->getProductPaging($page, $sort,$search);
-                $paging = $product->getPagingInfo($sort,$search);
-                $productType = $product->getAllProductType();
+                $acs = new Accessory();
+                $acs->insertAccessory($params);
+                $data = $acs->getAccessoryPaging($page, $sort,$search);
+                $paging = $acs->getPagingInfo($sort,$search);
+                $productType = $acs->getAllAccessoryType();
                 $paging['page'] = $page;
             } else {
                 $message = '';
@@ -80,12 +80,12 @@ class ProductController extends Controller
         return response()->json(['product' => $data, "product_type" => $productType ,'paging' => $paging,'success' => true, 'message' => $message, 'search'=>$search,'method'=>'insert'], 200);
     }
 
-    public function updateProduct($id, Request $request) {
+    public function updateAccessory($id, Request $request) {
         try {
             $message = __("Successfully processed.");
-            if ($request->has("product")) {
+            if ($request->has("accessory")) {
                 list($page, $sort, $search) = $this->getPageSortSearch($request);
-                $params = json_decode($request->input('product'), true);
+                $params = json_decode($request->input('accessory'), true);
                 $params['id'] = $id;
                 if (!empty($request->file('image-upload'))) {
                     foreach ($request->file('image-upload') as $index=>$imageUpload) {
@@ -93,11 +93,11 @@ class ProductController extends Controller
                         $params['images']['insert'][$index]['temp_name'] = $imageUpload->getRealPath();
                     }
                 }
-                $product = new Product();
-                $product->updateProduct($params);
-                $data = $product->getProductPaging($page, $sort,$search);
-                $paging = $product->getPagingInfo($sort,$search);
-                $productType = $product->getAllProductType();
+                $acs = new Accessory();
+                $acs->updateAccessory($params);
+                $data = $acs->getAccessoryPaging($page, $sort,$search);
+                $paging = $acs->getPagingInfo($sort,$search);
+                $productType = $acs->getAllAccessoryType();
                 $paging['page'] = $page;
             } else {
                 $message = '';
@@ -108,12 +108,12 @@ class ProductController extends Controller
         return response()->json(['product' => $data, "product_type" => $productType ,'paging' => $paging,'success' => true, 'message' => $message, 'search'=>$search,'method'=>'update'], 200);
     }
 
-    public function updateProductPaging($id, Request $request) {
+    public function updateAccessoryPaging($id, Request $request) {
         try {
             $message = __("Successfully processed.");
-            if ($request->has("product")) {
+            if ($request->has("accessory")) {
                 list($page, $sort, $search) = $this->getPageSortSearch($request);
-                $params = json_decode($request->input('product'), true);
+                $params = json_decode($request->input('accessory'), true);
                 $params['id'] = $id;
                 if (!empty($request->file('image-upload'))) {
                     foreach ($request->file('image-upload') as $index=>$imageUpload) {
@@ -121,8 +121,8 @@ class ProductController extends Controller
                         $params['images']['insert'][$index]['temp_name'] = $imageUpload->getRealPath();
                     }
                 }
-                $product = new Product();
-                $product->updateProduct($params);
+                $acs = new Accessory();
+                $acs->updateAccessory($params);
             } else {
                 $message = '';
             }
@@ -132,16 +132,16 @@ class ProductController extends Controller
         return response()->json(['success' => true, 'message' => $message, 'search'=>$search], 200);
     }
 
-    public function deleteProduct($ids, Request $request) {
+    public function deleteAccessory($ids, Request $request) {
         try {
             $message = __("Successfully processed.");
             list($page, $sort, $search) = $this->getPageSortSearch($request);
-            $product = new Product();
+            $acs = new Accessory();
             $ids = json_decode($ids,true);
-            $product->deleteProduct($ids);
-            $data = $product->getProductPaging($page,$sort,$search);
-            $paging = $product->getPagingInfo($sort,$search);
-            $productType = $product->getAllProductType();
+            $acs->deleteAccessory($ids);
+            $data = $acs->getAccessoryPaging($page,$sort,$search);
+            $paging = $acs->getPagingInfo($sort,$search);
+            $productType = $acs->getAllAccessoryType();
             $paging['page'] = $page;
         } catch (\Throwable $e) {
             throw $e;
