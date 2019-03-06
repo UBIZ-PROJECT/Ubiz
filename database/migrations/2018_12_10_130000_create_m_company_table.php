@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMDepartmentTable extends Migration
+class CreateMCompanyTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,17 @@ class CreateMDepartmentTable extends Migration
      */
     public function up()
     {
-        Schema::create('m_department', function (Blueprint $table) {
-            $table->increments('id');
-            $table->char('dep_code', 5);
-            $table->string('dep_name', 255);
-            $table->string('dep_icon', 255);
+        Schema::create('m_company', function (Blueprint $table) {
+            $table->increments('com_id');
+            $table->string('com_nm', 250);
+            $table->string('com_logo',10);
+            $table->text('com_address');
+            $table->string('com_phone', 50);
+            $table->string('com_fax', 50);
+            $table->string('com_web', 100);
+            $table->string('com_email', 100);
+            $table->string('com_hotline', 50);
+            $table->string('com_mst', 20);
             $table->char('delete_flg', 1)->default('0');
             $table->timestamp('inp_date');
             $table->integer('inp_user');
@@ -33,6 +39,6 @@ class CreateMDepartmentTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('m_department');
+        Schema::dropIfExists('m_company');
     }
 }

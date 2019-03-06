@@ -1,0 +1,61 @@
+.aKk {
+    display: block;
+    height: 100%;
+    table-layout: fixed;
+    border-spacing: 0;
+    width: 100%;
+}
+
+.aKk > tbody{
+    -webkit-align-items: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    height: 100%;
+}
+
+.aKk .aAA{
+    padding-top: 0;
+    background: transparent;
+    border-bottom: none;
+    white-space: nowrap;
+    -webkit-align-items: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    height: 100%;
+    margin: 0;
+    border: 0;
+    padding: 0;
+    list-style: none;
+    cursor: default;
+    outline: none;
+    width: 100%;
+}
+.aKk .aAA .aRz{
+    float: none;
+    margin: 0;
+    -webkit-align-items: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    height: 100%;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    position: relative;
+    border: 1px solid #369;
+    padding: 4px 8px;
+    color: #333;
+    background: #ddd;
+    cursor: default;
+}

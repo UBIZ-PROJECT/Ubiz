@@ -28,7 +28,7 @@ class CurrencyController extends Controller
 
             $currency = new Currency();
             $currencies = $currency->getCurrency($page, $sort, $search);
-            $paging = $currency->getPagingInfo();
+            $paging = $currency->getPagingInfo($search);
             $paging['page'] = $page;
         } catch (\Throwable $e) {
             throw $e;
@@ -36,58 +36,41 @@ class CurrencyController extends Controller
         return response()->json(['currency' => $currencies, 'paging' => $paging, 'success' => true, 'message' => ''], 200);
     }
 
-    public function getCurrencyById($id, Request $request){
-        try{
+    public function getCurrencyById($id, Request $request)
+    {
+        try {
             $currency = new Currency();
             if ($request->has('pos')) {
                 list ($page, $sort, $search) = $this->getRequestData($request);
                 $data = $currency->getCurrencyByPos($request->pos, $sort, $search);
-            }else{
+            } else {
                 $data = $currency->getCurrencyById($id);
             }
-        }catch (\Throwable $e){
+        } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['currency' => $data, 'success' => true, 'message' => ''],200);
+        return response()->json(['currency' => $data, 'success' => true, 'message' => ''], 200);
     }
 
-    public  function insertCurrency(Request $request){
-        try{
-            $param = [];
-            $param['cur_name'] = $request->txt_name;
-            $param['cur_code'] = $request->txt_code;
-            $param['cur_symbol'] = $request->txt_symbol;
-            $param['cur_state'] = $request->txt_state;
-            $param['inp_date'] = date('Y-m-d H:i:s');
-            $user = new User();
-            $data = $user->getAuthUser();
-            $param['inp_user'] = $data->id;
-            $param['upd_user'] = $data->id;
-            if ($request->hasFile('avatar')) {
-                $param['cur_avatar'] = $request->avatar;
-            }
+    public function insertCurrency(Request $request)
+    {
+        try {
+            list($page, $sort, $search, $insert_data) = $this->getRequestData($request);
             $currency = new Currency();
-            $currency->insertCurrency($param);
-        } catch (\Throwable $e){
+            $currency->insertCurrency($insert_data);
+        } catch (\Throwable $e) {
             throw $e;
         }
         return response()->json(['success' => true, 'message' => 'Insert success'], 200);
     }
 
-    public  function updatedCurrency($id, Request $request){
-        try{
-            $param = [];
-            $param['cur_id'] = $id;
-            $param['cur_name'] = $request->txt_name;
-            $param['cur_code'] = $request->txt_code;
-            $param['cur_symbol'] = $request->txt_symbol;
-            $param['cur_state'] = $request->txt_state;
-            if ($request->hasFile('avatar')) {
-                $param['cur_avatar'] = $request->avatar;
-            }
+    public function updatedCurrency($id, Request $request)
+    {
+        try {
+            list($page, $sort, $search, $update_data) = $this->getRequestData($request);
             $currency = new Currency();
-            $currency->updateCurrency($param);
-        } catch (\Throwable $e){
+            $currency->updateCurrency($update_data);
+        } catch (\Throwable $e) {
             throw $e;
         }
         return response()->json(['success' => true, 'message' => ''], 200);
@@ -105,7 +88,7 @@ class CurrencyController extends Controller
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['currency' => $currencies, 'paging' => $paging , 'success' => true, 'message' => __("Successfully processed.")], 200);
+        return response()->json(['currency' => $currencies, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed.")], 200);
     }
 
     public function getRequestData(Request $request)
@@ -121,17 +104,17 @@ class CurrencyController extends Controller
         }
 
         $search = [];
-        if ($request->has('name')) {
-            $search['name'] = $request->name;
+        if ($request->has('cur_ctr_nm')) {
+            $search['cur_ctr_nm'] = $request->cur_ctr_nm;
         }
-        if ($request->has('code')) {
-            $search['code'] = $request->code;
+        if ($request->has('cur_nm')) {
+            $search['cur_nm'] = $request->cur_nm;
         }
-        if ($request->has('symbol')) {
-            $search['symbol'] = $request->symbol;
+        if ($request->has('cur_cd_alpha')) {
+            $search['cur_cd_alpha'] = $request->cur_cd_alpha;
         }
-        if ($request->has('state')) {
-            $search['state'] = $request->state;
+        if ($request->has('cur_symbol')) {
+            $search['cur_symbol'] = $request->cur_symbol;
         }
         if ($request->has('contain')) {
             $search['contain'] = $request->contain;
@@ -140,21 +123,43 @@ class CurrencyController extends Controller
             $search['notcontain'] = $request->notcontain;
         }
 
+
         $currency = [];
-        if ($request->has('txt_name')) {
-            $currency['name'] = $request->txt_name;
+        if ($request->has('txt_cur_id')) {
+            $currency['cur_id'] = $request->txt_cur_id;
         }
-        if ($request->has('txt_code')) {
-            $currency['code'] = $request->txt_code;
+        if ($request->has('txt_cur_ctr_nm')) {
+            $currency['cur_ctr_nm'] = $request->txt_cur_ctr_nm;
         }
-        if ($request->has('txt_symbol')) {
-            $currency['symbol'] = $request->txt_symbol;
+        if ($request->has('txt_cur_ctr_cd_alpha_2')) {
+            $currency['cur_ctr_cd_alpha_2'] = $request->txt_cur_ctr_cd_alpha_2;
         }
-        if ($request->has('txt_state')) {
-            $currency['state'] = $request->txt_state;
+        if ($request->has('txt_cur_ctr_cd_alpha_3')) {
+            $currency['cur_ctr_cd_alpha_3'] = $request->txt_cur_ctr_cd_alpha_3;
         }
-        if ($request->hasFile('avatar')) {
-            $currency['avatar'] = $request->avatar;
+        if ($request->has('txt_cur_ctr_cd_numeric')) {
+            $currency['cur_ctr_cd_numeric'] = $request->txt_cur_ctr_cd_numeric;
+        }
+        if ($request->has('txt_cur_nm')) {
+            $currency['cur_nm'] = $request->txt_cur_nm;
+        }
+        if ($request->has('txt_cur_cd_numeric_default')) {
+            $currency['cur_cd_numeric_default'] = $request->txt_cur_cd_numeric_default;
+        }
+        if ($request->has('txt_cur_cd_alpha')) {
+            $currency['cur_cd_alpha'] = $request->txt_cur_cd_alpha;
+        }
+        if ($request->has('txt_cur_cd_numeric')) {
+            $currency['cur_cd_numeric'] = $request->txt_cur_cd_numeric;
+        }
+        if ($request->has('txt_cur_minor_units')) {
+            $currency['cur_minor_units'] = $request->txt_cur_minor_units;
+        }
+        if ($request->has('txt_cur_symbol')) {
+            $currency['cur_symbol'] = $request->txt_cur_symbol;
+        }
+        if ($request->has('txt_active_flg')) {
+            $currency['active_flg'] = $request->txt_active_flg;
         }
 
         return [$page, $sort, $search, $currency];

@@ -1,7 +1,7 @@
 <div class="search">
     <div class="tyo" role="search">
         <div class="cyo">
-            <input id="fuzzy" spellcheck="false" autocomplete="off" placeholder="Tìm kiếm tiền tệ" value="" type="text" onkeypress="jQuery.UbizOIWidget.w_fuzzy_search_handle_enter(event)">
+            <input id="fuzzy" spellcheck="false" autocomplete="off" placeholder="{{__('Company search')}}" value="" type="text" onkeypress="jQuery.UbizOIWidget.w_fuzzy_search_handle_enter(event)">
         </div>
         <button class="dyo" onclick="show_searh_form()">
             <svg focusable="false" height="24px" viewBox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg">
@@ -27,34 +27,50 @@
             <div class="gvo">
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="code">{{ __('Country') }}</label>
+                        <label for="code">{{ __('Company') }}</label>
                     </span>
                     <span class="avo">
-                        <input type="text" spellcheck="false" id="cur_ctr_nm" value="" autocomplete="off">
+                        <input type="text" spellcheck="false" id="com_nm" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="name">{{ __('Currency name') }}</label>
+                        <label for="name">{{ __('Address') }}</label>
                     </span>
                     <span class="avo">
-                        <input type="text" spellcheck="false" id="cur_nm" value="" autocomplete="off">
+                        <input type="text" spellcheck="false" id="com_address" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="symbol">{{ __('Currency code') }}</label>
+                        <label for="symbol">{{ __('Fax') }}</label>
                     </span>
                     <span class="avo">
-                        <input type="text" id="cur_cd_alpha" value="" autocomplete="off">
+                        <input type="text" id="com_fax" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo">
                     <span class="yvo">
-                        <label for="state">{{ __('Symbol') }}</label>
+                        <label for="state">{{ __('Tax code') }}</label>
                     </span>
                     <span class="avo">
-                        <input type="text" spellcheck="false" id="cur_symbol" value="" autocomplete="off">
+                        <input type="text" spellcheck="false" id="com_mst" value="" autocomplete="off">
+                    </span>
+                </div>
+                <div class="rvo">
+                    <span class="yvo">
+                        <label for="state">{{ __('Email') }}</label>
+                    </span>
+                    <span class="avo">
+                        <input type="text" spellcheck="false" id="com_email" value="" autocomplete="off">
+                    </span>
+                </div>
+                <div class="rvo">
+                    <span class="yvo">
+                        <label for="state">{{ __('Phone') }}</label>
+                    </span>
+                    <span class="avo">
+                        <input type="text" spellcheck="false" id="com_phone" value="" autocomplete="off">
                     </span>
                 </div>
                 <div class="rvo">
