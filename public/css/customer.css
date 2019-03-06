@@ -21,3 +21,53 @@
 .main-content .r-content .col-6 {
     width: 250px;
 }
+
+div.btn-a {
+    -webkit-transition: box-shadow .08s linear, min-width .15s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transition: box-shadow .08s linear, min-width .15s cubic-bezier(0.4, 0.0, 0.2, 1);
+    box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.302), 0 1px 3px 1px rgba(60, 64, 67, 0.149);
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+    letter-spacing: .15px;
+    -webkit-align-items: center;
+    align-items: center;
+    background-color: #fff;
+    background-image: none;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    color: #5f6368;
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    height: 40px;
+    margin-left: 1px;
+    padding: 0 24px 0 0;
+    text-transform: none;
+    min-width: 88px;
+    cursor: pointer;
+    margin-right: 0;
+    border: none;
+    font-weight: 500;
+    line-height: 32px;
+    -webkit-user-drag: none;
+    text-shadow: none;
+    text-align: center;
+    white-space: nowrap;
+    outline: 0;
+    position: relative;
+}
+
+div.btn-a::before {
+    background-image: url(../images/pricing.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 20px;
+    content: '';
+    display: block;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    height: 35px;
+    margin-right: 10px;
+    width: 35px;
+}
