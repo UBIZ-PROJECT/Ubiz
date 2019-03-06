@@ -8,7 +8,19 @@ body {
 	font-size: 12px;
 }
 
+#company-info{
+    width: 100%;
+}
+
 #company-info td{
+	padding: 5px;
+}
+
+#customer-info{
+    width: 100%;
+}
+
+#customer-info td{
 	padding: 5px;
 }
 </style>
@@ -18,7 +30,7 @@ body {
 
 <table border="1" cellpadding="0" cellspacing="0" id="company-info">
 	<tr>
-		<td rowspan="5"><img src="{{ asset('images/tkt_pumps_logo.jpg') }}" style="width: 200px; height: 200px"/></td>
+		<td rowspan="5"><center><img src="{{ asset('images/tkt_pumps_logo.jpg') }}" style="width: 150px; height: 150px"/></center></td>
 		<td colspan="2"><b>CÔNG TY TNHH KỸ THUẬT THƯƠNG MẠI THÁI KHƯƠNG</b></td>
 	</tr>
 	
@@ -41,7 +53,54 @@ body {
 		<td><b>MST:</b> 0304844502</td>
 	</tr>
 </table>
-<center><h1>BÁO GIÁ</h1></center>
+<center><h1>BÁO GIÁ</h1></center><br><br>
+<table border="1" cellpadding="0" cellspacing="0" id="customer-info">
+	<tr>
+    	<td colspan="2">Số báo giá: {{ $data['pri_id'] }}</td>
+    	<td colspan="2">Ngày báo giá: {{ $data['pri_export_date'] }}</td>
+	</tr>
+	<tr>
+		<td>Khách hàng (công ty):</td>
+		<td colspan="3"></td>
+	</tr>
+	<tr>
+		<td>Địa chỉ công ty:</td>
+		<td colspan="3"></td>
+	</tr>
+	<tr>
+		<td>Điện thoại công ty:</td>
+		<td></td>
+		<td>Fax:</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>Người liên hệ:</td>
+		<td></td>
+		<td>NV kinh doanh:</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>Chức vụ:</td>
+		<td></td>
+		<td>Chức vụ:</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>Di động:</td>
+		<td></td>
+		<td>Di động:</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>Email:</td>
+		<td></td>
+		<td>Email:</td>
+		<td></td>
+	</tr>
+</table>
+<img src="{{ asset('images/partner.png') }}" style="width:100%"/>
+<span>Rất cảm ơn Quý Công Ty đã quan tâm đến sản phẩm và dịch vụ của Công ty Thái Khương.
+Theo như yêu cầu, Thái Khương xin hân hạnh gửi đến Quý Công ty bảng chào giá như sau:</span>
 </body>
 
 </html>
