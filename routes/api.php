@@ -52,6 +52,13 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::post('currency/{id}/update', ['as' => 'update-currency', 'uses' => 'Api\CurrencyController@updatedCurrency']);
         Route::put('currency', ['as' => 'insert-currency', 'uses' => 'Api\CurrencyController@insertCurrency']);
 
+        Route::get('company', ['as' => 'get-company', 'uses' => 'Api\CompanyController@getCompany']);
+        Route::get('companies', ['as' => 'get-all-company', 'uses' => 'Api\CompanyController@getAllCompany']);
+        Route::get('company/{id}', ['as' => 'get-company', 'uses' => 'Api\CompanyController@getCompanyById']);
+        Route::delete('company/{ids}/delete', ['as' => 'delete-company', 'uses' => 'Api\CompanyController@deleteCompany']);
+        Route::post('company/{id}/update', ['as' => 'update-company', 'uses' => 'Api\CompanyController@updatedCompany']);
+        Route::put('company', ['as' => 'insert-company', 'uses' => 'Api\CompanyController@insertCompany']);
+
         Route::get('products', ['as' => 'api-product', 'uses' => 'Api\ProductController@getProduct']);
         Route::get('products/detail', ['as' => 'api-product-detail', 'uses' => 'Api\ProductController@getEachProductPaging']);
         Route::post('products/insert', ['as' => 'product-insert', 'uses' => 'Api\ProductController@insertProduct']);
@@ -59,7 +66,7 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::put('products/{id}/updatePaging', ['as' => 'product-update', 'uses' => 'Api\ProductController@updateProductPaging']);
         Route::delete('products/{ids}/delete', ['as' => 'product-delete', 'uses' => 'Api\ProductController@deleteProduct']);
 		
-		Route::get('pricing', ['as' => 'api-pricing', 'uses' => 'Api\PricingController@getPricingList']);
+		    Route::get('pricing', ['as' => 'api-pricing', 'uses' => 'Api\PricingController@getPricingList']);
         Route::get('pricing/{id}', ['as' => 'delete-pricing', 'uses' => 'Api\PricingController@deletePricing']);
         Route::get('pricing-list', ['as' => 'api-pricing', 'uses' => 'Api\PricingController@getPricingList']);
         Route::get('pricing-edit', ['as' => 'get-pricing', 'uses' => 'Api\PricingController@getPricing']);
@@ -69,5 +76,10 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         
 //         Route::post('pricing-pdf','Api\PdfController@exportPdf');
         Route::post('pricing-pdf', ['as' => 'export-pdf', 'uses' => 'Api\PdfController@exportPdf']);
+      
+        Route::post('permission', ['as' => 'set-permission', 'uses' => 'Api\PermissionController@setPermissions']);
+        Route::get('permission/{dep_id}/{scr_id}', ['as' => 'get-dep-permission', 'uses' => 'Api\PermissionController@getDepPermissions']);
+        Route::get('permission/{dep_id}/{scr_id}/{usr_id}', ['as' => 'get-usr-permission', 'uses' => 'Api\PermissionController@getUsrPermissions']);
+
     });
 });

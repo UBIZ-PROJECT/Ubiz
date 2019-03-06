@@ -118,12 +118,12 @@
                                 <div class="zho">
                                     <div class="ano">
                                         <a class="yno">
-                                            <img class="pno" src="{!!  \Helper::readImage($auth_user->avatar, 'usr') !!}">
+                                            <img class="pno" src="{!!  \Helper::readImage($cps_user->avatar, 'usr') !!}">
                                             <span class="wno">{{ __("Change") }}</span>
                                         </a>
                                         <div class="rho">
-                                            <div class="iho">{{ $auth_user->name }}</div>
-                                            <div class="mno">{{ $auth_user->email }}</div>
+                                            <div class="iho">{{ $cps_user->name }}</div>
+                                            <div class="mno">{{ $cps_user->email }}</div>
                                             <div class="jno">
                                                 <a href="#">{{ __("Privacy") }}</a>
                                             </div>
@@ -139,10 +139,10 @@
                     </div>
                     <div class="wyo" role="button" onclick="show_account_form()">
                         <div class="zyo">
-                            <img src="{{ asset('images/logo.png') }}">
+                            <img src="{{$cps_company->com_logo}}">
                         </div>
                         <div class="vyo">
-                            <a><span><img src="{!!  \Helper::readImage($auth_user->avatar, 'usr') !!}"></span></a>
+                            <a><span><img src="{!!  \Helper::readImage($cps_user->avatar, 'usr') !!}"></span></a>
                         </div>
                     </div>
                 </div>
