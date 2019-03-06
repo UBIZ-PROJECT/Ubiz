@@ -86,5 +86,12 @@
   "Please choose user and screen.": "Xin hãy chọn nhân viên và màn hình.",
   "Please choose department and screen.": "Xin hãy chọn phòng ban và màn hình.",
   "Allow": "Cho phép",
-  "Inherited": "Thừa hưởng"
+  "Inherited": "Thừa hưởng",
+  "Order": "Đơn hàng",
+  "Order No": "Mã đơn hàng",
+  "Order Date": "Ngày tạo",
+  "Total Money": "Tổng tiền",
+  "Paid Money": "Đã thanh toán",
+  "Owed Money": "Còn nợ",
+  "Search order": "Tìm kiếm đơn hàng"
 }
