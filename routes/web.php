@@ -23,8 +23,8 @@ Route::middleware(['api', 'cors'])->group(function () {
         Route::get('setting/company', ['as' => 'company', 'uses' => 'Web\CompanyController@index']);
         Route::get('setting/permission', ['as' => 'permission', 'uses' => 'Web\PermissionController@index']);
         Route::get('products', ['as'=>'supplier', 'uses'=>'Web\ProductController@products']);
-								Route::get('pricing', ['as'=>'pricing', 'uses'=>'Web\PricingController@pricing']);        
-								Route::get('orders', ['as'=>'orders', 'uses'=>'Web\OrderController@index']);
+        Route::get('pricing', ['as'=>'pricing', 'uses'=>'Web\PricingController@pricing']);
+        Route::get('orders', ['as'=>'orders', 'uses'=>'Web\OrderController@index']);
         Route::get('orders/{prc_no}/add-new', ['as'=>'orders', 'uses'=>'Web\OrderController@addNew']);
         Route::get('orders/{prc_no}/{ord_no}', ['as'=>'orders', 'uses'=>'Web\OrderController@detail']);
     });
