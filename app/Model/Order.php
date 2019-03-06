@@ -64,10 +64,10 @@ class Order
         $where_raw = 'order.delete_flg = ?';
 
         $params[] = $search;
-        $where_raw .= ' OR order.ord_no = ?';
+        $where_raw .= " AND ( order.ord_no LIKE '%?%'";
 
         $params[] = $search;
-        $where_raw .= ' OR order.ord_date = ?';
+        $where_raw .= " OR order.ord_date LIKE '%?%' )";
 
         return [$where_raw, $params];
     }

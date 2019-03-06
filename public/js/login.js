@@ -6442,7 +6442,7 @@ var LoginComponent = function (_React$Component) {
                                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                             'label',
                                             { className: 'txt-logo' },
-                                            'Ubiz'
+                                            'TKP'
                                         )
                                     )
                                 ),

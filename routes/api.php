@@ -30,6 +30,13 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::put('departments', ['as' => 'insert-department', 'uses' => 'Api\DepartmentsController@insertDepartment']);
         Route::delete('departments/{ids}/delete', ['as' => 'delete-departments', 'uses' => 'Api\DepartmentsController@deleteDepartments']);
 
+        Route::get('orders', ['as' => 'orders.search', 'uses' => 'Api\OrderController@getOrders']);
+        Route::get('orders/{id}', ['as' => 'orders.detail', 'uses' => 'Api\OrderController@getOrder']);
+        Route::post('orders/{id}/update', ['as' => 'orders.update', 'uses' => 'Api\OrderController@updateOrder']);
+        Route::put('orders', ['as' => 'orders.insert', 'uses' => 'Api\OrderController@insertOrder']);
+        Route::delete('orders/{ids}/delete', ['as' => 'orders.delete', 'uses' => 'Api\OrderController@deleteOrders']);
+
+
         Route::get('suppliers', ['as' => 'api-suppliers', 'uses' => 'Api\SupplierController@getSuppliers']);
         Route::post('suppliers/insert', ['as' => 'suppliers-insert', 'uses' => 'Api\SupplierController@insertSupplier']);
         Route::put('suppliers/{id}/update', ['as' => 'suppliers-update', 'uses' => 'Api\SupplierController@updateSupplierById']);
