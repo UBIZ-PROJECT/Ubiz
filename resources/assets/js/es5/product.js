@@ -154,26 +154,6 @@ var lst_image_delete = [];
                 search_info.name = jQuery('#search-form #name').val();
             }
 
-            if (jQuery('#search-form #model').val().replace(/\s/g, '') != '') {
-                search_info.model = jQuery('#search-form #model').val();
-            }
-
-            if (jQuery('#search-form #detail').val().replace(/\s/g, '') != '') {
-                search_info.detail = jQuery('#search-form #detail').val();
-            }
-
-            if (jQuery('#search-form #type_id').val().replace(/\s/g, '') != '') {
-                search_info.type_id = jQuery('#search-form #type_id').val();
-            }
-
-            if (jQuery('#search-form #contain').val().replace(/\s/g, '') != '') {
-                search_info.contain = jQuery('#search-form #contain').val();
-            }
-
-            if (jQuery('#search-form #notcontain').val().replace(/\s/g, '') != '') {
-                search_info.notcontain = jQuery('#search-form #notcontain').val();
-            }
-
             return search_info;
         },
         w_convert_search_info_to_fuzzy: function (search_info) {

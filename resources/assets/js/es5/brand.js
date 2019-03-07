@@ -934,6 +934,7 @@ var lst_image_delete = [];
             var search_info = jQuery.UbizOIWidgetPrd.w_convert_fuzzy_to_search_info(fuzzy);
             jQuery.UbizOIWidgetPrd.w_update_search_form(search_info);
             params.search = search_info;
+            params.search['brd_id'] = current_brd_id;
 
             var sort_info = jQuery.UbizOIWidgetPrd.w_get_sort_info();
             if (sort_info.sort_name != '' || sort_info.order_by != '') {
@@ -1552,6 +1553,11 @@ function createNew(screen) {
             obj.i_page.find(".onsite .delete").css("display","");
         }, 100);
 
+    } else {
+        var brd_name = $("#nicescroll-iput #txt_brd_name").val();
+        var brd_id = $("#nicescroll-iput #txt_brd_id").val();
+        $("#nicescroll-iput-2 #txt_brand_name").val(brd_name);
+        $("#nicescroll-iput-2 #txt_brd_id").val(brd_id);
     }
     obj.w_clear_input_page();
     obj.w_go_to_input_page(0);
