@@ -320,6 +320,12 @@
 					$('.cus-part-2').append(html);
 				}
 			}
+			
+			//go to create pricing page
+			$(".price-report").click(function(){
+				var cus_id = $('input[name="cus_id"]').val();
+				window.location.href = "/pricing?c="+cus_id;
+			});
 		},
         w_make_row_html: function (id, cols) {
             var row_html = '';

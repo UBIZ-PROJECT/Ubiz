@@ -419,7 +419,7 @@
 											</select>
 										</td>
 										<td><input type="text" name="new_p_price[]" class="inp100"/></td>
-										<td><input type="text" name="new_p_total[]" class="inp130"/></td>
+										<td><input type="text" name="new_p_total[]" class="inp130" disabled/></td>
 										<td><a href="#" class="delete_p_row"><i class="far fa-trash-alt" style="color:red"></i></a></td>
 									</tr>
 								</table>
@@ -456,7 +456,7 @@
 											</select>
 										</td>
 										<td><input type="text" name="new_f_price[]" class="inp100"/></td>
-										<td><input type="text" name="new_f_total[]" class="inp110"/></td>
+										<td><input type="text" name="new_f_total[]" class="inp110" disabled/></td>
 										<td><a href="#" class="delete_f_row"><i class="far fa-trash-alt" style="color:red"></i></a></td>
 									</tr>
 								</table>

@@ -357,10 +357,10 @@ var del_list = new Array();
 					
 					if(pricing.product[i].type == '1'){
 						p_no++;
-						$('#p_tab').append('<tr><input type="hidden" name="pro_id[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].pro_id + '"/><input type="hidden" name="type[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].type + '"/><td class="index_no">' + p_no + '</td><td><textarea size="5" name="specs[' + pricing.product[i].pro_id + ']" class="inp-specs">' + pricing.product[i].specs + '</textarea></td><td><input type="text" name="unit[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].unit + '"/></td><td><input type="text" name="amount[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].amount + '"/></td><td><input type="text" name="delivery_date[' + pricing.product[i].pro_id + ']" class="inp100" value="' + pricing.product[i].delivery_date + '"/></td><td> <select name="status[' + pricing.product[i].pro_id + ']" class="inp100"><option value="1" '+selected_instock+'>Sẵn có</option><option value="0" '+selected_order+'>Order</option> </select></td><td><input type="text" name="price[' + pricing.product[i].pro_id + ']" class="inp100" value="' + commaSeparateNumber(pricing.product[i].price) + '"/></td><td><input type="text" name="total[' + pricing.product[i].pro_id + ']" class="inp130" value="' + commaSeparateNumber(pricing.product[i].price * pricing.product[i].amount) + '"/></td><td><a href="#" class="delete_p_row"><i class="far fa-trash-alt" style="color:red"></i></a></td></tr>');
+						$('#p_tab').append('<tr><input type="hidden" name="pro_id[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].pro_id + '"/><input type="hidden" name="type[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].type + '"/><td class="index_no">' + p_no + '</td><td><textarea size="5" name="specs[' + pricing.product[i].pro_id + ']" class="inp-specs">' + pricing.product[i].specs + '</textarea></td><td><input type="text" name="unit[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].unit + '"/></td><td><input type="text" name="amount[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].amount + '"/></td><td><input type="text" name="delivery_date[' + pricing.product[i].pro_id + ']" class="inp100" value="' + pricing.product[i].delivery_date + '"/></td><td> <select name="status[' + pricing.product[i].pro_id + ']" class="inp100"><option value="1" '+selected_instock+'>Sẵn có</option><option value="0" '+selected_order+'>Order</option> </select></td><td><input type="text" name="price[' + pricing.product[i].pro_id + ']" class="inp100" value="' + commaSeparateNumber(pricing.product[i].price) + '"/></td><td><input type="text" name="total[' + pricing.product[i].pro_id + ']" class="inp130" value="' + commaSeparateNumber(pricing.product[i].price * pricing.product[i].amount) + '" disabled/></td><td><a href="#" class="delete_p_row"><i class="far fa-trash-alt" style="color:red"></i></a></td></tr>');
 					}else{
 						f_no++;
-						$('#f_tab').append('<tr><input type="hidden" name="pro_id[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].pro_id + '"/><input type="hidden" name="type[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].type + '"/><td class="index_f_no">' + f_no + '</td><td><input type="text" name="code[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].code + '"/></td><td><input type="text" name="name[' + pricing.product[i].pro_id + ']" class="inp130" value="' + pricing.product[i].name + '"/></td><td><input type="text" name="unit[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].unit + '"/></td><td><input type="text" name="amount[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].amount + '"/></td><td><input type="text" name="delivery_date[' + pricing.product[i].pro_id + ']" class="inp100" value="' + pricing.product[i].delivery_date + '"/></td><td> <select name="status[' + pricing.product[i].pro_id + ']" class="inp100"><option value="1" '+selected_instock+'>Sẵn có</option><option value="0" '+selected_order+'>Order</option> </select></td><td><input type="text" name="price[' + pricing.product[i].pro_id + ']" class="inp100" value="' + commaSeparateNumber(pricing.product[i].price) + '"/></td><td><input type="text" name="total[' + pricing.product[i].pro_id + ']" class="inp110" value="' + commaSeparateNumber(pricing.product[i].price * pricing.product[i].amount) + '"/></td><td><a href="#" class="delete_f_row"><i class="far fa-trash-alt" style="color:red"></i></a></td></tr>');					
+						$('#f_tab').append('<tr><input type="hidden" name="pro_id[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].pro_id + '"/><input type="hidden" name="type[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].type + '"/><td class="index_f_no">' + f_no + '</td><td><input type="text" name="code[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].code + '"/></td><td><input type="text" name="name[' + pricing.product[i].pro_id + ']" class="inp130" value="' + pricing.product[i].name + '"/></td><td><input type="text" name="unit[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].unit + '"/></td><td><input type="text" name="amount[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].amount + '"/></td><td><input type="text" name="delivery_date[' + pricing.product[i].pro_id + ']" class="inp100" value="' + pricing.product[i].delivery_date + '"/></td><td> <select name="status[' + pricing.product[i].pro_id + ']" class="inp100"><option value="1" '+selected_instock+'>Sẵn có</option><option value="0" '+selected_order+'>Order</option> </select></td><td><input type="text" name="price[' + pricing.product[i].pro_id + ']" class="inp100" value="' + commaSeparateNumber(pricing.product[i].price) + '"/></td><td><input type="text" name="total[' + pricing.product[i].pro_id + ']" class="inp110" value="' + commaSeparateNumber(pricing.product[i].price * pricing.product[i].amount) + '" disabled/></td><td><a href="#" class="delete_f_row"><i class="far fa-trash-alt" style="color:red"></i></a></td></tr>');					
 					}
 					
 					//for total table
@@ -371,14 +371,16 @@ var del_list = new Array();
 			
 			var vat_tax = (total_price*10)/100;
 			
-			total_html += 	'<tr><td>Thuế VAT 10%: '+ commaSeparateNumber(vat_tax) +' VNĐ</td></tr>'
-							+'<tr>'
-				    			+'<td>'
-									+'<h2 style="width:300px;border-bottom: 1px solid black"></h2>'
-					        		+'<p>Tổng cộng: '+ commaSeparateNumber(total_price + vat_tax) +' VNĐ</p>'
-									+'<div id="export_pdf" style="margin-top:30px" class="btn-a" onclick="jQuery.UbizOIWidget.w_export_pdf()">Xuất báo giá</div>'
-								+'<td>'
-							+'</tr>';
+			if(total_html != undefined){
+				total_html += 	'<tr><td>Thuế VAT 10%: '+ commaSeparateNumber(vat_tax) +' VNĐ</td></tr>'
+								+'<tr>'
+					    			+'<td>'
+										+'<h2 style="width:300px;border-bottom: 1px solid black"></h2>'
+						        		+'<p>Tổng cộng: '+ commaSeparateNumber(total_price + vat_tax) +' VNĐ</p>'
+										+'<div id="export_pdf" style="margin-top:30px" class="btn-a" onclick="jQuery.UbizOIWidget.w_export_pdf()">Xuất báo giá</div>'
+									+'<td>'
+								+'</tr>';
+			}
 			$('#total-table').empty();
 			$('#total-table').append(total_html);
 			
@@ -556,6 +558,7 @@ var del_list = new Array();
 		w_get_data_input_form: function () {
 			//var data = $('form').getForm2obj();
 			var data = new FormData($('#f-input')[0]);
+			data.append('del_list', del_list);
 			return data;
 		},
 		w_save: function () {
@@ -610,7 +613,7 @@ var del_list = new Array();
 			}
 		},
 		w_add_p_row: function () {
-			$("#p_tab").append('<tr><td class="index_no">1</td><td><textarea size="5" name="new_p_specs[]" class="inp-specs"></textarea></td><td><input type="text" name="new_p_unit[]" class="inp70"/></td><td><input type="text" name="new_p_amount[]" class="inp70"/></td><td><input type="text" name="new_p_delivery_date[]" class="inp100"/></td><td> <select name="new_p_status[]" class="inp100"><option value="1" selected>Sẵn có</option><option value="0">Order</option> </select></td><td><input type="text" name="new_p_price[]" class="inp100"/></td><td><input type="text" name="new_p_total[]" class="inp130"/></td><td><a href="#" class="delete_p_row"><i class="far fa-trash-alt" style="color:red"></i></a></td></tr>');
+			$("#p_tab").append('<tr><td class="index_no">1</td><td><textarea size="5" name="new_p_specs[]" class="inp-specs"></textarea></td><td><input type="text" name="new_p_unit[]" class="inp70"/></td><td><input type="text" name="new_p_amount[]" class="inp70"/></td><td><input type="text" name="new_p_delivery_date[]" class="inp100"/></td><td> <select name="new_p_status[]" class="inp100"><option value="1" selected>Sẵn có</option><option value="0">Order</option> </select></td><td><input type="text" name="new_p_price[]" class="inp100"/></td><td><input type="text" name="new_p_total[]" class="inp130" disabled/></td><td><a href="#" class="delete_p_row"><i class="far fa-trash-alt" style="color:red"></i></a></td></tr>');
 			$(".index_no").each(function(index) {
 				$(this).text(index+1);
 			});
@@ -653,7 +656,7 @@ var del_list = new Array();
 		    jQuery('#nicescroll-iput').getNiceScroll().resize();
 		},
 		w_add_f_row: function () {
-			$("#f_tab").append('<tr><td class="index_f_no">1</td><td><input type="text" name="new_f_code[]" class="inp70"/></td><td><input type="text" name="new_f_name[]" class="inp130"/></td><td><input type="text" name="new_f_unit[]" class="inp70"/></td><td><input type="text" name="new_f_amount[]" class="inp70"/></td><td><input type="text" name="new_f_delivery_date[]" class="inp100"/></td><td> <select name="new_f_status[]" class="inp100"><option value="1" selected>Sẵn có</option><option value="0">Order</option> </select></td><td><input type="text" name="new_f_price[]" class="inp100"/></td><td><input type="text" name="new_f_total[]" class="inp110"/></td><td><a href="#" class="delete_f_row"><i class="far fa-trash-alt" style="color:red"></i></a></td></tr>');
+			$("#f_tab").append('<tr><td class="index_f_no">1</td><td><input type="text" name="new_f_code[]" class="inp70"/></td><td><input type="text" name="new_f_name[]" class="inp130"/></td><td><input type="text" name="new_f_unit[]" class="inp70"/></td><td><input type="text" name="new_f_amount[]" class="inp70"/></td><td><input type="text" name="new_f_delivery_date[]" class="inp100"/></td><td> <select name="new_f_status[]" class="inp100"><option value="1" selected>Sẵn có</option><option value="0">Order</option> </select></td><td><input type="text" name="new_f_price[]" class="inp100"/></td><td><input type="text" name="new_f_total[]" class="inp110" disabled/></td><td><a href="#" class="delete_f_row"><i class="far fa-trash-alt" style="color:red"></i></a></td></tr>');
 			$(".index_f_no").each(function(index) {
 				$(this).text(index+1);
 			});
@@ -725,7 +728,29 @@ var del_list = new Array();
 })(jQuery);
 jQuery(document).ready(function () {
     jQuery.UbizOIWidget.w_init();
+    
+  //get customer id
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = window.location.search.substring(1),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+            }
+        }
+    };
+    var cus_id = getUrlParameter('c');
+    
+    if(cus_id != undefined){
+    	jQuery.UbizOIWidget.w_create();
+    }
 });
+
 
 (function($){
     $.fn.getForm2obj = function(){

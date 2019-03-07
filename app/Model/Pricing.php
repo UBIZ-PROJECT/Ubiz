@@ -331,6 +331,16 @@ class Pricing implements JWTSubject
 			 DB::table('pricing_product')->insert($productArrInsert);
 			}
 			
+			//delete product
+			if($param['del_list']){
+			    $delList = explode(",", $param['del_list']);
+			    DB::table('pricing_product')->whereIn('pro_id', $delList)->update(
+			         [
+			             'delete_flg' => '1'
+			         ]
+			    );
+			}
+			
 		} catch (\Throwable $e) {
             throw $e;
         }
