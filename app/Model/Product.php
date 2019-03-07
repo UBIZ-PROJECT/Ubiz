@@ -157,6 +157,7 @@ class Product implements JWTSubject
                     'prd_name'=> $param['name'],
                     'brd_id'=>$param['brd_id'],
                     'prd_model'=>!empty($param['prd_model'])? $param['prd_model'] : null,
+                    'prd_unit'=>!empty($para['prd_unit']) ? $param['prd_unit'] : null,
                     'prd_note'=>!empty($param['prd_note'])? $param['prd_note'] : null,
                     'type_id'=>!empty($param['type_id'])? $param['type_id'] : null,
                     'delete_flg'=>'0',
@@ -169,6 +170,13 @@ class Product implements JWTSubject
             foreach ($param['images'] as $element=>$image) {
                 if ($element === "delete") continue;
                 $this->insertProductImage($id,$image['extension'], $image['temp_name']);
+            }
+            if ($param['series']) {
+                $series = new Series();
+                foreach($param['series'] as $item ) {
+                    $item['prd_id'] = $id;
+                    $series->insertSeries($item);
+                }
             }
 
             DB::commit();
@@ -238,6 +246,7 @@ class Product implements JWTSubject
                     'prd_name'=>$param['name'],
                     'brd_id'=>!empty($param['brd_id']) ? $param['brd_id'] : null,
                     'prd_model'=>!empty($param['prd_model']) ? $param['prd_model'] : null,
+                    'prd_unit'=>!empty($param['prd_unit']) ? $param['prd_unit'] : null,
                     'prd_note'=>!empty($param['prd_note']) ? $param['prd_note'] : null,
                     'type_id'=>!empty($param['type_id']) ? $param['type_id'] : null,
                     'upd_date'=>date('Y-m-d H:i:s')

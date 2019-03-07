@@ -371,9 +371,11 @@
                                         </div>
                                         <div class="tcB col-2">
                                             <div class="cbo">
+                                                <?php if ($prd->prd_img_id) {?>
                                                 <div class="nCji" title="{{$prd->prd_img_id}}">
                                                     <img {{empty($prd->image) ? '' : 'src='.$prd->image}}  class="{{empty($prd->image) ? '' : 'img-thumbnail '}}prd-image"/>
                                                 </div>
+                                                <?php }?>
                                             </div>
                                         </div>
                                         <div class="tcB col-3">

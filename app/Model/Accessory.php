@@ -156,7 +156,13 @@ class Accessory implements JWTSubject
                 if ($element === "delete") continue;
                 $this->insertAccessoryImage($id,$image['extension'], $image['temp_name']);
             }
-
+            if ($param['keeper']) {
+                $keeper = new Keeper();
+                foreach ($param['keeper'] as $item) {
+                    $item['acs_id'] = $id;
+                    $keeper->insertKeeper($item);
+                }
+            }
             DB::commit();
         } catch(\Throwable $e) {
             DB::rollback();
@@ -247,7 +253,7 @@ class Accessory implements JWTSubject
         DB::beginTransaction();
         try {
             if ($id && is_array($id)) {
-                DB::table('product_image')->whereIn('acs_img_id', $id)
+                DB::table('product_image')->whereIn('prd_img_id', $id)
                     ->update([
                         'delete_flg'=>'1',
                         'upd_date'=>date('Y-m-d H:i:s')

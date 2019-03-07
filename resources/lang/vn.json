@@ -62,6 +62,8 @@
   "Type": "Loại",
   "Detail": "Chi tiết",
   "Do you want to continue insert Product?": "Bạn có muốn tiếp tục thêm sản phẩm?",
+  "Do you want to continue insert Brands?": "Bạn có muốn tiếp tục thêm thương hiệu?",
+  "Do you want to continue insert Accessory?": "Bạn có muốn tiếp tục thêm phụ tùng?",
 		"Unit": "Đơn vị",
   "Note": "Ghi chú",
   "Brand No": "Mã Thương Hiệu",
@@ -97,5 +99,6 @@
   "Total Money": "Tổng tiền",
   "Paid Money": "Đã thanh toán",
   "Owed Money": "Còn nợ",
-  "Search order": "Tìm kiếm đơn hàng"
+  "Search order": "Tìm kiếm đơn hàng",
+  "Accessory": "Phụ tùng"
 }

@@ -95,6 +95,7 @@ var lst_image_delete = [];
 
             var formData = jQuery.UbizOIWidget.w_get_images_upload();
             formData.append("accessory", JSON.stringify(jQuery.UbizOIWidget.w_get_data_input_form()));
+            formData.append("keeper", JSON.stringify(getKeeperDataForCreateAcs()));
 
             var params = jQuery.UbizOIWidget.w_get_param_search_sort();
             if (id == 0) {
@@ -408,7 +409,7 @@ var lst_image_delete = [];
                 if (response.data.method == "insert") {
                     swal({
                         title:response.data.message,
-                        text: i18next.t("Do you want to continue insert Product?"),
+                        text: i18next.t("Do you want to continue insert Accessory?"),
                         type: "success",
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
@@ -472,6 +473,7 @@ var lst_image_delete = [];
             var data = response.data.product[0];
             $("#i-put .GtF .delete").attr("onclick","jQuery.UbizOIWidget.w_delete("+data.id+")");
             $("#i-put .GtF .save").attr("onclick", "jQuery.UbizOIWidget.w_save("+data.id+")");
+            $("#i-put .GtF .refresh").attr("onclick", "getKeeper()");
             $("#i-put #nicescroll-iput #txt_acs_id").val(data.id);
             $("#i-put #nicescroll-iput #txt_code").val(data.id);
             $("#i-put #nicescroll-iput #txt_name").val(data.name).change(function() {inputChange(this, data.name)});
@@ -589,6 +591,7 @@ var lst_image_delete = [];
             return row_html;
         },
         w_make_col_html: function (col_id, col_val, col_idx, isImage = null) {
+            if (isEmpty(col_val)) col_val = "";
             var col_html = "";
             col_html += '<div class="tcB col-' + col_idx + '">';
             col_html += '<div class="cbo">';
@@ -731,6 +734,7 @@ function isEmpty(str) {
 }
 
 function getKeeper() {
+    jQuery.UbizOIWidget.i_page.find(".tb-keeper").find("tbody").empty();
     var acs_id = $("#txt_code").val();
     var params = {};
     params.page = 0;
@@ -891,15 +895,31 @@ function keeperSave(flg) {
     var params = getKeeperFromModal();
     params.acs_keeper_id= getAcsKeeperID();
     params.acs_id= getAccessoryId();
-
-    if (flg == 0) {
-        insertKeeper(params);
-    } else {
-        updateKeeper(params);
+    if (!isEmpty($("#nicescroll-iput #txt_code").val())) {
+        if (flg == 0) {
+            insertKeeper(params);
+        } else {
+            updateKeeper(params);
+        }
     }
+
     updateTableKeeper(keeper_row_selected);
     $("#addAcsKeeperModal").modal('hide');
     reOrderStt();
+}
+
+function getKeeperDataForCreateAcs() {
+    var rows = $(".list-keep-accessory .tb-keeper tbody tr");
+    var lstKeeper = [];
+    for(var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+        lstKeeper.push({
+            quantity: $(row).find(".quantity").html(),
+            keeper: $(row).find(".keeper").val(),
+            note: $(row).find(".note").html()
+        });
+    }
+    return lstKeeper;
 }
 
 function reOrderStt() {
