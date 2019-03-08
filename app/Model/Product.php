@@ -61,7 +61,8 @@ class Product implements JWTSubject
                 SELECT *
                 FROM product 
                 $where_raw
-                LIMIT $rows_per_page OFFSET " . ($page * $rows_per_page)." ) product
+                ORDER BY $field_name $order_by 
+                LIMIT $rows_per_page OFFSET " . ($page * $rows_per_page)."  ) product
             LEFT JOIN product_type product_type ON 
             product.type_id = product_type.prd_type_id
             LEFT JOIN brand brand ON
@@ -69,7 +70,7 @@ class Product implements JWTSubject
             LEFT JOIN product_image product_image ON
             product_image.prd_img_id = (select prd_img_id from product_image as pis where product.prd_id = pis.prd_id and pis.delete_flg = '0' limit 1) 
            
-            ORDER BY $field_name $order_by  ", $params);
+             ", $params);
         foreach ($product as &$item) {
             if (!empty($item->prd_img_id)) {
                 $item->image = Helper::readImage($item->id . '-' . $item->prd_img_id . '.' . $item->extension, "prd");

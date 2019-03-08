@@ -563,6 +563,7 @@ var lst_image_delete = [];
             lst_image_delete = [];
             $(".img-show").attr("src","../images/avatar.png").setName("");
             $(".file-upload").val("").isChange("false");
+            jQuery.UbizOIWidget.i_page.find(".tb-keeper").find("tbody").empty();
         },
         w_clear_search_form:function(){
             jQuery('#search-form  #name').val("");
@@ -747,7 +748,7 @@ function getKeeper() {
     });
 }
 
-function copyKeeper(row) { /// chưa làm xong
+function copyKeeper(row) {
     var cloneNewRow = $(row).closest("tr").clone();
     $(".tb-keeper").find("tbody").append(cloneNewRow);
     reOrderStt();
@@ -761,11 +762,16 @@ function copyKeeper(row) { /// chưa làm xong
     };
     params.acs_keeper_id= getAcsKeeperID();
     params.acs_id= getAccessoryId();
-    insertKeeper(params);
+    // thêm mới thì không có save liền
+    if (!isEmpty($("#nicescroll-iput #txt_code").val()) ) {
+        insertKeeper(params);
+    }
 }
 
 function deleteKeeper(row) {
-    ubizapis('v1', '/keeper/'+ $(row).closest("tr").find(".acs_keeper_id").val() +'/delete', 'delete', null, null);
+    if (!isEmpty($("#nicescroll-iput #txt_code").val()) ) {
+        ubizapis('v1', '/keeper/' + $(row).closest("tr").find(".acs_keeper_id").val() + '/delete', 'delete', null, null);
+    }
     $(row).closest("tr").remove();
     reOrderStt();
 }

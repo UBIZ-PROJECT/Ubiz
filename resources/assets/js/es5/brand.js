@@ -681,13 +681,13 @@ var is_image_delete = false;
             var older_css = 'adS';
             if (older_page > -1) {
                 older_css = 'aaT';
-                get_older_data_func = 'onclick="jQuery.UbizOIWidget.w_get_older_data(' + older_page + ')"';
+                get_older_data_func = 'onclick="jQuery.UbizOIWidgetPrd.w_get_older_data(' + older_page + ')"';
             }
 
             var newer_css = 'adS';
             if (newer_page < max_page) {
                 newer_css = 'aaT';
-                get_newer_data_func = 'onclick="jQuery.UbizOIWidget.w_get_newer_data(' + newer_page + ')"';
+                get_newer_data_func = 'onclick="jQuery.UbizOIWidgetPrd.w_get_newer_data(' + newer_page + ')"';
             }
 
             var paging_label = '<div id="paging-label" class="amH" style="user-select: none"><span class="Dj"><span><span class="ts">' + f_num + '</span>–<span class="ts">' + m_num + '</span></span> / <span class="ts">' + rows_num + '</span></span></div>';
@@ -1296,6 +1296,7 @@ var lst_image_delete = [];
             lst_image_delete = [];
             $("#i-put-2 #nicescroll-iput-2 .img-show").attr("src","../images/avatar.png").setName("");
             $("#i-put-2 #nicescroll-iput-2 .file-upload").val("").isChange("false");
+            jQuery.UbizOIWidgetPrd.i_page_2.find(".tb-series").find("tbody").empty();
         },
         w_clear_search_form:function(){
             jQuery('#search-form  #prd_name').val("");
@@ -1552,7 +1553,7 @@ function getSeries() {
 
 function createNew(screen) {
     var obj = jQuery.UbizOIWidgetPrd;
-    // obj.i_page_2.find(".tb-series").css("display","none");
+    jQuery.UbizOIWidgetPrd.i_page_2.find(".tb-series").find("tbody").empty();
     current_screen = screen;
     if (screen == _ADD_BRANDS) {
         obj = jQuery.UbizOIWidget;
@@ -1750,11 +1751,14 @@ function copySeries(row) {
         serial_keeper: keeper,
         serial_note: series_note
     };
+    if (isEmpty($("#nicescroll-iput-2 #txt_prd_id").val())) return;
     createNewSeries(params);
 }
 
 function deleteSeries(row) {
-    ubizapis('v1', '/series/'+ $(row).closest("tr").find(".prd_series_id").val() +'/delete', 'delete', null, null);
+    if (!isEmpty($("#nicescroll-iput-2 #txt_prd_id").val())) {
+        ubizapis('v1', '/series/' + $(row).closest("tr").find(".prd_series_id").val() + '/delete', 'delete', null, null);
+    }
     $(row).closest("tr").remove();
     reOrderStt();
 }

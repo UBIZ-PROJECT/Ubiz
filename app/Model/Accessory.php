@@ -59,14 +59,16 @@ class Accessory implements JWTSubject
             SELECT accessory.acs_id as id,accessory.acs_name as name,product_type.prd_type_id ,product_type.prd_type_name as name_type, 
             accessory.acs_note,accessory.acs_unit, product_image.extension,product_image.prd_img_id, accessory.acs_quantity from (
                 SELECT *
-                FROM accessory 
-                LIMIT $rows_per_page OFFSET " . ($page * $rows_per_page)." ) accessory
+                FROM accessory $where_raw
+                 ) accessory
             LEFT JOIN product_type product_type ON 
             accessory.acs_type_id = product_type.prd_type_id
             LEFT JOIN product_image product_image ON
             product_image.prd_img_id = (select prd_img_id from product_image as pis where accessory.acs_id = pis.acs_id and pis.delete_flg = '0' and pis.prd_id is null limit 1) 
-           $where_raw AND product_type.prd_type_flg = '2'
-            ORDER BY $field_name $order_by  ", $params);
+            WHERE product_type.prd_type_flg = '2'
+            ORDER BY $field_name $order_by
+            LIMIT $rows_per_page OFFSET " . ($page * $rows_per_page) . "
+              ", $params);
         foreach ($accessory as &$item) {
             if (!empty($item->prd_img_id)) {
                 $item->image = Helper::readImage($item->id . '-' . $item->prd_img_id . '.' . $item->extension, "acs");
@@ -90,6 +92,7 @@ class Accessory implements JWTSubject
             accessory.acs_type_id = product_type.prd_type_id
             LEFT JOIN product_image product_image ON
             product_image.prd_img_id in (select prd_img_id from product_image as pis where accessory.acs_id = pis.acs_id and pis.delete_flg = '0' and pis.prd_id is null)
+            WHERE product_type.prd_type_flg = '2'
             ", $params);
         $data = array();
         $data[0] = (object) array();
