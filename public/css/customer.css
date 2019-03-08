@@ -40,11 +40,11 @@ div.btn-a {
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
     display: inline-flex;
-    height: 40px;
+    height: 38px;
     margin-left: 1px;
     padding: 0 24px 0 0;
     text-transform: none;
-    min-width: 88px;
+    min-width: 70px;
     cursor: pointer;
     margin-right: 0;
     border: none;
@@ -67,7 +67,7 @@ div.btn-a::before {
     display: block;
     -webkit-border-radius: 50%;
     border-radius: 50%;
-    height: 35px;
+    height: 48px;
     margin-right: 10px;
-    width: 35px;
+    width: 48px;
 }

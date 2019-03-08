@@ -18,10 +18,10 @@ class CreatePricingTable extends Migration
 			$table->string('pri_code',10);
 			$table->integer('cus_id');
 			$table->integer('user_id');
-			$table->timestamp('pri_date');
-			$table->timestamp('exp_date');
+			$table->timestamp('pri_date')->nullable();
+			$table->timestamp('exp_date')->nullable();
             $table->char('delete_flg', 1)->default('0');
-            $table->timestamp('inp_date');
+            $table->timestamp('inp_date')->nullable();
             $table->integer('inp_user');
             $table->timestamp('upd_date')->useCurrent();
             $table->integer('upd_user');

@@ -185,10 +185,10 @@ var is_image_delete = false;
 
             var search_info = {};
             //
-            // if (jQuery('#search-form #name').val().replace(/\s/g, '') != '') {
-            //     search_info.name = jQuery('#search-form #name').val();
-            // }
-            //
+            if (jQuery('#search-form #name').val().replace(/\s/g, '') != '') {
+                search_info.name = jQuery('#search-form #name').val();
+            }
+
             // if (jQuery('#search-form #branch').val().replace(/\s/g, '') != '') {
             //     search_info.branch = jQuery('#search-form #branch').val();
             // }
@@ -205,13 +205,13 @@ var is_image_delete = false;
             //     search_info.type_id = jQuery('#search-form #type_id').val();
             // }
             //
-            // if (jQuery('#search-form #contain').val().replace(/\s/g, '') != '') {
-            //     search_info.contain = jQuery('#search-form #contain').val();
-            // }
-            //
-            // if (jQuery('#search-form #notcontain').val().replace(/\s/g, '') != '') {
-            //     search_info.notcontain = jQuery('#search-form #notcontain').val();
-            // }
+            if (jQuery('#search-form #contain').val().replace(/\s/g, '') != '') {
+                search_info.contain = jQuery('#search-form #contain').val();
+            }
+
+            if (jQuery('#search-form #notcontain').val().replace(/\s/g, '') != '') {
+                search_info.notcontain = jQuery('#search-form #notcontain').val();
+            }
             //
             return search_info;
         },
@@ -336,21 +336,21 @@ var is_image_delete = false;
                                 ubizapis('v1','/brands/'+formInput.id+'/updatePaging', 'post', formData,params,function() {
                                     jQuery.UbizOIWidget.w_reset_input_change();
                                     jQuery.UbizOIWidget.w_get_specific_brand_by_id(id);
-                                    $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
+                                    $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidgetPrd.w_delete("+id+")");
                                 });
                             } else {
                                 jQuery.UbizOIWidget.w_reset_input_change();
                                 jQuery.UbizOIWidget.w_get_specific_brand_by_id(id);
-                                $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
+                                $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidgetPrd.w_delete("+id+")");
                             }
                         });
                     } else {
                         jQuery.UbizOIWidget.w_get_specific_brand_by_id(id);
-                        $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
+                        $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidgetPrd.w_delete("+id+")");
                     }
                 } else {
                     jQuery.UbizOIWidget.w_get_specific_brand_by_id(id);
-                    $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
+                    $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidgetPrd.w_delete("+id+")");
                 }
             }
             else{
@@ -464,7 +464,7 @@ var is_image_delete = false;
                 if (response.data.method == "insert") {
                     swal({
                         title:response.data.message,
-                        text: i18next.t("Do you want to continue insert Product?"),
+                        text: i18next.t("Do you want to continue insert Brands?"),
                         type: "success",
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
@@ -481,10 +481,13 @@ var is_image_delete = false;
                         }
                     });
                 } else {
-                    jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
-                    jQuery.UbizOIWidget.w_go_back_to_output_page();
+
+                    // jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
+                    // jQuery.UbizOIWidget.w_go_back_to_output_page();
                     swal(response.data.message, {
                         type: "success",
+                    }).then(function(){
+                        location.reload();
                     });
                 }
 
@@ -510,7 +513,7 @@ var is_image_delete = false;
         },
         w_render_product_data_to_input: function(response) {
             var product_data = response.data.product;
-            initProduct(product_data);
+            initProduct(product_data, response.data.paging.page);
             jQuery.UbizOIWidget.page = response.data.paging.page;
             jQuery.UbizOIWidget.w_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
         },
@@ -520,11 +523,12 @@ var is_image_delete = false;
             }
             var data = response.data.brand;
             var product_data = response.data.product;
-            initProduct(product_data);
+            initProduct(product_data, response.data.paging_prd.page);
             jQuery.UbizOIWidget.page = response.data.paging_prd.page;
             jQuery.UbizOIWidget.w_paging(response.data.paging_prd.page, response.data.paging_prd.rows_num, response.data.paging_prd.rows_per_page);
 
-            $("#i-put .GtF .delete").attr("onclick","jQuery.UbizOIWidget.w_delete("+data.brd_id+")");
+            $("#i-put .GtF .delete").attr("onclick","jQuery.UbizOIWidgetPrd.w_delete()");
+            $("#i-put .GtF .refresh").attr("onclick","jQuery.UbizOIWidgetPrd.w_refresh_output_page()");
             $("#i-put .GtF .save").attr("onclick", "jQuery.UbizOIWidget.w_save("+data.brd_id+")");
             $("#i-put #nicescroll-iput #txt_brd_id").val(data.brd_id);
             $("#i-put #nicescroll-iput #txt_brd_name").val(data.brd_name).change(function() {inputChange(this, data.brd_name)});
@@ -590,15 +594,14 @@ var is_image_delete = false;
         },
         w_clear_search_form:function(){
             jQuery('#search-form  #name').val("");
-            jQuery('#search-form  #model').val("");
-            jQuery('#search-form  #name_type').val("");
-            jQuery('#search-form  #note').val("");
             jQuery('#search-form  #sup_contain').val("");
             jQuery('#search-form  #sup_notcontain').val("");
             jQuery('#search-form  #sup_fuzzy').val("");
         },
         w_get_specific_brand_by_id(id) {
-            changeCreateFunction(_ADD_BRANDS);
+            $(".ubiz-search.ubiz-search-brand").remove();
+            $(".ubiz-search.ubiz-search-product").addClass("active");
+            changeCreateFunction(_ADD_PRODUCT);
             ubizapis('v1','/brands/detail', 'get', null, {'brd_id': id},jQuery.UbizOIWidget.w_render_data_to_input_page);
         },
         w_callback_remove_image: function(self) {
@@ -678,13 +681,13 @@ var is_image_delete = false;
             var older_css = 'adS';
             if (older_page > -1) {
                 older_css = 'aaT';
-                get_older_data_func = 'onclick="jQuery.UbizOIWidget.w_get_older_data(' + older_page + ')"';
+                get_older_data_func = 'onclick="jQuery.UbizOIWidgetPrd.w_get_older_data(' + older_page + ')"';
             }
 
             var newer_css = 'adS';
             if (newer_page < max_page) {
                 newer_css = 'aaT';
-                get_newer_data_func = 'onclick="jQuery.UbizOIWidget.w_get_newer_data(' + newer_page + ')"';
+                get_newer_data_func = 'onclick="jQuery.UbizOIWidgetPrd.w_get_newer_data(' + newer_page + ')"';
             }
 
             var paging_label = '<div id="paging-label" class="amH" style="user-select: none"><span class="Dj"><span><span class="ts">' + f_num + '</span>–<span class="ts">' + m_num + '</span></span> / <span class="ts">' + rows_num + '</span></span></div>';
@@ -814,6 +817,7 @@ var lst_image_delete = [];
 
             var formData = jQuery.UbizOIWidgetPrd.w_get_images_upload();
             formData.append("product", JSON.stringify(jQuery.UbizOIWidgetPrd.w_get_data_input_form()));
+            formData.append("series", JSON.stringify(getSeriesDataForCreatePrd()));
 
             var params = jQuery.UbizOIWidgetPrd.w_get_param_search_sort();
             params.search['brd_id'] = current_brd_id;
@@ -870,16 +874,16 @@ var lst_image_delete = [];
 
             var search_info = {};
 
-            if (jQuery('#search-form #name').val().replace(/\s/g, '') != '') {
-                search_info.name = jQuery('#search-form #name').val();
+            if (jQuery('#search-form #prd_name').val().replace(/\s/g, '') != '') {
+                search_info.prd_name = jQuery('#search-form #prd_name').val();
             }
 
-            if (jQuery('#search-form #model').val().replace(/\s/g, '') != '') {
-                search_info.model = jQuery('#search-form #model').val();
+            if (jQuery('#search-form #prd_model').val().replace(/\s/g, '') != '') {
+                search_info.prd_model = jQuery('#search-form #prd_model').val();
             }
 
-            if (jQuery('#search-form #detail').val().replace(/\s/g, '') != '') {
-                search_info.detail = jQuery('#search-form #detail').val();
+            if (jQuery('#search-form #prd_note').val().replace(/\s/g, '') != '') {
+                search_info.prd_note = jQuery('#search-form #prd_note').val();
             }
 
             if (jQuery('#search-form #type_id').val().replace(/\s/g, '') != '') {
@@ -932,6 +936,7 @@ var lst_image_delete = [];
             var search_info = jQuery.UbizOIWidgetPrd.w_convert_fuzzy_to_search_info(fuzzy);
             jQuery.UbizOIWidgetPrd.w_update_search_form(search_info);
             params.search = search_info;
+            params.search['brd_id'] = current_brd_id;
 
             var sort_info = jQuery.UbizOIWidgetPrd.w_get_sort_info();
             if (sort_info.sort_name != '' || sort_info.order_by != '') {
@@ -982,6 +987,7 @@ var lst_image_delete = [];
                 id: $("#i-put-2 #txt_prd_id").val(),
                 name: $("#i-put-2 #txt_name").val(),
                 prd_model: $("#i-put-2 #txt_model").val(),
+                prd_unit: $("#i-put-2 #txt_unit").val(),
                 type_id: $("#i-put-2 #txt_name_type").val(),
                 prd_note: $("#i-put-2 #txt_prd_note").val(),
                 images: {
@@ -1105,7 +1111,7 @@ var lst_image_delete = [];
             }
         },
         w_go_back_to_output_page: function (self) {
-            changeCreateFunction(_ADD_BRANDS);
+            changeCreateFunction(_ADD_PRODUCT);
             jQuery.UbizOIWidgetPrd.i_page.fadeIn("slow");
             jQuery.UbizOIWidgetPrd.i_page_2.hide();
             jQuery('#nicescroll-oput').getNiceScroll().remove();
@@ -1188,7 +1194,7 @@ var lst_image_delete = [];
         w_render_data_to_ouput_page: function (response) {
             var table_html = "";
             var products = response.data.product;
-            initProduct(products);
+            initProduct(products, response.data.paging.page);
             jQuery.UbizOIWidgetPrd.page = response.data.paging.page;
             jQuery.UbizOIWidgetPrd.w_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
         },
@@ -1199,6 +1205,7 @@ var lst_image_delete = [];
             var data = response.data.product[0];
             $("#i-put-2 .GtF .delete").attr("onclick","jQuery.UbizOIWidgetPrd.w_delete("+data.id+")");
             $("#i-put-2 .GtF .save").attr("onclick", "jQuery.UbizOIWidgetPrd.w_save("+data.id+")");
+            $("#i-put-2 .GtF .refresh").attr("onclick","getSeries()");
             $("#i-put-2 #nicescroll-iput-2 #txt_brand_name").val(data.brd_name);
             $("#i-put-2 #nicescroll-iput-2 #txt_brd_id").val(data.brd_id);
             $("#i-put-2 #nicescroll-iput-2 #txt_prd_id").val(data.id);
@@ -1282,18 +1289,20 @@ var lst_image_delete = [];
             $("#i-put-2 #nicescroll-iput-2 #txt_model").val("").isChange("false");
             $("#i-put-2 #nicescroll-iput-2 #txt_name_type").val("").isChange("false");
             $("#i-put-2 #nicescroll-iput-2 #txt_prd_note").val("").isChange("false");
+            $("#i-put-2 #nicescroll-iput-2 #txt_unit").val("").isChange("false");
             jQuery.UbizOIWidgetPrd.sort = {'sort_name': 'prd_name', 'order_by': 'asc'};
             jQuery.UbizOIWidgetPrd.w_set_paging_for_detail_page(0,0,true);
             removeErrorInput();
             lst_image_delete = [];
             $("#i-put-2 #nicescroll-iput-2 .img-show").attr("src","../images/avatar.png").setName("");
             $("#i-put-2 #nicescroll-iput-2 .file-upload").val("").isChange("false");
+            jQuery.UbizOIWidgetPrd.i_page_2.find(".tb-series").find("tbody").empty();
         },
         w_clear_search_form:function(){
-            jQuery('#search-form  #name').val("");
-            jQuery('#search-form  #model').val("");
-            jQuery('#search-form  #name_type').val("");
-            jQuery('#search-form  #note').val("");
+            jQuery('#search-form  #prd_name').val("");
+            jQuery('#search-form  #prd_model').val("");
+            jQuery('#search-form  #type_id').val("");
+            jQuery('#search-form  #prd_note').val("");
             jQuery('#search-form  #sup_contain').val("");
             jQuery('#search-form  #sup_notcontain').val("");
             jQuery('#search-form  #sup_fuzzy').val("");
@@ -1460,14 +1469,17 @@ jQuery(document).ready(function () {
     })
 });
 
-function initProduct(data) {
+function initProduct(data, page) {
     var html = "";
-    var index = 0;
+    var index = page * 10 -1;
+    if (index < 0) index = 0;
     $(".product-content .product-content-detail").html("");
     html+='<div class="yTP">';
     html+='<div id="table-content" class="jFr">\n';
     for(var i = 0; i < data.length; i++)  {
         var prd = data[i];
+        var src_image = isEmpty(prd.image) ? "" : "src=" + prd.image;
+        var class_image = isEmpty(prd.image) ? "" : "img-thumbnail ";
         html+= '                                        <div class="jvD" ondblclick="jQuery.UbizOIWidgetPrd.w_go_to_input_page('+prd.id+','+index+')">';
         html+= '                                            <div class="tcB col-1">';
         html+= '                                                <div class="cbo">';
@@ -1482,9 +1494,11 @@ function initProduct(data) {
         html+= '                                            </div>';
         html+= '                                            <div class="tcB col-2">';
         html+= '                                                <div class="cbo">';
-        html+= '                                                    <div class="nCji" title="'+prd.prd_img_id+'">';
-        html+= '                                                        <img '+ isEmpty(prd.image) ? "" : "src=" + prd.image+'  class="'+ isEmpty(prd.image) ? "" : "img-thumbnail "+'prd-image"/>';
-        html+= '                                                    </div>';
+        if(prd.prd_img_id) {
+            html += '                                                    <div class="nCji" title="' + prd.prd_img_id + '">';
+            html += '                                                        <img ' + src_image + '  class="' + class_image + 'prd-image"/>';
+            html += '                                                    </div>';
+        }
         html+= '                                                </div>';
         html+= '                                            </div>';
         html+= '                                            <div class="tcB col-3">';
@@ -1503,8 +1517,8 @@ function initProduct(data) {
         html+= '                                            </div>';
         html+= '                                            <div class="tcB col-5">';
         html+= '                                                <div class="cbo">';
-        html+= '                                                    <div class="nCj" title="'+prd.model+'">';
-        html+= '                                                        <span>'+prd.model+'</span>';
+        html+= '                                                    <div class="nCj" title="'+(isEmpty(prd.model) ? "" : prd.model) +'">';
+        html+= '                                                        <span>'+ (isEmpty(prd.model) ? "" : prd.model) +'</span>';
         html+= '                                                    </div>';
         html+= '                                                </div>';
         html+= '                                            </div>';
@@ -1524,6 +1538,7 @@ function initProduct(data) {
 }
 
 function getSeries() {
+    jQuery.UbizOIWidgetPrd.i_page_2.find(".tb-series").find("tbody").empty();
     var prd_id = $("#txt_prd_id").val();
     var params = {};
     params.page = 0;
@@ -1538,7 +1553,7 @@ function getSeries() {
 
 function createNew(screen) {
     var obj = jQuery.UbizOIWidgetPrd;
-    obj.i_page_2.find(".tb-series").css("display","none");
+    jQuery.UbizOIWidgetPrd.i_page_2.find(".tb-series").find("tbody").empty();
     current_screen = screen;
     if (screen == _ADD_BRANDS) {
         obj = jQuery.UbizOIWidget;
@@ -1549,6 +1564,12 @@ function createNew(screen) {
             obj.i_page.find(".onsite .delete").css("display","");
         }, 100);
 
+    } else {
+        var brd_name = $("#nicescroll-iput #txt_brd_name").val();
+        var brd_id = $("#nicescroll-iput #txt_brd_id").val();
+        $("#nicescroll-iput-2 #txt_brand_name").val(brd_name);
+        $("#nicescroll-iput-2 #txt_brd_id").val(brd_id);
+        $("#nicescroll-iput-2 #txt_prd_id").val("");
     }
     obj.w_clear_input_page();
     obj.w_go_to_input_page(0);
@@ -1572,7 +1593,7 @@ function writeSeriesToTable(series) {
         html += "<td class='txt-stt'>" + (i + 1) +"</td>";
         html += "<td class='series_no'>" + seri.serial_no +"</td>";
         html += "<td class='series_inp_date'>" + seri.inp_date +"</td>";
-        html += "<td class='series_kepper'>" + seri.serial_sts +"</td>";
+        html += "<td > <input type='hidden' class='series_kepper' value='"+seri.serial_keeper+"'><span>" + seri.name +"</span></td>";
         html += "<td class='series_note'>" + seri.serial_note +"</td>";
         html += "<td class='text-center'><input type='hidden' value='"+seri.prd_series_id+"' class='prd_series_id'>"+copyButton+ " " +deleteButton+"</td>";
         html+= "</tr>";
@@ -1589,7 +1610,7 @@ function openSeriesModal(row) {
     if (!isEmpty(row)) {
         series_row_selected = row;
         var series_no =$(row).find(".series_no").html();
-        var keeper =$(row).find(".series_kepper").html();
+        var keeper =$(row).find(".series_kepper").val();
         var series_note=$(row).find(".series_note").html();
         $("#addSeriesModal #txt_series_no").val(series_no);
         $("#addSeriesModal #txt_keep_person").val(keeper);
@@ -1597,6 +1618,21 @@ function openSeriesModal(row) {
         $("#addSeriesModal .btn-save").attr("onclick","seriesSave(1)");
     }
     $("#addSeriesModal").modal();
+}
+
+function getSeriesDataForCreatePrd() {
+    var rows = $(".tb-series-container .tb-series tbody tr");
+    var lstSeries = [];
+    for(var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+        lstSeries.push({
+            serial_no: $(row).find(".series_no").html(),
+            serial_keeper: $(row).find(".series_kepper").val(),
+            serial_note: $(row).find(".series_note").html(),
+            serial_sts: isEmpty($(row).find(".series_kepper").val()) ? "0" : "1",
+        });
+    }
+    return lstSeries;
 }
 
 function clearSeriesModal() {
@@ -1616,12 +1652,15 @@ function seriesSave(flg) {
         prd_id: getProductId(),
         serial_no : series_no,
         serial_sts: isEmpty(keeper) ? "0" : "1",
+        serial_keeper: keeper,
         serial_note: series_note
     };
-    if (flg == 0) {
-        createNewSeries(params);
-    } else {
-        updateSeries(params);
+    if (!isEmpty($("#nicescroll-iput-2 #txt_prd_id").val())) {
+        if (flg == 0) {
+            createNewSeries(params);
+        } else {
+            updateSeries(params);
+        }
     }
     updateTableSeries(series_row_selected);
     $("#addSeriesModal").modal('hide');
@@ -1669,19 +1708,23 @@ function updateTableSeries(row) {
     var today = getCurrentDate();
     var series_no = $("#addSeriesModal #txt_series_no").val();
     var keeper  = $("#addSeriesModal #txt_keep_person").val();
+    var keeper_txt = $("#addSeriesModal #txt_keep_person option:selected").text();
     var series_note = $("#addSeriesModal #txt_series_note").val();
     var prd_series_id = getProductId();
     var seri = {
         prd_series_id: getProductSeriID(),
         prd_id:getProductId(),
         serial_no : series_no,
-        serial_sts: keeper,
+        serial_sts: isEmpty(keeper) ? "0" : "1",
+        serial_keeper: keeper,
+        name: keeper_txt,
         serial_note: series_note,
         inp_date: today
     };
     if (!isEmpty(row)) {
         $(row).find(".series_no").html(series_no);
-        $(row).find(".series_kepper").html(keeper);
+        $(row).find(".series_kepper").val(keeper);
+        $(row).find(".series_kepper").parent().find("span").html(keeper_txt);
         $(row).find(".series_note").html(series_note);
         $(row).find(".prd_series_id").val(prd_series_id);
     } else {
@@ -1697,28 +1740,36 @@ function copySeries(row) {
     $(cloneNewRow).find(".series_inp_date").html(today);
     $(".tb-series").find("tbody").append(cloneNewRow);
     reOrderStt();
-    var series_no =$(row).find(".series_no").html();
-    var keeper =$(row).find(".series_kepper").html();
-    var series_note=$(row).find(".series_note").html();
+    var series_no =$(cloneNewRow).find(".series_no").html();
+    var keeper =$(cloneNewRow).find(".series_kepper").val();
+    var series_note=$(cloneNewRow).find(".series_note").html();
     var params = {
         prd_series_id: getProductSeriID(),
         prd_id:getProductId(),
-        series_no : series_no,
-        keeper: keeper,
-        series_note: series_note
+        serial_no : series_no,
+        serial_sts: isEmpty(keeper) ? "0" : "1",
+        serial_keeper: keeper,
+        serial_note: series_note
     };
+    if (isEmpty($("#nicescroll-iput-2 #txt_prd_id").val())) return;
     createNewSeries(params);
 }
 
 function deleteSeries(row) {
-    ubizapis('v1', '/series/'+ $(row).closest("tr").find(".prd_series_id").val() +'/delete', 'delete', null, null);
+    if (!isEmpty($("#nicescroll-iput-2 #txt_prd_id").val())) {
+        ubizapis('v1', '/series/' + $(row).closest("tr").find(".prd_series_id").val() + '/delete', 'delete', null, null);
+    }
     $(row).closest("tr").remove();
     reOrderStt();
 }
 
 function getCurrentDate() {
     var date = new Date();
-    var today = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var year = date.getFullYear();
+    if (month < 10) month = "0" + month;
+    var today = day + "/" + month + "/" + year;
     return today;
 }
 
