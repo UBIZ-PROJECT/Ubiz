@@ -425,7 +425,7 @@
 								</table>
 							</div>
 							
-							<div id="add-pump" style="margin-top:30px" class="btn-a" onclick="jQuery.UbizOIWidget.w_add_p_row()">Thêm bơm</div>
+							<div id="add-pump" style="margin-top:30px" class="btn-b" onclick="jQuery.UbizOIWidget.w_add_p_row()">Thêm bơm</div>
 						
 							<div class="row z-mgl z-mgr" style="margin-top:30px;border:1px solid #f1f1f1;width:98%; padding:10px">
 								<h3 style="color:#194078;width:100%"><b>Phụ tùng:<b></h3>
@@ -461,7 +461,7 @@
 									</tr>
 								</table>
 								
-								<div id="add-accessory" style="margin-top:30px" class="btn-a" onclick="jQuery.UbizOIWidget.w_add_f_row()">Thêm phụ tùng</div>
+								<div id="add-accessory" style="margin-top:30px" class="btn-b" onclick="jQuery.UbizOIWidget.w_add_f_row()">Thêm phụ tùng</div>
 							</div>
 							<input type="hidden" name="pri_id" value=""/>
 							<input type="hidden" name="pri_code" value=""/>
