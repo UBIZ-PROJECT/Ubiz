@@ -86,6 +86,7 @@ class PricingController extends Controller
         try {
             $pricing = new Pricing();
             $pricing->updatePricing($request);
+            unset($request['pri_code']);
             list($page, $sort, $search) = $this->getRequestData($request);
             $pricingList = $pricing->getPricingList($page, $sort, $search);
             $paging = $pricing->getPagingInfo();

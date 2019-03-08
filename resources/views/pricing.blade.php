@@ -288,14 +288,14 @@
                                         <div class="tcB col-3">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$pricing->pri_date}}">
-                                                    <span>{{$pricing->pri_date}}</span>
+                                                    <span>{{substr($pricing->pri_date,0,10)}}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="tcB col-3">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$pricing->exp_date}}">
-                                                    <span>{{$pricing->exp_date}}</span>
+                                                    <span>{{substr($pricing->exp_date,0,10)}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -464,6 +464,8 @@
 								<div id="add-accessory" style="margin-top:30px" class="btn-a" onclick="jQuery.UbizOIWidget.w_add_f_row()">Thêm phụ tùng</div>
 							</div>
 							<input type="hidden" name="pri_id" value=""/>
+							<input type="hidden" name="pri_code" value=""/>
+							<input type="hidden" name="user_id" value=""/>
 						</form>
 						
 						<div id="total_price" style="float:right; margin-right: 50px; color: #195BA8; font-weight: 500">

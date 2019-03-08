@@ -201,8 +201,10 @@ class Pricing implements JWTSubject
     {
         try {
             $customer = DB::table('customer')
-            ->select('customer.*')
-            ->where('cus_id', $id)
+            ->leftJoin('customer_address', 'customer.cus_id', '=', 'customer_address.cus_id')
+            ->select('customer.*', 'customer_address.cad_address')
+            ->where('customer.cus_id', $id)
+            ->limit(1)
             ->get();
             
             $customer[0]->avt_src = Helper::readImage($customer[0]->cus_avatar, 'cus');
@@ -210,6 +212,19 @@ class Pricing implements JWTSubject
             throw $e;
         }
         return $customer;
+    }
+    
+    public function getPricingSale($id)
+    {
+        try {
+            $sale = DB::table('users')
+            ->select('users.*')
+            ->where('id', $id)
+            ->get();
+        }catch (\Throwable $e) {
+            throw $e;
+        }
+        return $sale;
     }
 	
 	public function insertPricing($param) {
