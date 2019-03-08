@@ -457,7 +457,7 @@
 								</div>
 							</div>
 							
-							<div class="btn-a price-report" onclick="">Tạo báo giá</div>
+							<div class="btn-b price-report" onclick="">Tạo báo giá</div>
 						</form>
                     </div>
                 </div>

@@ -136,7 +136,7 @@
                                 <div class="col-5" role="presentation"></div>
                             </div>
                             <div class="hdG">
-                                <div class="dcB col-3" role="presentation">
+                                <div class="dcB col-1" role="presentation">
                                     <div class="dWB dWT" role="button" sort-name="pri_code" order-by="asc" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Mã Báo Giá</div>
@@ -160,13 +160,13 @@
                                     </div>
                                 </div>
 								<div class="dcB col-3" role="presentation">
-                                    <div class="dWB dWT" role="button" sort-name="pri_code" order-by="asc" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                    <div class="dWB dWT" role="button" sort-name="cus_id" order-by="asc" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Khách Hàng</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
-                                                        <svg class="faH asc sVGT" x="0px" y="0px" width="18px" height="18px"
+                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
                                                              viewBox="0 0 48 48" focusable="false" fill="#000000">
                                                             <path fill="none" d="M0 0h48v48H0V0z"></path>
                                                             <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
@@ -183,13 +183,13 @@
                                     </div>
                                 </div>	
 								<div class="dcB col-3" role="presentation">
-                                    <div class="dWB dWT" role="button" sort-name="pri_code" order-by="asc" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                    <div class="dWB dWT" role="button" sort-name="user_id" order-by="asc" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Sale</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
-                                                        <svg class="faH asc sVGT" x="0px" y="0px" width="18px" height="18px"
+                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
                                                              viewBox="0 0 48 48" focusable="false" fill="#000000">
                                                             <path fill="none" d="M0 0h48v48H0V0z"></path>
                                                             <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
@@ -260,7 +260,7 @@
                             <div id="table-content" class="jFr">
                                 @foreach($pricingList as $pricing)
                                     <div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{$pricing->pri_id}}, this)">
-                                        <div class="tcB col-3">
+                                        <div class="tcB col-1">
                                             <div class="cbo">
                                                 <div class="jgQ" onclick="jQuery.UbizOIWidget.w_c_checkbox_click(this)">
                                                     <input type="checkbox" class="ckb-i" value="{{$pricing->pri_id}}" style="display: none"/>
@@ -288,14 +288,14 @@
                                         <div class="tcB col-3">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$pricing->pri_date}}">
-                                                    <span>{{$pricing->pri_date}}</span>
+                                                    <span>{{substr($pricing->pri_date,0,10)}}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="tcB col-3">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$pricing->exp_date}}">
-                                                    <span>{{$pricing->exp_date}}</span>
+                                                    <span>{{substr($pricing->exp_date,0,10)}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -413,19 +413,19 @@
 										<td><input type="text" name="new_p_amount[]" class="inp70"/></td>
 										<td><input type="text" name="new_p_delivery_date[]" class="inp100"/></td>
 										<td>
-											<select name="status" class="inp100">
+											<select name="new_p_status[]" class="inp100">
 												<option value="1" selected>Sẵn có</option>
 												<option value="0">Order</option>
 											</select>
 										</td>
 										<td><input type="text" name="new_p_price[]" class="inp100"/></td>
-										<td><input type="text" name="new_p_total[]" class="inp130"/></td>
+										<td><input type="text" name="new_p_total[]" class="inp130" disabled/></td>
 										<td><a href="#" class="delete_p_row"><i class="far fa-trash-alt" style="color:red"></i></a></td>
 									</tr>
 								</table>
 							</div>
 							
-							<div id="add-pump" style="margin-top:30px" class="btn-a" onclick="jQuery.UbizOIWidget.w_add_p_row()">Thêm bơm</div>
+							<div id="add-pump" style="margin-top:30px" class="btn-b" onclick="jQuery.UbizOIWidget.w_add_p_row()">Thêm bơm</div>
 						
 							<div class="row z-mgl z-mgr" style="margin-top:30px;border:1px solid #f1f1f1;width:98%; padding:10px">
 								<h3 style="color:#194078;width:100%"><b>Phụ tùng:<b></h3>
@@ -456,14 +456,16 @@
 											</select>
 										</td>
 										<td><input type="text" name="new_f_price[]" class="inp100"/></td>
-										<td><input type="text" name="new_f_total[]" class="inp110"/></td>
+										<td><input type="text" name="new_f_total[]" class="inp110" disabled/></td>
 										<td><a href="#" class="delete_f_row"><i class="far fa-trash-alt" style="color:red"></i></a></td>
 									</tr>
 								</table>
 								
-								<div id="add-accessory" style="margin-top:30px" class="btn-a" onclick="jQuery.UbizOIWidget.w_add_f_row()">Thêm phụ tùng</div>
+								<div id="add-accessory" style="margin-top:30px" class="btn-b" onclick="jQuery.UbizOIWidget.w_add_f_row()">Thêm phụ tùng</div>
 							</div>
 							<input type="hidden" name="pri_id" value=""/>
+							<input type="hidden" name="pri_code" value=""/>
+							<input type="hidden" name="user_id" value=""/>
 						</form>
 						
 						<div id="total_price" style="float:right; margin-right: 50px; color: #195BA8; font-weight: 500">

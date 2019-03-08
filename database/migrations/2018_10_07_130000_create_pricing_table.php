@@ -19,7 +19,7 @@ class CreatePricingTable extends Migration
 			$table->integer('cus_id');
 			$table->integer('user_id');
 			$table->timestamp('pri_date');
-			$table->timestamp('exp_date');
+			$table->timestamp('exp_date')->nullable();
             $table->char('delete_flg', 1)->default('0');
             $table->timestamp('inp_date');
             $table->integer('inp_user');

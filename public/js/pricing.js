@@ -190,6 +190,8 @@ var del_list = new Array();
 			}else{
 				$('#f-input input').val('');
 				$('#avt_img').attr('src','../images/avatar.png');
+				var cus_id = getUrlParameter('c');
+				ubizapis('v1','/pricing-cus', 'get', null, {'cus_id': cus_id}, jQuery.UbizOIWidget.w_render_customer_to_input_page);
 			}
             jQuery.UbizOIWidget.o_page.hide();
             jQuery.UbizOIWidget.i_page.fadeIn("slow");
@@ -216,6 +218,46 @@ var del_list = new Array();
 				ids.push(id);
 				jQuery.UbizOIWidget.w_delete(ids);
 			});
+			
+			$('input[name="new_p_price[]"]').keyup(function(){
+		    	$(this).val(commaSeparateNumber($(this).val().replace(/\./g,'')));
+		    });
+		    
+		    $('input[name="new_p_price[]"]').keyup(function(){
+		    	var total = $(this).val().replace(/\./g,'') * $(this).parent().parent().find('input[name="new_p_amount[]"]').val();
+		    	$(this).parent().parent().find('input[name="new_p_total[]"]').val(commaSeparateNumber(total));
+		    });
+		    
+		    $('input[name="new_p_amount[]"]').keyup(function(){
+		    	var total = $(this).parent().parent().find('input[name="new_p_price[]"]').val().replace(/\./g,'') * $(this).val();
+		    	$(this).parent().parent().find('input[name="new_p_total[]"]').val(commaSeparateNumber(total));
+		    });
+		    
+		    
+		    //validate number
+		    $('input[name="new_p_amount[]"]').inputFilter(function(value) {
+		    	  return /^-?\d*$/.test(value); 
+		    });
+		    
+		    $('input[name="new_f_price[]"]').keyup(function(){
+		    	$(this).val(commaSeparateNumber($(this).val().replace(/\./g,'')));
+		    });
+		    
+		    $('input[name="new_f_price[]"]').keyup(function(){
+		    	var total = $(this).val().replace(/\./g,'') * $(this).parent().parent().find('input[name="new_f_amount[]"]').val();
+		    	$(this).parent().parent().find('input[name="new_f_total[]"]').val(commaSeparateNumber(total));
+		    });
+		    
+		    $('input[name="new_f_amount[]"]').keyup(function(){
+		    	var total = $(this).parent().parent().find('input[name="new_f_price[]"]').val().replace(/\./g,'') * $(this).val();
+		    	$(this).parent().parent().find('input[name="new_f_total[]"]').val(commaSeparateNumber(total));
+		    });
+		    
+		    
+		    //validate number
+		    $('input[name="new_f_amount[]"]').inputFilter(function(value) {
+		    	  return /^-?\d*$/.test(value); 
+		    });
         },
 		w_go_to_input_page_paging: function (index) {
 			var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
@@ -302,8 +344,8 @@ var del_list = new Array();
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(pricing[i].pri_id, pricing[i].pri_code, 1));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(pricing[i].pri_id, pricing[i].cus_name, 3));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(pricing[i].pri_id, pricing[i].name, 3));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(pricing[i].pri_id, pricing[i].pri_date, 3));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(pricing[i].pri_id, pricing[i].exp_date, 3));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(pricing[i].pri_id, pricing[i].pri_date.substring(0,10), 3));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(pricing[i].pri_id, pricing[i].exp_date.substring(0,10), 3));
                     
                     rows.push(jQuery.UbizOIWidget.w_make_row_html(pricing[i].pri_id, cols));
                 }
@@ -314,6 +356,21 @@ var del_list = new Array();
             jQuery.UbizOIWidget.w_reset_f_checkbox_status();
             jQuery.UbizOIWidget.page = response.data.paging.page;
             jQuery.UbizOIWidget.w_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
+        },
+        w_render_customer_to_input_page: function (response) {
+        	var customer = response.data.customer[0];
+        	$('input[name="cus_id"]').val(customer.cus_id);
+			$('input[name="cus_code"]').val(customer.cus_code);
+			$('input[name="cus_name"]').val(customer.cus_name);
+			$('input[name="cus_type"]').val(customer.cus_type);
+			$('input[name="cus_phone"]').val(customer.cus_phone);
+			$('input[name="cus_fax"]').val(customer.cus_fax);
+			$('input[name="cus_mail"]').val(customer.cus_mail);
+			if(customer.avt_src != ''){
+				$('#avt_img').attr("src", customer.avt_src);
+			}else{
+				$('#avt_img').attr('src','../images/avatar.png');
+			}
         },
 		w_render_data_to_input_page: function (response) {
 			var pricing = response.data.pricings[0];
@@ -328,6 +385,8 @@ var del_list = new Array();
 			$('input[name="cus_mail"]').val(pricing.cus_mail);
 			$('input[name="exp_date"]').val(pricing.exp_date.substring(0,10));
 			$('input[name="pri_id"]').val(pricing.pri_id);
+			$('input[name="pri_code"]').val(pricing.pri_code);
+			$('input[name="user_id"]').val(pricing.user_id);
 			if(pricing.avt_src != ''){
 				$('#avt_img').attr("src", pricing.avt_src);
 			}else{
@@ -357,10 +416,10 @@ var del_list = new Array();
 					
 					if(pricing.product[i].type == '1'){
 						p_no++;
-						$('#p_tab').append('<tr><input type="hidden" name="pro_id[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].pro_id + '"/><input type="hidden" name="type[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].type + '"/><td class="index_no">' + p_no + '</td><td><textarea size="5" name="specs[' + pricing.product[i].pro_id + ']" class="inp-specs">' + pricing.product[i].specs + '</textarea></td><td><input type="text" name="unit[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].unit + '"/></td><td><input type="text" name="amount[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].amount + '"/></td><td><input type="text" name="delivery_date[' + pricing.product[i].pro_id + ']" class="inp100" value="' + pricing.product[i].delivery_date + '"/></td><td> <select name="status[' + pricing.product[i].pro_id + ']" class="inp100"><option value="1" '+selected_instock+'>Sẵn có</option><option value="0" '+selected_order+'>Order</option> </select></td><td><input type="text" name="price[' + pricing.product[i].pro_id + ']" class="inp100" value="' + commaSeparateNumber(pricing.product[i].price) + '"/></td><td><input type="text" name="total[' + pricing.product[i].pro_id + ']" class="inp130" value="' + commaSeparateNumber(pricing.product[i].price * pricing.product[i].amount) + '"/></td><td><a href="#" class="delete_p_row"><i class="far fa-trash-alt" style="color:red"></i></a></td></tr>');
+						$('#p_tab').append('<tr><input type="hidden" name="pro_id[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].pro_id + '"/><input type="hidden" name="type[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].type + '"/><td class="index_no">' + p_no + '</td><td><textarea size="5" name="specs[' + pricing.product[i].pro_id + ']" class="inp-specs">' + pricing.product[i].specs + '</textarea></td><td><input type="text" name="unit[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].unit + '"/></td><td><input type="text" name="amount[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].amount + '"/></td><td><input type="text" name="delivery_date[' + pricing.product[i].pro_id + ']" class="inp100" value="' + pricing.product[i].delivery_date.substring(0,10) + '"/></td><td> <select name="status[' + pricing.product[i].pro_id + ']" class="inp100"><option value="1" '+selected_instock+'>Sẵn có</option><option value="0" '+selected_order+'>Order</option> </select></td><td><input type="text" name="price[' + pricing.product[i].pro_id + ']" class="inp100" value="' + commaSeparateNumber(pricing.product[i].price) + '"/></td><td><input type="text" name="total[' + pricing.product[i].pro_id + ']" class="inp130" value="' + commaSeparateNumber(pricing.product[i].price * pricing.product[i].amount) + '" disabled/></td><td><a href="#" class="delete_p_row"><i class="far fa-trash-alt" style="color:red"></i></a></td></tr>');
 					}else{
 						f_no++;
-						$('#f_tab').append('<tr><input type="hidden" name="pro_id[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].pro_id + '"/><input type="hidden" name="type[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].type + '"/><td class="index_f_no">' + f_no + '</td><td><input type="text" name="code[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].code + '"/></td><td><input type="text" name="name[' + pricing.product[i].pro_id + ']" class="inp130" value="' + pricing.product[i].name + '"/></td><td><input type="text" name="unit[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].unit + '"/></td><td><input type="text" name="amount[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].amount + '"/></td><td><input type="text" name="delivery_date[' + pricing.product[i].pro_id + ']" class="inp100" value="' + pricing.product[i].delivery_date + '"/></td><td> <select name="status[' + pricing.product[i].pro_id + ']" class="inp100"><option value="1" '+selected_instock+'>Sẵn có</option><option value="0" '+selected_order+'>Order</option> </select></td><td><input type="text" name="price[' + pricing.product[i].pro_id + ']" class="inp100" value="' + commaSeparateNumber(pricing.product[i].price) + '"/></td><td><input type="text" name="total[' + pricing.product[i].pro_id + ']" class="inp110" value="' + commaSeparateNumber(pricing.product[i].price * pricing.product[i].amount) + '"/></td><td><a href="#" class="delete_f_row"><i class="far fa-trash-alt" style="color:red"></i></a></td></tr>');					
+						$('#f_tab').append('<tr><input type="hidden" name="pro_id[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].pro_id + '"/><input type="hidden" name="type[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].type + '"/><td class="index_f_no">' + f_no + '</td><td><input type="text" name="code[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].code + '"/></td><td><input type="text" name="name[' + pricing.product[i].pro_id + ']" class="inp130" value="' + pricing.product[i].name + '"/></td><td><input type="text" name="unit[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].unit + '"/></td><td><input type="text" name="amount[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].amount + '"/></td><td><input type="text" name="delivery_date[' + pricing.product[i].pro_id + ']" class="inp100" value="' + pricing.product[i].delivery_date.substring(0,10) + '"/></td><td> <select name="status[' + pricing.product[i].pro_id + ']" class="inp100"><option value="1" '+selected_instock+'>Sẵn có</option><option value="0" '+selected_order+'>Order</option> </select></td><td><input type="text" name="price[' + pricing.product[i].pro_id + ']" class="inp100" value="' + commaSeparateNumber(pricing.product[i].price) + '"/></td><td><input type="text" name="total[' + pricing.product[i].pro_id + ']" class="inp110" value="' + commaSeparateNumber(pricing.product[i].price * pricing.product[i].amount) + '" disabled/></td><td><a href="#" class="delete_f_row"><i class="far fa-trash-alt" style="color:red"></i></a></td></tr>');					
 					}
 					
 					//for total table
@@ -371,14 +430,16 @@ var del_list = new Array();
 			
 			var vat_tax = (total_price*10)/100;
 			
-			total_html += 	'<tr><td>Thuế VAT 10%: '+ commaSeparateNumber(vat_tax) +' VNĐ</td></tr>'
-							+'<tr>'
-				    			+'<td>'
-									+'<h2 style="width:300px;border-bottom: 1px solid black"></h2>'
-					        		+'<p>Tổng cộng: '+ commaSeparateNumber(total_price + vat_tax) +' VNĐ</p>'
-									+'<div id="export_pdf" style="margin-top:30px" class="btn-a" onclick="jQuery.UbizOIWidget.w_export_pdf()">Xuất báo giá</div>'
-								+'<td>'
-							+'</tr>';
+			if(total_html != undefined){
+				total_html += 	'<tr><td>Thuế VAT 10%: '+ commaSeparateNumber(vat_tax) +' VNĐ</td></tr>'
+								+'<tr>'
+					    			+'<td>'
+										+'<h2 style="width:300px;border-bottom: 1px solid black"></h2>'
+						        		+'<p>Tổng cộng: '+ commaSeparateNumber(total_price + vat_tax) +' VNĐ</p>'
+										+'<div id="export_pdf" style="margin-top:30px" class="btn-a" onclick="jQuery.UbizOIWidget.w_export_pdf()">Xuất báo giá</div>'
+									+'<td>'
+								+'</tr>';
+			}
 			$('#total-table').empty();
 			$('#total-table').append(total_html);
 			
@@ -556,6 +617,7 @@ var del_list = new Array();
 		w_get_data_input_form: function () {
 			//var data = $('form').getForm2obj();
 			var data = new FormData($('#f-input')[0]);
+			data.append('del_list', del_list);
 			return data;
 		},
 		w_save: function () {
@@ -597,6 +659,7 @@ var del_list = new Array();
                     icon: "error",
                 });
             }
+			history.pushState({}, null, 'http://ubiz.local/pricing');
 		},
 		w_preview_avatar: function (input) {
 			if (input.files && input.files[0]) {
@@ -610,7 +673,7 @@ var del_list = new Array();
 			}
 		},
 		w_add_p_row: function () {
-			$("#p_tab").append('<tr><td class="index_no">1</td><td><textarea size="5" name="new_p_specs[]" class="inp-specs"></textarea></td><td><input type="text" name="new_p_unit[]" class="inp70"/></td><td><input type="text" name="new_p_amount[]" class="inp70"/></td><td><input type="text" name="new_p_delivery_date[]" class="inp100"/></td><td> <select name="new_p_status[]" class="inp100"><option value="1" selected>Sẵn có</option><option value="0">Order</option> </select></td><td><input type="text" name="new_p_price[]" class="inp100"/></td><td><input type="text" name="new_p_total[]" class="inp130"/></td><td><a href="#" class="delete_p_row"><i class="far fa-trash-alt" style="color:red"></i></a></td></tr>');
+			$("#p_tab").append('<tr><td class="index_no">1</td><td><textarea size="5" name="new_p_specs[]" class="inp-specs"></textarea></td><td><input type="text" name="new_p_unit[]" class="inp70"/></td><td><input type="text" name="new_p_amount[]" class="inp70"/></td><td><input type="text" name="new_p_delivery_date[]" class="inp100"/></td><td> <select name="new_p_status[]" class="inp100"><option value="1" selected>Sẵn có</option><option value="0">Order</option> </select></td><td><input type="text" name="new_p_price[]" class="inp100"/></td><td><input type="text" name="new_p_total[]" class="inp130" disabled/></td><td><a href="#" class="delete_p_row"><i class="far fa-trash-alt" style="color:red"></i></a></td></tr>');
 			$(".index_no").each(function(index) {
 				$(this).text(index+1);
 			});
@@ -653,7 +716,7 @@ var del_list = new Array();
 		    jQuery('#nicescroll-iput').getNiceScroll().resize();
 		},
 		w_add_f_row: function () {
-			$("#f_tab").append('<tr><td class="index_f_no">1</td><td><input type="text" name="new_f_code[]" class="inp70"/></td><td><input type="text" name="new_f_name[]" class="inp130"/></td><td><input type="text" name="new_f_unit[]" class="inp70"/></td><td><input type="text" name="new_f_amount[]" class="inp70"/></td><td><input type="text" name="new_f_delivery_date[]" class="inp100"/></td><td> <select name="new_f_status[]" class="inp100"><option value="1" selected>Sẵn có</option><option value="0">Order</option> </select></td><td><input type="text" name="new_f_price[]" class="inp100"/></td><td><input type="text" name="new_f_total[]" class="inp110"/></td><td><a href="#" class="delete_f_row"><i class="far fa-trash-alt" style="color:red"></i></a></td></tr>');
+			$("#f_tab").append('<tr><td class="index_f_no">1</td><td><input type="text" name="new_f_code[]" class="inp70"/></td><td><input type="text" name="new_f_name[]" class="inp130"/></td><td><input type="text" name="new_f_unit[]" class="inp70"/></td><td><input type="text" name="new_f_amount[]" class="inp70"/></td><td><input type="text" name="new_f_delivery_date[]" class="inp100"/></td><td> <select name="new_f_status[]" class="inp100"><option value="1" selected>Sẵn có</option><option value="0">Order</option> </select></td><td><input type="text" name="new_f_price[]" class="inp100"/></td><td><input type="text" name="new_f_total[]" class="inp110" disabled/></td><td><a href="#" class="delete_f_row"><i class="far fa-trash-alt" style="color:red"></i></a></td></tr>');
 			$(".index_f_no").each(function(index) {
 				$(this).text(index+1);
 			});
@@ -714,18 +777,49 @@ var del_list = new Array();
 			});
 		},
 		w_export_pdf_callback: function (response) {
-			var a = document.createElement('a');
-            var url = window.URL.createObjectURL(response);
-            a.href = url;
-            a.download = 'baogia.pdf';
-            a.click();
-            window.URL.revokeObjectURL(url);
+			var d = new Date();
+			var strDate = d.getDate() + "" + (d.getMonth()+1) + "" + d.getFullYear();
+			
+			var element = document.createElement('a');
+			  element.setAttribute('href', 'data:application/pdf;base64,' + encodeURIComponent(response.data));
+			  element.setAttribute('download', 'bao_gia_'+strDate+'.pdf');
+
+			  element.style.display = 'none';
+			  document.body.appendChild(element);
+
+			  element.click();
+
+			  document.body.removeChild(element);
 		}
     });
 })(jQuery);
 jQuery(document).ready(function () {
     jQuery.UbizOIWidget.w_init();
+    
+  //get customer id
+//    var getUrlParameter = function getUrlParameter(sParam) {
+//        var sPageURL = window.location.search.substring(1),
+//            sURLVariables = sPageURL.split('&'),
+//            sParameterName,
+//            i;
+//
+//        for (i = 0; i < sURLVariables.length; i++) {
+//            sParameterName = sURLVariables[i].split('=');
+//
+//            if (sParameterName[0] === sParam) {
+//                return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+//            }
+//        }
+//    };
+    var cus_id = getUrlParameter('c');
+    
+    if(cus_id != undefined){
+    	jQuery.UbizOIWidget.w_create();
+    }
+    
+    $(".zY").remove();
 });
+
 
 (function($){
     $.fn.getForm2obj = function(){
@@ -771,4 +865,19 @@ function commaSeparateNumber(val){
       val = val.toString().replace(/(\d+)(\d{3})/, '$1'+'.'+'$2');
     }
     return val;
+}
+
+function getUrlParameter(sParam) {
+    var sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+        }
+    }
 }

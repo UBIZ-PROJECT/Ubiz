@@ -196,14 +196,55 @@ class Pricing implements JWTSubject
             'rows_per_page' => $rows_per_page
         ];
     }
+    
+    public function getPricingCustomer($id)
+    {
+        try {
+            $customer = DB::table('customer')
+            ->leftJoin('customer_address', 'customer.cus_id', '=', 'customer_address.cus_id')
+            ->select('customer.*', 'customer_address.cad_address')
+            ->where('customer.cus_id', $id)
+            ->limit(1)
+            ->get();
+            
+            $customer[0]->avt_src = Helper::readImage($customer[0]->cus_avatar, 'cus');
+        }catch (\Throwable $e) {
+            throw $e;
+        }
+        return $customer;
+    }
+    
+    public function getPricingSale($id)
+    {
+        try {
+            $sale = DB::table('users')
+            ->select('users.*')
+            ->where('id', $id)
+            ->get();
+        }catch (\Throwable $e) {
+            throw $e;
+        }
+        return $sale;
+    }
 	
 	public function insertPricing($param) {
+// 	    print_r($param->request);exit;
+	    if(!$param['user_id']){
+	        $user_id = 1;
+	    }else{
+	        $user_id = $param['user_id'];
+	    }
+	    if(!$param['pri_code']){
+	        $pri_code = '99999';
+	    }else{
+	        $pri_code = $param['pri_code'];
+	    }
 		try {
 			$id = DB::table('pricing')->insertGetId(
 			  [
-				  'pri_code'=>$param['pri_code'],
+			      'pri_code'=>$pri_code,
 				  'cus_id'=>$param['cus_id'],
-				  'user_id'=>$param['user_id'],
+			      'user_id'=>$user_id,
 				  'pri_date'=>$param['pri_date'],
 				  'exp_date'=>$param['exp_date'],
 				  'inp_date'=>now(),
@@ -212,33 +253,94 @@ class Pricing implements JWTSubject
 				  'upd_user'=>'1'
 			  ]
 			);
-			foreach($param['pri_products'] as $pri_product){
-				$this->insertPricingProduct($id, $pri_product);
+			
+			$priCode = str_pad($id,5,'0',STR_PAD_LEFT);
+			
+			DB::table('pricing')->where('pri_id', $id)->update(
+			    [
+			        'pri_code'=>$priCode
+			    ]
+			);
+			
+			//insert new product
+			$productArrInsert = array();
+			if( !empty($param->new_p_specs) ){
+			    foreach($param->new_p_specs as $key => $new_p_specs){
+			        if(!$new_p_specs && !$param['new_p_unit'][$key] && !$param['new_p_amount'][$key] && !$param['new_p_delivery_date'][$key] && !$param['new_p_price'][$key])
+			        {
+			            continue;
+			        }
+			        
+			        $productArrInsert[] = ['pri_id' => $id,
+                    			            'code'   => null,
+                    			            'name'   => null,
+                    			            'type'   => 1,
+                    			            'price'  => str_replace('.','',$param['new_p_price'][$key]),
+                    			            'unit'   => $param['new_p_unit'][$key],
+                    			            'amount' => $param['new_p_amount'][$key],
+                    			            'delivery_date' => $param['new_p_delivery_date'][$key],
+                    			            'status' => $param['new_p_status'][$key],
+                    			            'specs'  => $new_p_specs,
+                    			            'inp_user' => 1,
+                    			            'inp_date' => date('Y-m-d'),
+                    			            'upd_user' => 1,
+                    			            'upd_date' => date('Y-m-d')
+			        ];
+			    }
+			}
+			
+			if( !empty($param->new_f_code) ){
+			    foreach($param->new_f_code as $key => $new_f_code){
+			        if(!$new_f_code && !$param['new_f_name'][$key] && !$param['new_f_unit'][$key] && !$param['new_f_amount'][$key] && !$param['new_f_delivery_date'][$key] && !$param['new_f_price'][$key])
+			        {
+			            continue;
+			        }
+			        
+			        $productArrInsert[] = ['pri_id' => $id,
+                    			            'code'   => $param['new_f_code'][$key],
+                    			            'name'   => $param['new_f_name'][$key],
+                    			            'type'   => 2,
+                    			            'price'  => str_replace('.','',$param['new_f_price'][$key]),
+                    			            'unit'   => $param['new_f_unit'][$key],
+                    			            'amount' => $param['new_f_amount'][$key],
+                    			            'delivery_date' => $param['new_f_delivery_date'][$key],
+                    			            'status' => $param['new_f_status'][$key],
+                    			            'specs'  => null,
+                    			            'inp_user' => 1,
+                    			            'inp_date' => date('Y-m-d'),
+                    			            'upd_user' => 1,
+                    			            'upd_date' => date('Y-m-d')
+			        ];
+			    }
+			}
+			
+			if( !empty($productArrInsert) ){
+			    DB::table('pricing_product')->insert($productArrInsert);
 			}
 		} catch (\Throwable $e) {
             throw $e;
         }
-        return $id;
+        return $priCode;
     }
 	
-	public function insertPricingProduct($pri_id, $pri_product) {
-		try {
-			DB::table('pricing_product')->insert(
-			  [
-				  'pri_id'=>$pri_id,
-				  'pro_id'=>$pri_product['pro_id'],
-				  'detail'=>$pri_product['detail'],
-				  'amount'=>$pri_product['amount'],
-				  'inp_date'=>now(),
-				  'upd_date'=>now(),
-				  'inp_user'=>'1',
-				  'upd_user'=>'1'
-			  ]
-			);
-		} catch (\Throwable $e) {
-            throw $e;
-        }
-    }
+// 	public function insertPricingProduct($pri_id, $pri_product) {
+// 		try {
+// 			DB::table('pricing_product')->insert(
+// 			  [
+// 				  'pri_id'=>$pri_id,
+// 				  'pro_id'=>$pri_product['pro_id'],
+// 				  'detail'=>$pri_product['detail'],
+// 				  'amount'=>$pri_product['amount'],
+// 				  'inp_date'=>now(),
+// 				  'upd_date'=>now(),
+// 				  'inp_user'=>'1',
+// 				  'upd_user'=>'1'
+// 			  ]
+// 			);
+// 		} catch (\Throwable $e) {
+//             throw $e;
+//         }
+//     }
 	
 	public function updatePricing($param) {
 // 	    print_r($param->request);exit;
@@ -289,6 +391,11 @@ class Pricing implements JWTSubject
 			$productArrInsert = array();
 			if( !empty($param->new_p_specs) ){
     			foreach($param->new_p_specs as $key => $new_p_specs){
+    			    if(!$new_p_specs && !$param['new_p_unit'][$key] && !$param['new_p_amount'][$key] && !$param['new_p_delivery_date'][$key] && !$param['new_p_price'][$key])
+    			    {
+    			        continue;
+    			    }
+    			    
     			    $productArrInsert[] = ['pri_id' => $param['pri_id'],
     			                           'code'   => null,
     			                           'name'   => null,
@@ -309,6 +416,11 @@ class Pricing implements JWTSubject
 			
 			if( !empty($param->new_f_code) ){
     			foreach($param->new_f_code as $key => $new_f_code){
+    			    if(!$new_f_code && !$param['new_f_name'][$key] && !$param['new_f_unit'][$key] && !$param['new_f_amount'][$key] && !$param['new_f_delivery_date'][$key] && !$param['new_f_price'][$key])
+    			    {
+    			        continue;
+    			    }
+    			    
     			    $productArrInsert[] = ['pri_id' => $param['pri_id'],
     			                           'code'   => $param['new_f_code'][$key],
     			                           'name'   => $param['new_f_name'][$key],
@@ -329,6 +441,16 @@ class Pricing implements JWTSubject
 			
 			if( !empty($productArrInsert) ){
 			 DB::table('pricing_product')->insert($productArrInsert);
+			}
+			
+			//delete product
+			if($param['del_list']){
+			    $delList = explode(",", $param['del_list']);
+			    DB::table('pricing_product')->whereIn('pro_id', $delList)->update(
+			         [
+			             'delete_flg' => '1'
+			         ]
+			    );
 			}
 			
 		} catch (\Throwable $e) {
