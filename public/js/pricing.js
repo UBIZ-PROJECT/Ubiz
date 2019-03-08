@@ -190,6 +190,8 @@ var del_list = new Array();
 			}else{
 				$('#f-input input').val('');
 				$('#avt_img').attr('src','../images/avatar.png');
+				var cus_id = getUrlParameter('c');
+				ubizapis('v1','/pricing-cus', 'get', null, {'cus_id': cus_id}, jQuery.UbizOIWidget.w_render_customer_to_input_page);
 			}
             jQuery.UbizOIWidget.o_page.hide();
             jQuery.UbizOIWidget.i_page.fadeIn("slow");
@@ -216,6 +218,46 @@ var del_list = new Array();
 				ids.push(id);
 				jQuery.UbizOIWidget.w_delete(ids);
 			});
+			
+			$('input[name="new_p_price[]"]').keyup(function(){
+		    	$(this).val(commaSeparateNumber($(this).val().replace(/\./g,'')));
+		    });
+		    
+		    $('input[name="new_p_price[]"]').keyup(function(){
+		    	var total = $(this).val().replace(/\./g,'') * $(this).parent().parent().find('input[name="new_p_amount[]"]').val();
+		    	$(this).parent().parent().find('input[name="new_p_total[]"]').val(commaSeparateNumber(total));
+		    });
+		    
+		    $('input[name="new_p_amount[]"]').keyup(function(){
+		    	var total = $(this).parent().parent().find('input[name="new_p_price[]"]').val().replace(/\./g,'') * $(this).val();
+		    	$(this).parent().parent().find('input[name="new_p_total[]"]').val(commaSeparateNumber(total));
+		    });
+		    
+		    
+		    //validate number
+		    $('input[name="new_p_amount[]"]').inputFilter(function(value) {
+		    	  return /^-?\d*$/.test(value); 
+		    });
+		    
+		    $('input[name="new_f_price[]"]').keyup(function(){
+		    	$(this).val(commaSeparateNumber($(this).val().replace(/\./g,'')));
+		    });
+		    
+		    $('input[name="new_f_price[]"]').keyup(function(){
+		    	var total = $(this).val().replace(/\./g,'') * $(this).parent().parent().find('input[name="new_f_amount[]"]').val();
+		    	$(this).parent().parent().find('input[name="new_f_total[]"]').val(commaSeparateNumber(total));
+		    });
+		    
+		    $('input[name="new_f_amount[]"]').keyup(function(){
+		    	var total = $(this).parent().parent().find('input[name="new_f_price[]"]').val().replace(/\./g,'') * $(this).val();
+		    	$(this).parent().parent().find('input[name="new_f_total[]"]').val(commaSeparateNumber(total));
+		    });
+		    
+		    
+		    //validate number
+		    $('input[name="new_f_amount[]"]').inputFilter(function(value) {
+		    	  return /^-?\d*$/.test(value); 
+		    });
         },
 		w_go_to_input_page_paging: function (index) {
 			var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
@@ -314,6 +356,21 @@ var del_list = new Array();
             jQuery.UbizOIWidget.w_reset_f_checkbox_status();
             jQuery.UbizOIWidget.page = response.data.paging.page;
             jQuery.UbizOIWidget.w_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
+        },
+        w_render_customer_to_input_page: function (response) {
+        	var customer = response.data.customer[0];
+        	$('input[name="cus_id"]').val(customer.cus_id);
+			$('input[name="cus_code"]').val(customer.cus_code);
+			$('input[name="cus_name"]').val(customer.cus_name);
+			$('input[name="cus_type"]').val(customer.cus_type);
+			$('input[name="cus_phone"]').val(customer.cus_phone);
+			$('input[name="cus_fax"]').val(customer.cus_fax);
+			$('input[name="cus_mail"]').val(customer.cus_mail);
+			if(customer.avt_src != ''){
+				$('#avt_img').attr("src", customer.avt_src);
+			}else{
+				$('#avt_img').attr('src','../images/avatar.png');
+			}
         },
 		w_render_data_to_input_page: function (response) {
 			var pricing = response.data.pricings[0];
@@ -600,6 +657,7 @@ var del_list = new Array();
                     icon: "error",
                 });
             }
+			history.pushState({}, null, 'http://ubiz.local/pricing');
 		},
 		w_preview_avatar: function (input) {
 			if (input.files && input.files[0]) {
@@ -730,25 +788,27 @@ jQuery(document).ready(function () {
     jQuery.UbizOIWidget.w_init();
     
   //get customer id
-    var getUrlParameter = function getUrlParameter(sParam) {
-        var sPageURL = window.location.search.substring(1),
-            sURLVariables = sPageURL.split('&'),
-            sParameterName,
-            i;
-
-        for (i = 0; i < sURLVariables.length; i++) {
-            sParameterName = sURLVariables[i].split('=');
-
-            if (sParameterName[0] === sParam) {
-                return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
-            }
-        }
-    };
+//    var getUrlParameter = function getUrlParameter(sParam) {
+//        var sPageURL = window.location.search.substring(1),
+//            sURLVariables = sPageURL.split('&'),
+//            sParameterName,
+//            i;
+//
+//        for (i = 0; i < sURLVariables.length; i++) {
+//            sParameterName = sURLVariables[i].split('=');
+//
+//            if (sParameterName[0] === sParam) {
+//                return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+//            }
+//        }
+//    };
     var cus_id = getUrlParameter('c');
     
     if(cus_id != undefined){
     	jQuery.UbizOIWidget.w_create();
     }
+    
+    $(".zY").remove();
 });
 
 
@@ -796,4 +856,19 @@ function commaSeparateNumber(val){
       val = val.toString().replace(/(\d+)(\d{3})/, '$1'+'.'+'$2');
     }
     return val;
+}
+
+function getUrlParameter(sParam) {
+    var sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+        }
+    }
 }

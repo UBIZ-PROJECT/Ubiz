@@ -66,19 +66,19 @@ class PricingController extends Controller
     {
         try {
             $pricing = new Pricing();
-            $pricing->insertPricing($request);
+            $priCode = $pricing->insertPricing($request);
             list($page, $sort, $search) = $this->getRequestData($request);
             $pricingList = $pricing->getPricingList($page, $sort, $search);
             $paging = $pricing->getPagingInfo();
             $paging['page'] = $page;
             foreach($pricingList as $key => $item){
-                $pricingProducts = $pricing->getPricingProduct($item->cus_id);
+                $pricingProducts = $pricing->getPricingProduct($item->pri_id);
                 $pricingList[$key]->product = $pricingProducts;
             }
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['pricingList' => $pricingList, 'paging' => $paging, 'success' => true, 'message' => 'Xử lý thành công'], 200);
+        return response()->json(['pricingList' => $pricingList, 'paging' => $paging, 'success' => true, 'message' => 'Tạo thành công báo giá với mã báo giá ['.$priCode.']'], 200);
     }
 	
 	public function updatePricing(Request $request)
@@ -117,6 +117,18 @@ class PricingController extends Controller
             throw $e;
         }
         return response()->json(['pricingList' => $pricingList, 'paging' => $paging, 'success' => true, 'message' => 'Xử lý thành công'], 200);
+    }
+    
+    public function getPricingCustomer(Request $request)
+    {
+        try {
+            
+            $pricing = new Pricing();
+            $customer = $pricing->getPricingCustomer($request->cus_id);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['customer' => $customer, 'success' => true, 'message' => ''], 200);
     }
 	
 	public function getRequestData(Request $request)
