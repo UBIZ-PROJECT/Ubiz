@@ -242,6 +242,14 @@ class Customer implements JWTSubject
 			  ]
 			);
 			
+			DB::table('customer_address')->where('cus_id', '=', $param['cus_id'])->delete();
+			
+			foreach($param['cus_address'] as $cad_address){
+			    if($cad_address){
+			        $this->insertCustomerAddress($param['cus_id'], $cad_address);
+			    }
+			}
+			
 		} catch (\Throwable $e) {
             throw $e;
         }

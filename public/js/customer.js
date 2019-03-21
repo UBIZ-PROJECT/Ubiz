@@ -356,8 +356,13 @@
 			
 			if(customer.address.length > 0){
 				$(".cus_address\\[\\]_container").remove();
-				for(var i = 0; i < customer.address.length; i++){
-					var html = '<div class="textfield  root_textfield rootIsUnderlined cus_address[]_container"><div class="wrapper"><label for="cus_address[]" class="ms-Label root-56">Địa chỉ '+ (i+1) +' :</label><div class="fieldGroup"><input type="text" name="cus_address[]" id="cus_address[]" value="'+ customer.address[i].cad_address +'" class="input_field"></div></div><span class="error_message hidden-content"><div class="message-container"><p class="label_errorMessage css-57 errorMessage"><span class="error-message-text"></span></p></div></span></div>';
+				for(var i = 0; i < 3; i++){
+					if(typeof customer.address[i] != "undefined"){
+						var inp_address = customer.address[i].cad_address;
+					}else{
+						var inp_address = "";
+					}
+					var html = '<div class="textfield  root_textfield rootIsUnderlined cus_address[]_container"><div class="wrapper"><label for="cus_address[]" class="ms-Label root-56">Địa chỉ '+ (i+1) +' :</label><div class="fieldGroup"><input type="text" name="cus_address[]" id="cus_address[]" value="'+ inp_address +'" class="input_field"></div></div><span class="error_message hidden-content"><div class="message-container"><p class="label_errorMessage css-57 errorMessage"><span class="error-message-text"></span></p></div></span></div>';
 					$('.cus-part-2').append(html);
 				}
 			}
