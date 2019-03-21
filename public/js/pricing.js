@@ -97,13 +97,11 @@ var del_list = new Array();
             ubizapis('v1', '/pricing', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_clear_search_form:function(){
-            jQuery('#cus_code').val("");
-			jQuery('#cus_type').val("");
-            jQuery('#cus_name').val("");
-            jQuery('#cus_phone').val("");
-            jQuery('#cus_fax').val("");
-            jQuery('#cus_mail').val("");
-            jQuery('#cus_address').val("");
+            jQuery('#pri_code').val("");
+			jQuery('#cus_name').val("");
+            jQuery('#name').val("");
+            jQuery('#pri_date').val("");
+            jQuery('#exp_date').val("");
             jQuery.UbizOIWidget.page = '0';
             jQuery.UbizOIWidget.w_search();
         },
