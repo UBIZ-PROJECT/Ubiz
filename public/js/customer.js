@@ -362,7 +362,7 @@
 					}else{
 						var inp_address = "";
 					}
-					var html = '<div class="textfield  root_textfield rootIsUnderlined cus_address[]_container"><div class="wrapper"><label for="cus_address[]" class="ms-Label root-56">Địa chỉ '+ (i+1) +' :</label><div class="fieldGroup"><input type="text" name="cus_address[]" id="cus_address[]" value="'+ inp_address +'" class="input_field"></div></div><span class="error_message hidden-content"><div class="message-container"><p class="label_errorMessage css-57 errorMessage"><span class="error-message-text"></span></p></div></span></div>';
+					var html = '<div class="textfield  root_textfield rootIsUnderlined cus_address[]_container"><div class="wrapper"><label for="cus_address[]" class="ms-Label root-56 lbl-primary">Địa chỉ '+ (i+1) +' :</label><div class="fieldGroup"><input type="text" name="cus_address[]" id="cus_address[]" value="'+ inp_address +'" class="input_field" maxlength="250"></div></div><span class="error_message hidden-content"><div class="message-container"><p class="label_errorMessage css-57 errorMessage"><span class="error-message-text"></span></p></div></span></div>';
 					$('.cus-part-2').append(html);
 				}
 			}
