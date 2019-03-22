@@ -48,4 +48,11 @@ switch ($type) {
             </select>
         </div>
     </div>
+    <span class="error_message hidden-content">
+       <div class="message-container">
+          <p class="label_errorMessage css-57 errorMessage">
+              <span class="error-message-text"></span>
+          </p>
+       </div>
+    </span>
 </div>

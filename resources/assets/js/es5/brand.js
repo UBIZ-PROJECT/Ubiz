@@ -1467,7 +1467,18 @@ jQuery(document).ready(function () {
     $('#addSeriesModal').on('hide.bs.modal', function (e) {
         clearSeriesModal();
     })
+    $('#addSeriesModal #txt_keep_person').change(function() {
+        if ($(this).val() == "") $("#addSeriesModal .txt_expired_date_container").css("display","none");
+        else $("#addSeriesModal .txt_expired_date_container").css("display","");
+    })
 });
+
+function initModal() {
+    if ($('#addSeriesModal #txt_keep_person').val() == "")
+        $("#addSeriesModal .txt_expired_date_container").css("display","none");
+    else
+        $("#addSeriesModal .txt_expired_date_container").css("display","");
+}
 
 function initProduct(data, page) {
     var html = "";
@@ -1593,13 +1604,16 @@ function writeSeriesToTable(series) {
         html += "<td class='txt-stt'>" + (i + 1) +"</td>";
         html += "<td class='series_no'>" + seri.serial_no +"</td>";
         html += "<td class='series_inp_date'>" + seri.inp_date +"</td>";
-        html += "<td > <input type='hidden' class='series_kepper' value='"+seri.serial_keeper+"'><span>" + seri.name +"</span></td>";
+        html += "<td class='series_keep_date'>" + (isEmpty(seri.serial_keep_date) ? "" : seri.serial_keep_date)  +"</td>";
+        html += "<td class='series_expired_date'>" + (isEmpty(seri.serial_expired_date) ? "" : seri.serial_expired_date) +"</td>";
+        html += "<td > <input type='hidden' class='series_kepper' value='"+ seri.serial_keeper+"'><span>" + seri.name +"</span></td>";
         html += "<td class='series_note'>" + seri.serial_note +"</td>";
         html += "<td class='text-center'><input type='hidden' value='"+seri.prd_series_id+"' class='prd_series_id'>"+copyButton+ " " +deleteButton+"</td>";
         html+= "</tr>";
     }
 
     $(".tb-series").find("tbody").append(html);
+    $("#nicescroll-iput-2 #txt_quantity").val(series.length);
 }
 
 var series_row_selected;
@@ -1612,12 +1626,17 @@ function openSeriesModal(row) {
         var series_no =$(row).find(".series_no").html();
         var keeper =$(row).find(".series_kepper").val();
         var series_note=$(row).find(".series_note").html();
+        var expired_date =$(row).find(".series_expired_date").html();
         $("#addSeriesModal #txt_series_no").val(series_no);
         $("#addSeriesModal #txt_keep_person").val(keeper);
         $("#addSeriesModal #txt_series_note").val(series_note);
+        $("#addSeriesModal #txt_expired_date").val(expired_date);
         $("#addSeriesModal .btn-save").attr("onclick","seriesSave(1)");
     }
     $("#addSeriesModal").modal();
+    setTimeout(function() {
+        initModal();
+    }, 100);
 }
 
 function getSeriesDataForCreatePrd() {
@@ -1639,21 +1658,25 @@ function clearSeriesModal() {
     $("#addSeriesModal #txt_series_no").val("");
     $("#addSeriesModal #txt_keep_person").val("");
     $("#addSeriesModal #txt_series_note").val("");
+    $("#addSeriesModal #txt_expired_date").val("");
     series_row_selected = null;
 }
 
 function seriesSave(flg) {
-
+    if (!validateSeries(series_row_selected)) return;
     var series_no = $("#addSeriesModal #txt_series_no").val();
     var keeper  = $("#addSeriesModal #txt_keep_person").val();
     var series_note = $("#addSeriesModal #txt_series_note").val();
+    var expired_date = $("#addSeriesModal #txt_expired_date").val();
     var params = {
         prd_series_id: getProductSeriID(),
         prd_id: getProductId(),
         serial_no : series_no,
         serial_sts: isEmpty(keeper) ? "0" : "1",
         serial_keeper: keeper,
-        serial_note: series_note
+        serial_note: series_note,
+        serial_expired_date: !isEmpty(keeper) ? expired_date : "",
+        serial_keep_date: !isEmpty(keeper) ? getCurrentDate() : ""
     };
     if (!isEmpty($("#nicescroll-iput-2 #txt_prd_id").val())) {
         if (flg == 0) {
@@ -1710,6 +1733,7 @@ function updateTableSeries(row) {
     var keeper  = $("#addSeriesModal #txt_keep_person").val();
     var keeper_txt = $("#addSeriesModal #txt_keep_person option:selected").text();
     var series_note = $("#addSeriesModal #txt_series_note").val();
+    var txt_expired_date = $("#addSeriesModal #txt_expired_date").val();
     var prd_series_id = getProductId();
     var seri = {
         prd_series_id: getProductSeriID(),
@@ -1719,13 +1743,17 @@ function updateTableSeries(row) {
         serial_keeper: keeper,
         name: keeper_txt,
         serial_note: series_note,
-        inp_date: today
+        inp_date: today,
+        serial_expired_date: isEmpty(keeper) ? txt_expired_date : "",
+        serial_keep_date: !isEmpty(keeper) ? getCurrentDate() : ""
     };
     if (!isEmpty(row)) {
         $(row).find(".series_no").html(series_no);
         $(row).find(".series_kepper").val(keeper);
         $(row).find(".series_kepper").parent().find("span").html(keeper_txt);
         $(row).find(".series_note").html(series_note);
+        $(row).find(".series_expired_date").html(txt_expired_date);
+        $(row).find(".series_keep_date").html(today);
         $(row).find(".prd_series_id").val(prd_series_id);
     } else {
         var series = [];
@@ -1743,13 +1771,16 @@ function copySeries(row) {
     var series_no =$(cloneNewRow).find(".series_no").html();
     var keeper =$(cloneNewRow).find(".series_kepper").val();
     var series_note=$(cloneNewRow).find(".series_note").html();
+    var expired_date=$(cloneNewRow).find(".series_expired_date").html();
     var params = {
         prd_series_id: getProductSeriID(),
         prd_id:getProductId(),
         serial_no : series_no,
         serial_sts: isEmpty(keeper) ? "0" : "1",
         serial_keeper: keeper,
-        serial_note: series_note
+        serial_note: series_note,
+        serial_expired_date: !isEmpty(keeper) ? expired_date : "",
+        serial_keep_date: !isEmpty(keeper) ? getCurrentDate() : ""
     };
     if (isEmpty($("#nicescroll-iput-2 #txt_prd_id").val())) return;
     createNewSeries(params);
@@ -1779,6 +1810,7 @@ function reOrderStt() {
     for(i = 0; i < sttLength; i++) {
         $(stt[i]).html(i + 1);
     }
+    $("#nicescroll-iput-2 #txt_quantity").val(sttLength - 1);
 }
 
 function getProductId() {
@@ -1787,4 +1819,93 @@ function getProductId() {
 
 function getProductSeriID() {
     return  $(series_row_selected).find(".prd_series_id").val();
+}
+
+function validateSeries(row) {
+    removeErrorInput();
+    var isValid = true;
+    var txt_input = $("#addSeriesModal .modal-body input");
+    for(var i = 0; i < txt_input.length; i++) {
+        if ($(txt_input[i]).prop("required") == true) {
+            if ($(txt_input[i]).val() == "") {
+                isValid = false;
+                showErrorInput(txt_input[i], i18next.t("This input is required"));
+            }
+        }
+        var control_id = $(txt_input[i]).attr("id");
+        var control_value = $(txt_input[i]).val().trim();
+        var message = "";
+        switch(control_id) {
+            case "txt_expired_date":
+                // First check for the pattern
+                if(!/^\d{1,2}[\-\/]\d{1,2}[\-\/]\d{4}$/.test(control_value)){
+                    message = "Not correct format date";
+                    isValid = false;
+                }
+
+                // Parse the date parts to integers
+                var parts = control_value.split(/[\-\/]/);
+                var day = parseInt(parts[0], 10);
+                var month = parseInt(parts[1], 10);
+                var year = parseInt(parts[2], 10);
+
+                // Check the ranges of month and year
+                if(year < 1000 || year > 3000 || month == 0 || month > 12) {
+                    message = "Not correct format date";
+                    isValid = false;
+                }
+
+                var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+
+                // Adjust for leap years
+                if(year % 400 == 0 || (year % 100 != 0 && year % 4 == 0))
+                    monthLength[1] = 29;
+
+
+                if ((day > 0 && day <= monthLength[month - 1]) == false) {
+                    message = "Not correct format date";
+                    isValid = false;
+                } else {
+                    isGreaterDate = compareDate($(row).find(".series_keep_date").html(), control_value);
+                    if(isGreaterDate == -1){
+                        isValid = false;
+                        message = "Expired date have to greater than or equals to keep date";
+                    }
+
+                }
+                if (!isValid) {
+                    showErrorInput(txt_input[i], i18next.t(message));
+                }
+
+                break;
+        }
+    }
+    return isValid;
+}
+
+function compareDate(date1, date2) {
+    if (date1 == null || date1 == undefined || date1 == "") {
+        date1 = getCurrentDate();
+    }
+    var datePart1 = date1.split(/[\/-]/);
+    var datePart2 = date2.split(/[\/-]/);
+    if (parseInt(datePart2[2]) > parseInt(datePart1[2])) {
+        return 1;
+    } else if (parseInt(datePart2[2]) == parseInt(datePart1[2])) {
+        if (parseInt(datePart2[1]) > parseInt(datePart1[1]) ) {
+            return 1;
+        } else if (parseInt(datePart2[1]) == parseInt(datePart1[1]) ) {
+            if (parseInt(datePart2[0]) > parseInt(datePart1[0]) ) {
+                return 1;
+            } else if (parseInt(datePart2[0]) == parseInt(datePart1[0]) ) {
+                return 0;
+            } else {
+                return -1;
+            }
+        } else {
+            return -1;
+        }
+    } else {
+        return -1;
+    }
 }

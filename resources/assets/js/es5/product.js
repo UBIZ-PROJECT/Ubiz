@@ -1,5 +1,6 @@
 const _YES = i18next.t("Yes");
 const _NO = i18next.t("No");
+var ACS_QUANTITY_DEFAULT = 0;
 var lst_image_delete = [];
 (function ($) {
     UbizOIWidget = function () {
@@ -479,8 +480,9 @@ var lst_image_delete = [];
             $("#i-put #nicescroll-iput #txt_name").val(data.name).change(function() {inputChange(this, data.name)});
             $("#i-put #nicescroll-iput #txt_unit").val(data.acs_unit).change(function() {inputChange(this, data.acs_unit)});
             $("#i-put #nicescroll-iput #txt_acs_note").val(data.acs_note).change(function() {inputChange(this, data.acs_note)});
-            $("#i-put #nicescroll-iput #txt_name_type").val(data.acs_type_id).change(function() {inputChange(this, data.acs_type_id)}); // THY  fix thành combobox
-            $("#i-put #nicescroll-iput #txt_quantity").val(data.acs_quantity).change(function() {inputChange(this, data.acs_quantity)}); // THY fix thành Textarea
+            $("#i-put #nicescroll-iput #txt_name_type").val(data.acs_type_id).change(function() {inputChange(this, data.acs_type_id)});
+            $("#i-put #nicescroll-iput #txt_quantity").val(data.acs_quantity).change(function() {inputChange(this, data.acs_quantity)});
+            ACS_QUANTITY_DEFAULT = data.acs_quantity;
             if (data.images != undefined && data.images.length > 0) {
                 var controlImages = $("#i-put .img-show");
                 for(var i = 0; i < data.images.length; i++) {
@@ -750,15 +752,19 @@ function getKeeper() {
 
 function copyKeeper(row) {
     var cloneNewRow = $(row).closest("tr").clone();
+    var today = getCurrentDate();
+    $(cloneNewRow).find(".inp_date").html(today);
     $(".tb-keeper").find("tbody").append(cloneNewRow);
     reOrderStt();
     var quantity =$(cloneNewRow).find(".quantity").html();
     var keeper =$(cloneNewRow).find(".keeper").val();
     var note=$(cloneNewRow).find(".note").html();
+    var expired_date = $(cloneNewRow).find(".expired_date").html();
     var params = {
         quantity : quantity,
         keeper: keeper,
-        note: note
+        note: note,
+        expired_date: expired_date
     };
     params.acs_keeper_id= getAcsKeeperID();
     params.acs_id= getAccessoryId();
@@ -785,6 +791,8 @@ function writeKeeperToTable(accessoryKeeper) {
         html += "<tr ondblclick='openKeeperModal(this)'>";
         html += "<td class='txt-stt text-center'>" + (i + 1) +"</td>";
         html += "<td ><input type='hidden' class='keeper' value='"+acsKeeper.keeper+"' ><span>" + acsKeeper.name +"</span></td>";
+        html += "<td class='inp_date'>" + acsKeeper.inp_date +"</td>";
+        html += "<td class='expired_date'>" + acsKeeper.expired_date +"</td>";
         html += "<td class='quantity'>" + acsKeeper.quantity +"</td>";
         html += "<td class='note'>" + acsKeeper.note +"</td>";
         html += "<td class='text-center'><input type='hidden' value='"+acsKeeper.acs_keeper_id+"' class='acs_keeper_id'>"+copyButton+ " " +deleteButton+"</td>";
@@ -799,7 +807,8 @@ function getKeeperFromModal() {
         keeper : $("#addAcsKeeperModal #txt_keeper").val(),
         keeper_txt: $("#addAcsKeeperModal #txt_keeper option:selected").text(),
         quantity : $("#addAcsKeeperModal #txt_quantity").val(),
-        note : $("#addAcsKeeperModal #txt_note").val()
+        note : $("#addAcsKeeperModal #txt_note").val(),
+        expired_date : $("#addAcsKeeperModal #expired_date").val()
     }
 }
 
@@ -830,6 +839,7 @@ function updateTableKeeper(row) {
     var quantity = $("#addAcsKeeperModal #txt_quantity").val();
     var keeper  = $("#addAcsKeeperModal #txt_keeper").val();
     var keeper_txt = $("#addAcsKeeperModal #txt_keeper option:selected").text();
+    var expired_date = $("#addAcsKeeperModal #expired_date").val();
     var note = $("#addAcsKeeperModal #txt_note").val();
     var acs_keeper_id = getAcsKeeperID();
     var keeperObj = {
@@ -839,13 +849,15 @@ function updateTableKeeper(row) {
         keeper: keeper,
         name: keeper_txt,
         note: note,
-        inp_date: today
+        inp_date: today,
+        expired_date: expired_date
     };
     if (!isEmpty(row)) {
         $(row).find(".quantity").html(quantity);
         $(row).find(".keeper").val(keeper);
         $(row).find(".keeper").parent().find("span").html(keeper_txt);
         $(row).find(".note").html(note);
+        $(row).find(".expired_date").html(expired_date);
         $(row).find(".acs_keeper_id").val(acs_keeper_id);
     } else {
         var keepers = [];
@@ -881,9 +893,11 @@ function openKeeperModal(row) {
         keeper_row_selected = row;
         var quantity =$(row).find(".quantity").html();
         var keeper =$(row).find(".keeper").val();
+        var expired_date =$(row).find(".expired_date").html();
         var note=$(row).find(".note").html();
         $("#addAcsKeeperModal #txt_quantity").val(quantity);
         $("#addAcsKeeperModal #txt_keeper").val(keeper);
+        $("#addAcsKeeperModal #expired_date").val(expired_date);
         $("#addAcsKeeperModal #txt_note").val(note);
         $("#addAcsKeeperModal .btn-save").attr("onclick","keeperSave(1)");
     }
@@ -894,6 +908,8 @@ function clearKeeperModal() {
     $("#addAcsKeeperModal #txt_quantity").val("");
     $("#addAcsKeeperModal #txt_keeper").val("");
     $("#addAcsKeeperModal #txt_note").val("");
+    $("#addAcsKeeperModal #expired_date").val("");
+    removeErrorInput();
     keeper_row_selected = null;
 }
 
@@ -901,6 +917,7 @@ function keeperSave(flg) {
     var params = getKeeperFromModal();
     params.acs_keeper_id= getAcsKeeperID();
     params.acs_id= getAccessoryId();
+    if (validateKeeper(keeper_row_selected) == false) return;
     if (!isEmpty($("#nicescroll-iput #txt_code").val())) {
         if (flg == 0) {
             insertKeeper(params);
@@ -922,7 +939,8 @@ function getKeeperDataForCreateAcs() {
         lstKeeper.push({
             quantity: $(row).find(".quantity").html(),
             keeper: $(row).find(".keeper").val(),
-            note: $(row).find(".note").html()
+            note: $(row).find(".note").html(),
+            expired_date: $(row).find(".expired_date").html()
         });
     }
     return lstKeeper;
@@ -933,5 +951,130 @@ function reOrderStt() {
     var sttLength = $(".txt-stt").length + 1;
     for(i = 0; i < sttLength; i++) {
         $(stt[i]).html(i + 1);
+    }
+}
+
+function validateKeeper(row) {
+    removeErrorInput();
+    var isPass = true;
+    var txt_input = $("#addAcsKeeperModal .modal-body input, #addAcsKeeperModal .modal-body select");
+    for(var i = 0; i < txt_input.length; i++) {
+        if ($(txt_input[i]).prop("required") == true) {
+            if ($(txt_input[i]).val() == "") {
+                isValid = false;
+                showErrorInput(txt_input[i], i18next.t("This input is required"));
+            }
+        }
+        var control_id = $(txt_input[i]).attr("id");
+        var control_value = $(txt_input[i]).val().trim();
+        var message = "";
+        var param = {};
+        var isValid = true;
+        switch(control_id) {
+            case "txt_quantity":
+                var quantity_remain = ACS_QUANTITY_DEFAULT - countQuantityAcs(row); //số lượng phụ tùng còn lại
+                if (control_value == "") continue;
+                if (control_value.search(/\w/)) {
+                    isValid = false;
+                    message = "Just accpept only number!";
+                } else if (parseInt(control_value) > quantity_remain) {
+                    isValid = false;
+                    message = "Not enough quantity!";
+                    param = {"quantity": quantity_remain};
+                }
+                if (isValid == false){
+                    showErrorInput(txt_input[i], i18next.t(message, param));
+                    isPass = false;
+                }
+
+                break;
+            case "expired_date":
+                // First check for the pattern
+                if(!/^\d{1,2}[\-\/]\d{1,2}[\-\/]\d{4}$/.test(control_value)){
+                    message = "Not correct format date";
+                    isValid = false;
+                }
+
+                // Parse the date parts to integers
+                var parts = control_value.split(/[\-\/]/);
+                var day = parseInt(parts[0], 10);
+                var month = parseInt(parts[1], 10);
+                var year = parseInt(parts[2], 10);
+
+                // Check the ranges of month and year
+                if(year < 1000 || year > 3000 || month == 0 || month > 12) {
+                    message = "Not correct format date";
+                    isValid = false;
+                }
+
+                var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+
+                // Adjust for leap years
+                if(year % 400 == 0 || (year % 100 != 0 && year % 4 == 0))
+                    monthLength[1] = 29;
+
+                // Check the range of the day
+
+                if ((day > 0 && day <= monthLength[month - 1]) == false) {
+                    message = "Not correct format date";
+                    isValid = false;
+                } else {
+                    isGreaterDate = compareDate($(row).find(".keep_date").html(), control_value);
+                    if(isGreaterDate == -1){
+                        isValid = false;
+                        message = "Expired date have to greater than or equals to keep date";
+                    }
+
+                }
+                if (!isValid) {
+                    showErrorInput(txt_input[i], i18next.t(message));
+                    isPass = false;
+                }
+
+                break;
+        }
+    }
+    return isPass;
+}
+
+//đếm số lượng phụ tùng đã được giữ
+function countQuantityAcs(row) {
+    var txt_input = $("#nicescroll-iput  .tb-keeper .quantity");
+    var result = 0;
+    for(var i = 0; i < txt_input.length; i++) {
+        var quantity = parseInt($(txt_input[i]).html());
+        result+= quantity;
+    }
+    if (row != null && row != undefined) {
+        result -= parseInt($(row).find(".quantity").html());
+    }
+
+    return result;
+}
+
+function compareDate(date1, date2) {
+    if (date1 == null || date1 == undefined || date1 == "") {
+        date1 = getCurrentDate();
+    }
+    var datePart1 = date1.split(/[\/-]/);
+    var datePart2 = date2.split(/[\/-]/);
+    if (parseInt(datePart2[2]) > parseInt(datePart1[2])) {
+        return 1;
+    } else if (parseInt(datePart2[2]) == parseInt(datePart1[2])) {
+        if (parseInt(datePart2[1]) > parseInt(datePart1[1]) ) {
+            return 1;
+        } else if (parseInt(datePart2[1]) == parseInt(datePart1[1]) ) {
+            if (parseInt(datePart2[0]) > parseInt(datePart1[0]) ) {
+                return 1;
+            } else if (parseInt(datePart2[0]) == parseInt(datePart1[0]) ) {
+                return 0;
+            } else {
+                return -1;
+            }
+        } else {
+            return -1;
+        }
+    } else {
+        return -1;
     }
 }

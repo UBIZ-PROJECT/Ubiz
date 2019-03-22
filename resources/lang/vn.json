@@ -100,5 +100,15 @@
   "Paid Money": "Đã thanh toán",
   "Owed Money": "Còn nợ",
   "Search order": "Tìm kiếm đơn hàng",
-  "Accessory": "Phụ tùng"
+  "Accessory": "Phụ tùng",
+  "Specification": "Thông số kỷ thuật",
+  "Quantity": "Số lượng",
+  "Expired Date": "Ngày hết hạn",
+  "Keep Date": "Ngày giữ hàng",
+  "Keeper": "Người giữ hàng",
+  "Day/Month/Year": "Ngày/Tháng/Năm",
+  "Just accpept only number!": "Chỉ được nhập số!",
+  "Not enough quantity!": "Chỉ còn :quantity sản phẩm!",
+  "Not correct format date": "Định dạng ngày chưa chính xác!",
+  "Expired date have to greater than or equals to keep date": "Ngày hết hạng phải lớn hơn hoặc bằng với ngày giữ hàng!"
 }

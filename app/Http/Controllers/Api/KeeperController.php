@@ -22,6 +22,10 @@ class KeeperController extends Controller
             }
             $keeper = new Keeper();
             $data = $keeper->getKeeperPaging($acs_id);
+            foreach ($data as &$kp) {
+                $kp->inp_date = $this->convertDbDateToWebDate($kp->inp_date);
+                $kp->expired_date = $this->convertDbDateToWebDate($kp->expired_date);
+            }
             $paging = $keeper->getPagingInfo($acs_id);
         } catch (\Throwable $e) {
             throw $e;
@@ -57,5 +61,14 @@ class KeeperController extends Controller
             $keeper->deleteKeeper($id);
         }
         return response()->json(['message' => $message, 'method'=>'delete'], 200);
+    }
+
+    public function convertDbDateToWebDate($date) {
+        if (!empty($date)) {
+            $time = strtotime($date);
+            $newFormat = date("d/m/Y", $time);
+            return $newFormat;
+        }
+        return "";
     }
 }
