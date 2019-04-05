@@ -192,7 +192,9 @@ class Customer implements JWTSubject
 			  ]
 			);
 			foreach($param['cus_address'] as $cad_address){
-				$this->insertCustomerAddress($id, $cad_address);
+			    if($cad_address){
+				    $this->insertCustomerAddress($id, $cad_address);
+			    }
 			}
 		} catch (\Throwable $e) {
             throw $e;
@@ -240,6 +242,14 @@ class Customer implements JWTSubject
 			  ]
 			);
 			
+			DB::table('customer_address')->where('cus_id', '=', $param['cus_id'])->delete();
+			
+			foreach($param['cus_address'] as $cad_address){
+			    if($cad_address){
+			        $this->insertCustomerAddress($param['cus_id'], $cad_address);
+			    }
+			}
+			
 		} catch (\Throwable $e) {
             throw $e;
         }
@@ -252,10 +262,10 @@ class Customer implements JWTSubject
         if (sizeof($search) > 0) {
             if (isset($search['contain']) || isset($search['notcontain'])) {
 
-                $search_val = "%" . $search['search'] . "%";
                 if(isset($search['contain'])){
+                    $search_val = "%" . $search['contain'] . "%";
                     $where_raw .= " AND (";
-                    $where_raw .= "customer.cus_code like ?'";
+                    $where_raw .= "customer.cus_code like ?";
                     $params[] = $search_val;
                     $where_raw .= " OR customer.cus_name like ?";
                     $params[] = $search_val;
@@ -267,12 +277,13 @@ class Customer implements JWTSubject
                     $params[] = $search_val;
                     $where_raw .= " OR customer.cus_phone like ?";
                     $params[] = $search_val;
-                    $where_raw .= " OR customer_address.address like ?";
+                    $where_raw .= " OR customer_address.cad_address like ?";
                     $params[] = $search_val;
                     $where_raw .= " ) ";
                 }
                 if(isset($search['notcontain'])){
-                    $where_raw .= "customer.cus_code not like ?'";
+                    $search_val = "%" . $search['notcontain'] . "%";
+                    $where_raw .= "customer.cus_code not like ?";
                     $params[] = $search_val;
                     $where_raw .= " OR customer.cus_name not like ?";
                     $params[] = $search_val;

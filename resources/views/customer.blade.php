@@ -442,18 +442,18 @@
 								</div>
 								<div class="col-sm-5 col-md-5 col-xl-5">
 									<input type="hidden" name="cus_id" value="0"/>
-									@include('components.input',['type'=>'required', 'control_id'=>'cus_code', 'label'=>'Mã'])
-									@include('components.input',['type'=>'required', 'control_id'=>'cus_name', 'label'=>'Tên khách hàng'])
-									@include('components.input',['type'=>'required', 'control_id'=>'cus_type', 'label'=>'Loại khách hàng'])
-									@include('components.input',['control_id'=>'cus_phone', 'label'=>'Số điện thoại'])
+									@include('components.input',['type'=>'required', 'control_id'=>'cus_code', 'label'=>'Mã', 'length'=>5])
+									@include('components.input',['type'=>'required', 'control_id'=>'cus_name', 'label'=>'Tên khách hàng', 'length'=>100])
+									@include('components.input',['type'=>'required', 'control_id'=>'cus_type', 'label'=>'Loại khách hàng', 'length'=>2])
+									@include('components.input',['control_id'=>'cus_phone', 'label'=>'Số điện thoại', 'length'=>15])
 								</div>
 								<div class="col-sm-5 col-md-5 col-xl-5 z-pdr cus-part-2">
-									@include('components.input',['control_id'=>'cus_fax', 'label'=>'Fax'])
-									@include('components.input',['control_id'=>'cus_mail', 'label'=>'Email'])
-									@include('components.input',['control_id'=>'user_id', 'label'=>'Nhân viên phụ trách'])
-									@include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 1'])
-									@include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 2'])
-									@include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 3'])
+									@include('components.input',['control_id'=>'cus_fax', 'label'=>'Fax', 'length'=>20])
+									@include('components.input',['control_id'=>'cus_mail', 'label'=>'Email', 'length'=>100])
+									@include('components.input',['control_id'=>'user_id', 'label'=>'Nhân viên phụ trách', 'length'=>11])
+									@include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 1', 'length'=>250])
+									@include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 2', 'length'=>250])
+									@include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 3', 'length'=>250])
 								</div>
 							</div>
 							

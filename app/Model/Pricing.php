@@ -133,10 +133,9 @@ class Pricing implements JWTSubject
 			$pricing = DB::table('pricing')
 				->leftJoin('customer', 'pricing.cus_id', '=', 'customer.cus_id')
 				->leftJoin('users', 'pricing.user_id', '=', 'users.id')
-				->select('pricing.*', 'customer.*', 'users.name')
+				->select('customer.*','pricing.*', 'users.name')
 				->where('pri_id', $id)
 				->get();
-				
 			// $pricingProducts = DB::table('pricing_product')
 				// ->select('pricing_product.*')
 				// ->where('pri_id', $id)

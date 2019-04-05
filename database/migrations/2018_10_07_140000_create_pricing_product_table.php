@@ -23,7 +23,7 @@ class CreatePricingProductTable extends Migration
 			$table->string('unit', 20);
 			$table->integer('amount');
 			$table->string('specs');
-			$table->timestamp('delivery_date')->nullable();
+			$table->string('delivery_date', 20)->nullable();
 			$table->char('status', 1);
             $table->char('delete_flg', 1)->default('0');
             $table->timestamp('inp_date')->nullable();

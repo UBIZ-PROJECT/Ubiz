@@ -408,17 +408,17 @@
 									</tr>
 									<tr>
 										<td class="index_no">1</td>
-										<td><textarea size="5" name="new_p_specs[]" class="inp-specs"></textarea></td>
-										<td><input type="text" name="new_p_unit[]" class="inp70"/></td>
-										<td><input type="text" name="new_p_amount[]" class="inp70"/></td>
-										<td><input type="text" name="new_p_delivery_date[]" class="inp100"/></td>
+										<td><textarea size="5" name="new_p_specs[]" class="inp-specs" maxlength="250"></textarea></td>
+										<td><input type="text" name="new_p_unit[]" class="inp70" maxlength="20"/></td>
+										<td><input type="text" name="new_p_amount[]" class="inp70" maxlength="11"/></td>
+										<td><input type="text" name="new_p_delivery_date[]" class="inp100" maxlength="20"/></td>
 										<td>
 											<select name="new_p_status[]" class="inp100">
 												<option value="1" selected>Sẵn có</option>
 												<option value="0">Order</option>
 											</select>
 										</td>
-										<td><input type="text" name="new_p_price[]" class="inp100"/></td>
+										<td><input type="text" name="new_p_price[]" class="inp100" maxlength="11"/></td>
 										<td><input type="text" name="new_p_total[]" class="inp130" disabled/></td>
 										<td><a href="#" class="delete_p_row"><i class="far fa-trash-alt" style="color:red"></i></a></td>
 									</tr>
@@ -444,18 +444,18 @@
 									</tr>
 									<tr>
 										<td class="index_f_no">1</td>
-										<td><input type="text" name="new_f_code[]" class="inp70"/></td>
-										<td><input type="text" name="new_f_name[]" class="inp130"/></td>
-										<td><input type="text" name="new_f_unit[]" class="inp70"/></td>
-										<td><input type="text" name="new_f_amount[]" class="inp70"/></td>
-										<td><input type="text" name="new_f_delivery_date[]" class="inp100"/></td>
+										<td><input type="text" name="new_f_code[]" class="inp70" maxlength="5"/></td>
+										<td><input type="text" name="new_f_name[]" class="inp130" maxlength="100"/></td>
+										<td><input type="text" name="new_f_unit[]" class="inp70" maxlength="20"/></td>
+										<td><input type="text" name="new_f_amount[]" class="inp70" maxlength="11"/></td>
+										<td><input type="text" name="new_f_delivery_date[]" class="inp100" maxlength="20"/></td>
 										<td>
 											<select name="new_f_status[]" class="inp100">
 												<option value="1" selected>Sẵn có</option>
 												<option value="0">Order</option>
 											</select>
 										</td>
-										<td><input type="text" name="new_f_price[]" class="inp100"/></td>
+										<td><input type="text" name="new_f_price[]" class="inp100" maxlength="11"/></td>
 										<td><input type="text" name="new_f_total[]" class="inp110" disabled/></td>
 										<td><a href="#" class="delete_f_row"><i class="far fa-trash-alt" style="color:red"></i></a></td>
 									</tr>
