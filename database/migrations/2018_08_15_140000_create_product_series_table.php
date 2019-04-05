@@ -24,6 +24,8 @@ class CreateProductSeriesTable extends Migration
             $table->char('serial_sts', 1);
             $table->integer('serial_keeper')->nullable();
             $table->string('serial_note')->nullable();
+            $table->timestamp('serial_keep_date')->nullable();
+            $table->timestamp('serial_expired_date')->nullable();
             $table->char('delete_flg', 1)->default('0');
             $table->timestamp('inp_date');
             $table->integer('inp_user');
