@@ -59,6 +59,9 @@ class AccessoryController extends Controller
             if ($request->has("accessory")) { //accessory
                 list($page, $sort, $search) = $this->getPageSortSearch($request);
                 $params = json_decode($request->input('accessory'), true);
+                if ($request->has("keeper")) {
+                    $params['keeper'] = json_decode($request->input("keeper"), true);
+                }
                 if (!empty($request->file('image-upload'))) {
                     foreach ($request->file('image-upload') as $index=>$imageUpload) {
                         $params['images'][$index]['extension'] = $imageUpload->getClientOriginalExtension();

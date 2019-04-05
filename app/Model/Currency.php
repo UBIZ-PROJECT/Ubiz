@@ -93,7 +93,7 @@ class Currency
         return $count;
     }
 
-    public function getPagingInfo($search)
+    public function getPagingInfo($search=[])
     {
         try {
             $rows_per_page = env('ROWS_PER_PAGE', 10);

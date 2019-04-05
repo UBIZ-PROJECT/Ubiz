@@ -20,19 +20,19 @@ body {
     height: 100px;
 }
 
-#nicescroll-oput #table-content .tcB .cbo {
+.product-content #table-content .tcB .cbo {
     height: 110px;
 }
 
-#nicescroll-oput #table-content .tcB .cbo .nCj {
+.product-content #table-content .tcB .cbo .nCj {
     position: relative;
     top: 30px;
 }
 
-#nicescroll-oput #table-content .tcB .cbo .nCT, #nicescroll-oput #table-content .tcB .cbo .jgQ {
+.product-content #table-content .tcB .cbo .nCT, .product-content #table-content .tcB .cbo .jgQ {
     top: 30px;
 }
-#nicescroll-oput #table-content .tcB .cbo .nCji {
+.product-content #table-content .tcB .cbo .nCji {
     position: relative;
     top: 4px;
 }
@@ -78,26 +78,6 @@ body {
     border: 2px solid #345F90;
 }
 
-#nicescroll-sidebar .sP .aW.aT{
-    padding: 20px 0;
-}
-
-#nicescroll-sidebar .sP .aW.aT a{
-    padding: 20px 0;
-    text-decoration: none;
-}
-
-#nicescroll-sidebar .sP .aW.NaT{
-    padding: 20px 0;
-    color: #757575;
-}
-#nicescroll-sidebar .sP .aW.NaT a{
-    padding: 20px 0;
-    color: #757575;
-    text-decoration: none;
-}
-
-
 .r-content #o-put .brd-content {
     width: 97%;
     height: 100%;
@@ -125,6 +105,18 @@ body {
     top: 20%;
 }
 
+#i-put-2 #nicescroll-iput-2 .tb-series-container {
+    max-height: 500px;
+    display: block;
+    overflow-y: auto;
+    max-width: 83%;
+}
+
+
+#i-put-2 #nicescroll-iput-2 .title-series {
+    width: 83%;
+}
+
 @media only screen and (max-width: 1366px) {
     .r-content #o-put .brd-content .brd-box {
         width: 15%;
@@ -145,6 +137,16 @@ body {
         position: absolute;
         left: 21%;
         top: 20%;
+    }
+
+    #i-put-2 #nicescroll-iput-2 .tb-series-container {
+        max-height: 400px;
+        display: block;
+        overflow-y: auto;
+        max-width: 90%;
+    }
+    #i-put-2 #nicescroll-iput-2 .title-series {
+        width: 90%;
     }
 }
 
@@ -283,12 +285,12 @@ body {
 }
 
 #i-put-2 #nicescroll-iput-2 .tb-series {
-    max-width: 83%;
+    max-width: 100%;
 }
 
 #i-put-2 #nicescroll-iput-2 .tb-series .fa {
     font-size: 25px;
-    margin: 0 10px;
+    margin: 0 5px;
     cursor: pointer;
 }
 
@@ -335,4 +337,39 @@ body {
     line-height: 50px;
     font-size: 12px;
     font-weight: 500;
+}
+
+.label-change-prd {
+    background: rgba(0, 0, 0, .54);
+    width: 100px;
+    height: 30px;
+    position: absolute;
+    top: 47%;
+    text-align: center;
+    display: none;
+    color: white;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    vertical-align: middle;
+    line-height: 30px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.image-upload:hover .label-change-prd {
+    display: block;
+}
+
+.ubiz-search {
+    display: none;
+}
+
+.ubiz-search.active {
+    display: block;
+    width: 100%;
+}
+
+.prd-image {
+    width: 100px;
+    height: 100px;
 }

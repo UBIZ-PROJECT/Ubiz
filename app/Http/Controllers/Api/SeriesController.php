@@ -26,6 +26,8 @@ class SeriesController extends Controller
             $data = $series->getSeriesPaging($prd_id, $page, $sort,$search);
             foreach ($data as &$seri) {
                 $seri->inp_date = $this->convertDbDateToWebDate($seri->inp_date);
+                $seri->serial_expired_date = $this->convertDbDateToWebDate($seri->serial_expired_date);
+                $seri->serial_keep_date = $this->convertDbDateToWebDate($seri->serial_keep_date);
             }
             $paging = $series->getPagingInfo($sort,$search);
             $paging['page'] = $page;

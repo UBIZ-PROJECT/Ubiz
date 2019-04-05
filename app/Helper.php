@@ -32,6 +32,9 @@ class Helper
         } else {
             $target_file = $target_dir . $target_img;
         }
+        if ($target_dir !== "/" && $target_dir !== "" && !is_dir($target_dir)) {
+            mkdir($target_dir, 0777,true);
+        }
         $image->load($img);
         $image->save($target_file);
     }

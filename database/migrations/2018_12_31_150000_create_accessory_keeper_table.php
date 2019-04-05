@@ -22,6 +22,8 @@ class CreateAccessoryKeeperTable extends Migration
             $table->integer('acs_id');
             $table->integer('keeper');
             $table->integer('quantity')->nullable();
+            $table->string('note')->nullable();
+            $table->timestamp('expired_date')->nullable();
             $table->char('delete_flg', 1)->default('0');
             $table->timestamp('inp_date');
             $table->integer('inp_user');

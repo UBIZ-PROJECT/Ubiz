@@ -2,6 +2,10 @@
 
 $html_type = '';
 $html_control_type = '';
+$html_placeholder = '';
+if (isset($placeholder)) {
+    $html_placeholder = $placeholder;
+}
 if (!isset($type)) {
     $type = '';
 }
@@ -40,7 +44,7 @@ switch ($type) {
     <div class="wrapper">
         <label for="{{$control_id}}" class="ms-Label root-56 lbl-primary" style="{{$lbl_style}}">{{$label}}:</label>
         <div class="fieldGroup">
-            <input is-change="false" onfocus="i_focus(this)" onblur="i_blur(this)" spellcheck="false" type="text" {{ $html_max_length }} {{$html_control_type}} id="{{$control_id}}" name="{{$control_id}}" value="" class="input_field {{ $html_class }}">
+            <input is-change="false" onfocus="i_focus(this)" placeholder="{{$html_placeholder}}" onblur="i_blur(this)" spellcheck="false" type="text" {{ $html_max_length }} {{$html_control_type}} id="{{$control_id}}" name="{{$control_id}}" value="" class="input_field {{ $html_class }}">
         </div>
     </div>
     <span class="error_message hidden-content">

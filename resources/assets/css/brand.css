@@ -20,19 +20,19 @@ body {
     height: 100px;
 }
 
-#nicescroll-oput #table-content .tcB .cbo {
+.product-content #table-content .tcB .cbo {
     height: 110px;
 }
 
-#nicescroll-oput #table-content .tcB .cbo .nCj {
+.product-content #table-content .tcB .cbo .nCj {
     position: relative;
     top: 30px;
 }
 
-#nicescroll-oput #table-content .tcB .cbo .nCT, #nicescroll-oput #table-content .tcB .cbo .jgQ {
+.product-content #table-content .tcB .cbo .nCT, .product-content #table-content .tcB .cbo .jgQ {
     top: 30px;
 }
-#nicescroll-oput #table-content .tcB .cbo .nCji {
+.product-content #table-content .tcB .cbo .nCji {
     position: relative;
     top: 4px;
 }
@@ -307,19 +307,19 @@ body {
 }
 
 #i-put-2 #nicescroll-iput-2 .tb-series .col2 {
-    width: 15%;
+    width: 10%;
 }
 
 #i-put-2 #nicescroll-iput-2 .tb-series .col3 {
-    width: 15%;
+    width: 10%;
 }
 
 #i-put-2 #nicescroll-iput-2 .tb-series .col4 {
-    width: 20%;
+    width: 15%;
 }
 
 #i-put-2 #nicescroll-iput-2 .tb-series .col5 {
-    width: 35%;
+    width: 30%;
 }
 
 .label-change {
@@ -367,4 +367,9 @@ body {
 .ubiz-search.active {
     display: block;
     width: 100%;
+}
+
+.prd-image {
+    width: 100px;
+    height: 100px;
 }

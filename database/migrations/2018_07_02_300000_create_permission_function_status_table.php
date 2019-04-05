@@ -34,6 +34,6 @@ class CreatePermissionFunctionStatusTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('m_permission');
+        Schema::dropIfExists('permission_function_status');
     }
 }

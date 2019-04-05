@@ -371,9 +371,11 @@
                                         </div>
                                         <div class="tcB col-2">
                                             <div class="cbo">
+                                                <?php if ($prd->prd_img_id) {?>
                                                 <div class="nCji" title="{{$prd->prd_img_id}}">
                                                     <img {{empty($prd->image) ? '' : 'src='.$prd->image}}  class="{{empty($prd->image) ? '' : 'img-thumbnail '}}prd-image"/>
                                                 </div>
+                                                <?php }?>
                                             </div>
                                         </div>
                                         <div class="tcB col-3">
@@ -511,9 +513,11 @@
                                     <thead>
                                         <tr class="table-primary">
                                             <th class="keep-col-1 text-center">STT</th>
-                                            <th class="keep-col-3 ">Nhân Viên</th>
+                                            <th class="keep-col-3 ">Người giữ hàng</th>
+                                            <th class="keep-col-3 ">{{__("Keep Date")}}</th>
+                                            <th class="keep-col-3 ">{{__("Expired Date")}}</th>
                                             <th class="keep-col-1 ">Số lượng</th>
-                                            <th class="keep-col-2 ">Note</th>
+                                            <th class="keep-col-2 ">{{__("Note")}}</th>
                                             <th class="keep-col-4 "></th>
                                         </tr>
                                     </thead>
@@ -540,8 +544,9 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    @include('components.dropdown',['width'=>'250','control_id'=>'txt_keeper', 'label'=>__("Nhân Viên"), 'data'=> Helper::convertDataToDropdownOptions($users, 'id', 'name')])
-                    @include('components.input',['width'=>'250','type'=>'required', 'control_id'=>'txt_quantity', 'label'=>__("Số Lượng"), 'length'=>10])
+                    @include('components.dropdown',['width'=>'250','type'=>'required', 'control_id'=>'txt_keeper', 'label'=>__("Keeper"), 'data'=> Helper::convertDataToDropdownOptions($users, 'id', 'name')])
+                    @include('components.input',['width'=>'250','type'=>'required', 'control_id'=>'txt_quantity', 'label'=>__("Quantity"), 'length'=>10])
+                    @include('components.input',['width'=>'250','type'=>'required', 'placeholder'=>__("Day/Month/Year"),'control_id'=>'expired_date', 'label'=>__("Expired Date"), 'length'=>10])
                     @include('components.textarea',['width'=>'250', 'control_id'=>'txt_note', 'label'=>__('Note')])
                 </div>
                 <div class="modal-footer">
@@ -553,5 +558,5 @@
     </div>
 @endsection
 @section('end-javascript')
-    <script type="text/javascript" src="{{ asset('js/product.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/product.js?v=12') }}"></script>
 @endsection
