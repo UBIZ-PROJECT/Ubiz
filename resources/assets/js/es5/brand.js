@@ -1468,16 +1468,16 @@ jQuery(document).ready(function () {
         clearSeriesModal();
     })
     $('#addSeriesModal #txt_keep_person').change(function() {
-        if ($(this).val() == "") $("#addSeriesModal .txt_expired_date_container").css("display","none");
-        else $("#addSeriesModal .txt_expired_date_container").css("display","");
+        if ($(this).val() == "") $("#addSeriesModal .txt_expired_date_container").css("display","none").find("#txt_expired_date").addClass("input-hidden");
+        else $("#addSeriesModal .txt_expired_date_container").css("display","").find("#txt_expired_date").removeClass("input-hidden");
     })
 });
 
 function initModal() {
     if ($('#addSeriesModal #txt_keep_person').val() == "")
-        $("#addSeriesModal .txt_expired_date_container").css("display","none");
+        $("#addSeriesModal .txt_expired_date_container").css("display","none").find("#txt_expired_date").addClass("input-hidden");
     else
-        $("#addSeriesModal .txt_expired_date_container").css("display","");
+        $("#addSeriesModal .txt_expired_date_container").css("display","").find("#txt_expired_date").removeClass("input-hidden");
 }
 
 function initProduct(data, page) {
@@ -1826,7 +1826,7 @@ function validateSeries(row) {
     var isValid = true;
     var txt_input = $("#addSeriesModal .modal-body input");
     for(var i = 0; i < txt_input.length; i++) {
-        if ($(txt_input[i]).prop("required") == true) {
+        if ($(txt_input[i]).prop("required") == true && $(txt_input[i]).hasClass("input-hidden") == false) {
             if ($(txt_input[i]).val() == "") {
                 isValid = false;
                 showErrorInput(txt_input[i], i18next.t("This input is required"));
@@ -1837,6 +1837,7 @@ function validateSeries(row) {
         var message = "";
         switch(control_id) {
             case "txt_expired_date":
+                if ($("#" + control_id).hasClass("input-hidden")) break;
                 // First check for the pattern
                 if(!/^\d{1,2}[\-\/]\d{1,2}[\-\/]\d{4}$/.test(control_value)){
                     message = "Not correct format date";
