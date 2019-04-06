@@ -254,13 +254,9 @@ class Brand implements JWTSubject
     {
         try {
             list($where_raw,$params) = $this->makeWhereRaw($search);
-            list($field_name, $order_by) = $this->makeOrderBy($sort);
-            $count = DB::select("
-                SELECT count(*) as count
-                    FROM brand where $where_raw 
-                ORDER BY $field_name $order_by
-                ", $params);
-            $count = $count[0]->count;
+            $count = DB::table('brand')
+                ->whereRaw($where_raw, $params)
+                ->count();
         } catch (\Throwable $e) {
             throw $e;
         }
