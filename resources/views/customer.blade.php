@@ -433,7 +433,8 @@
 								<div class="col-sm-2 col-md-2 col-xl-2 z-pdl">
 									<div class="image-upload mb-1" style="max-width: 150px; max-height: 150px">
 										<img id="avt_img" src="{{ asset("images/avatar.png") }}" img-name="" style="height: 150px; width:150px" alt="" class="img-thumbnail img-show ">
-										<input  id="avatar" type="file" accept="image/*" name="cus_avatar" is-change="true" style="display:none">
+										<input  id="avatar" type="file" accept="image/*" name="cus_avatar" style="display:none">
+										<input  id="avatar_flg" type="text" name="cus_avatar_flg" value="0" style="display:none">
 										<button type="button" style="top: -150px;" class="close" aria-label="Close" onclick="removeImage(this, jQuery.UbizOIWidget.w_callback_remove_image)">
 											<span aria-hidden="true">×</span>
 										</button>
