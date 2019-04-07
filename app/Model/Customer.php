@@ -221,12 +221,22 @@ class Customer implements JWTSubject
 	
 	public function updateCustomer($param) {
 		try {
-			if($param['cus_avatar']){
+		    if($param['cus_avatar'] && ($param['cus_avatar_flg'] == 2)){
 				$avatar = $param['cus_id'].'.'.$param['cus_avatar']->getClientOriginalExtension();
 				Helper::resizeImage($param['cus_avatar']->getRealPath(), $param['cus_id'].'.'.$param['cus_avatar']->getClientOriginalExtension(), 200, 200, 'cus');
 			}else{
-				$avatar = '';
+			    if($param['cus_avatar_flg'] == 0){
+    			    $customerAvatar = DB::table('customer')
+    			    ->select('cus_avatar')
+    			    ->where('cus_id', $param['cus_id'])
+    			    ->get();
+    			    
+    			    $avatar = $customerAvatar[0]->cus_avatar;
+			    }else{
+				    $avatar = '';
+			    }
 			}
+			
 			DB::table('customer')->where('cus_id', $param['cus_id'])->update(
 			  [
 				  'cus_code'   => $param['cus_code'],

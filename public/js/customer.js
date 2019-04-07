@@ -498,6 +498,7 @@
 		w_get_data_input_form: function () {
 			//var data = $('form').getForm2obj();
 			var data = new FormData($('#f-input')[0]);
+
 			return data;
 		},
 		w_save: function () {
@@ -550,6 +551,10 @@
 
 				reader.readAsDataURL(input.files[0]);
 			}
+		},
+		w_callback_remove_image: function () {
+			$("#avatar").val("");
+			$("#avatar_flg").val(1);
 		}
     });
 })(jQuery);
@@ -592,4 +597,5 @@ $("#avt_img").click(function(){
 
 $("#avatar").change(function(){
 	jQuery.UbizOIWidget.w_preview_avatar(this);
+	$("#avatar_flg").val(2);
 });
