@@ -137,7 +137,7 @@ class SupplierController extends Controller
         if ($request->has('sort')) {
             $sort = $request->sort;
         }
-        $search = '';
+        $search = [];
         if ($request->has('search')) {
             $search = json_decode($request->search, true);
         }
