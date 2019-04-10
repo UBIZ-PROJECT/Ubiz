@@ -13,13 +13,14 @@ class CustomerController extends Controller
 		try {
 			$customer = new Customer();
 			$customers = $customer->getCustomers();
+			$users = $customer->getUsers();
 			$paging = $customer->getPagingInfo();
 			$paging['page'] = 0;
 			foreach($customers as $key => $item){
 				$customerAddress = $customer->getCustomerAddress($item->cus_id);
 				$customers[$key]->address = $customerAddress;
 			}
-			return view('customer', ['customers' => $customers, 'paging' => $paging]);
+			return view('customer', ['customers' => $customers, 'users' => $users, 'paging' => $paging]);
 		} catch (\Throwable $e) {
             throw $e;
         }
