@@ -264,6 +264,14 @@ class Customer implements JWTSubject
             throw $e;
         }
     }
+    
+    public function getUsers(){
+        $users = DB::table('users')
+        ->select('id','name')
+        ->get();
+        
+        return $users;
+    }
 	
 	public function makeWhereRaw($search = [])
     {

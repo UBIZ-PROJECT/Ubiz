@@ -325,7 +325,13 @@
                                         <div class="tcB col-3">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$customer->cus_type}}">
-                                                    <span>{{$customer->cus_type}}</span>
+                                                	@if ($customer->cus_type == 1)
+                                                    <span>Khách hàng mới</span>
+                                                    @elseif ($customer->cus_type == 2)
+                                                    <span>Khách hàng cũ</span>
+                                                    @else
+                                                    <span>Khách hàng thân thiết</span>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -445,13 +451,49 @@
 									<input type="hidden" name="cus_id" value="0"/>
 									@include('components.input',['type'=>'required', 'control_id'=>'cus_code', 'label'=>'Mã', 'length'=>5])
 									@include('components.input',['type'=>'required', 'control_id'=>'cus_name', 'label'=>'Tên khách hàng', 'length'=>100])
-									@include('components.input',['type'=>'required', 'control_id'=>'cus_type', 'label'=>'Loại khách hàng', 'length'=>2])
+									<div class="textfield  root_textfield rootIsUnderlined cus_type_container" style="width: 300px">
+                                        <div class="wrapper">
+                                            <label for="user_id" class="ms-Label root-56 lbl-primary" style="">Loại khách hàng:&nbsp;&nbsp;&nbsp;</label>
+                                            <div class="fieldGroup">
+                                                <select name="cus_type">
+                                    				<option value="1">Khách hàng mới</option>
+                                    				<option value="2">Khách hàng cũ</option>
+                                    				<option value="3">Khách hàng thân thiết</option>
+                                    			</select>
+                                            </div>
+                                        </div>
+                                        <span class="error_message hidden-content">
+                                           <div class="message-container">
+                                              <p class="label_errorMessage css-57 errorMessage">
+                                                  <span class="error-message-text"></span>
+                                              </p>
+                                           </div>
+                                        </span>
+                                    </div>
 									@include('components.input',['control_id'=>'cus_phone', 'label'=>'Số điện thoại', 'length'=>15])
 								</div>
 								<div class="col-sm-5 col-md-5 col-xl-5 z-pdr cus-part-2">
 									@include('components.input',['control_id'=>'cus_fax', 'label'=>'Fax', 'length'=>20])
 									@include('components.input',['control_id'=>'cus_mail', 'label'=>'Email', 'length'=>100])
-									@include('components.input',['control_id'=>'user_id', 'label'=>'Nhân viên phụ trách', 'length'=>11])
+									<div class="textfield  root_textfield rootIsUnderlined user_id_container" style="width: 300px">
+                                        <div class="wrapper">
+                                            <label for="user_id" class="ms-Label root-56 lbl-primary" style="">Nhân viên phụ trách:&nbsp;&nbsp;&nbsp;</label>
+                                            <div class="fieldGroup">
+                                                <select name="user_id">
+                                    				@foreach($users as $user)
+                                    				<option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    				@endforeach
+                                    			</select>
+                                            </div>
+                                        </div>
+                                        <span class="error_message hidden-content">
+                                           <div class="message-container">
+                                              <p class="label_errorMessage css-57 errorMessage">
+                                                  <span class="error-message-text"></span>
+                                              </p>
+                                           </div>
+                                        </span>
+                                    </div>									
 									@include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 1', 'length'=>250])
 									@include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 2', 'length'=>250])
 									@include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 3', 'length'=>250])

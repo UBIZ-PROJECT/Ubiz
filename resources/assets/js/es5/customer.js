@@ -314,10 +314,17 @@
             if (customer.length > 0) {
                 var rows = [];
                 for (let i = 0; i < customer.length; i++) {
+                	if(customer[i].cus_type == 1){
+                		var cus_type_name = 'Khách hàng mới';
+                	}else if(customer[i].cus_type == 2){
+                		var cus_type_name = 'Khách hàng cũ';
+                	}else{
+                		var cus_type_name = 'Khách hàng thân thiết';
+                	}
                     var cols = [];
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_code, 1));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_name, 3));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_type, 3));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, cus_type_name, 3));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_phone, 3));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_fax, 3));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_mail, 3));
@@ -348,11 +355,11 @@
 			}else{
 				$('#avt_img').attr('src','../images/avatar.png');
 			}
-			$('input[name="cus_type"]').val(customer.cus_type);
+			$('select[name="cus_type"]').val(customer.cus_type);
 			$('input[name="cus_phone"]').val(customer.cus_phone);
 			$('input[name="cus_fax"]').val(customer.cus_fax);
 			$('input[name="cus_mail"]').val(customer.cus_mail);
-			$('input[name="user_id"]').val(customer.user_id);
+			$('select[name="user_id"]').val(customer.user_id);
 			
 			if(customer.address.length > 0){
 				$(".cus_address\\[\\]_container").remove();
