@@ -25,7 +25,7 @@ class OrderController extends Controller
 
     public function addNew(Request $request, $prc_no)
     {
-
+        return view('order_input');
     }
 
     public function detail(Request $request, $prc_no, $ord_no)
