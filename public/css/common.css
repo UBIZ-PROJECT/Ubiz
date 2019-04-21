@@ -2252,3 +2252,19 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
     display: -ms-flexbox;
     display: flex;
 }
+
+.zero-pdl{
+    padding-left: 0 !important;
+}
+
+.zero-pdr{
+    padding-right: 0 !important;
+}
+
+.zero-mgl{
+    margin-left: 0 !important;
+}
+
+.zero-mgr{
+    margin-right: 0 !important;
+}

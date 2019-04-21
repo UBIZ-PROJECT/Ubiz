@@ -16,5 +16,84 @@
 @include('layouts/headbar')
 @endsection
 @section('content')
-    <div style="text-align: center; margin-top: 50px">HOME PAGE</div>
+    <div class="mvo">
+        <div class="xvo">
+            <div class="bvo">
+                <ul class="cto">
+                    <li class="who">
+                        <a class="ruo" role="button" href="/users">
+                            <div class="pto">
+                                <img src="{{asset('images/app_bg.png')}}">
+                                <div class="zro">
+                                    <div class="rco">
+                                        <div class="kko">{{ __("Employee") }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="who">
+                        <a class="ruo" role="button" href="/customers">
+                            <div class="pto">
+                                <img src="{{asset('images/app_bg.png')}}">
+                                <div class="zro">
+                                    <div class="rco">
+                                        <div class="kko">{{ __("Customer") }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="who">
+                        <a class="ruo" role="button" href="/suppliers">
+                            <div class="pto">
+                                <img src="{{asset('images/app_bg.png')}}">
+                                <div class="zro">
+                                    <div class="rco">
+                                        <div class="kko">{{ __("Supplier") }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="who">
+                        <a class="ruo" role="button" href="/currency">
+                            <div class="pto">
+                                <img src="{{asset('images/app_bg.png')}}">
+                                <div class="zro">
+                                    <div class="rco">
+                                        <div class="kko">{{ __("Currency") }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="who">
+                        <a class="ruo" role="button" href="/departments">
+                            <div class="pto">
+                                <img src="{{asset('images/app_bg.png')}}">
+                                <div class="zro">
+                                    <div class="rco">
+                                        <div class="kko">{{ __("Department") }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="who">
+                        <a class="ruo" role="button" href="/products">
+                            <div class="pto">
+                                <img src="{{asset('images/app_bg.png')}}">
+                                <div class="zro">
+                                    <div class="rco">
+                                        <div class="kko">{{ __("Product") }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 @endsection
