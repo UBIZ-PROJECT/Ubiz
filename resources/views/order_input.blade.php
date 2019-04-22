@@ -116,35 +116,137 @@
                 </div>
                 <div class="jAQ">
                     <div class="aqI" id="nicescroll-iput">
-                        <div class="dt-row">
-                            <div class="row dt-row-head zero-mgl zero-mgr">
-                                <div class="col text-left">
-                                    <label class="lbl-primary">Row: 1</label>
+                        <ul class="nav nav-tabs" id="ord-inp-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="dt-prod-tab" data-toggle="tab" href="#dt-prod" role="tab" aria-controls="dt-prod" aria-selected="true">{{ __('Products') }}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="dt-acce-tab" data-toggle="tab" href="#dt-acce" role="tab" aria-controls="dt-acce" aria-selected="false">{{ __('Accessories') }}</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="tab-ord-inp-content">
+                            <div class="tab-pane fade show active" id="dt-prod" role="tabpanel" aria-labelledby="dt-prod-tab">
+                                <div class="dt-row">
+                                    <div class="row dt-row-head zero-mgl zero-mgr">
+                                        <div class="col text-left">
+                                            <label class="lbl-primary z-mgb">Row: 1</label>
+                                        </div>
+                                        <div class="col text-right">
+                                            <i class="fas fa-caret-down"></i>
+                                        </div>
+                                    </div>
+                                    <div class="row dt-row-body zero-mgl zero-mgr">
+                                        <div class="col-md-auto">
+                                            <label class="lbl-primary">{{ __('Specification') }}:</label>
+                                            <textarea name="txt_dt_spec"></textarea>
+                                        </div>
+                                        <div class="col-md-auto">
+                                            @include('components.input',['control_id'=>'txt_dt_model', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Model')])
+                                            @include('components.textarea',['width'=>'250', 'height'=>'100', 'control_id'=>'txt_dt_series', 'label'=>__('Series')])
+                                            @include('components.textarea',['width'=>'250', 'height'=>'100', 'control_id'=>'txt_dt_memo', 'label'=>__('Memo')])
+                                        </div>
+                                        <div class="col-md-auto">
+                                            @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit')])
+                                            @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity')])
+                                            @include('components.dropdown',['control_id'=>'txt_dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Status'),'data'=>['a'=>'a','b'=>'b']])
+                                            @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price')])
+                                            @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Total')])
+                                        </div>
+                                        <div class="col-md-auto text-right">
+                                            <i class="fas fa-copy fa-2x"></i>
+                                            <i class="fas fa-trash fa-2x"></i>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col text-right">
-                                    <i class="material-icons">
-                                        keyboard_arrow_down
-                                    </i>
+                                <div class="dt-row">
+                                    <div class="row dt-row-head zero-mgl zero-mgr">
+                                        <div class="col text-left">
+                                            <label class="lbl-primary z-mgb">Row: 1</label>
+                                        </div>
+                                        <div class="col text-right">
+                                            <i class="fas fa-caret-down"></i>
+                                        </div>
+                                    </div>
+                                    <div class="row dt-row-body zero-mgl zero-mgr">
+                                        <div class="col-md-auto">
+                                            <label class="lbl-primary">{{ __('Specification') }}:</label>
+                                            <textarea name="txt_dt_spec"></textarea>
+                                        </div>
+                                        <div class="col-md-auto">
+                                            @include('components.input',['control_id'=>'txt_dt_model', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Model')])
+                                            @include('components.textarea',['width'=>'250', 'height'=>'100', 'control_id'=>'txt_dt_series', 'label'=>__('Series')])
+                                            @include('components.textarea',['width'=>'250', 'height'=>'100', 'control_id'=>'txt_dt_memo', 'label'=>__('Memo')])
+                                        </div>
+                                        <div class="col-md-auto">
+                                            @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit')])
+                                            @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity')])
+                                            @include('components.dropdown',['control_id'=>'txt_dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Status'),'data'=>['a'=>'a','b'=>'b']])
+                                            @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price')])
+                                            @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Total')])
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row dt-row-body zero-mgl zero-mgr">
-                                <div class="col-md-auto">
-                                    {{--<div style="width:400px">--}}
-                                    <label class="ms-Label root-56 lbl-primary">{{ __('Specification') }}:</label>
-                                    <textarea name="txt_dt_spec"></textarea>
-                                    {{--</div>--}}
+                            <div class="tab-pane fade" id="dt-acce" role="tabpanel" aria-labelledby="dt-acce-tab">
+                                <div class="dt-row">
+                                    <div class="row dt-row-head zero-mgl zero-mgr">
+                                        <div class="col text-left">
+                                            <label class="lbl-primary z-mgb">Row: 1</label>
+                                        </div>
+                                        <div class="col text-right">
+                                            <i class="fas fa-caret-down"></i>
+                                        </div>
+                                    </div>
+                                    <div class="row dt-row-body zero-mgl zero-mgr">
+                                        <div class="col-md-auto">
+                                            <label class="lbl-primary">{{ __('Specification') }}:</label>
+                                            <textarea name="txt_dt_spec"></textarea>
+                                        </div>
+                                        <div class="col-md-auto">
+                                            @include('components.input',['control_id'=>'txt_dt_model', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Model')])
+                                            @include('components.textarea',['width'=>'250', 'height'=>'100', 'control_id'=>'txt_dt_series', 'label'=>__('Series')])
+                                            @include('components.textarea',['width'=>'250', 'height'=>'100', 'control_id'=>'txt_dt_memo', 'label'=>__('Memo')])
+                                        </div>
+                                        <div class="col-md-auto">
+                                            @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit')])
+                                            @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity')])
+                                            @include('components.dropdown',['control_id'=>'txt_dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Status'),'data'=>['a'=>'a','b'=>'b']])
+                                            @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price')])
+                                            @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Total')])
+                                        </div>
+                                        <div class="col-md-auto text-right">
+                                            <i class="fas fa-copy fa-2x"></i>
+                                            <i class="fas fa-trash fa-2x"></i>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-md-auto">
-                                    @include('components.input',['control_id'=>'txt_dt_model', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Model')])
-                                    @include('components.textarea',['width'=>'250', 'height'=>'100', 'control_id'=>'txt_dt_series', 'label'=>__('Series')])
-                                    @include('components.textarea',['width'=>'250', 'height'=>'100', 'control_id'=>'txt_dt_memo', 'label'=>__('Memo')])
-                                </div>
-                                <div class="col-md-auto">
-                                    @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit')])
-                                    @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity')])
-                                    @include('components.dropdown',['control_id'=>'txt_dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Status'),'data'=>['a'=>'a','b'=>'b']])
-                                    @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price')])
-                                    @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Total')])
+                                <div class="dt-row">
+                                    <div class="row dt-row-head zero-mgl zero-mgr">
+                                        <div class="col text-left">
+                                            <label class="lbl-primary z-mgb">Row: 1</label>
+                                        </div>
+                                        <div class="col text-right">
+                                            <i class="fas fa-caret-down"></i>
+                                        </div>
+                                    </div>
+                                    <div class="row dt-row-body zero-mgl zero-mgr">
+                                        <div class="col-md-auto">
+                                            <label class="lbl-primary">{{ __('Specification') }}:</label>
+                                            <textarea name="txt_dt_spec"></textarea>
+                                        </div>
+                                        <div class="col-md-auto">
+                                            @include('components.input',['control_id'=>'txt_dt_model', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Model')])
+                                            @include('components.textarea',['width'=>'250', 'height'=>'100', 'control_id'=>'txt_dt_series', 'label'=>__('Series')])
+                                            @include('components.textarea',['width'=>'250', 'height'=>'100', 'control_id'=>'txt_dt_memo', 'label'=>__('Memo')])
+                                        </div>
+                                        <div class="col-md-auto">
+                                            @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit')])
+                                            @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity')])
+                                            @include('components.dropdown',['control_id'=>'txt_dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Status'),'data'=>['a'=>'a','b'=>'b']])
+                                            @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price')])
+                                            @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Total')])
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -159,7 +261,7 @@
         jQuery(document).ready(function () {
             tinymce.init({
                 width: 350,
-                min_height: 269,
+                min_height: 246,
                 max_height: 500,
                 menubar: false,
                 toolbar_drawer: 'floating',

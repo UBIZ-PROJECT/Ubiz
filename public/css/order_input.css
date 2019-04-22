@@ -1,8 +1,77 @@
+/* Material Design Icon*/
+/* Rules for sizing the icon. */
+.material-icons.md-18 {
+  font-size: 18px;
+}
+
+.material-icons.md-24 {
+  font-size: 24px;
+}
+
+.material-icons.md-36 {
+  font-size: 36px;
+}
+
+.material-icons.md-48 {
+  font-size: 48px;
+}
+
+/* Rules for using icons as black on a light background. */
+.material-icons.md-dark {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.material-icons.md-dark.md-inactive {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+/* Rules for using icons as white on a dark background. */
+.material-icons.md-light {
+  color: white;
+}
+
+.material-icons.md-light.md-inactive {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.order-input .dt-row {
+  padding: 0px 15px;
+  margin-bottom: 10px;
+}
+
 .order-input .dt-row .row {
-  padding: 10px 15px;
   background-color: #e8f0fe;
 }
 
 .order-input .dt-row .dt-row-head {
-  border-bottom: 1px solid #a6a6a6;
+  padding: 3px 0px;
+}
+
+.order-input .dt-row .dt-row-body {
+  display: none;
+  padding: 5px 0px;
+  border-top: 1px solid #a6a6a6;
+}
+
+.order-input .dt-row .root-56 {
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  height: 23px;
+}
+
+.order-input .dt-row .fieldGroup {
+  height: 23px !important;
+}
+
+.order-input .dt-row .tox-tbtn {
+  height: 25px;
+}
+
+.order-input .dt-row .fa-copy {
+  color: #FF6E40;
+  margin-left: 10px;
+}
+
+.order-input .dt-row .fa-trash {
+  color: #F44336;
 }

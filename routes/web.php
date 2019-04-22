@@ -27,5 +27,6 @@ Route::middleware(['api', 'cors'])->group(function () {
         Route::get('orders', ['as'=>'orders', 'uses'=>'Web\OrderController@index']);
         Route::get('orders/{prc_no}/add-new', ['as'=>'orders', 'uses'=>'Web\OrderController@addNew']);
         Route::get('orders/{prc_no}/{ord_no}', ['as'=>'orders', 'uses'=>'Web\OrderController@detail']);
+        Route::get('todo', ['as'=>'orders', 'uses'=>'Web\TodoController@index']);
     });
 });

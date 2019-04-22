@@ -1,11 +1,36 @@
+// Variables
+@import "variables";
 .order-input {
   .dt-row {
+    padding: 0px 15px;
+    margin-bottom: 10px;
     .row {
-      padding: 10px 15px;
       background-color: #e8f0fe;
     }
-    .dt-row-head{
-      border-bottom: 1px solid #a6a6a6;
+    .dt-row-head {
+      padding: 3px 0px;
+    }
+    .dt-row-body {
+      display: none;
+      padding: 5px 0px;
+      border-top: 1px solid #a6a6a6;
+    }
+    .root-56 {
+      padding-top: 2px !important;
+      padding-bottom: 2px !important;
+      height: 23px;
+    }
+    .fieldGroup {
+      height: 23px !important;
+    }
+    .tox-tbtn {
+      height: 25px;
+    }
+    .fa-copy {
+      color: $mdc-green-A700;
+    }
+    .fa-trash {
+      color: $mdc-deep-orange-A400;
     }
   }
 }
