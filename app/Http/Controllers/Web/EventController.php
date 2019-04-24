@@ -6,13 +6,13 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 
-class TodoController extends Controller
+class EventController extends Controller
 {
 
     public function index(Request $request)
     {
         try {
-            return view('todo');
+            return view('event');
         } catch (\Throwable $e) {
             throw $e;
         }

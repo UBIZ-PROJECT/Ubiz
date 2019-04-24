@@ -148,6 +148,7 @@
                                         <div class="col-md-auto">
                                             @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit')])
                                             @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity')])
+                                            @include('components.input',['control_id'=>'txt_dt_deadline', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Deadline')])
                                             @include('components.dropdown',['control_id'=>'txt_dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Status'),'data'=>['a'=>'a','b'=>'b']])
                                             @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price')])
                                             @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Total')])

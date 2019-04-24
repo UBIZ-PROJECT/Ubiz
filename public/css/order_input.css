@@ -68,10 +68,9 @@
 }
 
 .order-input .dt-row .fa-copy {
-  color: #FF6E40;
-  margin-left: 10px;
+  color: #00C853;
 }
 
 .order-input .dt-row .fa-trash {
-  color: #F44336;
+  color: #FF3D00;
 }
