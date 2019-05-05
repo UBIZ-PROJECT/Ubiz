@@ -13,7 +13,7 @@
 
 Route::middleware(['api', 'cors'])->group(function () {
     Route::middleware(['jwt'])->group(function () {
-        Route::get('/', ['as' => '/', 'uses' => 'Web\HomeController@home']);
+        Route::redirect('/', '/events')->name('/');
         Route::get('login', ['as' => 'login', 'uses' => 'Web\UsersController@login']);
         Route::get('users', ['as' => 'users', 'uses' => 'Web\UsersController@index']);
         Route::get('suppliers', ['as'=>'supplier', 'uses'=>'Web\SupplierController@suppliers']);
