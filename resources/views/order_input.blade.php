@@ -98,6 +98,13 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="aqL">
+                                <ul class="nav nav-wizard">
+                                    <li class="active"><a href="#">Home</a></li>
+                                    <li><a href="#">Profile</a></li>
+                                    <li><a href="#">Messages</a></li>
+                                </ul>
+                            </div>
                             <div class="aqJ">
                                 <div class="ar5">
                                 <span class="Di">
@@ -116,6 +123,80 @@
                 </div>
                 <div class="jAQ">
                     <div class="aqI" id="nicescroll-iput">
+                        <div class="row">
+                            <div class="col-md-auto">
+                                <div class="row">
+                                    <div class="col-md-auto">
+                                        @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Pricing No')])
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-auto">
+                                        @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Pricing Date')])
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-auto">
+                                        @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '300', 'lbl_width'=>'100', 'label'=>__('Sale person')])
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-auto">
+                                        @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Duty')])
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-auto">
+                                        @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Mobile')])
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-auto">
+                                        @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Email')])
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-auto">
+                                <div class="row">
+                                    <div class="col-md-auto">
+                                        @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Customer')])
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-auto">
+                                        @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '630', 'lbl_width'=>'90', 'label'=>__('Address')])
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-auto">
+                                        <div class="row">
+                                            <div class="col-md-auto">
+                                                @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Contact person')])
+                                            </div>
+                                            <div class="col-md-auto">
+                                                @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Duty')])
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-auto">
+                                                @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Mobile')])
+                                            </div>
+                                            <div class="col-md-auto">
+                                                @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Email')])
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-auto">
+                                                @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Fax')])
+                                            </div>
+                                            <div class="col-md-auto">
+                                                @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '120', 'lbl_width'=>'70', 'label'=>__('Tax')])
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <ul class="nav nav-tabs" id="ord-inp-tab" role="tablist">
                             <li class="nav-item">
                                 <a class="nav-link active" id="dt-prod-tab" data-toggle="tab" href="#dt-prod" role="tab" aria-controls="dt-prod" aria-selected="true">{{ __('Products') }}</a>

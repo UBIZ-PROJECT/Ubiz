@@ -7,14 +7,16 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/common.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('dist/air-datepicker/css/datepicker.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('dist/fullcalendar-4.0.2/packages/core/main.min.css') }}">
-    <link rel="stylesheet" type="text/css"
-          href="{{ asset('dist/fullcalendar-4.0.2/packages/bootstrap/main.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('dist/fullcalendar-4.0.2/packages/bootstrap/main.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('dist/fullcalendar-4.0.2/packages/daygrid/main.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('dist/fullcalendar-4.0.2/packages/timegrid/main.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('dist/fullcalendar-4.0.2/packages/list/main.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/event.css') }}">
 @endsection
 @section('headbar')
+    @section('headbar-icon')
+        <i class="fas fa-calendar-day fa-2x"></i>
+    @endsection
     @include('layouts/headbar')
 @endsection
 @section('content')
@@ -29,16 +31,16 @@
 
                 <div class="tag">
 
-                    <div id="event-tag-head" class="row z-mgl z-mgr tag-show">
+                    <div id="event-tag-head" class="tag-head row z-mgl z-mgr tag-show">
                         <div class="col text-left z-pdl z-pdr">
-                            <h5>Thẻ</h5>
+                            <h5>{{ __('Tag') }}</h5>
                         </div>
                         <div class="col text-right z-pdl z-pdr">
                             <i class="fas fa-angle-up"></i>
                             <i class="fas fa-angle-down"></i>
                         </div>
                     </div>
-                    <div id="event-tag-body" class="collapse show">
+                    <div id="event-tag-body" class="tag-body collapse show">
                         <table>
                             <tbody>
                             @foreach($tags as $tag)

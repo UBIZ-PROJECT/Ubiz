@@ -1,7 +1,7 @@
 #calendar-container {
-    height: calc(100% - 75px);
-    width: 100%;
-}
+     height: calc(100% - 75px);
+     width: 100%;
+ }
 
 .fc-header-toolbar {
     padding-top: 1em;
@@ -29,4 +29,35 @@
 
 .datepicker{
     z-index: 1151 !important;
+}
+
+.datepicker-inline .datepicker{
+    width: 230px !important;
+    margin-left: 10px;
+}
+
+.tag{
+    width: 230px;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.tag .tag-show .fa-angle-up{
+    display: block;
+}
+
+.tag .tag-show .fa-angle-down{
+    display: none;
+}
+
+.tag .tag-hide .fa-angle-up{
+    display: none;
+}
+
+.tag .tag-hide .fa-angle-down{
+    display: block;
+}
+
+.tag-body table tr{
+    line-height: 1px;
 }
