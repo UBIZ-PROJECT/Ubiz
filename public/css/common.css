@@ -1515,6 +1515,34 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
     color: #FF3D00;
 }
 
+/*left side bar*/
+#i-put #nicescroll-iput .tb-keeper .fa-files-o {
+    color: #009fff;
+}
+
+#nicescroll-sidebar .sP .aW.aT{
+    padding: 20px 0;
+}
+
+#nicescroll-sidebar .sP .aW.aT a{
+    padding: 20px 0;
+    text-decoration: none;
+}
+
+#nicescroll-sidebar .sP .aW.NaT{
+    padding: 20px 0;
+    color: #757575;
+}
+#nicescroll-sidebar .sP .aW.NaT a{
+    padding: 20px 0;
+    color: #757575;
+    text-decoration: none;
+    text-shadow: none;
+    color: #5f6368;
+    white-space: nowrap;
+    user-select: none;
+}
+/*left side bar*/
 .main-content .output {
     height: 100%;
     -webkit-flex: 1 1 auto;

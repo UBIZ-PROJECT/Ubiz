@@ -1,9 +1,9 @@
 .main-content .r-content .col-1 {
-    width: 70px;
+    width: 30px;
 }
 
 .main-content .r-content .col-2 {
-    width: 100px;
+    width: 200px;
 }
 
 .main-content .r-content .col-3 {
@@ -17,9 +17,12 @@
 .main-content .r-content .col-5 {
     width: 150px;
 }
-
 .main-content .r-content .col-6 {
-    width: 250px;
+    width: 300px;
+}
+
+.main-content .r-content .aqI {
+    height: 100%;
 }
 
 #nicescroll-iput {
@@ -66,4 +69,40 @@
     height: auto;
     max-width: 100%;
     vertical-align: middle;
+}
+
+#nicescroll-iput .list-keep-accessory {
+    max-width: 90%;
+}
+
+#nicescroll-iput .list-keep-accessory .keep-col-1 {
+    width: 120px;
+}
+
+#nicescroll-iput .list-keep-accessory .keep-col-2 {
+    width: 730px;
+}
+
+#nicescroll-iput .list-keep-accessory .keep-col-3 {
+    width: 250px;
+}
+#nicescroll-iput .list-keep-accessory .keep-col-4 {
+    width: 230px;
+}
+
+#i-put #nicescroll-iput .tb-keeper .fa {
+    font-size: 25px;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+#i-put #nicescroll-iput .tb-keeper .fa-trash-o {
+    color: red;
+}
+
+#nicescroll-iput .list-keep-accessory {
+    height: 40%;
+    display: block;
+    overflow-y: auto;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
 }

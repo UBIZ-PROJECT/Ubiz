@@ -325,7 +325,13 @@
                                         <div class="tcB col-3">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$customer->cus_type}}">
-                                                    <span>{{$customer->cus_type}}</span>
+                                                	@if ($customer->cus_type == 1)
+                                                    <span>Khách hàng mới</span>
+                                                    @elseif ($customer->cus_type == 2)
+                                                    <span>Khách hàng cũ</span>
+                                                    @else
+                                                    <span>Khách hàng thân thiết</span>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -433,7 +439,8 @@
 								<div class="col-sm-2 col-md-2 col-xl-2 z-pdl">
 									<div class="image-upload mb-1" style="max-width: 150px; max-height: 150px">
 										<img id="avt_img" src="{{ asset("images/avatar.png") }}" img-name="" style="height: 150px; width:150px" alt="" class="img-thumbnail img-show ">
-										<input  id="avatar" type="file" accept="image/*" name="cus_avatar" is-change="true" style="display:none">
+										<input  id="avatar" type="file" accept="image/*" name="cus_avatar" style="display:none">
+										<input  id="avatar_flg" type="text" name="cus_avatar_flg" value="0" style="display:none">
 										<button type="button" style="top: -150px;" class="close" aria-label="Close" onclick="removeImage(this, jQuery.UbizOIWidget.w_callback_remove_image)">
 											<span aria-hidden="true">×</span>
 										</button>
@@ -442,22 +449,58 @@
 								</div>
 								<div class="col-sm-5 col-md-5 col-xl-5">
 									<input type="hidden" name="cus_id" value="0"/>
-									@include('components.input',['type'=>'required', 'control_id'=>'cus_code', 'label'=>'Mã'])
-									@include('components.input',['type'=>'required', 'control_id'=>'cus_name', 'label'=>'Tên khách hàng'])
-									@include('components.input',['type'=>'required', 'control_id'=>'cus_type', 'label'=>'Loại khách hàng'])
-									@include('components.input',['control_id'=>'cus_phone', 'label'=>'Số điện thoại'])
+									@include('components.input',['type'=>'required', 'control_id'=>'cus_code', 'label'=>'Mã', 'length'=>5])
+									@include('components.input',['type'=>'required', 'control_id'=>'cus_name', 'label'=>'Tên khách hàng', 'length'=>100])
+									<div class="textfield  root_textfield rootIsUnderlined cus_type_container" style="width: 300px">
+                                        <div class="wrapper">
+                                            <label for="user_id" class="ms-Label root-56 lbl-primary" style="">Loại khách hàng:&nbsp;&nbsp;&nbsp;</label>
+                                            <div class="fieldGroup">
+                                                <select name="cus_type">
+                                    				<option value="1">Khách hàng mới</option>
+                                    				<option value="2">Khách hàng cũ</option>
+                                    				<option value="3">Khách hàng thân thiết</option>
+                                    			</select>
+                                            </div>
+                                        </div>
+                                        <span class="error_message hidden-content">
+                                           <div class="message-container">
+                                              <p class="label_errorMessage css-57 errorMessage">
+                                                  <span class="error-message-text"></span>
+                                              </p>
+                                           </div>
+                                        </span>
+                                    </div>
+									@include('components.input',['control_id'=>'cus_phone', 'label'=>'Số điện thoại', 'length'=>15])
 								</div>
 								<div class="col-sm-5 col-md-5 col-xl-5 z-pdr cus-part-2">
-									@include('components.input',['control_id'=>'cus_fax', 'label'=>'Fax'])
-									@include('components.input',['control_id'=>'cus_mail', 'label'=>'Email'])
-									@include('components.input',['control_id'=>'user_id', 'label'=>'Nhân viên phụ trách'])
-									@include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 1'])
-									@include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 2'])
-									@include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 3'])
+									@include('components.input',['control_id'=>'cus_fax', 'label'=>'Fax', 'length'=>20])
+									@include('components.input',['control_id'=>'cus_mail', 'label'=>'Email', 'length'=>100])
+									<div class="textfield  root_textfield rootIsUnderlined user_id_container" style="width: 300px">
+                                        <div class="wrapper">
+                                            <label for="user_id" class="ms-Label root-56 lbl-primary" style="">Nhân viên phụ trách:&nbsp;&nbsp;&nbsp;</label>
+                                            <div class="fieldGroup">
+                                                <select name="user_id">
+                                    				@foreach($users as $user)
+                                    				<option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    				@endforeach
+                                    			</select>
+                                            </div>
+                                        </div>
+                                        <span class="error_message hidden-content">
+                                           <div class="message-container">
+                                              <p class="label_errorMessage css-57 errorMessage">
+                                                  <span class="error-message-text"></span>
+                                              </p>
+                                           </div>
+                                        </span>
+                                    </div>									
+									@include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 1', 'length'=>250])
+									@include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 2', 'length'=>250])
+									@include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 3', 'length'=>250])
 								</div>
 							</div>
 							
-							<div class="btn-a price-report" onclick="">Tạo báo giá</div>
+							<div class="btn-b price-report" onclick="">Tạo báo giá</div>
 						</form>
                     </div>
                 </div>

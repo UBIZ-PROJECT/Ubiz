@@ -14,11 +14,9 @@ use App\Model\Product;
 use Illuminate\Http\Request;
 class ProductController extends Controller
 {
-
     public function getProduct(Request $req) {
         try {
             list($page, $sort,$search) = $this->getPageSortSearch($req);
-
             $product = new Product();
             $data = $product->getProductPaging($page, $sort,$search);
             $paging = $product->getPagingInfo($sort,$search);
@@ -33,7 +31,6 @@ class ProductController extends Controller
     public function getEachProductPaging(Request $req) {
         try {
             list($page, $sort,$search) = $this->getPageSortSearch($req);
-
             $product = new Product();
             $data = $product->getEachProductPaging($page, $sort,$search);
             $paging = $product->getPagingInfoDetailProductWithConditionSearch($sort,$search);
@@ -62,6 +59,9 @@ class ProductController extends Controller
             if ($request->has("product")) {
                 list($page, $sort, $search) = $this->getPageSortSearch($request);
                 $params = json_decode($request->input('product'), true);
+                if ($request->has("series")) {
+                    $params['series'] = json_decode($request->input("series"), true);
+                }
                 if (!empty($request->file('image-upload'))) {
                     foreach ($request->file('image-upload') as $index=>$imageUpload) {
                         $params['images'][$index]['extension'] = $imageUpload->getClientOriginalExtension();

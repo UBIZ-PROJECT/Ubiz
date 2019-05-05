@@ -18,8 +18,9 @@ class CreateProductTypeTable extends Migration
     public function up()
     {
         Schema::create('product_type', function (Blueprint $table) {
-            $table->increments('id')
-            $table->char('name_type', 255);
+            $table->increments('prd_type_id');
+            $table->char('prd_type_name', 255);
+            $table->char('prd_type_flg', 1)->default('1'); // 1 is product, 2 is accessory
             $table->char('delete_flg', 1)->default('0');
             $table->timestamp('inp_date');
             $table->integer('inp_user');

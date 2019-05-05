@@ -72,8 +72,9 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::put('products/{id}/update', ['as' => 'product-update', 'uses' => 'Api\ProductController@updateProduct']);
         Route::put('products/{id}/updatePaging', ['as' => 'product-update', 'uses' => 'Api\ProductController@updateProductPaging']);
         Route::delete('products/{ids}/delete', ['as' => 'product-delete', 'uses' => 'Api\ProductController@deleteProduct']);
-
+        
         Route::get('pricing', ['as' => 'api-pricing', 'uses' => 'Api\PricingController@getPricingList']);
+
         Route::get('pricing/{id}', ['as' => 'delete-pricing', 'uses' => 'Api\PricingController@deletePricing']);
         Route::get('pricing-list', ['as' => 'api-pricing', 'uses' => 'Api\PricingController@getPricingList']);
         Route::get('pricing-edit', ['as' => 'get-pricing', 'uses' => 'Api\PricingController@getPricing']);
@@ -81,14 +82,48 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::post('pricing-update', ['as' => 'update-pricing', 'uses' => 'Api\PricingController@updatePricing']);
         Route::delete('pricing/{ids}/delete', ['as' => 'delete-pricing', 'uses' => 'Api\PricingController@deletePricing']);
 
-//         Route::post('pricing-pdf','Api\PdfController@exportPdf');
+        Route::get('orders', ['as' => 'api-orders', 'uses' => 'Api\OrderController@getOrderList']);
+        Route::get('orders/{id}', ['as' => 'delete-orders', 'uses' => 'Api\OrderController@deleteOrder']);
+        Route::get('orders-list', ['as' => 'api-orders', 'uses' => 'Api\OrderController@getOrderList']);
+        Route::get('orders-edit', ['as' => 'get-orders', 'uses' => 'Api\OrderController@getOrder']);
+        Route::post('orders-create', ['as' => 'insert-orders', 'uses' => 'Api\OrderController@insertOrder']);
+        Route::post('orders-update', ['as' => 'update-orders', 'uses' => 'Api\OrderController@updateOrder']);
+        Route::delete('orders/{ids}/delete', ['as' => 'delete-orders', 'uses' => 'Api\OrderController@deleteOrder']);
+
+
+        Route::get('pricing-cus', ['as' => 'get-pricing-cus', 'uses' => 'Api\PricingController@getPricingCustomer']);
+    
         Route::post('pricing-pdf', ['as' => 'export-pdf', 'uses' => 'Api\PdfController@exportPdf']);
 
         Route::post('permission', ['as' => 'set-permission', 'uses' => 'Api\PermissionController@setPermissions']);
         Route::get('permission/{dep_id}/{scr_id}', ['as' => 'get-dep-permission', 'uses' => 'Api\PermissionController@getDepPermissions']);
         Route::get('permission/{dep_id}/{scr_id}/{usr_id}', ['as' => 'get-usr-permission', 'uses' => 'Api\PermissionController@getUsrPermissions']);
 
-        Route::get('events', ['as' => 'api-get-events', 'uses' => 'Api\EventController@getEvents']);
+        Route::get('brands', ['as' => 'api-brand', 'uses' => 'Api\BrandController@getBrand']);
+        Route::get('brands/detail', ['as' => 'api-brand-detail', 'uses' => 'Api\BrandController@getEachBrandPaging']);
+        Route::post('brands/insert', ['as' => 'brand-insert', 'uses' => 'Api\BrandController@insertBrand']);
+        Route::put('brands/{id}/update', ['as' => 'brand-update', 'uses' => 'Api\BrandController@updateBrand']);
+        Route::put('brands/{id}/updatePaging', ['as' => 'brand-update', 'uses' => 'Api\BrandController@updateBrandPaging']);
+        Route::delete('brands/{ids}/delete', ['as' => 'brand-delete', 'uses' => 'Api\BrandController@deleteBrand']);
+
+        Route::get('series', ['as' => 'api-series', 'uses' => 'Api\SeriesController@getSeries']);
+        Route::post('series/insert', ['as' => 'api-series-insert', 'uses' => 'Api\SeriesController@insertSeries']);
+        Route::put('series/{id}/update', ['as' => 'api-series-update', 'uses' => 'Api\SeriesController@updateSeries']);
+        Route::delete('series/{ids}/delete', ['as' => 'api-series-delete', 'uses' => 'Api\SeriesController@deleteSeries']);
+
+        Route::get('accessories', ['as' => 'api-accessory', 'uses' => 'Api\AccessoryController@getAccessory']);
+        Route::get('accessories/detail', ['as' => 'api-accessory-detail', 'uses' => 'Api\AccessoryController@getEachAccessoryPaging']);
+        Route::post('accessories/insert', ['as' => 'accessory-insert', 'uses' => 'Api\AccessoryController@insertAccessory']);
+        Route::put('accessories/{id}/update', ['as' => 'accessory-update', 'uses' => 'Api\AccessoryController@updateAccessory']);
+        Route::put('accessories/{id}/updatePaging', ['as' => 'accessory-update', 'uses' => 'Api\AccessoryController@updateAccessoryPaging']);
+        Route::delete('accessories/{ids}/delete', ['as' => 'accessory-delete', 'uses' => 'Api\AccessoryController@deleteAccessory']);
+
+        Route::get('keeper', ['as' => 'api-keeper', 'uses' => 'Api\KeeperController@getKeeper']);
+        Route::post('keeper/insert', ['as' => 'api-keeper-insert', 'uses' => 'Api\KeeperController@insertKeeper']);
+        Route::put('keeper/{id}/update', ['as' => 'api-keeper-update', 'uses' => 'Api\KeeperController@updateKeeper']);
+        Route::delete('keeper/{id}/delete', ['as' => 'api-keeper-delete', 'uses' => 'Api\KeeperController@deleteKeeper']);
+        
+								Route::get('events', ['as' => 'api-get-events', 'uses' => 'Api\EventController@getEvents']);
         Route::get('events/{id}', ['as' => 'api-get-event', 'uses' => 'Api\EventController@getEvent']);
         Route::post('events', ['as' => 'api-insert-event', 'uses' => 'Api\EventController@insertEvent']);
         Route::post('events/{id}/update', ['as' => 'api-update-event', 'uses' => 'Api\EventController@updateEvent']);

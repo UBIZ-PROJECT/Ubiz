@@ -21,7 +21,7 @@ class CreateCustomerTable extends Migration
 			$table->string('cus_avatar', 250);
             $table->char('cus_type', 2);
             $table->char('cus_phone', 15);
-            $table->char('cus_fax', 20);
+            $table->char('cus_fax', 20)->nullable();
             $table->string('cus_mail', 100);
             $table->char('delete_flg', 1)->default('0');
             $table->timestamp('inp_date');

@@ -12,7 +12,7 @@ class PricingController extends Controller
     {
 		try {
 			$pricing = new Pricing();
-			$pricingList = $pricing->getAllPricing();
+			$pricingList = $pricing->getPricingList();
 			$paging = $pricing->getPagingInfo();
 			$paging['page'] = 0;
 	

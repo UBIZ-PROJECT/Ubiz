@@ -122,16 +122,38 @@
             jQuery.UbizOIWidget.page = '0';
             jQuery.UbizOIWidget.w_search();
         },
+        w_update_search_form: function (search_info) {
+            jQuery.UbizOIWidget.w_clear_advance_search_form();
+            jQuery.each(search_info, function (key, val) {
+                var search_item = jQuery('#' + key);
+                if (search_item.length == 1) {
+                    search_item.val(val);
+                }
+            });
+        },
+        w_clear_advance_search_form: function () {
+            jQuery('#cus_code').val("");
+            jQuery('#cus_type').val("");
+            jQuery('#cus_name').val("");
+            jQuery('#cus_phone').val("");
+            jQuery('#cus_fax').val("");
+            jQuery('#cus_mail').val("");
+            jQuery('#cus_address').val("");
+            jQuery('#contain').val("");
+            jQuery('#notcontain').val("");
+        },
         w_fuzzy_search: function () {
             var params = {};
             params.page = '0';
             jQuery.UbizOIWidget.page = '0';
 
-            var fuzzy_val = jQuery('#fuzzy').val();
+            var fuzzy = jQuery('#fuzzy').val();
+            var search_info = jQuery.UbizOIWidget.w_convert_fuzzy_to_search_info(fuzzy);
+            jQuery.UbizOIWidget.w_update_search_form(search_info);
+            Object.assign(params, search_info);
+            
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
-
-            params.search = fuzzy_val;
             params.sort = sort;
 
             ubizapis('v1', '/customers', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
@@ -141,6 +163,25 @@
             if (keycode == '13') {
                 jQuery.UbizOIWidget.w_fuzzy_search();
             }
+        },
+        w_convert_search_info_to_fuzzy: function (search_info) {
+            var fuzzy = JSON.stringify(search_info);
+            return fuzzy;
+        },
+        w_convert_fuzzy_to_search_info: function (fuzzy) {
+            var search_info = {};
+            try {
+                search_info = JSON.parse(fuzzy);
+            } catch (e) {
+                var fuzzy_info = fuzzy.split('-');
+                if (fuzzy_info.length == 1) {
+                    search_info.contain = fuzzy;
+                } else {
+                    fuzzy_info.shift();
+                    search_info.notcontain = fuzzy_info.join('-');
+                }
+            }
+            return search_info;
         },
         w_go_to_input_page: function (id, ele) {
 			if(id != 0){
@@ -273,10 +314,17 @@
             if (customer.length > 0) {
                 var rows = [];
                 for (let i = 0; i < customer.length; i++) {
+                	if(customer[i].cus_type == 1){
+                		var cus_type_name = 'Khách hàng mới';
+                	}else if(customer[i].cus_type == 2){
+                		var cus_type_name = 'Khách hàng cũ';
+                	}else{
+                		var cus_type_name = 'Khách hàng thân thiết';
+                	}
                     var cols = [];
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_code, 1));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_name, 3));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_type, 3));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, cus_type_name, 3));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_phone, 3));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_fax, 3));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_mail, 3));
@@ -307,19 +355,30 @@
 			}else{
 				$('#avt_img').attr('src','../images/avatar.png');
 			}
-			$('input[name="cus_type"]').val(customer.cus_type);
+			$('select[name="cus_type"]').val(customer.cus_type);
 			$('input[name="cus_phone"]').val(customer.cus_phone);
 			$('input[name="cus_fax"]').val(customer.cus_fax);
 			$('input[name="cus_mail"]').val(customer.cus_mail);
-			$('input[name="user_id"]').val(customer.user_id);
+			$('select[name="user_id"]').val(customer.user_id);
 			
 			if(customer.address.length > 0){
 				$(".cus_address\\[\\]_container").remove();
-				for(var i = 0; i < customer.address.length; i++){
-					var html = '<div class="textfield  root_textfield rootIsUnderlined cus_address[]_container"><div class="wrapper"><label for="cus_address[]" class="ms-Label root-56">Địa chỉ '+ (i+1) +' :</label><div class="fieldGroup"><input type="text" name="cus_address[]" id="cus_address[]" value="'+ customer.address[i].cad_address +'" class="input_field"></div></div><span class="error_message hidden-content"><div class="message-container"><p class="label_errorMessage css-57 errorMessage"><span class="error-message-text"></span></p></div></span></div>';
+				for(var i = 0; i < 3; i++){
+					if(typeof customer.address[i] != "undefined"){
+						var inp_address = customer.address[i].cad_address;
+					}else{
+						var inp_address = "";
+					}
+					var html = '<div class="textfield  root_textfield rootIsUnderlined cus_address[]_container"><div class="wrapper"><label for="cus_address[]" class="ms-Label root-56 lbl-primary">Địa chỉ '+ (i+1) +' :</label><div class="fieldGroup"><input type="text" name="cus_address[]" id="cus_address[]" value="'+ inp_address +'" class="input_field" maxlength="250"></div></div><span class="error_message hidden-content"><div class="message-container"><p class="label_errorMessage css-57 errorMessage"><span class="error-message-text"></span></p></div></span></div>';
 					$('.cus-part-2').append(html);
 				}
 			}
+			
+			//go to create pricing page
+			$(".price-report").click(function(){
+				var cus_id = $('input[name="cus_id"]').val();
+				window.location.href = "/pricing?c="+cus_id;
+			});
 		},
         w_make_row_html: function (id, cols) {
             var row_html = '';
@@ -446,6 +505,7 @@
 		w_get_data_input_form: function () {
 			//var data = $('form').getForm2obj();
 			var data = new FormData($('#f-input')[0]);
+
 			return data;
 		},
 		w_save: function () {
@@ -498,6 +558,10 @@
 
 				reader.readAsDataURL(input.files[0]);
 			}
+		},
+		w_callback_remove_image: function () {
+			$("#avatar").val("");
+			$("#avatar_flg").val(1);
 		}
     });
 })(jQuery);
@@ -540,4 +604,5 @@ $("#avt_img").click(function(){
 
 $("#avatar").change(function(){
 	jQuery.UbizOIWidget.w_preview_avatar(this);
+	$("#avatar_flg").val(2);
 });

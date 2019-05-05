@@ -9,14 +9,13 @@
 namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Model\Product;
-use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
     public function products() {
         try {
             $product = new Product();
-            $data = $product->getProductPaging(0);
+            $data = $product->getProductPaging(0, '',array("type_id"=>"1"));
             $paging = $product->getPagingInfo();
             $productType = $product->getAllProductType();
             $paging['page'] = '0';
@@ -25,4 +24,5 @@ class ProductController extends Controller
             throw $e;
         }
     }
+
 }

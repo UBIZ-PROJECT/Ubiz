@@ -18,13 +18,13 @@ class CreateProductTable extends Migration
     public function up()
     {
         Schema::create('product', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('seri_no');
-            $table->char('name', 255);
-            $table->char('branch', 255)->nullable();
-            $table->char('model', 255)->nullable();
-            $table->string('detail')->nullable();
-            $table->integer("type_id")->nullable();
+            $table->increments('prd_id');
+            $table->integer('type_id');
+            $table->integer('brd_id');
+            $table->char('prd_name', 255);
+            $table->char('prd_model', 255)->nullable();
+            $table->string('prd_note')->nullable();
+            $table->char("prd_unit", 5)->nullable();
             $table->char('delete_flg', 1)->default('0');
             $table->timestamp('inp_date');
             $table->integer('inp_user');
