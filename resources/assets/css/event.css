@@ -1,0 +1,28 @@
+#calendar-container {
+    height: calc(100% - 75px);
+    width: 100%;
+}
+
+.fc-header-toolbar {
+    padding-top: 1em;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.my-event {
+    background: unset;
+    border: unset;
+}
+
+.my-event i.fa-circle {
+    padding-right: 3px;
+}
+
+.my-event:hover {
+    background-color: #EEEEEE;
+}
+
+.dp-permanent{
+    width: 230px !important;
+    margin-left: 10px;
+}
