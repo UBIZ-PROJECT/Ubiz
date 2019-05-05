@@ -64,66 +64,56 @@
         <div class="r-content">
             <div class="jAQ" id="i-put">
                 <div class="bkK">
-                    <div class="aeH">
-                        <div class="aqK">
-                            <div class="aqL">
-                                <div class="GtF">
-                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_go_back_to_output_page()">
-                                        <div class="ax7 poK utooltip" title="{{ __("Back to the list page") }}">
-                                            <div class="asA">
-                                                <div class="arB"></div>
-                                            </div>
+                    <div class="rwq">
+                        <div class="row z-mgr z-mgl">
+                            <div class="col-3 text-left pdt-7">
+                                <div class="GNi" onclick="jQuery.UbizOIWidget.w_go_back_to_output_page()">
+                                    <div class="ax7 poK utooltip" title="{{ __("Back to the list page") }}">
+                                        <div class="asA">
+                                            <div class="arB"></div>
                                         </div>
                                     </div>
-                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_save()">
-                                        <div class="ax7 poK utooltip" title="{{ __("Save") }}">
-                                            <div class="asA">
-                                                <div class="arS"></div>
-                                            </div>
+                                </div>
+                                <div class="GNi" onclick="jQuery.UbizOIWidget.w_save()">
+                                    <div class="ax7 poK utooltip" title="{{ __("Save") }}">
+                                        <div class="asA">
+                                            <div class="arS"></div>
                                         </div>
                                     </div>
-                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_refresh()">
-                                        <div class="ax7 poK utooltip" title="{{ __("Refresh") }}">
-                                            <div class="asA">
-                                                <div class="arR"></div>
-                                            </div>
+                                </div>
+                                <div class="GNi" onclick="jQuery.UbizOIWidget.w_refresh()">
+                                    <div class="ax7 poK utooltip" title="{{ __("Refresh") }}">
+                                        <div class="asA">
+                                            <div class="arR"></div>
                                         </div>
                                     </div>
-                                    <div id="btn-delete" class="GNi" onclick="jQuery.UbizOIWidget.w_i_delete()">
-                                        <div class="ax7 poK utooltip" title="{{ __("Delete") }}">
-                                            <div class="asA">
-                                                <div class="asX"></div>
-                                            </div>
+                                </div>
+                                <div id="btn-delete" class="GNi" onclick="jQuery.UbizOIWidget.w_i_delete()">
+                                    <div class="ax7 poK utooltip" title="{{ __("Delete") }}">
+                                        <div class="asA">
+                                            <div class="asX"></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="aqL">
+                            <div class="col-7 text-left pdt-5">
                                 <ul class="nav nav-wizard">
-                                    <li class="active"><a href="#">Home</a></li>
-                                    <li><a href="#">Profile</a></li>
-                                    <li><a href="#">Messages</a></li>
+                                    <li class="done"><a href="#">Báo giá</a></li>
+                                    <li class="active"><a href="#">Đơn hàng</a></li>
+                                    <li class="undone"><a href="#">Đặt hàng</a></li>
+                                    <li class="undone"><a href="#">Hợp đồng</a></li>
+                                    <li class="undone"><a href="#">Giao hàng</a></li>
                                 </ul>
                             </div>
-                            <div class="aqJ">
-                                <div class="ar5">
-                                <span class="Di">
-                                    <div id="i-paging-label"></div>
-                                    <div id="i-paging-older"></div>
-                                    <div id="i-paging-newer"></div>
-                                    <div class="amD utooltip" title="{{ __("Setting") }}">
-                                        <span class="amF">&nbsp;</span>
-                                        <img class="amG" src="{{ asset("images/cleardot.gif") }}" alt="">
-                                    </div>
-                                </span>
-                                </div>
+                            <div class="col-2 text-right">
+
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="jAQ">
                     <div class="aqI" id="nicescroll-iput">
-                        <div class="row">
+                        <div class="row z-pdl z-pdr z-mgr z-mgl">
                             <div class="col-md-auto">
                                 <div class="row">
                                     <div class="col-md-auto">
@@ -199,10 +189,15 @@
                         </div>
                         <ul class="nav nav-tabs" id="ord-inp-tab" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" id="dt-prod-tab" data-toggle="tab" href="#dt-prod" role="tab" aria-controls="dt-prod" aria-selected="true">{{ __('Products') }}</a>
+                                <a class="nav-link active" id="dt-prod-tab" data-toggle="tab" href="#dt-prod" role="tab" aria-controls="dt-prod" aria-selected="true">{{ __('Pump') }}</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" id="dt-acce-tab" data-toggle="tab" href="#dt-acce" role="tab" aria-controls="dt-acce" aria-selected="false">{{ __('Accessories') }}</a>
+                            </li>
+                            <li class="nav-item add-btn">
+                                <i class="material-icons md-33" title="{{ __("Add new") }}">
+                                    add_box
+                                </i>
                             </li>
                         </ul>
                         <div class="tab-content" id="tab-ord-inp-content">
@@ -210,7 +205,7 @@
                                 <div class="dt-row">
                                     <div class="row dt-row-head zero-mgl zero-mgr">
                                         <div class="col text-left">
-                                            <label class="lbl-primary z-mgb">Row: 1</label>
+                                            <label class="lbl-primary z-mgb">No.1</label>
                                         </div>
                                         <div class="col text-right">
                                             <i class="fas fa-caret-down"></i>
@@ -234,16 +229,21 @@
                                             @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price')])
                                             @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Total')])
                                         </div>
-                                        <div class="col-md-auto text-right">
-                                            <i class="fas fa-copy fa-2x"></i>
-                                            <i class="fas fa-trash fa-2x"></i>
+                                        <div class="col-md-auto z-pdr text-center">
+                                            <i class="material-icons text-primary i-btn" title="{{ __("Copy") }}">
+                                                copyright
+                                            </i>
+                                            <br>
+                                            <i class="material-icons text-danger i-btn" title="{{ __("Delete") }}">
+                                                delete
+                                            </i>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="dt-row">
                                     <div class="row dt-row-head zero-mgl zero-mgr">
                                         <div class="col text-left">
-                                            <label class="lbl-primary z-mgb">Row: 1</label>
+                                            <label class="lbl-primary z-mgb">No.2</label>
                                         </div>
                                         <div class="col text-right">
                                             <i class="fas fa-caret-down"></i>
@@ -262,9 +262,19 @@
                                         <div class="col-md-auto">
                                             @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit')])
                                             @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity')])
+                                            @include('components.input',['control_id'=>'txt_dt_deadline', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Deadline')])
                                             @include('components.dropdown',['control_id'=>'txt_dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Status'),'data'=>['a'=>'a','b'=>'b']])
                                             @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price')])
                                             @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Total')])
+                                        </div>
+                                        <div class="col-md-auto z-pdr text-center">
+                                            <i class="material-icons text-primary i-btn" title="{{ __("Copy") }}">
+                                                copyright
+                                            </i>
+                                            <br>
+                                            <i class="material-icons text-danger i-btn" title="{{ __("Delete") }}">
+                                                delete
+                                            </i>
                                         </div>
                                     </div>
                                 </div>
@@ -273,7 +283,7 @@
                                 <div class="dt-row">
                                     <div class="row dt-row-head zero-mgl zero-mgr">
                                         <div class="col text-left">
-                                            <label class="lbl-primary z-mgb">Row: 1</label>
+                                            <label class="lbl-primary z-mgb">No.2</label>
                                         </div>
                                         <div class="col text-right">
                                             <i class="fas fa-caret-down"></i>
@@ -292,43 +302,68 @@
                                         <div class="col-md-auto">
                                             @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit')])
                                             @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity')])
+                                            @include('components.input',['control_id'=>'txt_dt_deadline', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Deadline')])
                                             @include('components.dropdown',['control_id'=>'txt_dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Status'),'data'=>['a'=>'a','b'=>'b']])
                                             @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price')])
                                             @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Total')])
                                         </div>
-                                        <div class="col-md-auto text-right">
-                                            <i class="fas fa-copy fa-2x"></i>
-                                            <i class="fas fa-trash fa-2x"></i>
+                                        <div class="col-md-auto z-pdr text-center">
+                                            <i class="material-icons text-primary i-btn" title="{{ __("Copy") }}">
+                                                copyright
+                                            </i>
+                                            <br>
+                                            <i class="material-icons text-danger i-btn" title="{{ __("Delete") }}">
+                                                delete
+                                            </i>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="dt-row">
-                                    <div class="row dt-row-head zero-mgl zero-mgr">
-                                        <div class="col text-left">
-                                            <label class="lbl-primary z-mgb">Row: 1</label>
-                                        </div>
-                                        <div class="col text-right">
-                                            <i class="fas fa-caret-down"></i>
-                                        </div>
-                                    </div>
-                                    <div class="row dt-row-body zero-mgl zero-mgr">
-                                        <div class="col-md-auto">
-                                            <label class="lbl-primary">{{ __('Specification') }}:</label>
-                                            <textarea name="txt_dt_spec"></textarea>
-                                        </div>
-                                        <div class="col-md-auto">
-                                            @include('components.input',['control_id'=>'txt_dt_model', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Model')])
-                                            @include('components.textarea',['width'=>'250', 'height'=>'100', 'control_id'=>'txt_dt_series', 'label'=>__('Series')])
-                                            @include('components.textarea',['width'=>'250', 'height'=>'100', 'control_id'=>'txt_dt_memo', 'label'=>__('Memo')])
-                                        </div>
-                                        <div class="col-md-auto">
-                                            @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit')])
-                                            @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity')])
-                                            @include('components.dropdown',['control_id'=>'txt_dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Status'),'data'=>['a'=>'a','b'=>'b']])
-                                            @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price')])
-                                            @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Total')])
-                                        </div>
-                                    </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="total-info margin-bottom-30">
+                            <div class="row justify-content-end z-pdl z-pdr z-mgr z-mgl">
+                                <div class="col-md-auto text-right z-mgr z-mgl pdt-5">
+                                    <span>Tổng giá trị đơn hàng( trước thuế VAT )</span>
+                                </div>
+                                <div class="col-md-auto z-pdr z-pdl" style="width: 150px">
+                                    <input type="text" readonly class="w-100 text-right" value="1,000,000,000">
+                                </div>
+                                <div class="col-md-auto z-mgr z-mgl">
+                                    <span>VND</span>
+                                </div>
+                            </div>
+                            <div class="row justify-content-end z-pdl z-pdr z-mgr z-mgl">
+                                <div class="col-md-auto text-right z-mgr z-mgl pdt-5">
+                                    <span>Tổng giá trị đơn hàng ( đã bao gồm thuế VAT )</span>
+                                </div>
+                                <div class="col-md-auto z-pdr z-pdl" style="width: 150px">
+                                    <input type="text" readonly class="w-100 text-right" value="1,000,000,000">
+                                </div>
+                                <div class="col-md-auto z-mgr z-mgl">
+                                    <span>VND</span>
+                                </div>
+                            </div>
+                            <div class="row justify-content-end z-pdl z-pdr z-mgr z-mgl">
+                                <div class="col-md-auto text-right z-mgr z-mgl pdt-5">
+                                    <span>Đã thanh toán</span>
+                                </div>
+                                <div class="col-md-auto z-pdr z-pdl" style="width: 150px">
+                                    <input type="text" readonly class="w-100 text-right" value="1,000,000,000">
+                                </div>
+                                <div class="col-md-auto z-mgr z-mgl">
+                                    <span>VND</span>
+                                </div>
+                            </div>
+                            <div class="row justify-content-end z-pdl z-pdr z-mgr z-mgl">
+                                <div class="col-md-auto text-right z-mgr z-mgl pdt-5">
+                                    <span>Còn nợ</span>
+                                </div>
+                                <div class="col-md-auto z-pdr z-pdl" style="width: 150px">
+                                    <input type="text" readonly class="w-100 text-right" value="1,000,000,000">
+                                </div>
+                                <div class="col-md-auto z-mgr z-mgl">
+                                    <span>VND</span>
                                 </div>
                             </div>
                         </div>
@@ -355,6 +390,16 @@
                 content_css: [
                     '{{ asset('fonts/roboto/v18/roboto.css') }}'
                 ]
+            });
+            jQuery('#nicescroll-iput').niceScroll({
+                cursorcolor: "#9fa8b0",
+                cursorwidth: "5px",
+                cursorborder: "none",
+                cursorborderradius: 5,
+                cursoropacitymin: 0.4,
+                scrollbarid: 'nc-oput',
+                autohidemode: false,
+                horizrailenabled: false
             });
         });
     </script>
