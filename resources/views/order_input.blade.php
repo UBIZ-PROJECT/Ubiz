@@ -189,10 +189,12 @@
                         </div>
                         <ul class="nav nav-tabs" id="ord-inp-tab" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" id="dt-prod-tab" data-toggle="tab" href="#dt-prod" role="tab" aria-controls="dt-prod" aria-selected="true">{{ __('Pump') }}</a>
+                                <a class="nav-link active" id="dt-prod-tab" data-toggle="tab" href="#dt-prod" role="tab"
+                                   aria-controls="dt-prod" aria-selected="true">{{ __('Pump') }}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="dt-acce-tab" data-toggle="tab" href="#dt-acce" role="tab" aria-controls="dt-acce" aria-selected="false">{{ __('Accessories') }}</a>
+                                <a class="nav-link" id="dt-acce-tab" data-toggle="tab" href="#dt-acce" role="tab"
+                                   aria-controls="dt-acce" aria-selected="false">{{ __('Accessories') }}</a>
                             </li>
                             <li class="nav-item add-btn">
                                 <i class="material-icons md-33" title="{{ __("Add new") }}">
@@ -203,7 +205,7 @@
                         <div class="tab-content" id="tab-ord-inp-content">
                             <div class="tab-pane fade show active" id="dt-prod" role="tabpanel" aria-labelledby="dt-prod-tab">
                                 <div class="dt-row">
-                                    <div class="row dt-row-head zero-mgl zero-mgr">
+                                    <div class="row dt-row-head zero-mgl zero-mgr" onclick="my_collapse(this)">
                                         <div class="col text-left">
                                             <label class="lbl-primary z-mgb">No.1</label>
                                         </div>
@@ -211,7 +213,7 @@
                                             <i class="fas fa-caret-down"></i>
                                         </div>
                                     </div>
-                                    <div class="row dt-row-body zero-mgl zero-mgr">
+                                    <div class="row dt-row-body zero-mgl zero-mgr collapse hide">
                                         <div class="col-md-auto">
                                             <label class="lbl-primary">{{ __('Specification') }}:</label>
                                             <textarea name="txt_dt_spec"></textarea>
@@ -230,7 +232,7 @@
                                             @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Total')])
                                         </div>
                                         <div class="col-md-auto z-pdr text-center">
-                                            <i class="material-icons text-primary i-btn" title="{{ __("Copy") }}">
+                                            <i onclick="row_copy(this)" class="material-icons text-primary i-btn" title="{{ __("Copy") }}">
                                                 copyright
                                             </i>
                                             <br>
@@ -241,7 +243,7 @@
                                     </div>
                                 </div>
                                 <div class="dt-row">
-                                    <div class="row dt-row-head zero-mgl zero-mgr">
+                                    <div class="row dt-row-head zero-mgl zero-mgr" onclick="my_collapse(this)">
                                         <div class="col text-left">
                                             <label class="lbl-primary z-mgb">No.2</label>
                                         </div>
@@ -249,7 +251,7 @@
                                             <i class="fas fa-caret-down"></i>
                                         </div>
                                     </div>
-                                    <div class="row dt-row-body zero-mgl zero-mgr">
+                                    <div class="row dt-row-body zero-mgl zero-mgr collapse hide">
                                         <div class="col-md-auto">
                                             <label class="lbl-primary">{{ __('Specification') }}:</label>
                                             <textarea name="txt_dt_spec"></textarea>
@@ -281,7 +283,45 @@
                             </div>
                             <div class="tab-pane fade" id="dt-acce" role="tabpanel" aria-labelledby="dt-acce-tab">
                                 <div class="dt-row">
-                                    <div class="row dt-row-head zero-mgl zero-mgr">
+                                    <div class="row dt-row-head zero-mgl zero-mgr" onclick="my_collapse(this)">
+                                        <div class="col text-left">
+                                            <label class="lbl-primary z-mgb">No.1</label>
+                                        </div>
+                                        <div class="col text-right">
+                                            <i class="fas fa-caret-down"></i>
+                                        </div>
+                                    </div>
+                                    <div class="row dt-row-body zero-mgl zero-mgr collapse hide">
+                                        <div class="col-md-auto">
+                                            <label class="lbl-primary">{{ __('Specification') }}:</label>
+                                            <textarea name="txt_dt_spec"></textarea>
+                                        </div>
+                                        <div class="col-md-auto">
+                                            @include('components.input',['control_id'=>'txt_dt_model', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Model')])
+                                            @include('components.textarea',['width'=>'250', 'height'=>'100', 'control_id'=>'txt_dt_series', 'label'=>__('Series')])
+                                            @include('components.textarea',['width'=>'250', 'height'=>'100', 'control_id'=>'txt_dt_memo', 'label'=>__('Memo')])
+                                        </div>
+                                        <div class="col-md-auto">
+                                            @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit')])
+                                            @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity')])
+                                            @include('components.input',['control_id'=>'txt_dt_deadline', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Deadline')])
+                                            @include('components.dropdown',['control_id'=>'txt_dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Status'),'data'=>['a'=>'a','b'=>'b']])
+                                            @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price')])
+                                            @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Total')])
+                                        </div>
+                                        <div class="col-md-auto z-pdr text-center">
+                                            <i class="material-icons text-primary i-btn" title="{{ __("Copy") }}">
+                                                copyright
+                                            </i>
+                                            <br>
+                                            <i class="material-icons text-danger i-btn" title="{{ __("Delete") }}">
+                                                delete
+                                            </i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dt-row">
+                                    <div class="row dt-row-head zero-mgl zero-mgr" onclick="my_collapse(this)">
                                         <div class="col text-left">
                                             <label class="lbl-primary z-mgb">No.2</label>
                                         </div>
@@ -289,7 +329,7 @@
                                             <i class="fas fa-caret-down"></i>
                                         </div>
                                     </div>
-                                    <div class="row dt-row-body zero-mgl zero-mgr">
+                                    <div class="row dt-row-body zero-mgl zero-mgr collapse hide">
                                         <div class="col-md-auto">
                                             <label class="lbl-primary">{{ __('Specification') }}:</label>
                                             <textarea name="txt_dt_spec"></textarea>
@@ -375,6 +415,51 @@
 @endsection
 @section('end-javascript')
     <script type="text/javascript">
+        function my_collapse(self) {
+            var next_ele = jQuery(self).next('div');
+            next_ele.on('hidden.bs.collapse', function () {
+                jQuery('#nicescroll-iput').getNiceScroll().resize();
+            })
+            next_ele.on('shown.bs.collapse', function () {
+                jQuery('#nicescroll-iput').getNiceScroll().resize();
+            });
+            next_ele.collapse('toggle');
+        }
+
+        function row_copy(self) {
+            var copy_row = jQuery(self).closest('div.dt-row');
+            var clone_row = copy_row.clone(false)
+            clone_row.find('div.tox-tinymce').remove();
+            jQuery(self).closest('div.dt-row').after(clone_row.wrap('<p/>').parent().html());
+            var ele = copy_row.next('div').find('textarea[name=txt_dt_spec]');
+            tinymce.init({
+                width: 350,
+                min_height: 246,
+                max_height: 500,
+                menubar: false,
+                toolbar_drawer: 'floating',
+                target: ele,
+                plugins: [
+                    'advlist autolink lists link image charmap print preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code wordcount autoresize'
+                ],
+                toolbar: 'undo redo | bold italic forecolor backcolor | formatselect | fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat',
+                content_css: [
+                    '{{ asset('fonts/roboto/v18/roboto.css') }}'
+                ]
+            });
+        }
+
+
+        function row_delete(self) {
+            var delete_row = jQuery(self).closest('div.dt-row');
+            if(delete_row.attr('id') == '0'){
+                delete_row.remove();
+            }else{
+                delete_row.addClass('hide');
+                delete_row.addClass('deleted');
+            }
+        }
+
         jQuery(document).ready(function () {
             tinymce.init({
                 width: 350,
