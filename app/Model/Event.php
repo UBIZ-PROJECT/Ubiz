@@ -48,6 +48,7 @@ class Event
                         'end' => $event->end,
                         'title' => $event->title,
                         'desc' => $event->desc,
+                        'all_day' => $event->all_day,
                         'tag_id' => $event->tag_id,
                         'tag_title' => $event->tag_title,
                         'tag_color' => $event->tag_color,
