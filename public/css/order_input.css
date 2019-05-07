@@ -1,0 +1,93 @@
+/* Material Design Icon*/
+/* Rules for sizing the icon. */
+.material-icons.md-18 {
+  font-size: 18px;
+}
+
+.material-icons.md-24 {
+  font-size: 24px;
+}
+
+.material-icons.md-33 {
+  font-size: 33px;
+}
+
+.material-icons.md-36 {
+  font-size: 36px;
+}
+
+.material-icons.md-48 {
+  font-size: 48px;
+}
+
+/* Rules for using icons as black on a light background. */
+.material-icons.md-dark {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.material-icons.md-dark.md-inactive {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+/* Rules for using icons as white on a dark background. */
+.material-icons.md-light {
+  color: white;
+}
+
+.material-icons.md-light.md-inactive {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.order-input .dt-row {
+  padding-right: 15px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.order-input .dt-row .row {
+  background-color: #e8f0fe;
+}
+
+.order-input .dt-row .dt-row-head {
+  padding: 3px 0px;
+}
+
+.order-input .dt-row .dt-row-body {
+  /*display: none;*/
+  padding: 5px 0px;
+  border-top: 1px solid #a6a6a6;
+}
+
+.order-input .dt-row .root-56 {
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  height: 23px;
+}
+
+.order-input .dt-row .fieldGroup {
+  height: 23px !important;
+}
+
+.order-input .dt-row .tox-tbtn {
+  height: 25px;
+}
+
+.order-input .dt-row i.i-btn {
+  cursor: pointer;
+}
+
+.total-info input{
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-bottom: 1px solid #a6a6a6;
+    background: none;
+    color: black !important;
+}
+
+.add-btn{
+    position: fixed;
+    right: 10px;
+    color: #FA6800;
+    cursor: pointer;
+}

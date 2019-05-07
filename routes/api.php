@@ -82,7 +82,6 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::post('pricing-update', ['as' => 'update-pricing', 'uses' => 'Api\PricingController@updatePricing']);
         Route::delete('pricing/{ids}/delete', ['as' => 'delete-pricing', 'uses' => 'Api\PricingController@deletePricing']);
 
-
         Route::get('orders', ['as' => 'api-orders', 'uses' => 'Api\OrderController@getOrderList']);
         Route::get('orders/{id}', ['as' => 'delete-orders', 'uses' => 'Api\OrderController@deleteOrder']);
         Route::get('orders-list', ['as' => 'api-orders', 'uses' => 'Api\OrderController@getOrderList']);
@@ -123,5 +122,11 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::post('keeper/insert', ['as' => 'api-keeper-insert', 'uses' => 'Api\KeeperController@insertKeeper']);
         Route::put('keeper/{id}/update', ['as' => 'api-keeper-update', 'uses' => 'Api\KeeperController@updateKeeper']);
         Route::delete('keeper/{id}/delete', ['as' => 'api-keeper-delete', 'uses' => 'Api\KeeperController@deleteKeeper']);
+        
+								Route::get('events', ['as' => 'api-get-events', 'uses' => 'Api\EventController@getEvents']);
+        Route::get('events/{id}', ['as' => 'api-get-event', 'uses' => 'Api\EventController@getEvent']);
+        Route::post('events', ['as' => 'api-insert-event', 'uses' => 'Api\EventController@insertEvent']);
+        Route::post('events/{id}/update', ['as' => 'api-update-event', 'uses' => 'Api\EventController@updateEvent']);
+        Route::delete('events/{id}/delete', ['as' => 'api-delete-event', 'uses' => 'Api\EventController@deleteEvent']);
     });
 });

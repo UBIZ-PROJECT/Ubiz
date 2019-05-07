@@ -5,7 +5,10 @@
  * Date: 7/12/2018
  * Time: 10:29 PM
  */
-
+$lbl_style = "";
+if(isset($lbl_width)){
+    $lbl_style = "width : " . $lbl_width. "px";
+}
 $html_type = '';
 $html_control_type = '';
 if (!isset($type)) {
@@ -38,7 +41,7 @@ switch ($type) {
 
 <div class="textfield {{$html_type}} root_textfield rootIsUnderlined {{$control_id}}_container" style="width: {{ $html_width }}">
     <div class="wrapper">
-        <label for="{{$control_id}}" class="lbl-primary ms-Label root-56">{{$label}}</label>
+        <label for="{{$control_id}}" class="lbl-primary ms-Label root-56" style="{{$lbl_style}}">{{$label}}</label>
         <div class="fieldGroup">
             <select id="{{$control_id}}" {{$html_control_type}} class="dropdown_field">
                 <option value=""></option>
