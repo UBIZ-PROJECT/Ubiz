@@ -412,6 +412,12 @@ var del_list = new Array();
 						var selected_order = 'selected';
 					}
 					
+					if(pricing.product[i].delivery_date != null){
+						var f_delivery_date = pricing.product[i].delivery_date.substring(0,10);
+					}else{
+						var f_delivery_date = '';
+					}
+					
 					if(pricing.product[i].type == '1'){
 						p_no++;
 						$('#p_tab').append('<tr><input type="hidden" name="pro_id[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].pro_id + '"/><input type="hidden" name="type[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].type + '"/><td class="index_no">' + p_no + '</td><td><textarea size="5" name="specs[' + pricing.product[i].pro_id + ']" class="inp-specs" maxlength="250">' + pricing.product[i].specs + '</textarea></td><td><input type="text" name="unit[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].unit + '" maxlength="20"/></td><td><input type="text" name="amount[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].amount + '" maxlength="11"/></td><td><input type="text" name="delivery_date[' + pricing.product[i].pro_id + ']" class="inp100" value="' + pricing.product[i].delivery_date.substring(0,10) + '" maxlength="20"/></td><td> <select name="status[' + pricing.product[i].pro_id + ']" class="inp100"><option value="1" '+selected_instock+'>Sẵn có</option><option value="0" '+selected_order+'>Order</option> </select></td><td><input type="text" name="price[' + pricing.product[i].pro_id + ']" class="inp100" value="' + commaSeparateNumber(pricing.product[i].price) + '" maxlength="11"/></td><td><input type="text" name="total[' + pricing.product[i].pro_id + ']" class="inp130" value="' + commaSeparateNumber(pricing.product[i].price * pricing.product[i].amount) + '" disabled/></td><td><a href="#" class="delete_p_row"><i class="far fa-trash-alt" style="color:red"></i></a></td></tr>');
