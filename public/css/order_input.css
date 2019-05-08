@@ -65,7 +65,7 @@
 }
 
 .order-input .dt-row .fieldGroup {
-  height: 23px !important;
+  height: 22px !important;
 }
 
 .order-input .dt-row .tox-tbtn {
@@ -90,4 +90,5 @@
     right: 10px;
     color: #FA6800;
     cursor: pointer;
+    z-index: 1151px;
 }

@@ -197,7 +197,7 @@
                                    aria-controls="dt-acce" aria-selected="false">{{ __('Accessories') }}</a>
                             </li>
                             <li class="nav-item add-btn">
-                                <i class="material-icons md-33" title="{{ __("Add new") }}">
+                                <i onclick="prod_row_add()" class="material-icons md-33" title="{{ __("Add new") }}">
                                     add_box
                                 </i>
                             </li>
@@ -205,7 +205,7 @@
                         <div class="tab-content" id="tab-ord-inp-content">
                             <div class="tab-pane fade show active" id="dt-prod" role="tabpanel"
                                  aria-labelledby="dt-prod-tab">
-                                <div class="dt-row">
+                                <div class="dt-row" dt_id="0">
                                     <div class="row dt-row-head zero-mgl zero-mgr" onclick="my_collapse(this)">
                                         <div class="col text-left">
                                             <label class="lbl-primary z-mgb">No.1</label>
@@ -217,20 +217,20 @@
                                     <div class="row dt-row-body zero-mgl zero-mgr collapse hide">
                                         <div class="col-md-auto">
                                             <label class="lbl-primary">{{ __('Specification') }}:</label>
-                                            <textarea name="txt_dt_spec" id="txt_dt_spec_1"></textarea>
+                                            <textarea name="dt_prod_specs_mce" id="dt_prod_specs_mce_1"></textarea>
                                         </div>
                                         <div class="col-md-auto">
-                                            @include('components.input',['control_id'=>'txt_dt_model', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Model')])
-                                            @include('components.textarea',['width'=>'250', 'height'=>'100', 'control_id'=>'txt_dt_series', 'label'=>__('Series')])
-                                            @include('components.textarea',['width'=>'250', 'height'=>'100', 'control_id'=>'txt_dt_memo', 'label'=>__('Memo')])
+                                            @include('components.input',['control_id'=>'dt_prod_model', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Model')])
+                                            @include('components.textarea',['width'=>'250', 'height'=>'100', 'control_id'=>'dt_prod_series', 'resize'=>'none', 'label'=>__('Series')])
+                                            @include('components.textarea',['width'=>'250', 'height'=>'100', 'control_id'=>'dt_memo', 'resize'=>'none', 'label'=>__('Memo')])
                                         </div>
                                         <div class="col-md-auto">
-                                            @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit')])
-                                            @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity')])
-                                            @include('components.input',['control_id'=>'txt_dt_deadline', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Deadline')])
-                                            @include('components.dropdown',['control_id'=>'txt_dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Status'),'data'=>['a'=>'a','b'=>'b']])
-                                            @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price')])
-                                            @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Total')])
+                                            @include('components.input',['control_id'=>'dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit')])
+                                            @include('components.input',['control_id'=>'dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity')])
+                                            @include('components.textarea',['width'=>'250', 'height'=>'50', 'control_id'=>'dt_delivery_time', 'resize'=>'none', 'class'=> 'margin-bottom-15', 'label'=>__('Delivery time')])
+                                            @include('components.dropdown',['control_id'=>'dt_status', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Status'),'data'=>['a'=>'a','b'=>'b']])
+                                            @include('components.input',['control_id'=>'dt_price', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price')])
+                                            @include('components.input',['control_id'=>'dt_amount', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Amount')])
                                         </div>
                                         <div class="col-md-auto z-pdr text-center">
                                             <i onclick="prod_row_copy(this)" class="material-icons text-primary i-btn"
@@ -238,46 +238,8 @@
                                                 copyright
                                             </i>
                                             <br>
-                                            <i class="material-icons text-danger i-btn" title="{{ __("Delete") }}">
-                                                delete
-                                            </i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="dt-row">
-                                    <div class="row dt-row-head zero-mgl zero-mgr" onclick="my_collapse(this)">
-                                        <div class="col text-left">
-                                            <label class="lbl-primary z-mgb">No.2</label>
-                                        </div>
-                                        <div class="col text-right">
-                                            <i class="fas fa-caret-down"></i>
-                                        </div>
-                                    </div>
-                                    <div class="row dt-row-body zero-mgl zero-mgr collapse hide">
-                                        <div class="col-md-auto">
-                                            <label class="lbl-primary">{{ __('Specification') }}:</label>
-                                            <textarea name="txt_dt_spec" id="txt_dt_spec_2"></textarea>
-                                        </div>
-                                        <div class="col-md-auto">
-                                            @include('components.input',['control_id'=>'txt_dt_model', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Model')])
-                                            @include('components.textarea',['width'=>'250', 'height'=>'100', 'control_id'=>'txt_dt_series', 'label'=>__('Series')])
-                                            @include('components.textarea',['width'=>'250', 'height'=>'100', 'control_id'=>'txt_dt_memo', 'label'=>__('Memo')])
-                                        </div>
-                                        <div class="col-md-auto">
-                                            @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit')])
-                                            @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity')])
-                                            @include('components.input',['control_id'=>'txt_dt_deadline', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Deadline')])
-                                            @include('components.dropdown',['control_id'=>'txt_dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Status'),'data'=>['a'=>'a','b'=>'b']])
-                                            @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price')])
-                                            @include('components.input',['control_id'=>'txt_dt_quantity', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Total')])
-                                        </div>
-                                        <div class="col-md-auto z-pdr text-center">
-                                            <i onclick="prod_row_copy(this)" class="material-icons text-primary i-btn"
-                                               title="{{ __("Copy") }}">
-                                                copyright
-                                            </i>
-                                            <br>
-                                            <i class="material-icons text-danger i-btn" title="{{ __("Delete") }}">
+                                            <i onclick="prod_row_del(this)" class="material-icons text-danger i-btn"
+                                               title="{{ __("Delete") }}">
                                                 delete
                                             </i>
                                         </div>
@@ -359,17 +321,17 @@
         function prod_row_copy(self) {
 
             prod_spec_no++;
-            var txt_dt_spec_id = "txt_dt_spec_" + prod_spec_no;
-            var tinymce_selector = "#" + txt_dt_spec_id;
+            var dt_prod_specs_mce_id = "dt_prod_specs_mce_" + prod_spec_no;
+            var tinymce_selector = "#" + dt_prod_specs_mce_id;
 
             var copy_row = jQuery(self).closest('div.dt-row');
-            var copy_tinymce_selector = copy_row.find('textarea[name=txt_dt_spec]').attr('id');
+            var copy_tinymce_selector = copy_row.find('textarea[name=dt_prod_specs_mce]').attr('id');
 
             var clone_row = copy_row.clone(false)
             clone_row.find('div.tox-tinymce').remove();
-            clone_row.find('textarea[name=txt_dt_spec]').attr('id', txt_dt_spec_id);
-            clone_row.find('textarea[name=txt_dt_spec]').removeAttr('style');
-            clone_row.find('textarea[name=txt_dt_spec]').removeAttr('aria-hidden');
+            clone_row.find('textarea[name=dt_prod_specs_mce]').attr('id', dt_prod_specs_mce_id);
+            clone_row.find('textarea[name=dt_prod_specs_mce]').removeAttr('style');
+            clone_row.find('textarea[name=dt_prod_specs_mce]').removeAttr('aria-hidden');
             jQuery(self).closest('div.dt-row').after(clone_row.wrap('<p/>').parent().html());
 
             tinymce.init({
@@ -379,10 +341,15 @@
                 menubar: false,
                 toolbar_drawer: 'floating',
                 selector: tinymce_selector,
-                init_instance_callback : function(inst){
+                init_instance_callback: function (inst) {
                     var copy_tinymce_content = tinyMCE.get(copy_tinymce_selector).getContent();
-                    tinyMCE.get(txt_dt_spec_id).setContent(copy_tinymce_content);
+                    tinyMCE.get(dt_prod_specs_mce_id).setContent(copy_tinymce_content);
                     jQuery('#nicescroll-iput').getNiceScroll().resize();
+
+                    prod_row_set_no();
+                    var copy_row_data = prod_row_get_data(copy_row);
+                    prod_row_set_data(copy_row.next('div.dt-row', copy_row_data));
+
                 },
                 plugins: [
                     'advlist autolink lists link image charmap print preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code wordcount autoresize'
@@ -392,19 +359,130 @@
                     '{{ asset('fonts/roboto/v18/roboto.css') }}'
                 ]
             });
+        }
 
-            jQuery('#nicescroll-iput').getNiceScroll().resize();
+        function prod_row_add() {
+
+            prod_spec_no++;
+            var dt_prod_specs_mce_id = "dt_prod_specs_mce_" + prod_spec_no;
+            var tinymce_selector = "#" + dt_prod_specs_mce_id;
+
+            var copy_row = jQuery("#dt-prod").find('div.dt-row:first');
+            var copy_tinymce_selector = copy_row.find('textarea[name=dt_prod_specs_mce]').attr('id');
+
+            var clone_row = copy_row.clone(false)
+            clone_row.find('div.tox-tinymce').remove();
+            clone_row.find('textarea[name=dt_prod_specs_mce]').attr('id', dt_prod_specs_mce_id);
+            clone_row.find('textarea[name=dt_prod_specs_mce]').removeAttr('style');
+            clone_row.find('textarea[name=dt_prod_specs_mce]').removeAttr('aria-hidden');
+            jQuery("#dt-prod").append(clone_row.wrap('<p/>').parent().html());
+
+            tinymce.init({
+                width: 350,
+                min_height: 246,
+                max_height: 500,
+                menubar: false,
+                toolbar_drawer: 'floating',
+                selector: tinymce_selector,
+                init_instance_callback: function (inst) {
+                    jQuery('#nicescroll-iput').getNiceScroll().resize();
+                    prod_row_set_no();
+                },
+                plugins: [
+                    'advlist autolink lists link image charmap print preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code wordcount autoresize'
+                ],
+                toolbar: 'undo redo | bold italic forecolor backcolor | formatselect | fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat',
+                content_css: [
+                    '{{ asset('fonts/roboto/v18/roboto.css') }}'
+                ]
+            });
+        }
+
+        function prod_row_del(self) {
+
+            var del_row = jQuery(self).closest('div.dt-row');
+            var cur_rows_length = jQuery("#dt-prod").find('div.dt-row').not('div.deleted').length;
+
+            if (del_row.attr('dt_id') == '0') {
+                if (cur_rows_length == 1) {
+                    prod_row_clean(del_row);
+                } else {
+                    var del_tinymce_selector = del_row.find('textarea[name=dt_prod_specs_mce]').attr('id');
+                    tinyMCE.get(del_tinymce_selector).remove();
+                    del_row.remove();
+                }
+            } else {
+                del_row.addClass('hidden-content deleted');
+            }
+        }
+
+        function prod_row_clean(row) {
+            row.attr('dt_id', '0');
+            var tinymce_selector = row.find('textarea[name=dt_prod_specs_mce]').attr('id');
+            tinyMCE.get(tinymce_selector).setContent('');
+            row.find("input[name=dt_prod_model]").val('');
+            row.find("textarea[name=dt_prod_series]").val('');
+            row.find("textarea[name=dt_memo]").val('');
+            row.find("input[name=dt_unit]").val('');
+            row.find("input[name=dt_quantity]").val('');
+            row.find("textarea[name=dt_delivery_time]").val('');
+            row.find("select[name=dt_status]").val('');
+            row.find("input[name=dt_price]").val('');
+            row.find("input[name=dt_amount]").val('');
+        }
+
+        function prod_row_get_data(row) {
+            var data = {};
+            data.dt_id = row.attr('dt_id');
+
+            var tinymce_selector = row.find('textarea[name=dt_prod_specs_mce]').attr('id');
+            data.dt_prod_specs_mce = tinyMCE.get(tinymce_selector).getContent();
+            data.dt_prod_specs = tinyMCE.get(tinymce_selector).getContent({'format': 'text'});
+            data.dt_prod_model = row.find("input[name=dt_prod_model]").val();
+            data.dt_prod_series = row.find("textarea[name=dt_prod_series]").val();
+            data.dt_memo = row.find("textarea[name=dt_memo]").val();
+            data.dt_unit = row.find("input[name=dt_unit]").val();
+            data.dt_quantity = row.find("input[name=dt_quantity]").val();
+            data.dt_delivery_time = row.find("textarea[name=dt_delivery_time]").val();
+            data.dt_status = row.find("select[name=dt_status]").val();
+            data.dt_price = row.find("input[name=dt_price]").val();
+            data.dt_amount = row.find("input[name=dt_amount]").val();
+            data.dt_type = '1';
+
+        }
+
+        function prod_row_set_data(row, data) {
+            row.attr('dt_id', data.dt_id);
+            var tinymce_selector = row.find('textarea[name=dt_prod_specs_mce]').attr('id');
+            tinyMCE.get(tinymce_selector).setContent(data.dt_prod_specs_mce);
+            row.find("input[name=dt_prod_model]").val(data.dt_prod_model);
+            row.find("textarea[name=dt_prod_series]").val(data.dt_prod_series);
+            row.find("textarea[name=dt_memo]").val(data.dt_memo);
+            row.find("input[name=dt_unit]").val(data.dt_unit);
+            row.find("input[name=dt_quantity]").val(data.dt_quantity);
+            row.find("textarea[name=dt_delivery_time]").val(data.dt_delivery_time);
+            row.find("select[name=dt_status]").val(data.dt_status);
+            row.find("input[name=dt_price]").val(data.dt_price);
+            row.find("input[name=dt_amount]").val(data.dt_amount);
+        }
+
+        function prod_row_set_no() {
+            var cur_rows = jQuery("#dt-prod").find('div.dt-row').not('div.deleted');
+            $.each(cur_rows, function (idx, row) {
+                var row_no = idx + 1;
+                $(row).find("div.dt-row-head").find('label').text('No.' + row_no);
+            });
         }
 
         function acce_row_copy(self) {
 
             prod_spec_no++;
-            var txt_dt_spec_id = "txt_dt_spec_" + prod_spec_no;
+            var dt_prod_specs_mce_id = "dt_prod_specs_mce_" + prod_spec_no;
 
             var copy_row = jQuery(self).closest('div.dt-row');
             var clone_row = copy_row.clone(false)
             clone_row.find('div.tox-tinymce').remove();
-            clone_row.find('textarea[name=txt_dt_spec]').attr('id', txt_dt_spec_id);
+            clone_row.find('textarea[name=dt_prod_specs_mce]').attr('id', dt_prod_specs_mce_id);
             jQuery(self).closest('div.dt-row').after(clone_row.wrap('<p/>').parent().html());
 
             tinymce.init({
@@ -413,7 +491,7 @@
                 max_height: 500,
                 menubar: false,
                 toolbar_drawer: 'floating',
-                target: txt_dt_spec_id,
+                target: dt_prod_specs_mce_id,
                 plugins: [
                     'advlist autolink lists link image charmap print preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code wordcount autoresize'
                 ],
@@ -445,7 +523,7 @@
                 max_height: 500,
                 menubar: false,
                 toolbar_drawer: 'floating',
-                selector: 'textarea[name=txt_dt_spec]',
+                selector: 'textarea[name=dt_prod_specs_mce]',
                 plugins: [
                     'advlist autolink lists link image charmap print preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code wordcount autoresize'
                 ],
