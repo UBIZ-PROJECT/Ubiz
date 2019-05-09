@@ -67,10 +67,19 @@ class Order
         try {
             $order = DB::table('order')
                 ->leftJoin('customer', 'customer.cus_id', '=', 'order.cus_id')
+                ->leftJoin('m_customer_type', 'customer.cus_type', '=', 'm_customer_type.id')
+                ->leftJoin('customer_address', 'customer_address.cad_id', '=', 'order.cad_id')
                 ->leftJoin('users', 'users.id', '=', 'order.sale_id')
                 ->select(
                     'order.*',
-                    'customer.*',
+                    'customer.cus_code',
+                    'customer.cus_name',
+                    'customer.cus_phone',
+                    'customer.cus_fax',
+                    'customer.cus_mail',
+                    'customer.cus_avatar',
+                    'customer_address.cad_address as cus_addr',
+                    'm_customer_type.title as cus_type',
                     'users.name as sale_name',
                     'users.rank as sale_rank',
                     'users.email as sale_email',

@@ -1,5 +1,6 @@
 // Variables
 @import "variables";
+
 .order-input {
   .dt-row {
     padding: 0px 15px;
@@ -32,5 +33,25 @@
     .fa-trash {
       color: $mdc-deep-orange-A400;
     }
+  }
+
+  .total-info input {
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-bottom: 1px solid #a6a6a6;
+    background: none;
+    color: black !important;
+  }
+
+  .add-btn {
+    position: fixed;
+    right: 10px;
+    color: #FA6800;
+    cursor: pointer;
+  }
+
+  .add-btn buton{
+    z-index: 1151px !important;
   }
 }

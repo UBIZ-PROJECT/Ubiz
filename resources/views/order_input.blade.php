@@ -149,17 +149,24 @@
                             <div class="col-md-auto">
                                 <div class="row">
                                     <div class="col-md-auto">
-                                        @include('components.input',['control_id'=>'cus_name', 'value'=> $order->cus_name, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Customer')])
+                                        <div class="row">
+                                            <div class="col-md-auto">
+                                                @include('components.input',['control_id'=>'cus_name', 'value'=> $order->cus_name, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Customer')])
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-auto">
+                                                @include('components.input',['control_id'=>'cus_type', 'value'=> $order->cus_type, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Type')])
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-auto">
+                                        @include('components.textarea',['value'=>$order->ord_note, 'control_id'=>'ord_note', 'width'=>'300', 'height'=>'70', 'resize'=>'none', 'label'=>__('Note'), 'lable_class'=>'hidden-content'])
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-auto">
-                                        @include('components.input',['control_id'=>'cus_type', 'value'=> $order->cus_type, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Type')])
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-auto">
-                                        @include('components.input',['control_id'=>'cus_addr', 'value'=> '', 'type'=>'disabled', 'width'=> '630', 'lbl_width'=>'90', 'label'=>__('Address')])
+                                        @include('components.input',['control_id'=>'cus_addr', 'value'=> $order->cus_addr, 'type'=>'disabled', 'width'=> '630', 'lbl_width'=>'90', 'label'=>__('Address')])
                                     </div>
                                 </div>
                                 <div class="row">
@@ -202,14 +209,15 @@
                                    aria-controls="dt-acce" aria-selected="false">{{ __('Accessories') }}</a>
                             </li>
                             <li class="nav-item add-btn">
-                                <i onclick="prod_row_add()" class="material-icons md-33" title="{{ __("Add new") }}">
-                                    add_box
-                                </i>
+                                <button type="button" onclick="prod_row_add()" class="btn btn-info">
+                                    <i class="material-icons md-33" title="{{ __("Add new") }}">
+                                        add_box
+                                    </i>
+                                </button>
                             </li>
                         </ul>
                         <div class="tab-content" id="tab-ord-inp-content">
-                            <div class="tab-pane fade show active" id="dt-prod" role="tabpanel"
-                                 aria-labelledby="dt-prod-tab">
+                            <div class="tab-pane fade show active" id="dt-prod" role="tabpanel" aria-labelledby="dt-prod-tab">
                                 @foreach($orderDetail as $idx => $item)
                                     <div class="dt-row" dt_id="{{ $item->ordt_id }}">
                                         <div class="row dt-row-head zero-mgl zero-mgr" onclick="my_collapse(this)">
@@ -229,7 +237,7 @@
                                             <div class="col-md-auto">
                                                 @include('components.input',['value'=>$item->prod_model, 'control_id'=>'dt_prod_model','width'=> '250', 'lbl_width'=>'70', 'label'=>__('Model')])
                                                 @include('components.textarea',['value'=>$item->prod_series, 'width'=>'250', 'height'=>'100', 'control_id'=>'dt_prod_series', 'resize'=>'none', 'label'=>__('Series')])
-                                                @include('components.textarea',['value'=>$item->memo, 'width'=>'250', 'height'=>'100', 'control_id'=>'dt_memo', 'resize'=>'none', 'label'=>__('Memo')])
+                                                @include('components.textarea',['value'=>$item->note, 'width'=>'250', 'height'=>'100', 'control_id'=>'dt_note', 'resize'=>'none', 'label'=>__('Note')])
                                             </div>
                                             <div class="col-md-auto">
                                                 @include('components.input',['value'=>$item->unit, 'control_id'=>'dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit'), 'class'=> 'text-right'])
@@ -349,8 +357,10 @@
             clone_row.find('textarea[name=dt_prod_specs_mce]').attr('id', dt_prod_specs_mce_id);
             clone_row.find('textarea[name=dt_prod_specs_mce]').removeAttr('style');
             clone_row.find('textarea[name=dt_prod_specs_mce]').removeAttr('aria-hidden');
+            clone_row.find('div.dt-row-body').removeClass('hide');
+            clone_row.find('div.dt-row-body').addClass('show');
+            clone_row.find("div.dt-row-head").find('label').text('');
             jQuery(self).closest('div.dt-row').after(clone_row.wrap('<p/>').parent().html());
-
             tinymce.init({
                 width: 350,
                 min_height: 246,
@@ -390,8 +400,13 @@
             var clone_row = copy_row.clone(false)
             clone_row.find('div.tox-tinymce').remove();
             clone_row.find('textarea[name=dt_prod_specs_mce]').attr('id', dt_prod_specs_mce_id);
+            clone_row.find('textarea[name=dt_prod_specs_mce]').text('');
             clone_row.find('textarea[name=dt_prod_specs_mce]').removeAttr('style');
             clone_row.find('textarea[name=dt_prod_specs_mce]').removeAttr('aria-hidden');
+            clone_row.find('div.dt-row-body').removeClass('hide');
+            clone_row.find('div.dt-row-body').addClass('show');
+            clone_row.find("div.dt-row-head").find('label').text('');
+            clone_row.removeClass('hidden-content deleted')
             jQuery("#dt-prod").append(clone_row.wrap('<p/>').parent().html());
 
             tinymce.init({
@@ -419,10 +434,10 @@
         function prod_row_del(self) {
 
             var del_row = jQuery(self).closest('div.dt-row');
-            var cur_rows_length = jQuery("#dt-prod").find('div.dt-row').not('div.deleted').length;
+            var visible_rows_length = jQuery("#dt-prod").find('div.dt-row').not('div.deleted').length;
 
             if (del_row.attr('dt_id') == '0') {
-                if (cur_rows_length == 1) {
+                if (visible_rows_length == 1) {
                     prod_row_clean(del_row);
                 } else {
                     var del_tinymce_selector = del_row.find('textarea[name=dt_prod_specs_mce]').attr('id');
@@ -431,16 +446,22 @@
                 }
             } else {
                 del_row.addClass('hidden-content deleted');
+                if (visible_rows_length == 1) {
+                    prod_row_add();
+                }
             }
+            prod_row_set_no();
+            jQuery('#nicescroll-iput').getNiceScroll().resize();
         }
 
         function prod_row_clean(row) {
             row.attr('dt_id', '0');
             var tinymce_selector = row.find('textarea[name=dt_prod_specs_mce]').attr('id');
             tinyMCE.get(tinymce_selector).setContent('');
+            row.find('textarea[name=dt_prod_specs_mce]').val("")
             row.find("input[name=dt_prod_model]").val('');
             row.find("textarea[name=dt_prod_series]").val('');
-            row.find("textarea[name=dt_memo]").val('');
+            row.find("textarea[name=dt_note]").val('');
             row.find("input[name=dt_unit]").val('');
             row.find("input[name=dt_quantity]").val('');
             row.find("textarea[name=dt_delivery_time]").val('');
@@ -474,7 +495,7 @@
             data.dt_prod_specs = tinyMCE.get(tinymce_selector).getContent({'format': 'text'});
             data.dt_prod_model = row.find("input[name=dt_prod_model]").val();
             data.dt_prod_series = row.find("textarea[name=dt_prod_series]").val();
-            data.dt_memo = row.find("textarea[name=dt_memo]").val();
+            data.dt_note = row.find("textarea[name=dt_note]").val();
             data.dt_unit = row.find("input[name=dt_unit]").val();
             data.dt_quantity = row.find("input[name=dt_quantity]").val();
             data.dt_delivery_time = row.find("textarea[name=dt_delivery_time]").val();
@@ -491,8 +512,9 @@
             var tinymce_selector = row.find('textarea[name=dt_prod_specs_mce]').attr('id');
             tinyMCE.get(tinymce_selector).setContent(data.dt_prod_specs_mce);
             row.find("input[name=dt_prod_model]").val(data.dt_prod_model);
+            row.find("textarea[name=dt_prod_specs_mce]").val(data.dt_prod_specs_mce);
             row.find("textarea[name=dt_prod_series]").val(data.dt_prod_series);
-            row.find("textarea[name=dt_memo]").val(data.dt_memo);
+            row.find("textarea[name=dt_note]").val(data.dt_note);
             row.find("input[name=dt_unit]").val(data.dt_unit);
             row.find("input[name=dt_quantity]").val(data.dt_quantity);
             row.find("textarea[name=dt_delivery_time]").val(data.dt_delivery_time);
@@ -539,8 +561,7 @@
                 autohidemode: false,
                 horizrailenabled: false
             });
-
-            TinyDatePicker('.datepicker', {mode: 'dp-below'});
+            fnc_datepicker('.datepicker');
         });
     </script>
 @endsection
