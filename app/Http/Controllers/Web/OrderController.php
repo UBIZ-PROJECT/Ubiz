@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Helper;
 use App\Model\Order;
+use App\Model\OrderDetail;
+use App\Model\ProductStatus;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -22,13 +25,23 @@ class OrderController extends Controller
         }
     }
 
-    public function addNew(Request $request, $prc_no)
+    public function detail(Request $request, $ord_id)
     {
-        return view('order_input');
-    }
+        $order = new Order();
+        $orderData = $order->getOrder($ord_id);
 
-    public function detail(Request $request, $prc_no, $ord_no)
-    {
+        if($orderData == null){
+            return response()->view('errors.404', [], 404);
+        }
+        $orderDetail = new OrderDetail();
+        $orderDetailData = $orderDetail->getOrderDetails($ord_id);
 
+        $productStatus = new ProductStatus();
+        $statusList = $productStatus->getAllStatus();
+        return view('order_input', [
+            'order' => $orderData,
+            'orderDetail' => $orderDetailData,
+            'statusList' => Helper::convertDataToDropdownOptions($statusList, 'id', 'title')
+        ]);
     }
 }

@@ -117,70 +117,75 @@
                             <div class="col-md-auto">
                                 <div class="row">
                                     <div class="col-md-auto">
-                                        @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Pricing No')])
+                                        @include('components.input',['control_id'=>'ord_no', 'value'=> $order->ord_no, 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Order No')])
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-auto">
-                                        @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Pricing Date')])
+                                        @include('components.input',['control_id'=>'ord_date', 'value'=> date('Y/m/d', strtotime($order->ord_date)), 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Order Date'), 'class'=>'datepicker'])
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-auto">
-                                        @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '300', 'lbl_width'=>'100', 'label'=>__('Sale person')])
+                                        @include('components.input',['control_id'=>'sale_name', 'value'=> $order->sale_name, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Sale person')])
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-auto">
-                                        @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Duty')])
+                                        @include('components.input',['control_id'=>'sale_rank', 'value'=> $order->sale_rank, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Duty')])
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-auto">
-                                        @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Mobile')])
+                                        @include('components.input',['control_id'=>'sale_phone', 'value'=> $order->sale_phone, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Mobile')])
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-auto">
-                                        @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Email')])
+                                        @include('components.input',['control_id'=>'sale_email', 'value'=> $order->sale_email, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Email')])
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-auto">
                                 <div class="row">
                                     <div class="col-md-auto">
-                                        @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Customer')])
+                                        @include('components.input',['control_id'=>'cus_name', 'value'=> $order->cus_name, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Customer')])
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-auto">
-                                        @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '630', 'lbl_width'=>'90', 'label'=>__('Address')])
+                                        @include('components.input',['control_id'=>'cus_type', 'value'=> $order->cus_type, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Type')])
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-auto">
+                                        @include('components.input',['control_id'=>'cus_addr', 'value'=> '', 'type'=>'disabled', 'width'=> '630', 'lbl_width'=>'90', 'label'=>__('Address')])
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-auto">
                                         <div class="row">
                                             <div class="col-md-auto">
-                                                @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Contact person')])
+                                                @include('components.input',['control_id'=>'contact_name', 'value'=> '', 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Contact person')])
                                             </div>
                                             <div class="col-md-auto">
-                                                @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Duty')])
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-auto">
-                                                @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Mobile')])
-                                            </div>
-                                            <div class="col-md-auto">
-                                                @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Email')])
+                                                @include('components.input',['control_id'=>'contact_duty', 'value'=> '', 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Duty')])
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-auto">
-                                                @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Fax')])
+                                                @include('components.input',['control_id'=>'contact_mobile', 'value'=> '', 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Mobile')])
                                             </div>
                                             <div class="col-md-auto">
-                                                @include('components.input',['control_id'=>'txt_dt_unit', 'width'=> '120', 'lbl_width'=>'70', 'label'=>__('Tax')])
+                                                @include('components.input',['control_id'=>'contact_email', 'value'=> '', 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Email')])
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-auto">
+                                                @include('components.input',['control_id'=>'cus_fax', 'value'=> $order->cus_fax, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Fax')])
+                                            </div>
+                                            <div class="col-md-auto">
+                                                @include('components.number',['value'=>$order->ord_tax, 'onchange'=>'ord_tax_change(this)', 'control_id'=>'ord_tax', 'width'=> '120', 'lbl_width'=>'70', 'label'=>__('Tax'), 'class'=> 'text-right'])
                                             </div>
                                         </div>
                                     </div>
@@ -205,93 +210,105 @@
                         <div class="tab-content" id="tab-ord-inp-content">
                             <div class="tab-pane fade show active" id="dt-prod" role="tabpanel"
                                  aria-labelledby="dt-prod-tab">
-                                <div class="dt-row" dt_id="0">
-                                    <div class="row dt-row-head zero-mgl zero-mgr" onclick="my_collapse(this)">
-                                        <div class="col text-left">
-                                            <label class="lbl-primary z-mgb">No.1</label>
+                                @foreach($orderDetail as $idx => $item)
+                                    <div class="dt-row" dt_id="{{ $item->ordt_id }}">
+                                        <div class="row dt-row-head zero-mgl zero-mgr" onclick="my_collapse(this)">
+                                            <div class="col text-left">
+                                                <label class="lbl-primary z-mgb">No.{{ $idx + 1 }}</label>
+                                            </div>
+                                            <div class="col text-right">
+                                                <i class="fas fa-caret-down"></i>
+                                            </div>
                                         </div>
-                                        <div class="col text-right">
-                                            <i class="fas fa-caret-down"></i>
+                                        <div class="row dt-row-body zero-mgl zero-mgr collapse hide">
+                                            <div class="col-md-auto">
+                                                <label class="lbl-primary">{{ __('Specification') }}:</label>
+                                                <textarea name="dt_prod_specs_mce"
+                                                          id="dt_prod_specs_mce_1">{{ $item->prod_specs_mce }}</textarea>
+                                            </div>
+                                            <div class="col-md-auto">
+                                                @include('components.input',['value'=>$item->prod_model, 'control_id'=>'dt_prod_model','width'=> '250', 'lbl_width'=>'70', 'label'=>__('Model')])
+                                                @include('components.textarea',['value'=>$item->prod_series, 'width'=>'250', 'height'=>'100', 'control_id'=>'dt_prod_series', 'resize'=>'none', 'label'=>__('Series')])
+                                                @include('components.textarea',['value'=>$item->memo, 'width'=>'250', 'height'=>'100', 'control_id'=>'dt_memo', 'resize'=>'none', 'label'=>__('Memo')])
+                                            </div>
+                                            <div class="col-md-auto">
+                                                @include('components.input',['value'=>$item->unit, 'control_id'=>'dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit'), 'class'=> 'text-right'])
+                                                @include('components.number',['value'=>number_format($item->quantity), 'onchange'=>'dt_quantity_change(this)', 'control_id'=>'dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity'), 'class'=> 'text-right'])
+                                                @include('components.textarea',['value'=>$item->delivery_time, 'control_id'=>'dt_delivery_time', 'width'=>'250', 'height'=>'50', 'resize'=>'none', 'class'=> 'margin-bottom-15', 'label'=>__('Delivery time')])
+                                                @include('components.dropdown',['value'=>$item->status, 'control_id'=>'dt_status', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Status') ,'data'=> $statusList])
+                                                @include('components.money',['value'=> number_format($item->price), 'onchange'=>'dt_price_change(this)', 'control_id'=>'dt_price', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price'), 'class'=> 'text-right'])
+                                                @include('components.money',['value'=>number_format($item->amount), 'onchange'=>'dt_amount_change(this)', 'control_id'=>'dt_amount', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Amount'), 'class'=> 'text-right'])
+                                            </div>
+                                            <div class="col-md-auto z-pdr text-center">
+                                                <i onclick="prod_row_copy(this)"
+                                                   class="material-icons text-primary i-btn" title="{{ __("Copy") }}">
+                                                    copyright
+                                                </i>
+                                                <br>
+                                                <i onclick="prod_row_del(this)" class="material-icons text-danger i-btn"
+                                                   title="{{ __("Delete") }}">
+                                                    delete
+                                                </i>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="row dt-row-body zero-mgl zero-mgr collapse hide">
-                                        <div class="col-md-auto">
-                                            <label class="lbl-primary">{{ __('Specification') }}:</label>
-                                            <textarea name="dt_prod_specs_mce" id="dt_prod_specs_mce_1"></textarea>
-                                        </div>
-                                        <div class="col-md-auto">
-                                            @include('components.input',['control_id'=>'dt_prod_model', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Model')])
-                                            @include('components.textarea',['width'=>'250', 'height'=>'100', 'control_id'=>'dt_prod_series', 'resize'=>'none', 'label'=>__('Series')])
-                                            @include('components.textarea',['width'=>'250', 'height'=>'100', 'control_id'=>'dt_memo', 'resize'=>'none', 'label'=>__('Memo')])
-                                        </div>
-                                        <div class="col-md-auto">
-                                            @include('components.input',['control_id'=>'dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit')])
-                                            @include('components.input',['control_id'=>'dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity')])
-                                            @include('components.textarea',['width'=>'250', 'height'=>'50', 'control_id'=>'dt_delivery_time', 'resize'=>'none', 'class'=> 'margin-bottom-15', 'label'=>__('Delivery time')])
-                                            @include('components.dropdown',['control_id'=>'dt_status', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Status'),'data'=>['a'=>'a','b'=>'b']])
-                                            @include('components.input',['control_id'=>'dt_price', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price')])
-                                            @include('components.input',['control_id'=>'dt_amount', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Amount')])
-                                        </div>
-                                        <div class="col-md-auto z-pdr text-center">
-                                            <i onclick="prod_row_copy(this)" class="material-icons text-primary i-btn"
-                                               title="{{ __("Copy") }}">
-                                                copyright
-                                            </i>
-                                            <br>
-                                            <i onclick="prod_row_del(this)" class="material-icons text-danger i-btn"
-                                               title="{{ __("Delete") }}">
-                                                delete
-                                            </i>
-                                        </div>
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
                             <div class="tab-pane fade" id="dt-acce" role="tabpanel" aria-labelledby="dt-acce-tab"></div>
                         </div>
                         <hr>
                         <div class="total-info margin-bottom-30">
-                            <div class="row justify-content-end z-pdl z-pdr z-mgr z-mgl">
-                                <div class="col-md-auto text-right z-mgr z-mgl pdt-5">
-                                    <span>Tổng giá trị đơn hàng( trước thuế VAT )</span>
+                            <div class="row z-pdl z-pdr z-mgr z-mgl">
+                                <div class="col-4 text-left z-pdl z-pdr">
+                                    <label style="width: 70px">{{ __('Input Date') }}</label><label>: {{ date("Y/m/d H:i:s", strtotime($order->inp_date)) }}</label>
+                                    <br>
+                                    <label style="width: 70px">{{ __('Update Date') }}</label><label>: {{ date("Y/m/d H:i:s", strtotime($order->upd_date)) }}</label>
                                 </div>
-                                <div class="col-md-auto z-pdr z-pdl" style="width: 150px">
-                                    <input type="text" readonly class="w-100 text-right" value="1,000,000,000">
-                                </div>
-                                <div class="col-md-auto z-mgr z-mgl">
-                                    <span>VND</span>
-                                </div>
-                            </div>
-                            <div class="row justify-content-end z-pdl z-pdr z-mgr z-mgl">
-                                <div class="col-md-auto text-right z-mgr z-mgl pdt-5">
-                                    <span>Tổng giá trị đơn hàng ( đã bao gồm thuế VAT )</span>
-                                </div>
-                                <div class="col-md-auto z-pdr z-pdl" style="width: 150px">
-                                    <input type="text" readonly class="w-100 text-right" value="1,000,000,000">
-                                </div>
-                                <div class="col-md-auto z-mgr z-mgl">
-                                    <span>VND</span>
-                                </div>
-                            </div>
-                            <div class="row justify-content-end z-pdl z-pdr z-mgr z-mgl">
-                                <div class="col-md-auto text-right z-mgr z-mgl pdt-5">
-                                    <span>Đã thanh toán</span>
-                                </div>
-                                <div class="col-md-auto z-pdr z-pdl" style="width: 150px">
-                                    <input type="text" readonly class="w-100 text-right" value="1,000,000,000">
-                                </div>
-                                <div class="col-md-auto z-mgr z-mgl">
-                                    <span>VND</span>
-                                </div>
-                            </div>
-                            <div class="row justify-content-end z-pdl z-pdr z-mgr z-mgl">
-                                <div class="col-md-auto text-right z-mgr z-mgl pdt-5">
-                                    <span>Còn nợ</span>
-                                </div>
-                                <div class="col-md-auto z-pdr z-pdl" style="width: 150px">
-                                    <input type="text" readonly class="w-100 text-right" value="1,000,000,000">
-                                </div>
-                                <div class="col-md-auto z-mgr z-mgl">
-                                    <span>VND</span>
+                                <div class="col-8 text-right">
+                                    <div class="row justify-content-end z-pdl z-pdr z-mgr z-mgl">
+                                        <div class="col-md-auto text-right z-mgr z-mgl pdt-5">
+                                            <span>{{ __('Total value of orders (before VAT)') }}</span>
+                                        </div>
+                                        <div class="col-md-auto z-pdr z-pdl" style="width: 150px">
+                                            <input type="text" id="ord_amount" readonly class="w-100 text-right" value="{{ number_format($order->ord_amount) }}">
+                                        </div>
+                                        <div class="col-md-auto z-mgr z-mgl">
+                                            <span>VND</span>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-end z-pdl z-pdr z-mgr z-mgl">
+                                        <div class="col-md-auto text-right z-mgr z-mgl pdt-5">
+                                            <span>{{ __('Total value of orders (VAT included)') }}</span>
+                                        </div>
+                                        <div class="col-md-auto z-pdr z-pdl" style="width: 150px">
+                                            <input type="text" id="ord_amount_tax" readonly class="w-100 text-right" value="{{ number_format($order->ord_amount_tax) }}">
+                                        </div>
+                                        <div class="col-md-auto z-mgr z-mgl">
+                                            <span>VND</span>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-end z-pdl z-pdr z-mgr z-mgl">
+                                        <div class="col-md-auto text-right z-mgr z-mgl pdt-5">
+                                            <span>{{ __('Paid') }}</span>
+                                        </div>
+                                        <div class="col-md-auto z-pdr z-pdl" style="width: 150px">
+                                            <input type="text" id="ord_paid" readonly class="w-100 text-right" value="{{ number_format($order->ord_paid) }}">
+                                        </div>
+                                        <div class="col-md-auto z-mgr z-mgl">
+                                            <span>VND</span>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-end z-pdl z-pdr z-mgr z-mgl">
+                                        <div class="col-md-auto text-right z-mgr z-mgl pdt-5">
+                                            <span>{{ __('Debt') }}</span>
+                                        </div>
+                                        <div class="col-md-auto z-pdr z-pdl" style="width: 150px">
+                                            <input type="text" id="ord_debt" readonly class="w-100 text-right" value="{{ number_format($order->ord_debt) }}">
+                                        </div>
+                                        <div class="col-md-auto z-mgr z-mgl">
+                                            <span>VND</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -337,7 +354,7 @@
             tinymce.init({
                 width: 350,
                 min_height: 246,
-                max_height: 500,
+                max_height: 246,
                 menubar: false,
                 toolbar_drawer: 'floating',
                 selector: tinymce_selector,
@@ -348,7 +365,7 @@
 
                     prod_row_set_no();
                     var copy_row_data = prod_row_get_data(copy_row);
-                    prod_row_set_data(copy_row.next('div.dt-row', copy_row_data));
+                    prod_row_set_data(copy_row.next('div.dt-row'), copy_row_data);
 
                 },
                 plugins: [
@@ -380,13 +397,14 @@
             tinymce.init({
                 width: 350,
                 min_height: 246,
-                max_height: 500,
+                max_height: 246,
                 menubar: false,
                 toolbar_drawer: 'floating',
                 selector: tinymce_selector,
                 init_instance_callback: function (inst) {
-                    jQuery('#nicescroll-iput').getNiceScroll().resize();
                     prod_row_set_no();
+                    prod_row_clean(jQuery("#dt-prod").find('div.dt-row:last'));
+                    jQuery('#nicescroll-iput').getNiceScroll().resize();
                 },
                 plugins: [
                     'advlist autolink lists link image charmap print preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code wordcount autoresize'
@@ -431,6 +449,22 @@
             row.find("input[name=dt_amount]").val('');
         }
 
+        function dt_quantity_change(self) {
+            alert('changed');
+        }
+
+        function dt_price_change(self) {
+            alert('changed');
+        }
+
+        function dt_amount_change(self) {
+            alert('changed');
+        }
+
+        function ord_tax_change(self) {
+            alert('changed');
+        }
+
         function prod_row_get_data(row) {
             var data = {};
             data.dt_id = row.attr('dt_id');
@@ -448,6 +482,7 @@
             data.dt_price = row.find("input[name=dt_price]").val();
             data.dt_amount = row.find("input[name=dt_amount]").val();
             data.dt_type = '1';
+            return data;
 
         }
 
@@ -474,44 +509,6 @@
             });
         }
 
-        function acce_row_copy(self) {
-
-            prod_spec_no++;
-            var dt_prod_specs_mce_id = "dt_prod_specs_mce_" + prod_spec_no;
-
-            var copy_row = jQuery(self).closest('div.dt-row');
-            var clone_row = copy_row.clone(false)
-            clone_row.find('div.tox-tinymce').remove();
-            clone_row.find('textarea[name=dt_prod_specs_mce]').attr('id', dt_prod_specs_mce_id);
-            jQuery(self).closest('div.dt-row').after(clone_row.wrap('<p/>').parent().html());
-
-            tinymce.init({
-                width: 350,
-                min_height: 246,
-                max_height: 500,
-                menubar: false,
-                toolbar_drawer: 'floating',
-                target: dt_prod_specs_mce_id,
-                plugins: [
-                    'advlist autolink lists link image charmap print preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code wordcount autoresize'
-                ],
-                toolbar: 'undo redo | bold italic forecolor backcolor | formatselect | fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat',
-                content_css: [
-                    '{{ asset('fonts/roboto/v18/roboto.css') }}'
-                ]
-            });
-        }
-
-        function row_delete(self) {
-            var delete_row = jQuery(self).closest('div.dt-row');
-            if (delete_row.attr('id') == '0') {
-                delete_row.remove();
-            } else {
-                delete_row.addClass('hide');
-                delete_row.addClass('deleted');
-            }
-        }
-
         jQuery(document).ready(function () {
 
             prod_spec_no = jQuery("#dt-prod").find('div.dt-row').length;
@@ -520,7 +517,7 @@
             tinymce.init({
                 width: 350,
                 min_height: 246,
-                max_height: 500,
+                max_height: 246,
                 menubar: false,
                 toolbar_drawer: 'floating',
                 selector: 'textarea[name=dt_prod_specs_mce]',
@@ -542,6 +539,8 @@
                 autohidemode: false,
                 horizrailenabled: false
             });
+
+            TinyDatePicker('.datepicker', {mode: 'dp-below'});
         });
     </script>
 @endsection

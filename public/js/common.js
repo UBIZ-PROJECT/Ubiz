@@ -242,15 +242,135 @@ function checkbox_click(self) {
     }
 }
 
-function format_date(val, format){
+function format_date(val, format) {
     val = val.replace(/\s/g, "");
-    if(val == "")
+    if (val == "")
         return "";
 
     var f_date = moment(val).format(format);
-    if(f_date == "Invalid date")
+    if (f_date == "Invalid date")
         return "";
     return f_date;
+}
+
+function num_keydown(event) {
+    var controlKeys = [8, 9, 13, 35, 36, 37, 39, 46, 119, 120];
+    var isControlKey = controlKeys.join(",").match(new RegExp(event.which));
+    if (isControlKey
+        || (48 <= event.which && event.which <= 57)
+        || (96 <= event.which && event.which <= 105)
+        || (65 == event.which && event.ctrlKey)
+    )
+        return;
+    else
+        event.preventDefault();
+}
+
+function num_focus(self) {
+    setTimeout(function () {
+        var f_value = $(self).val();
+        var uf_value = numeral(f_value).format('0');
+        $(self).val(uf_value).select();
+    }, 10);
+}
+
+function max_validator(num, max, mode) {
+
+    var check_num = numeral(num).value();
+    var check_max = numeral(max).value();
+    if (check_num == null || check_max == null)
+        return false;
+
+    switch (mode) {
+        case 'integer':
+            check_num = parseInt(check_num);
+            check_max = parseInt(check_max);
+            break;
+        case 'double':
+            check_num = parseFloat(check_num);
+            check_max = parseFloat(check_max);
+            break;
+        default:
+            console.log('[ ' + mode + ' ] is not supported');
+            return false;
+            break;
+    }
+
+    if (check_num > check_max)
+        return false;
+    return true;
+}
+
+function num_blur(self) {
+    setTimeout(function () {
+        var f_value = $(self).val();
+        var uf_value = numeral(f_value).format('0,0');
+        $(self).val(uf_value);
+    }, 10);
+}
+
+function fnc_datepicker(ele) {
+
+    if (ele == null)
+        return false;
+
+    return TinyDatePicker(ele, {
+        // Lang can be used to customize the text that is displayed
+        // in the calendar. You can use this to display a different language.
+        lang: {
+            days: [
+                i18next.t('A00017'),
+                i18next.t('A00018'),
+                i18next.t('A00019'),
+                i18next.t('A00020'),
+                i18next.t('A00021'),
+                i18next.t('A00022'),
+                i18next.t('A00023')
+            ],
+            months: [
+                i18next.t('A00024'),
+                i18next.t('A00025'),
+                i18next.t('A00026'),
+                i18next.t('A00027'),
+                i18next.t('A00028'),
+                i18next.t('A00029'),
+                i18next.t('A00030'),
+                i18next.t('A00031'),
+                i18next.t('A00032'),
+                i18next.t('A00033'),
+                i18next.t('A00034'),
+                i18next.t('A00035')
+            ],
+            today: i18next.t('A00036'),
+            clear: i18next.t('A00037'),
+            close: i18next.t('A00038')
+        },
+
+        // format {Date} -> string is a function which takes a date and returns a string. It can be used to customize
+        // the way a date will look in the input after the user has selected it, and is particularly
+        // useful if you're targeting a non-US customer.
+        format(date) {
+            return fnc_format_date(date);
+        },
+
+        // parse {string|Date} -> Date is the inverse of format. If you specify one, you probably should specify the other
+        // the default parse function handles whatever the new Date constructor handles. Note that
+        // parse may be passed either a string or a date.
+        parse(str) {
+            var date = new Date(str);
+            return isNaN(date) ? new Date() : date;
+        },
+
+        // mode {'dp-modal'|'dp-below'|'dp-permanent'} specifies the way the date picker should display:
+        // 'dp-modal' displays the picker as a modal
+        // 'dp-below' displays the date picker as a dropdown
+        // 'dp-permanent' displays the date picker as a permanent (always showing) calendar
+        mode: 'dp-below',
+
+        // hilightedDate specifies what date to hilight when the date picker is displayed and the
+        // associated input has no value.
+        hilightedDate: new Date()
+    });
 }
 
 jQuery.fn.forceNumeric = function () {
@@ -307,15 +427,15 @@ jQuery.fn.extend({
             this.attr("is-change", bool);
         }
     },
-    getImageId: function() {
+    getImageId: function () {
         var name = this.attr("img-name");
-        if (name == undefined || name == "" ) return "";
+        if (name == undefined || name == "") return "";
         var arr = name.split('-');
-        var imageId = arr[1].substring(0,arr[1].indexOf("."));
+        var imageId = arr[1].substring(0, arr[1].indexOf("."));
         return imageId;
     },
-    setName: function(name) {
-        this.attr("img-name",name);
+    setName: function (name) {
+        this.attr("img-name", name);
     }
 });
 
