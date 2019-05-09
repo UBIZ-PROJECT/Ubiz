@@ -29,8 +29,7 @@ Route::middleware(['api', 'cors'])->group(function () {
         Route::get('products', ['as'=>'supplier', 'uses'=>'Web\AccessoryController@accessories']);
         Route::get('pricing', ['as'=>'pricing', 'uses'=>'Web\PricingController@pricing']);
         Route::get('orders', ['as'=>'orders', 'uses'=>'Web\OrderController@index']);
-        Route::get('orders/{prc_no}/add-new', ['as'=>'orders', 'uses'=>'Web\OrderController@addNew']);
-        Route::get('orders/{prc_no}/{ord_no}', ['as'=>'orders', 'uses'=>'Web\OrderController@detail']);
+        Route::get('orders/{ord_id}', ['as'=>'orders', 'uses'=>'Web\OrderController@detail']);
         Route::get('events', ['as'=>'events', 'uses'=>'Web\EventController@index']);
     });
 });

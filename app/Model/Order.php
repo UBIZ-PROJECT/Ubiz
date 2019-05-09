@@ -2,52 +2,12 @@
 
 namespace App\Model;
 
-use Illuminate\Notifications\Notifiable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Helper;
 
-class Order implements JWTSubject
+class Order
 {
-    use Notifiable;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'exp_date',
-    ];
-
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [
-
-    ];
-
-    /**
-     * Get the identifier that will be stored in the subject claim of the JWT.
-     *
-     * @return mixed
-     */
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-
-    /**
-     * Return a key value array, containing any custom claims to be added to the JWT.
-     *
-     * @return array
-     */
-    public function getJWTCustomClaims()
-    {
-        return [];
-    }
 
     public function getAllOrder()
     {
@@ -57,17 +17,6 @@ class Order implements JWTSubject
             ->select('order.*', 'customer.cus_name', 'users.name')
             ->where('order.delete_flg', '0')->get();
         return $orderList;
-    }
-
-    public function getOrderDetail($ord_id)
-    {
-        $order_details = DB::table('order_detail')
-            ->select('order_detail.*')
-            ->where('ord_id', $ord_id)
-            ->where('order_detail.delete_flg', '0')
-            ->orderBy('order_detail.pro_id')
-            ->get();
-        return $order_details;
     }
 
     public function deleteOrder($ids = '')
@@ -113,21 +62,29 @@ class Order implements JWTSubject
         return DB::table('order')->where('delete_flg', '0')->count();
     }
 
-    public function getOrder($id)
+    public function getOrder($ord_id)
     {
         try {
             $order = DB::table('order')
                 ->leftJoin('customer', 'customer.cus_id', '=', 'order.cus_id')
-                ->leftJoin('users', 'users.id', '=', 'order.user_id')
-                ->select('order.*', 'customer.*', 'users.name')
-                ->where('ord_id', $id)
-                ->get();
-
-            $order[0]->avt_src = Helper::readImage($order[0]->cus_avatar, 'cus');
+                ->leftJoin('users', 'users.id', '=', 'order.sale_id')
+                ->select(
+                    'order.*',
+                    'customer.*',
+                    'users.name as sale_name',
+                    'users.rank as sale_rank',
+                    'users.email as sale_email',
+                    'users.phone as sale_phone'
+                )
+                ->where([
+                    ['order.ord_id', '=', $ord_id],
+                    ['order.owner_id', '=', Auth::user()->id]
+                ])
+                ->first();
+            return $order;
         } catch (\Throwable $e) {
             throw $e;
         }
-        return $order;
     }
 
     public function getOrderPaging($index, $sort, $order)
