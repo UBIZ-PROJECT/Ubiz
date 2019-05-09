@@ -130,5 +130,8 @@
   "Paid": "Đã thanh toán",
   "Debt": "Còn nợ",
   "Input Date": "Ngày tạo",
-  "Update Date": "Ngày sửa"
+  "Update Date": "Ngày sửa",
+  "Copy": "Sao chép",
+  "You didn't select any image yet.":"Bạn chưa chọn hình.",
+  "Error!!!": "Lỗi!!!"
 }
