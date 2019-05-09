@@ -18,6 +18,10 @@ $html_width = "300px";
 if(isset($width)){
     $html_width = $width . "px";
 }
+$html_value = "";
+if(isset($value)){
+    $html_value = $value;
+}
 
 if(!isset($label)) {
     $label = '';
@@ -43,12 +47,13 @@ switch ($type) {
     <div class="wrapper">
         <label for="{{$control_id}}" class="lbl-primary ms-Label root-56" style="{{$lbl_style}}">{{$label}}</label>
         <div class="fieldGroup">
-            <select id="{{$control_id}}" {{$html_control_type}} class="dropdown_field">
+            <select name="{{$control_id}}" id="{{$control_id}}" {{$html_control_type}} class="dropdown_field">
                 <option value=""></option>
                 @foreach( $data as $value => $options)
-                    <option value="{{ $value }}">{{ $options }}</option>
+                    <option value="{{ $value }}" {{ $html_value == $value ? "selected" : "" }}>{{ $options }}</option>
                 @endforeach
             </select>
+            <input type="hidden" name="{{$control_id}}_old" value="{{ $html_value }}">
         </div>
     </div>
     <span class="error_message hidden-content">

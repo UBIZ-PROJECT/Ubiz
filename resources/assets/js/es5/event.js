@@ -4,6 +4,7 @@ function event_modal(info) {
     $("#event-title").val(info.event.title);
     $("#event-start-date").val(moment().format('MMM DD, YYYY'));
     $("#event-end-date").val(moment().format('MMM DD, YYYY'));
+    $('#event-modal').modal();
 }
 
 moment.locale('vi', {
@@ -75,6 +76,8 @@ document.addEventListener('DOMContentLoaded', function () {
             if (info.event.url) {
                 window.open(info.event.url);
             }
+
+            event_modal(info);
         }
     });
     calendar.render();

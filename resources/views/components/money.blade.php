@@ -17,9 +17,9 @@ $lbl_style = "";
 if(isset($lbl_width)){
     $lbl_style = "width : " . $lbl_width. "px";
 }
-$html_max_length = "";
+$html_max_length = "19";
 if(isset($length)){
-    $html_max_length = "maxlength=$length";
+    $html_max_length = $length;
 }
 $html_class = "";
 if(isset($class)){
@@ -28,6 +28,18 @@ if(isset($class)){
 $html_value = "";
 if(isset($value)){
     $html_value = $value;
+}
+$html_min = "0";
+if(isset($min)){
+    $html_min = $min;
+}
+$html_max = "9223372036854775807";
+if(isset($max)){
+    $html_max = $max;
+}
+$html_onchange = "";
+if(isset($onchange)){
+    $html_onchange = $onchange;
 }
 
 switch ($type) {
@@ -48,7 +60,7 @@ switch ($type) {
     <div class="wrapper">
         <label for="{{$control_id}}" class="ms-Label root-56 lbl-primary" style="{{$lbl_style}}">{{$label}}:</label>
         <div class="fieldGroup">
-            <input is-change="false" onfocus="i_focus(this)" placeholder="{{$html_placeholder}}" onblur="i_blur(this)" spellcheck="false" type="text" {{ $html_max_length }} {{$html_control_type}} id="{{$control_id}}" name="{{$control_id}}" value="{{ $html_value }}" class="input_field {{ $html_class }}">
+            <input is-change="false" onchange="{{ $html_onchange }}" onfocus="num_focus(this)" onblur="num_blur(this)" onkeydown="return num_keydown(event)" min="{{ $html_min }}" max="{{ $html_max }}" placeholder="{{$html_placeholder}}" spellcheck="false" type="text" maxlength="{{ $html_max_length }}" {{$html_control_type}} id="{{$control_id}}" name="{{$control_id}}" value="{{ $html_value }}" class="input_field {{ $html_class }}">
             <input type="hidden" name="{{$control_id}}_old" value="{{ $html_value }}">
         </div>
     </div>

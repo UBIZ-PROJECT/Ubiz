@@ -580,6 +580,15 @@ var is_image_delete = false;
                     }
                 }
             }
+            var image =$($("#i-put .jAQ .image-upload").find("img")[0]).prop("src");
+            if (image.indexOf("images/avatar.png") > -1) {
+                isValid = false;
+                swal({
+                    title: i18next.t("Error!!!"),
+                    text: i18next.t("You didn't select any image yet."),
+                    type: "warning",
+                });
+            }
             return isValid;
         },
         w_clear_input_page: function() {

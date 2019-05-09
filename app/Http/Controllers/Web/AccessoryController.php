@@ -20,7 +20,7 @@ class AccessoryController extends Controller
             $acs = new Accessory();
             $user = new User();
             $allUser = $user->getAllUsers();
-            $data = $acs->getAccessoryPaging(0, '','');
+            $data = $acs->getAccessoryPaging(0, '',[]);
             $paging = $acs->getPagingInfo();
             $productType = $acs->getAllAccessoryType();
             $paging['page'] = '0';

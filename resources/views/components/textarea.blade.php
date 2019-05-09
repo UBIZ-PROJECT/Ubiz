@@ -22,6 +22,16 @@ if(isset($class)){
     $html_class = $class;
 }
 
+$html_resize = "both";
+if(isset($resize)){
+    $html_resize = $resize;
+}
+
+$html_value = "";
+if(isset($value)){
+    $html_value = $value;
+}
+
 switch ($type) {
     case 'disabled':
         $html_type = 'rootIsDisabled';
@@ -40,7 +50,8 @@ switch ($type) {
     <label for="{{$control_id}}" class="ms-Label root-56 lbl-primary">{{$label}}:</label>
     <div class="wrapper">
         <div class="fieldGroup_area">
-            <textarea style="height: {{$html_height}};width: {{ $html_width }}" is-change="false" {{ $html_max_length }} {{$html_control_type}} id="{{$control_id}}" name="{{$control_id}}" class="input-textarea {{ $html_class }}"></textarea>
+            <textarea style="height: {{$html_height}};width: {{ $html_width }}; resize: {{ $html_resize }}" is-change="false" {{ $html_max_length }} {{$html_control_type}} id="{{$control_id}}" name="{{$control_id}}" class="input-textarea {{ $html_class }}">{{ $html_value }}</textarea>
+            <textarea style="display: none" name="{{$control_id}}_old">{{ $html_value }}</textarea>
         </div>
     </div>
     <span class="error_message hidden-content">
