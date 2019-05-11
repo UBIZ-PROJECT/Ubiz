@@ -35,6 +35,32 @@ var del_list = new Array();
             jQuery('.utooltip').tooltipster({
                 side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
             });
+            TinyDatePicker('.i-date', {
+            	mode: 'dp-below',
+            	lang: {
+            	    days: ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'],
+            	    months: [
+            	      'Tháng 1',
+            	      'Tháng 2',
+            	      'Tháng 3',
+            	      'Tháng 4',
+            	      'Tháng 5',
+            	      'Tháng 6',
+            	      'Tháng 7',
+            	      'Tháng 8',
+            	      'Tháng 9',
+            	      'Tháng 10',
+            	      'Tháng 11',
+            	      'Tháng 12',
+            	    ],
+            	    today: 'Hôm nay',
+            	    clear: 'Xoá',
+            	    close: 'Đóng',
+            	  },
+            	  format(dt) {
+            		 return dt.getDate() + '/' + (dt.getMonth() + 1) + '/' + dt.getFullYear();
+            	  },
+            });
         },
         w_sort: function (self) {
             var sort_name = jQuery(self).attr('sort-name');
@@ -97,13 +123,11 @@ var del_list = new Array();
             ubizapis('v1', '/pricing', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_clear_search_form:function(){
-            jQuery('#cus_code').val("");
-			jQuery('#cus_type').val("");
-            jQuery('#cus_name').val("");
-            jQuery('#cus_phone').val("");
-            jQuery('#cus_fax').val("");
-            jQuery('#cus_mail').val("");
-            jQuery('#cus_address').val("");
+            jQuery('#pri_code').val("");
+			jQuery('#cus_name').val("");
+            jQuery('#name').val("");
+            jQuery('#pri_date').val("");
+            jQuery('#exp_date').val("");
             jQuery.UbizOIWidget.page = '0';
             jQuery.UbizOIWidget.w_search();
         },
@@ -344,8 +368,8 @@ var del_list = new Array();
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(pricing[i].pri_id, pricing[i].pri_code, 1));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(pricing[i].pri_id, pricing[i].cus_name, 3));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(pricing[i].pri_id, pricing[i].name, 3));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(pricing[i].pri_id, pricing[i].pri_date.substring(0,10), 3));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(pricing[i].pri_id, pricing[i].exp_date.substring(0,10), 3));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(pricing[i].pri_id, pricing[i].pri_date, 3));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(pricing[i].pri_id, pricing[i].exp_date.substring(8,10) + '/' + pricing[i].exp_date.substring(5,7) + '/' + pricing[i].exp_date.substring(0,4), 3));
                     
                     rows.push(jQuery.UbizOIWidget.w_make_row_html(pricing[i].pri_id, cols));
                 }
@@ -383,7 +407,7 @@ var del_list = new Array();
 			$('input[name="cus_phone"]').val(pricing.cus_phone);
 			$('input[name="cus_fax"]').val(pricing.cus_fax);
 			$('input[name="cus_mail"]').val(pricing.cus_mail);
-			$('input[name="exp_date"]').val(pricing.exp_date.substring(0,10));
+			$('input[name="exp_date"]').val(pricing.exp_date.substring(8,10) + '/' + pricing.exp_date.substring(5,7) + '/' + pricing.exp_date.substring(0,4));
 			$('input[name="pri_id"]').val(pricing.pri_id);
 			$('input[name="pri_code"]').val(pricing.pri_code);
 			$('input[name="user_id"]').val(pricing.user_id);
@@ -414,12 +438,18 @@ var del_list = new Array();
 						var selected_order = 'selected';
 					}
 					
+					if(pricing.product[i].delivery_date != null){
+						var f_delivery_date = pricing.product[i].delivery_date.substring(0,10);
+					}else{
+						var f_delivery_date = '';
+					}
+					
 					if(pricing.product[i].type == '1'){
 						p_no++;
-						$('#p_tab').append('<tr><input type="hidden" name="pro_id[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].pro_id + '"/><input type="hidden" name="type[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].type + '"/><td class="index_no">' + p_no + '</td><td><textarea size="5" name="specs[' + pricing.product[i].pro_id + ']" class="inp-specs">' + pricing.product[i].specs + '</textarea></td><td><input type="text" name="unit[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].unit + '"/></td><td><input type="text" name="amount[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].amount + '"/></td><td><input type="text" name="delivery_date[' + pricing.product[i].pro_id + ']" class="inp100" value="' + pricing.product[i].delivery_date.substring(0,10) + '"/></td><td> <select name="status[' + pricing.product[i].pro_id + ']" class="inp100"><option value="1" '+selected_instock+'>Sẵn có</option><option value="0" '+selected_order+'>Order</option> </select></td><td><input type="text" name="price[' + pricing.product[i].pro_id + ']" class="inp100" value="' + commaSeparateNumber(pricing.product[i].price) + '"/></td><td><input type="text" name="total[' + pricing.product[i].pro_id + ']" class="inp130" value="' + commaSeparateNumber(pricing.product[i].price * pricing.product[i].amount) + '" disabled/></td><td><a href="#" class="delete_p_row"><i class="far fa-trash-alt" style="color:red"></i></a></td></tr>');
+						$('#p_tab').append('<tr><input type="hidden" name="pro_id[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].pro_id + '"/><input type="hidden" name="type[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].type + '"/><td class="index_no">' + p_no + '</td><td><textarea size="5" name="specs[' + pricing.product[i].pro_id + ']" class="inp-specs" maxlength="250">' + pricing.product[i].specs + '</textarea></td><td><input type="text" name="unit[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].unit + '" maxlength="20"/></td><td><input type="text" name="amount[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].amount + '" maxlength="11"/></td><td><input type="text" name="delivery_date[' + pricing.product[i].pro_id + ']" class="inp100" value="' + pricing.product[i].delivery_date.substring(0,10) + '" maxlength="20"/></td><td> <select name="status[' + pricing.product[i].pro_id + ']" class="inp100"><option value="1" '+selected_instock+'>Sẵn có</option><option value="0" '+selected_order+'>Order</option> </select></td><td><input type="text" name="price[' + pricing.product[i].pro_id + ']" class="inp100" value="' + commaSeparateNumber(pricing.product[i].price) + '" maxlength="11"/></td><td><input type="text" name="total[' + pricing.product[i].pro_id + ']" class="inp130" value="' + commaSeparateNumber(pricing.product[i].price * pricing.product[i].amount) + '" disabled/></td><td><a href="#" class="delete_p_row"><i class="far fa-trash-alt" style="color:red"></i></a></td></tr>');
 					}else{
 						f_no++;
-						$('#f_tab').append('<tr><input type="hidden" name="pro_id[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].pro_id + '"/><input type="hidden" name="type[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].type + '"/><td class="index_f_no">' + f_no + '</td><td><input type="text" name="code[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].code + '"/></td><td><input type="text" name="name[' + pricing.product[i].pro_id + ']" class="inp130" value="' + pricing.product[i].name + '"/></td><td><input type="text" name="unit[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].unit + '"/></td><td><input type="text" name="amount[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].amount + '"/></td><td><input type="text" name="delivery_date[' + pricing.product[i].pro_id + ']" class="inp100" value="' + pricing.product[i].delivery_date.substring(0,10) + '"/></td><td> <select name="status[' + pricing.product[i].pro_id + ']" class="inp100"><option value="1" '+selected_instock+'>Sẵn có</option><option value="0" '+selected_order+'>Order</option> </select></td><td><input type="text" name="price[' + pricing.product[i].pro_id + ']" class="inp100" value="' + commaSeparateNumber(pricing.product[i].price) + '"/></td><td><input type="text" name="total[' + pricing.product[i].pro_id + ']" class="inp110" value="' + commaSeparateNumber(pricing.product[i].price * pricing.product[i].amount) + '" disabled/></td><td><a href="#" class="delete_f_row"><i class="far fa-trash-alt" style="color:red"></i></a></td></tr>');					
+						$('#f_tab').append('<tr><input type="hidden" name="pro_id[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].pro_id + '"/><input type="hidden" name="type[' + pricing.product[i].pro_id + ']" value="' + pricing.product[i].type + '"/><td class="index_f_no">' + f_no + '</td><td><input type="text" name="code[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].code + '" maxlength="5"/></td><td><input type="text" name="name[' + pricing.product[i].pro_id + ']" class="inp130" value="' + pricing.product[i].name + '" maxlength="100"/></td><td><input type="text" name="unit[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].unit + '" maxlength="20"/></td><td><input type="text" name="amount[' + pricing.product[i].pro_id + ']" class="inp70" value="' + pricing.product[i].amount + '" maxlength="11"/></td><td><input type="text" name="delivery_date[' + pricing.product[i].pro_id + ']" class="inp100" value="' + pricing.product[i].delivery_date.substring(0,10) + '" maxlength="20"/></td><td> <select name="status[' + pricing.product[i].pro_id + ']" class="inp100"><option value="1" '+selected_instock+'>Sẵn có</option><option value="0" '+selected_order+'>Order</option> </select></td><td><input type="text" name="price[' + pricing.product[i].pro_id + ']" class="inp100" value="' + commaSeparateNumber(pricing.product[i].price) + '" maxlength="11"/></td><td><input type="text" name="total[' + pricing.product[i].pro_id + ']" class="inp110" value="' + commaSeparateNumber(pricing.product[i].price * pricing.product[i].amount) + '" disabled/></td><td><a href="#" class="delete_f_row"><i class="far fa-trash-alt" style="color:red"></i></a></td></tr>');					
 					}
 					
 					//for total table
@@ -624,8 +654,6 @@ var del_list = new Array();
 			var data = jQuery.UbizOIWidget.w_get_data_input_form();
 			var pri_id = jQuery('input[name="pri_id"]').val();
 			
-			
-			
 			swal({
 				title: "Bạn có chắc chắn muốn lưu dữ liệu?",
 				type: 'warning',
@@ -637,6 +665,13 @@ var del_list = new Array();
 				reverseButtons: true
 			}).then((result) => {
 				if (result.value) {
+					if($('input[name="exp_date"').val() == ''){
+						swal("Vui lòng nhập Ngày hết hạn.", {
+		                    icon: "error",
+		                });
+						return;
+					}
+					
 					if(pri_id != 0){
 						ubizapis('v1', '/pricing-update', 'post', data, null, jQuery.UbizOIWidget.w_save_callback);
 					}else{
@@ -818,6 +853,46 @@ jQuery(document).ready(function () {
     }
     
     $(".zY").remove();
+    
+    $( ".i-date" ).change(function() {
+	   if(isValidDate( $(this).val() ) == false){
+		   $(this).val('');
+		   swal('Sai định dạng ngày.', {
+               icon: "error",
+           });
+	   }
+	});
+    
+    //date input mask
+    var exp_date = document.querySelectorAll('.i-date')[0];
+    var dateInputMask = function dateInputMask(elm) {
+	  elm.addEventListener('keypress', function(e) {
+	    if(e.keyCode < 47 || e.keyCode > 57) {
+	      e.preventDefault();
+	    }
+	    
+	    var len = elm.value.length;
+	    
+	    // If we're at a particular place, let the user type the slash
+	    // i.e., 12/12/1212
+	    if(len !== 1 || len !== 3) {
+	      if(e.keyCode == 47) {
+	        e.preventDefault();
+	      }
+	    }
+	    
+	    // If they don't add the slash, do it for them...
+	    if(len === 2) {
+	      elm.value += '/';
+	    }
+	
+	    // If they don't add the slash, do it for them...
+	    if(len === 5) {
+	      elm.value += '/';
+	    }
+	  });
+	};
+	dateInputMask(exp_date);
 });
 
 
@@ -880,4 +955,13 @@ function getUrlParameter(sParam) {
             return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
         }
     }
+}
+
+function isValidDate(s) {
+	if(s != ''){
+	  var bits = s.split('/');
+	  var d = new Date(bits[2] + '/' + bits[1] + '/' + bits[0]);
+		
+	  return !!(d && (d.getMonth() + 1) == bits[1] && d.getDate() == Number(bits[0]));
+	}
 }
