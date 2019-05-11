@@ -341,9 +341,9 @@ function fnc_datepicker(ele) {
                 i18next.t('Nov'),
                 i18next.t('Dec')
             ],
-            today: i18next.t('A00036'),
-            clear: i18next.t('A00037'),
-            close: i18next.t('A00038')
+            today: i18next.t('Today'),
+            clear: i18next.t('Clear'),
+            close: i18next.t('Close')
         },
 
         // format {Date} -> string is a function which takes a date and returns a string. It can be used to customize
@@ -371,6 +371,16 @@ function fnc_datepicker(ele) {
         // associated input has no value.
         hilightedDate: new Date()
     });
+}
+
+function nicescroll_resize(ele){
+    setTimeout(function(){
+        $(ele).getNiceScroll().resize();
+    },10);
+}
+
+function fnc_format_date(date){
+    return moment(date).format('YYYY/MM/DD');
 }
 
 jQuery.fn.forceNumeric = function () {
@@ -417,10 +427,6 @@ jQuery.fn.forceNumeric = function () {
 
         });
     });
-}
-
-function fnc_format_date(date){
-    return moment(date).format('YYYY/MM/DD');
 }
 
 jQuery.fn.extend({

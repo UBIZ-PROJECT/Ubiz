@@ -135,7 +135,7 @@
                             </div>
                             <div class="hdG">
                                 <div class="dcB col-1" role="presentation">
-                                    <div class="dWB dWT" role="button" sort-name="ord_code" order-by="asc" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                    <div class="dWB dWT" role="button" sort-name="ord_no" order-by="asc" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Mã đơn hàng</div>
                                             <div class="mhH">
@@ -241,8 +241,8 @@
                                                     <input type="checkbox" class="ckb-i" value="{{$order->ord_id}}" style="display: none"/>
                                                     <div class="asU ckb-c"></div>
                                                 </div>
-                                                <div class="nCT" title="{{$order->ord_code}}">
-                                                    <span>{{$order->ord_code}}</span>
+                                                <div class="nCT" title="{{$order->ord_no}}">
+                                                    <span>{{$order->ord_no}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -255,8 +255,8 @@
                                         </div>
 										<div class="tcB col-3">
                                             <div class="cbo">
-                                                <div class="nCj" title="{{$order->name}}">
-                                                    <span>{{$order->name}}</span>
+                                                <div class="nCj" title="{{$order->sale_name}}">
+                                                    <span>{{$order->sale_name}}</span>
                                                 </div>
                                             </div>
                                         </div>

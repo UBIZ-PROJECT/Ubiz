@@ -22,4 +22,24 @@ class OrderDetail
             throw $e;
         }
     }
+
+    public function insertOrderDetail($ord_id, $order_detail)
+    {
+        try {
+            DB::table('order_detail')->insert(
+                [
+                    'ord_id' => $ord_id,
+                    'pro_id' => $order_detail['pro_id'],
+                    'detail' => $order_detail['detail'],
+                    'amount' => $order_detail['amount'],
+                    'inp_date' => now(),
+                    'upd_date' => now(),
+                    'inp_user' => '1',
+                    'upd_user' => '1'
+                ]
+            );
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
 }

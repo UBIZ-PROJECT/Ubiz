@@ -82,14 +82,9 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::post('pricing-update', ['as' => 'update-pricing', 'uses' => 'Api\PricingController@updatePricing']);
         Route::delete('pricing/{ids}/delete', ['as' => 'delete-pricing', 'uses' => 'Api\PricingController@deletePricing']);
 
-        Route::get('orders', ['as' => 'api-orders', 'uses' => 'Api\OrderController@getOrderList']);
-        Route::get('orders/{id}', ['as' => 'delete-orders', 'uses' => 'Api\OrderController@deleteOrder']);
-        Route::get('orders-list', ['as' => 'api-orders', 'uses' => 'Api\OrderController@getOrderList']);
-        Route::get('orders-edit', ['as' => 'get-orders', 'uses' => 'Api\OrderController@getOrder']);
-        Route::post('orders-create', ['as' => 'insert-orders', 'uses' => 'Api\OrderController@insertOrder']);
-        Route::post('orders-update', ['as' => 'update-orders', 'uses' => 'Api\OrderController@updateOrder']);
-        Route::delete('orders/{ids}/delete', ['as' => 'delete-orders', 'uses' => 'Api\OrderController@deleteOrder']);
-
+        Route::get('orders', ['as' => 'api-get-orders', 'uses' => 'Api\OrderController@getOrders']);
+        Route::post('orders/{id}/update', ['as' => 'api-update-order', 'uses' => 'Api\OrderController@updateOrder']);
+        Route::delete('orders/{ids}/delete', ['as' => 'api-delete-orders', 'uses' => 'Api\OrderController@deleteOrders']);
 
         Route::get('pricing-cus', ['as' => 'get-pricing-cus', 'uses' => 'Api\PricingController@getPricingCustomer']);
     
@@ -123,7 +118,7 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::put('keeper/{id}/update', ['as' => 'api-keeper-update', 'uses' => 'Api\KeeperController@updateKeeper']);
         Route::delete('keeper/{id}/delete', ['as' => 'api-keeper-delete', 'uses' => 'Api\KeeperController@deleteKeeper']);
         
-								Route::get('events', ['as' => 'api-get-events', 'uses' => 'Api\EventController@getEvents']);
+        Route::get('events', ['as' => 'api-get-events', 'uses' => 'Api\EventController@getEvents']);
         Route::get('events/{id}', ['as' => 'api-get-event', 'uses' => 'Api\EventController@getEvent']);
         Route::post('events', ['as' => 'api-insert-event', 'uses' => 'Api\EventController@insertEvent']);
         Route::post('events/{id}/update', ['as' => 'api-update-event', 'uses' => 'Api\EventController@updateEvent']);
