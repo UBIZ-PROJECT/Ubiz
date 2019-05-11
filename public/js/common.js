@@ -141,9 +141,9 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
                 console.log(error.response.status);
                 console.log(error.response.headers);
                 if (error.response.status === 401) {
-                    let timerInterval
+                    let timerInterval;
                     swal({
-                        title: i18next.t("Authentication failed.\nYou will be taken back to the login page for 5 seconds."),
+                        title: error.response.data.message,
                         html: '<strong></strong> ' + i18next.t('seconds') + '.',
                         timer: 5000,
                         onOpen: () => {
@@ -156,6 +156,10 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
                             clearInterval(timerInterval)
                             window.location.href = '/login';
                         }
+                    });
+                } else {
+                    swal({
+                        type: 'error', title: error.response.data.message
                     });
                 }
             } else if (error.request) {

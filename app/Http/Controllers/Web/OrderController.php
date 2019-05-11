@@ -34,7 +34,7 @@ class OrderController extends Controller
             return response()->view('errors.404', [], 404);
         }
         $orderDetail = new OrderDetail();
-        $orderDetailData = $orderDetail->getOrderDetails($ord_id);
+        $orderDetailData = $orderDetail->getOrderDetailsByOrdId($ord_id);
 
         $productStatus = new ProductStatus();
         $statusList = $productStatus->getAllStatus();

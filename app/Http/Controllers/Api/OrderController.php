@@ -28,18 +28,41 @@ class OrderController extends Controller
         }
     }
 
-    public function updateOrder(Request $request)
+    public function updateOrder($ord_id, Request $request)
     {
         try {
+
+            $data = $request->get('data', null);
+            if (empty($data) == true || $data == null) {
+                return response()->json(['success' => false, 'message' => __('Data is wrong.!')], 200);
+            }
+
+            $order = new Order();
+            $validator = $order->validateData($data);
+            if ($validator['success'] == false) {
+                return response()->json(['success' => false, 'message' => $validator['message']], 200);
+            }
+
+            //update order
+            $order->transactionUpdateOrder($ord_id, $data);
+
             return response()->json(['success' => true, 'message' => __('Successfully processed.')], 200);
         } catch (\Throwable $e) {
             throw $e;
         }
     }
 
-    public function deleteOrder(Request $request)
+    public function deleteOrders($ord_ids, Request $request)
     {
         try {
+
+            if (empty($ord_ids) || $ord_ids == '') {
+                return response()->json(['success' => false, 'message' => __('Successfully processed.')], 200);
+            }
+
+            $order = new Order();
+            $order->transactionDeleteOrdersByIds($ord_ids);
+
             return response()->json(['success' => true, 'message' => __('Successfully processed.')], 200);
         } catch (\Throwable $e) {
             throw $e;

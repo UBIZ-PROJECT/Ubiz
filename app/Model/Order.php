@@ -2,9 +2,11 @@
 
 namespace App\Model;
 
+use App\Helper;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Helper;
+use App\Model\OrderDetail;
 
 class Order
 {
@@ -47,37 +49,6 @@ class Order
         }
     }
 
-    public function countOrders($search = '')
-    {
-        try {
-            list($where_raw, $params) = $this->makeWhereRaw($search);
-            return DB::table('order')
-                ->leftJoin('customer', 'customer.cus_id', '=', 'order.cus_id')
-                ->leftJoin('m_customer_type', 'customer.cus_type', '=', 'm_customer_type.id')
-                ->leftJoin('customer_address', 'customer_address.cad_id', '=', 'order.cad_id')
-                ->leftJoin('users', 'users.id', '=', 'order.sale_id')
-                ->select(
-                    'order.*',
-                    'customer.cus_code',
-                    'customer.cus_name',
-                    'customer.cus_phone',
-                    'customer.cus_fax',
-                    'customer.cus_mail',
-                    'customer.cus_avatar',
-                    'customer_address.cad_address as cus_addr',
-                    'm_customer_type.title as cus_type',
-                    'users.name as sale_name',
-                    'users.rank as sale_rank',
-                    'users.email as sale_email',
-                    'users.phone as sale_phone'
-                )
-                ->whereRaw($where_raw, $params)
-                ->count();
-        } catch (\Throwable $e) {
-            throw $e;
-        }
-    }
-
     public function getOrder($ord_id)
     {
         try {
@@ -112,6 +83,37 @@ class Order
         }
     }
 
+    public function countOrders($search = '')
+    {
+        try {
+            list($where_raw, $params) = $this->makeWhereRaw($search);
+            return DB::table('order')
+                ->leftJoin('customer', 'customer.cus_id', '=', 'order.cus_id')
+                ->leftJoin('m_customer_type', 'customer.cus_type', '=', 'm_customer_type.id')
+                ->leftJoin('customer_address', 'customer_address.cad_id', '=', 'order.cad_id')
+                ->leftJoin('users', 'users.id', '=', 'order.sale_id')
+                ->select(
+                    'order.*',
+                    'customer.cus_code',
+                    'customer.cus_name',
+                    'customer.cus_phone',
+                    'customer.cus_fax',
+                    'customer.cus_mail',
+                    'customer.cus_avatar',
+                    'customer_address.cad_address as cus_addr',
+                    'm_customer_type.title as cus_type',
+                    'users.name as sale_name',
+                    'users.rank as sale_rank',
+                    'users.email as sale_email',
+                    'users.phone as sale_phone'
+                )
+                ->whereRaw($where_raw, $params)
+                ->count();
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
     public function getPagingInfo($search = '')
     {
         try {
@@ -126,17 +128,290 @@ class Order
         }
     }
 
-    public function deleteOrders($ids = '')
+    public function transactionDeleteOrdersByIds($ord_ids = '')
     {
         DB::beginTransaction();
         try {
 
-            DB::table('order')
-                ->whereIn('ord_id', explode(',', $ids))
-                ->update(['delete_flg' => '1']);
+            //delete orders
+            $this->deleteOrdersByIds($ord_ids);
+
+            //delete orders detail
+            $orderDetail = new OrderDetail();
+            $orderDetail->deleteOrderDetailsByOrdIds($ord_ids);
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollback();
+            throw $e;
+        }
+    }
+
+    public function transactionUpdateOrder($ord_id, $data)
+    {
+        DB::beginTransaction();
+        try {
+
+            $insert_order_detail_data = [];
+            $delete_order_detail_data = [];
+            $update_order_detail_data = [];
+
+            foreach ($data['order_detail'] as $item) {
+
+
+                $order_detail_data = [
+                    "note" => $item['dt_note'],
+                    "unit" => $item['dt_unit'],
+                    "quantity" => $item['dt_quantity'],
+                    "status" => $item['dt_status'],
+                    "delivery_time" => $item['dt_delivery_time'],
+                    "price" => $item['dt_price'],
+                    "amount" => $item['dt_amount'],
+                    "type" => $item['dt_type'],
+                    "sort_no" => $item['dt_sort_no'],
+                    "owner_id" => Auth::user()->id,
+                    "upd_user" => Auth::user()->id
+                ];
+
+                if ($item['dt_type'] == '1') {
+                    $order_detail_data["prod_model"] = $item['dt_prod_model'];
+                    $order_detail_data["prod_series"] = $item['dt_prod_series'];
+                    $order_detail_data["prod_specs"] = $item['dt_prod_specs'];
+                    $order_detail_data["prod_specs_mce"] = $item['dt_prod_specs_mce'];
+                    $order_detail_data["acce_code"] = null;
+                    $order_detail_data["acce_name"] = null;
+                }
+
+                if ($item['dt_type'] == '2') {
+                    $order_detail_data["prod_model"] = null;
+                    $order_detail_data["prod_series"] = null;
+                    $order_detail_data["prod_specs"] = null;
+                    $order_detail_data["prod_specs_mce"] = null;
+                    $order_detail_data["acce_code"] = $item['dt_acce_code'];
+                    $order_detail_data["acce_name"] = $item['dt_acce_name'];
+                }
+
+                $action = $item['action'];
+                switch ($action) {
+                    case'insert':
+                        $order_detail_data["ord_id"] = $ord_id;
+                        $order_detail_data["inp_user"] = Auth::user()->id;
+                        $insert_order_detail_data[] = $order_detail_data;
+                        break;
+                    case'update':
+                        $order_detail_data["ordt_id"] = $item['dt_id'];
+                        $update_order_detail_data[] = $order_detail_data;
+                        break;
+                    case'delete':
+                        $delete_order_detail_data[] = $item['dt_id'];
+                        break;
+                }
+            }
+
+            //update orders
+            $this->updateOrder($data['order']);
+
+            $orderDetail = new OrderDetail();
+            //insert order detail
+            if (!empty($insert_order_detail_data)) {
+                $orderDetail->insertOrderDetail($insert_order_detail_data);
+            }
+
+            //delete order detail
+            if (!empty($delete_order_detail_data)) {
+                $orderDetail->deleteOrderDetailsByIds($delete_order_detail_data);
+            }
+
+            //update order detail
+            foreach ($update_order_detail_data as $order_detail) {
+                $orderDetail->updateOrderDetail($order_detail);
+            }
+
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    public function validateData($data)
+    {
+        try {
+
+            $res = ['success' => true, 'message' => ''];
+            $message = [];
+
+            if (!array_key_exists('order', $data)) {
+                $res['success'] = false;
+                $message[] = __('Data is wrong.!');
+                return $res;
+            }
+
+            $order = $data['order'];
+            if (!array_key_exists('ord_no', $order) || $order['ord_no'] == '' || $order['ord_no'] == null) {
+                $res['success'] = false;
+                $message[] = __('Order No is required.');
+            }
+            if (array_key_exists('ord_no', $order) && mb_strlen($order['ord_no'], "utf-8") > 10) {
+                $res['success'] = false;
+                $message[] = __('Order No is too long.');
+            }
+            if (!array_key_exists('ord_date', $order) || $order['ord_date'] == '' || $order['ord_date'] == null) {
+                $res['success'] = false;
+                $message[] = __('Order Date is required.');
+            }
+            if (array_key_exists('ord_date', $order) && Carbon::createFromFormat('Y/m/d', $order['ord_date']) == false) {
+                $res['success'] = false;
+                $message[] = __('Order Date is wrong format YYYY/MM/DD.');
+            }
+
+            $amount_check = true;
+            if (!array_key_exists('ord_tax', $order)) {
+                $amount_check = false;
+                $res['success'] = false;
+                $message[] = __('Order Tax is required.');
+            }
+            if (!array_key_exists('ord_amount', $order)) {
+                $amount_check = false;
+                $res['success'] = false;
+                $message[] = __('Total value of orders (before VAT) is required.');
+            }
+            if (!array_key_exists('ord_amount_tax', $order)) {
+                $amount_check = false;
+                $res['success'] = false;
+                $message[] = __('Total value of orders (VAT included) is required.');
+            }
+            if (!array_key_exists('ord_paid', $order)) {
+                $amount_check = false;
+                $res['success'] = false;
+                $message[] = __('Paid is required.');
+            }
+            if (!array_key_exists('ord_debt', $order)) {
+                $res['success'] = false;
+                $message[] = __('Debt is required.');
+            }
+            if (array_key_exists('ord_tax', $order) && (is_numeric($order['ord_tax']) == false || intval($order['ord_tax']) < 0 || intval($order['ord_tax']) > 2147483647)) {
+                $amount_check = false;
+                $res['success'] = false;
+                $message[] = __('Order Tax is wrong data.');
+            }
+            if (array_key_exists('ord_amount', $order) && (is_numeric($order['ord_amount']) == false || floatval($order['ord_amount']) < 0 || floatval($order['ord_amount']) > 9223372036854775807)) {
+                $amount_check = false;
+                $res['success'] = false;
+                $message[] = __('Total value of orders (before VAT) is wrong.');
+            }
+            if (array_key_exists('ord_amount_tax', $order) && (is_numeric($order['ord_amount_tax']) == false || floatval($order['ord_amount_tax']) < 0 || floatval($order['ord_amount']) > 9223372036854775807)) {
+                $amount_check = false;
+                $res['success'] = false;
+                $message[] = __('Total value of orders (VAT included) is wrong.');
+            }
+            if (array_key_exists('ord_paid', $order) && (is_numeric($order['ord_paid']) == false || floatval($order['ord_paid']) < 0 || floatval($order['ord_paid']) > 9223372036854775807)) {
+                $amount_check = false;
+                $res['success'] = false;
+                $message[] = __('Paid is wrong.');
+            }
+            if (array_key_exists('ord_debt', $order) && (is_numeric($order['ord_debt']) == false || floatval($order['ord_debt']) < 0 || floatval($order['ord_debt']) > 9223372036854775807)) {
+                $amount_check = false;
+                $res['success'] = false;
+                $message[] = __('Debt is wrong.');
+            }
+
+            if ($amount_check == true) {
+
+                $ord_tax = $order['ord_tax'] == null || $order['ord_tax'] == '' ? 0 : intval($order['ord_tax']);
+                $ord_amount = $order['ord_amount'] == null || $order['ord_amount'] == '' ? 0 : doubleval($order['ord_amount']);
+                $ord_amount_tax = $order['ord_amount_tax'] == null || $order['ord_amount_tax'] == '' ? 0 : doubleval($order['ord_amount_tax']);
+                $ord_paid = $order['ord_paid'] == null || $order['ord_paid'] == '' ? 0 : doubleval($order['ord_paid']);
+                $ord_debt = $order['ord_debt'] == null || $order['ord_debt'] == '' ? 0 : doubleval($order['ord_debt']);
+
+                $chk_ord_amount_tax = $ord_amount + $ord_amount * $ord_tax / 100;
+                $chk_ord_debt = $ord_amount_tax - $ord_paid;
+                if ($ord_amount_tax != $chk_ord_amount_tax || $chk_ord_debt != $ord_debt) {
+                    $amount_check = false;
+                    $res['success'] = false;
+                    $message[] = __('Amount total is wrong.');
+                }
+            }
+
+            $dt_total_amount = 0;
+            $order_details = array_key_exists('order_detail', $data) ? $data['order_detail'] : [];
+            foreach ($order_details as $line_no => $item) {
+
+                if (!array_key_exists('dt_note', $item)
+                    || !array_key_exists('dt_unit', $item)
+                    || !array_key_exists('dt_quantity', $item)
+                    || !array_key_exists('dt_delivery_time', $item)
+                    || !array_key_exists('dt_status', $item)
+                    || !array_key_exists('dt_price', $item)
+                    || !array_key_exists('dt_amount', $item)
+                    || !array_key_exists('dt_type', $item)
+                    || !array_key_exists('dt_sort_no', $item)
+                    || !array_key_exists('action', $item)
+                ) {
+                    $res['success'] = false;
+                    switch ($item['dt_type']) {
+                        case '1':
+                            $message[] = __('[Row : :line ] pump detail is wrong data.', ['line' => "No." + ($line_no + 1)]);
+                            break;
+                        case '2':
+                            $message[] = __('[Row : :line ] accessory detail is wrong data.', ['line' => "No." + ($line_no + 1)]);
+                            break;
+                    }
+                    continue;
+                }
+                switch ($item['dt_type']) {
+                    case '1':
+                        if (!array_key_exists('dt_prod_specs_mce', $item)
+                            || !array_key_exists('dt_prod_specs', $item)
+                            || !array_key_exists('dt_prod_model', $item)
+                            || !array_key_exists('dt_prod_series', $item)
+                        ) {
+                            $res['success'] = false;
+                            $message[] = __('[Row : :line ] pump detail is wrong data.', ['line' => "No." + ($line_no + 1)]);
+                            continue;
+                        }
+                        break;
+                    case '2':
+                        if (!array_key_exists('dt_acce_code', $item)
+                            || !array_key_exists('dt_acce_name', $item)
+                        ) {
+                            $res['success'] = false;
+                            $message[] = __('[Row : :line ] accessory detail is wrong data.', ['line' => "No." + ($line_no + 1)]);
+                            continue;
+                        }
+                        break;
+                }
+
+                if ($item['action'] == 'delete')
+                    continue;
+                $dt_total_amount += $item['dt_amount'] == null || $item['dt_amount'] == '' ? 0 : doubleval($item['dt_amount']);
+            }
+
+            if ($amount_check == true && $dt_total_amount != $ord_amount) {
+                $amount_check = false;
+                $res['success'] = false;
+                $message[] = __('Amount total of order details is not equal amount total of order.');
+            }
+
+            $res['message'] = implode("\n", $message);
+            return $res;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+
+    }
+
+    public function deleteOrdersByIds($ord_ids = '')
+    {
+        try {
+
+            DB::table('order')
+                ->where('owner_id', Auth::user()->id)
+                ->whereIn('ord_id', explode(',', $ord_ids))
+                ->update([
+                    'upd_user' => Auth::user()->id,
+                    'delete_flg' => '1'
+                ]);
+        } catch (\Throwable $e) {
             throw $e;
         }
     }
@@ -151,10 +426,17 @@ class Order
         return $id;
     }
 
-    public function updateOrder()
+    public function updateOrder($order)
     {
         try {
-
+            $ord_id = $order['ord_id'];
+            unset($order['ord_id']);
+            DB::table('order')
+                ->where([
+                    ['owner_id', '=', Auth::user()->id],
+                    ['ord_id', '=', $ord_id]
+                ])
+                ->update($order);
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -164,6 +446,8 @@ class Order
     {
         $params = [0];
         $where_raw = 'order.delete_flg = ?';
+        $params[] = Auth::user()->id;
+        $where_raw .= ' AND order.owner_id = ? ';
 
         if ($search != '') {
             $search_val = "%" . $search . "%";
