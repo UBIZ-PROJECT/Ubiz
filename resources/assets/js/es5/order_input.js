@@ -1,624 +1,1014 @@
-(function ($) {
-    UbizOIWidget = function () {
-        this.page = 0;
-        this.sort = {};
-        this.pos = 0;
-        this.rows_num = 0;
-        this.o_page = null;
-        this.i_page = null;
-    };
+var prod_spec_no = 1;
+var max_integer = 2147483647;
+var max_double = 9223372036854775807;
 
-    jQuery.UbizOIWidget = new UbizOIWidget();
-    jQuery.extend(UbizOIWidget.prototype, {
-        w_init: function () {
-            jQuery.UbizOIWidget.o_page = jQuery("#o-put");
-            jQuery.UbizOIWidget.i_page = jQuery("#i-put");
-            jQuery('#nicescroll-sidebar').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-sidebar',
-                autohidemode: false,
-                horizrailenabled: false
-            });
-            jQuery('#nicescroll-oput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-oput',
-                autohidemode: false,
-                horizrailenabled: false
-            });
-            jQuery('.utooltip').tooltipster({
-                side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
-            });
+function my_collapse(self) {
+    var next_ele = $(self).next('div');
+    next_ele.on('hidden.bs.collapse', function () {
+        nicescroll_resize("#nicescroll-iput");
+    })
+    next_ele.on('shown.bs.collapse', function () {
+        nicescroll_resize("#nicescroll-iput");
+    });
+    next_ele.collapse('toggle');
+}
+
+function prod_row_copy(self) {
+
+    prod_spec_no++;
+    var dt_prod_specs_mce_id = "dt_prod_specs_mce_" + prod_spec_no;
+    var tinymce_selector = "#" + dt_prod_specs_mce_id;
+
+    var copy_row = $(self).closest('div.dt-row');
+
+    var copy_dt_amount = numeral(copy_row.find('input[name=dt_amount]').val()).value();
+    var dt_amount_total = dt_get_amount_total();
+    dt_amount_total = dt_amount_total + copy_dt_amount;
+    if (max_validator(dt_amount_total, max_double, 'double') == false) {
+
+        var message = i18next.t("System doesn't support money bigger than :max.", {
+            'max': numeral(max_double).format('0,0')
+        });
+        swal({
+            type: 'error',
+            text: message
+        });
+        return false;
+    }
+    var ord_tax = numeral($("input[name=ord_tax]").val()).value();
+    var dt_amount_tax_total = dt_amount_total + (dt_amount_total * ord_tax / 100);
+    if (max_validator(dt_amount_tax_total, max_double, 'double') == false) {
+
+        var message = i18next.t("System doesn't support money bigger than :max.", {
+            'max': numeral(max_double).format('0,0')
+        });
+        swal({
+            type: 'error',
+            text: message
+        });
+        return false;
+    }
+
+    var copy_tinymce_selector = copy_row.find('textarea[name=dt_prod_specs_mce]').attr('id');
+    var clone_row = copy_row.clone(false)
+
+
+    clone_row.find('div.tox-tinymce').remove();
+    clone_row.find('textarea[name=dt_prod_specs_mce]').attr('id', dt_prod_specs_mce_id);
+    clone_row.find('textarea[name=dt_prod_specs_mce]').removeAttr('style');
+    clone_row.find('textarea[name=dt_prod_specs_mce]').removeAttr('aria-hidden');
+    $(self).closest('div.dt-row').after(clone_row.wrap('<p/>').parent().html());
+
+    var add_row = copy_row.next('div.dt-row');
+    var copy_row_data = prod_row_get_data(copy_row);
+
+    prod_row_set_data(add_row, copy_row_data);
+    add_row.find('div.dt-row-body').removeClass('hide');
+    add_row.find('div.dt-row-body').addClass('show');
+    add_row.find("div.dt-row-head").find('label').text('');
+    add_row.attr('dt_id', '0');
+
+    tinymce.init({
+        width: 350,
+        min_height: 246,
+        max_height: 246,
+        menubar: false,
+        toolbar_drawer: 'floating',
+        selector: tinymce_selector,
+        init_instance_callback: function (inst) {
+            prod_row_set_no();
+            var copy_tinymce_content = tinyMCE.get(copy_tinymce_selector).getContent();
+            tinyMCE.get(dt_prod_specs_mce_id).setContent(copy_tinymce_content);
+            add_row.find('input[name=dt_prod_model]').focus();
+            ord_set_total(dt_amount_total, dt_amount_tax_total);
+            nicescroll_resize("#nicescroll-iput");
         },
-        w_sort: function (self) {
+        plugins: [
+            'advlist autolink lists link image charmap print preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code wordcount autoresize'
+        ],
+        toolbar: 'undo redo | bold italic forecolor backcolor | formatselect | fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat',
+        content_css: [
+            '/fonts/roboto/v18/roboto.css'
+        ]
+    });
+}
 
-            var params = {};
-            params.page = jQuery.UbizOIWidget.page;
+function prod_row_add() {
 
-            var search_info = jQuery.UbizOIWidget.w_get_search_info();
-            Object.assign(params, search_info);
+    prod_spec_no++;
+    var dt_prod_specs_mce_id = "dt_prod_specs_mce_" + prod_spec_no;
+    var tinymce_selector = "#" + dt_prod_specs_mce_id;
 
-            var sort_name = jQuery(self).attr('sort-name');
-            var order_by = jQuery(self).attr('order-by') == '' ? 'asc' : (jQuery(self).attr('order-by') == 'asc' ? 'desc' : 'asc');
-            params.sort = sort_name + "_" + order_by;
+    var copy_row = $("#dt-prod").find('div.dt-row:first');
+    var copy_tinymce_selector = copy_row.find('textarea[name=dt_prod_specs_mce]').attr('id');
 
-            jQuery.UbizOIWidget.o_page.find('div.dWT').removeClass('dWT');
-            jQuery(self).attr('order-by', order_by);
-            jQuery(self).addClass('dWT');
-            jQuery(self).find('svg').removeClass('sVGT');
-            jQuery(self).find('svg.' + order_by).addClass('sVGT');
+    var clone_row = copy_row.clone(false)
+    clone_row.find('div.tox-tinymce').remove();
+    clone_row.find('textarea[name=dt_prod_specs_mce]').attr('id', dt_prod_specs_mce_id);
+    clone_row.find('textarea[name=dt_prod_specs_mce]').text('');
+    clone_row.find('textarea[name=dt_prod_specs_mce]').removeAttr('style');
+    clone_row.find('textarea[name=dt_prod_specs_mce]').removeAttr('aria-hidden');
 
-            ubizapis('v1', '/departments', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+    $("#dt-prod").append(clone_row.wrap('<p/>').parent().html());
+    var add_row = $("#dt-prod").find('div.dt-row:last');
+    prod_row_clean(add_row);
+    add_row.find('div.dt-row-body').removeClass('hide');
+    add_row.find('div.dt-row-body').addClass('show');
+    add_row.find("div.dt-row-head").find('label').text('');
+    add_row.removeClass('hidden-content deleted');
+
+    tinymce.init({
+        width: 350,
+        min_height: 246,
+        max_height: 246,
+        menubar: false,
+        toolbar_drawer: 'floating',
+        selector: tinymce_selector,
+        init_instance_callback: function (inst) {
+
+            add_row.find('input[name=dt_prod_model]').focus();
+
+            prod_row_set_no();
+            nicescroll_resize("#nicescroll-iput");
         },
-        w_save: function () {
-            var form_data = jQuery.UbizOIWidget.w_get_form_data();
-            var id = jQuery("#txt_id").val();
-            form_data.append("id", id);
-            if (id == "0") {
-                form_data.append('_method', 'put');
-                ubizapis('v1', '/departments', 'post', form_data, null, function(response){
-                    if (response.data.success == true) {
-                        swal({
-                            title: i18next.t('Successfully processed.'),
-                            text: i18next.t('Do you want to continue or go back to the list page?'),
-                            type: 'question',
-                            showCancelButton: true,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#3085d6',
-                            cancelButtonText: i18next.t('Back to the list page'),
-                            confirmButtonText: i18next.t('Continue'),
-                            reverseButtons: true
-                        }).then((result) => {
-                            if (result.value) {
-                                jQuery.UbizOIWidget.w_clean_input_page();
-                            } else if (result.dismiss === swal.DismissReason.cancel) {
-                                jQuery.UbizOIWidget.w_go_back_to_output_page();
-                                jQuery.UbizOIWidget.w_refresh_output_page();
-                            }
-                        })
-                    } else {
-                        swal({
-                            type: 'error',
-                            text: response.data.message
-                        });
-                    }
-                });
-            } else {
-                ubizapis('v1', '/departments/' + id + "/update", 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
-            }
-        },
-        w_o_delete: function () {
-            var ids = jQuery.UbizOIWidget.w_get_checked_rows();
-            if (ids.length == 0)
-                return false;
+        plugins: [
+            'advlist autolink lists link image charmap print preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code wordcount autoresize'
+        ],
+        toolbar: 'undo redo | bold italic forecolor backcolor | formatselect | fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat',
+        content_css: [
+            '/fonts/roboto/v18/roboto.css'
+        ]
+    });
+}
 
-            swal({
-                title: i18next.t('Do you want to delete the data?'),
-                text: i18next.t('Once deleted, you will not be able to recover this data!'),
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                cancelButtonText: i18next.t('No'),
-                confirmButtonText: i18next.t('Yes'),
-                reverseButtons: true
-            }).then((result) => {
-                if (result.value) {
-                    ubizapis('v1', '/departments/' + ids.join(',') + '/delete', 'delete', null, null, jQuery.UbizOIWidget.w_o_delete_callback);
-                }
-            })
-        },
-        w_i_delete: function () {
-            var id = jQuery("#txt_id").val();
-            swal({
-                title: i18next.t('Do you want to delete the data?'),
-                text: i18next.t('Once deleted, you will not be able to recover this data!'),
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                cancelButtonText: i18next.t('No'),
-                confirmButtonText: i18next.t('Yes'),
-                reverseButtons: true
-            }).then((result) => {
-                if (result.value) {
-                    ubizapis('v1', '/departments/' + id + '/delete', 'delete', null, null, jQuery.UbizOIWidget.w_i_delete_callback);
-                }
-            })
-        },
-        w_refresh: function () {
-            var id = jQuery("#txt_id").val();
-            if (id == '0') {
-                jQuery.UbizOIWidget.w_clean_input_page();
-            } else {
-                ubizapis('v1', '/departments/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
-            }
-        },
-        w_save_callback: function (response) {
-            if (response.data.success == true) {
-                jQuery.UbizOIWidget.w_go_back_to_output_page();
-                jQuery.UbizOIWidget.w_refresh_output_page();
-            } else {
-                swal({
-                    type: 'error',
-                    text: response.data.message
-                });
-            }
-        },
-        w_search: function () {
+function prod_row_del(self) {
 
-            var params = {};
-            params.page = '0';
+    var del_row = $(self).closest('div.dt-row');
+    var visible_rows_length = $("#dt-prod").find('div.dt-row').not('div.deleted').length;
 
-            var search_info = jQuery.UbizOIWidget.w_get_search_info();
-            Object.assign(params, search_info);
+    if (del_row.attr('dt_id') == '0') {
+        if (visible_rows_length == 1) {
+            prod_row_clean(del_row);
+        } else {
+            var del_tinymce_selector = del_row.find('textarea[name=dt_prod_specs_mce]').attr('id');
+            tinyMCE.get(del_tinymce_selector).remove();
+            del_row.remove();
+        }
+    } else {
+        del_row.addClass('hidden-content deleted');
+        if (visible_rows_length == 1) {
+            prod_row_add();
+        }
+    }
 
-            if (jQuery.isEmptyObject(search_info) === false) {
-                var fuzzy = jQuery.UbizOIWidget.w_convert_search_info_to_fuzzy(search_info);
-                jQuery('#fuzzy').val(fuzzy);
-            }
+    var dt_amount_total = dt_get_amount_total();
+    var ord_tax = numeral($("input[name=ord_tax]").val()).value();
+    var dt_amount_tax_total = dt_amount_total + (dt_amount_total * ord_tax / 100);
+    ord_set_total(dt_amount_total, dt_amount_tax_total);
 
-            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-            params.sort = sort_info.sort_name + "_" + sort_info.order_by;
+    prod_row_set_no();
+    nicescroll_resize("#nicescroll-iput");
+}
 
-            var event = new CustomEvent("click");
-            document.body.dispatchEvent(event);
-            ubizapis('v1', '/departments', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
-        },
-        w_clear_search_form: function () {
-            jQuery('#fuzzy').val("");
-            jQuery.UbizOIWidget.w_clear_advance_search_form();
-            jQuery.UbizOIWidget.w_refresh_output_page();
+function prod_row_clean(row) {
+    row.attr('dt_id', '0');
+    var tinymce_selector = row.find('textarea[name=dt_prod_specs_mce]').attr('id');
+    if (tinyMCE.get(tinymce_selector) != null) {
+        tinyMCE.get(tinymce_selector).setContent('');
+    }
+    row.find('textarea[name=dt_prod_specs_mce]').val("")
+    row.find("input[name=dt_prod_model]").val('');
+    row.find("textarea[name=dt_prod_series]").val('');
+    row.find("textarea[name=dt_note]").val('');
+    row.find("input[name=dt_unit]").val('');
+    row.find("input[name=dt_quantity]").val('');
+    row.find("textarea[name=dt_delivery_time]").val('');
+    row.find("select[name=dt_status]").val('');
+    row.find("input[name=dt_price]").val('');
+    row.find("input[name=dt_amount]").val('');
+}
 
-        },
-        w_clear_advance_search_form: function () {
-            jQuery('#dep_code').val("");
-            jQuery('#dep_name').val("");
-        },
-        w_update_search_form: function (search_info) {
-            jQuery.UbizOIWidget.w_clear_advance_search_form();
-            jQuery.each(search_info, function (key, val) {
-                var search_item = jQuery('#' + key);
-                if (search_item.length == 1) {
-                    search_item.val(val);
-                }
-            });
-        },
-        w_fuzzy_search: function () {
-            var params = {};
-            params.page = '0';
-            jQuery.UbizOIWidget.page = '0';
+function prod_row_get_data(row) {
 
-            var fuzzy = jQuery('#fuzzy').val();
-            var search_info = jQuery.UbizOIWidget.w_convert_fuzzy_to_search_info(fuzzy);
-            jQuery.UbizOIWidget.w_update_search_form(search_info);
-            Object.assign(params, search_info);
+    var data = {};
+    var tinymce_selector = row.find('textarea[name=dt_prod_specs_mce]').attr('id');
 
-            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-            var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            params.sort = sort;
+    data.dt_id = row.attr('dt_id');
+    data.dt_prod_specs_mce = tinyMCE.get(tinymce_selector).getContent();
+    data.dt_prod_specs = tinyMCE.get(tinymce_selector).getContent({'format': 'text'});
+    data.dt_prod_model = row.find("input[name=dt_prod_model]").val();
+    data.dt_prod_series = row.find("textarea[name=dt_prod_series]").val();
+    data.dt_note = row.find("textarea[name=dt_note]").val();
+    data.dt_unit = row.find("input[name=dt_unit]").val();
+    data.dt_quantity = numeral(row.find("input[name=dt_quantity]").val()).value();
+    data.dt_delivery_time = row.find("textarea[name=dt_delivery_time]").val();
+    data.dt_status = row.find("select[name=dt_status]").val();
+    data.dt_price = numeral(row.find("input[name=dt_price]").val()).value();
+    data.dt_amount = numeral(row.find("input[name=dt_amount]").val()).value();
+    data.dt_type = '1';
 
-            ubizapis('v1', '/departments', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
-        },
-        w_fuzzy_search_handle_enter(e) {
-            var keycode = (e.keyCode ? e.keyCode : e.which);
-            if (keycode == '13') {
-                jQuery.UbizOIWidget.w_fuzzy_search();
-            }
-        },
-        w_go_to_input_page: function (pos ,id) {
-            jQuery.UbizOIWidget.pos = pos;
-            if (id == 0 || pos == 0) {
-                jQuery("#btn-delete").hide();
-                jQuery("#i-paging-label").hide();
-                jQuery("#i-paging-older").hide();
-                jQuery("#i-paging-newer").hide();
-                jQuery.UbizOIWidget.w_clean_input_page();
-                jQuery.UbizOIWidget.o_page.hide();
-                jQuery.UbizOIWidget.i_page.fadeIn("slow");
-                jQuery('#nicescroll-oput').getNiceScroll().remove();
-                jQuery('#nicescroll-iput').getNiceScroll().remove();
-                jQuery('#nicescroll-iput').niceScroll({
-                    cursorcolor: "#9fa8b0",
-                    cursorwidth: "5px",
-                    cursorborder: "none",
-                    cursorborderradius: 5,
-                    cursoropacitymin: 0.4,
-                    scrollbarid: 'nc-input',
-                    autohidemode: false,
-                    horizrailenabled: false
-                });
-            } else {
-                jQuery("#btn-delete").show();
-                ubizapis('v1', '/departments/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
-            }
-        },
-        w_go_back_to_output_page: function () {
-            jQuery.UbizOIWidget.o_page.fadeIn("slow");
-            jQuery.UbizOIWidget.i_page.hide();
-            jQuery('#nicescroll-oput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').getNiceScroll().remove();
-            jQuery('#nicescroll-oput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-oput',
-                autohidemode: false,
-                horizrailenabled: false
-            });
-        },
-        w_refresh_output_page: function () {
-            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-            var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/departments', 'get', null, {
-                'page': jQuery.UbizOIWidget.page,
-                'sort': sort
-            }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
-        },
-        w_get_sort_info: function () {
-            var sort_obj = jQuery.UbizOIWidget.o_page.find('div.dWT');
-            var sort_name = sort_obj.attr('sort-name');
-            var order_by = sort_obj.attr('order-by');
-            return {'sort_name': sort_name, 'order_by': order_by};
-        },
-        w_get_search_info: function () {
+    return data;
+}
 
-            var search_info = {};
+function prod_row_set_data(row, data) {
+    row.attr('dt_id', data.dt_id);
+    var tinymce_selector = row.find('textarea[name=dt_prod_specs_mce]').attr('id');
+    if (tinyMCE.get(tinymce_selector) != null) {
+        tinyMCE.get(tinymce_selector).setContent(data.dt_prod_specs_mce);
+    }
+    row.find("input[name=dt_prod_model]").val(data.dt_prod_model);
+    row.find("textarea[name=dt_prod_specs_mce]").val(data.dt_prod_specs_mce);
+    row.find("textarea[name=dt_prod_series]").val(data.dt_prod_series);
+    row.find("textarea[name=dt_note]").val(data.dt_note);
+    row.find("input[name=dt_unit]").val(data.dt_unit);
+    row.find("input[name=dt_quantity]").val(data.dt_quantity);
+    row.find("textarea[name=dt_delivery_time]").val(data.dt_delivery_time);
+    row.find("select[name=dt_status]").val(data.dt_status);
+    row.find("input[name=dt_price]").val(data.dt_price);
+    row.find("input[name=dt_amount]").val(data.dt_amount);
+}
 
-            if (jQuery('#dep_code').val().replace(/\s/g, '') != '') {
-                search_info.dep_code = jQuery('#dep_code').val();
-            }
+function prod_row_set_no() {
+    var cur_rows = $("#dt-prod").find('div.dt-row').not('div.deleted');
+    $.each(cur_rows, function (idx, row) {
+        var row_no = idx + 1;
+        $(row).find("div.dt-row-head").find('label').text('No.' + row_no);
+    });
+}
 
-            if (jQuery('#dep_name').val().replace(/\s/g, '') != '') {
-                search_info.dep_code = jQuery('#dep_code').val();
-            }
+function prod_row_validate_data(data) {
 
-            if (jQuery('#contain').val().replace(/\s/g, '') != '') {
-                search_info.contain = jQuery('#contain').val();
-            }
+    if (numeral(data.dt_id).value() > 0)
+        return true;
 
-            if (jQuery('#notcontain').val().replace(/\s/g, '') != '') {
-                search_info.notcontain = jQuery('#notcontain').val();
-            }
+    if (data.dt_prod_specs_mce == ""
+        && data.dt_prod_specs == ""
+        && data.dt_prod_model == ""
+        && data.dt_prod_series == ""
+        && data.dt_note == ""
+        && data.dt_unit == ""
+        && data.dt_quantity == ""
+        && data.dt_delivery_time == ""
+        && (data.dt_status == "1" || data.dt_status == "")
+        && data.dt_price == ""
+        && data.dt_amount == ""
+    ) return false;
+    return true;
+}
 
-            return search_info;
-        },
-        w_convert_search_info_to_fuzzy: function (search_info) {
-            var fuzzy = JSON.stringify(search_info);
-            return fuzzy;
-        },
-        w_convert_fuzzy_to_search_info: function (fuzzy) {
-            var search_info = {};
-            try {
-                search_info = JSON.parse(fuzzy);
-            } catch (e) {
-                var fuzzy_info = fuzzy.split('-');
-                if (fuzzy_info.length == 1) {
-                    search_info.contain = fuzzy;
-                } else {
-                    fuzzy_info.shift();
-                    search_info.notcontain = fuzzy_info.join('-');
-                }
-            }
-            return search_info;
-        },
-        w_get_older_data: function (page) {
-            jQuery.UbizOIWidget.page = page;
-            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-            jQuery.UbizOIWidget.sort = sort_info;
-            var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/departments', 'get', null, {
-                'page': page,
-                'sort': sort
-            }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
-        },
-        w_get_newer_data: function (page) {
-            jQuery.UbizOIWidget.page = page;
-            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-            jQuery.UbizOIWidget.sort = sort_info;
-            var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/departments', 'get', null, {
-                'page': page,
-                'sort': sort
-            }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
-        },
-        w_o_delete_callback: function (response) {
-            if (response.data.success == true) {
-                jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
-                swal({
-                    type: 'success',
-                    text: response.data.message
-                });
-            } else {
-                swal({
-                    type: 'error',
-                    text: response.data.message
-                });
-            }
-        },
-        w_i_delete_callback: function (response) {
-            if (response.data.success == true) {
-                swal({
-                    type: 'success',
-                    text: response.data.message,
-                    onClose: function(){
-                        jQuery.UbizOIWidget.w_go_back_to_output_page();
-                        jQuery.UbizOIWidget.w_refresh_output_page();
-                    }
-                });
-            } else {
-                swal({
-                    type: 'error',
-                    text: response.data.message
-                });
-            }
-        },
-        w_render_data_to_ouput_page: function (response) {
-            var table_html = "";
-            var departments = response.data.departments;
-            var paging = response.data.paging;
-            if (departments.length > 0) {
-                var rows = [];
-                for (let i = 0; i < departments.length; i++) {
-                    var cols = [];
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(departments[i].id, departments[i].dep_code, 1));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(departments[i].id, departments[i].dep_name, 2));
-                    rows.push(jQuery.UbizOIWidget.w_make_row_html(departments[i].id, cols, i, paging.page, paging.rows_per_page));
-                }
-                table_html += rows.join("");
-            }
-            jQuery.UbizOIWidget.o_page.find("#table-content").empty();
-            jQuery.UbizOIWidget.o_page.find("#table-content").append(table_html);
-            jQuery.UbizOIWidget.w_reset_f_checkbox_status();
-            jQuery.UbizOIWidget.page = response.data.paging.page;
-            jQuery.UbizOIWidget.w_o_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
-            jQuery.UbizOIWidget.rows_num = response.data.paging.rows_num;
+function acce_row_copy(self) {
 
-        },
-        w_render_data_to_input_page: function (response) {
-            var department = response.data.department;
-            jQuery.UbizOIWidget.w_clean_input_page();
-            jQuery.UbizOIWidget.w_set_input_page(department);
-            jQuery.UbizOIWidget.w_i_paging();
+    var copy_row = $(self).closest('div.dt-row');
+    var copy_dt_amount = numeral(copy_row.find('input[name=dt_amount]').val()).value();
+    var dt_amount_total = dt_get_amount_total();
+    dt_amount_total = dt_amount_total + copy_dt_amount;
+    if (max_validator(dt_amount_total, max_double, 'double') == false) {
 
-            jQuery.UbizOIWidget.o_page.hide();
-            jQuery.UbizOIWidget.i_page.fadeIn("slow");
-            jQuery('#nicescroll-oput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-input',
-                autohidemode: false,
-                horizrailenabled: false
-            });
-        },
-        w_clean_input_page: function () {
-            jQuery.UbizOIWidget.i_page.find("#txt_id").val("0");
-            jQuery.UbizOIWidget.i_page.find("#txt_dep_code").val("");
-            jQuery.UbizOIWidget.i_page.find("#txt_dep_name").val("");
-        },
-        w_set_input_page: function (data) {
-            jQuery.UbizOIWidget.i_page.find("#txt_id").val(data.id);
-            jQuery.UbizOIWidget.i_page.find("#txt_dep_code").val(data.dep_code);
-            jQuery.UbizOIWidget.i_page.find("#txt_dep_name").val(data.dep_name);
-        },
-        w_make_row_html: function (id, cols, row_no, page_no, rows_per_page) {
-            var row_html = '';
-            if (cols.length > 0) {
-                var pos = rows_per_page * page_no + row_no + 1;
-                row_html = '<div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page(' + pos + ',' + id + ')">';
-                row_html += cols.join("");
-                row_html += '</div>';
-            }
-            return row_html;
-        },
-        w_make_col_html: function (col_id, col_val, col_idx) {
-            var col_html = "";
-            col_html += '<div class="tcB col-' + col_idx + '">';
-            col_html += '<div class="cbo">';
-            if (col_idx == 1) {
-                col_html += '<div class="jgQ" onclick="jQuery.UbizOIWidget.w_c_checkbox_click(this)">';
-                col_html += '<input type="checkbox" class="ckb-i" value="' + col_id + '" style="display: none"/>';
-                col_html += '<div class="asU ckb-c"></div>';
-                col_html += '</div>';
-            }
-            if (col_idx == 1) {
-                col_html += '<div class="nCT" title="' + col_val + '">';
-            } else {
-                col_html += '<div class="nCj" title="' + col_val + '">';
-            }
-            col_html += '<span>' + col_val + '</span>';
-            col_html += '</div>';
-            col_html += '</div>';
-            col_html += '</div>';
-            return col_html;
-        },
-        w_make_tab_html: function (data) {
-            var tab_html = "";
-            var screens = data.screens;
-            if (typeof screens === 'object') {
-                jQuery.each(screens, function (screen_id, item) {
-                    tab_html += '<li><div className="active" onClick="jQuery.UbizOIWidget.w_tab_click(' + item. + ', this)">' + i18next.t(item.screen_name) + '</div>';
-                });
-            }
-            var functions = data.functions;
-            return tab_html;
-        },
-        w_f_checkbox_click: function (self) {
-            if (jQuery(self).find('div.ckb-f').hasClass('asU')) {
-                jQuery.UbizOIWidget.o_page.find('.ckb-f').removeClass('asU');
-                jQuery.UbizOIWidget.o_page.find('.ckb-f').removeClass('asP');
-                jQuery.UbizOIWidget.o_page.find('.ckb-f').addClass('asC');
-                jQuery.UbizOIWidget.o_page.find('.ckb-c').removeClass('asU');
-                jQuery.UbizOIWidget.o_page.find('.ckb-c').addClass('asC');
-                jQuery.UbizOIWidget.o_page.find('.ckb-i').prop('checked', true);
-            } else {
-                jQuery.UbizOIWidget.o_page.find('.ckb-f').removeClass('asC');
-                jQuery.UbizOIWidget.o_page.find('.ckb-f').removeClass('asP');
-                jQuery.UbizOIWidget.o_page.find('.ckb-f').addClass('asU');
-                jQuery.UbizOIWidget.o_page.find('.ckb-c').removeClass('asC');
-                jQuery.UbizOIWidget.o_page.find('.ckb-c').addClass('asU');
-                jQuery.UbizOIWidget.o_page.find('.ckb-i').prop('checked', false);
-            }
-        },
-        w_c_checkbox_click: function (self) {
-            if (jQuery(self).find('.ckb-c').hasClass('asU')) {
-                jQuery(self).find('.ckb-c').removeClass('asU');
-                jQuery(self).find('.ckb-c').addClass('asC');
-                jQuery(self).find('.ckb-i').prop('checked', true);
-            } else {
-                jQuery(self).find('.ckb-c').removeClass('asC');
-                jQuery(self).find('.ckb-c').addClass('asU');
-                jQuery(self).find('.ckb-i').prop('checked', false);
-            }
-            jQuery.UbizOIWidget.w_reset_f_checkbox_status();
-        },
-        w_reset_f_checkbox_status: function () {
-            var row_length = jQuery.UbizOIWidget.o_page.find('.jvD').length;
-            var checked_row_length = jQuery.UbizOIWidget.o_page.find('.ckb-i:checked').length;
-            if (row_length == checked_row_length) {
-                jQuery.UbizOIWidget.o_page.find('.ckb-f').removeClass('asU');
-                jQuery.UbizOIWidget.o_page.find('.ckb-f').removeClass('asP');
-                jQuery.UbizOIWidget.o_page.find('.ckb-f').addClass('asC');
-            } else {
-                if (checked_row_length == 0) {
-                    jQuery.UbizOIWidget.o_page.find('.ckb-f').removeClass('asC');
-                    jQuery.UbizOIWidget.o_page.find('.ckb-f').removeClass('asP');
-                    jQuery.UbizOIWidget.o_page.find('.ckb-f').addClass('asU');
-                } else {
-                    jQuery.UbizOIWidget.o_page.find('.ckb-f').removeClass('asC');
-                    jQuery.UbizOIWidget.o_page.find('.ckb-f').removeClass('asU');
-                    jQuery.UbizOIWidget.o_page.find('.ckb-f').addClass('asP');
-                }
-            }
-        },
-        w_get_checked_rows: function () {
-            var ids = [];
-            var checked_rows = jQuery.UbizOIWidget.o_page.find('.ckb-i:checked');
-            checked_rows.each(function (idx, ele) {
-                var id = ele.value;
-                ids.push(id);
-            });
-            return ids;
-        },
-        w_get_form_data: function () {
-            var form_data = new FormData();
-            form_data.append('txt_dep_code', jQuery("#txt_dep_code").val());
-            form_data.append('txt_dep_name', jQuery("#txt_dep_name").val());
-            return form_data;
-        },
-        w_get_detail_data: function (pos) {
+        var message = i18next.t("System doesn't support money bigger than :max.", {
+            'max': numeral(max_double).format('0,0')
+        });
+        swal({
+            type: 'error',
+            text: message
+        });
+        return false;
+    }
+    var ord_tax = numeral($("input[name=ord_tax]").val()).value();
+    var dt_amount_tax_total = dt_amount_total + (dt_amount_total * ord_tax / 100);
+    if (max_validator(dt_amount_tax_total, max_double, 'double') == false) {
 
-            if (pos > jQuery.UbizOIWidget.rows_num || pos < 1)
-                return false;
+        var message = i18next.t("System doesn't support money bigger than :max.", {
+            'max': numeral(max_double).format('0,0')
+        });
+        swal({
+            type: 'error',
+            text: message
+        });
+        return false;
+    }
 
-            var params = {};
-            params.pos = pos;
-            jQuery.UbizOIWidget.pos = pos;
+    var clone_row = copy_row.clone(false)
 
-            var search_info = jQuery.UbizOIWidget.w_get_search_info();
-            Object.assign(params, search_info);
+    clone_row.find('div.dt-row-body').removeClass('hide');
+    clone_row.find('div.dt-row-body').addClass('show');
+    clone_row.find("div.dt-row-head").find('label').text('');
+    $(self).closest('div.dt-row').after(clone_row.wrap('<p/>').parent().html());
 
-            if (jQuery.isEmptyObject(search_info) === false) {
-                var fuzzy = jQuery.UbizOIWidget.w_convert_search_info_to_fuzzy(search_info);
-                jQuery('#fuzzy').val(fuzzy);
-            }
+    var copy_row_data = acce_row_get_data(copy_row);
+    acce_row_set_data(copy_row.next('div.dt-row'), copy_row_data);
 
-            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-            params.sort = sort_info.sort_name + "_" + sort_info.order_by;
+    acce_row_set_no();
+    nicescroll_resize("#nicescroll-iput");
+    copy_row.next('div.dt-row').find('input[name=dt_acce_code]').focus();
+    copy_row.next('div.dt-row').attr('dt_id', '0');
 
-            var id = jQuery.UbizOIWidget.i_page.find("#txt_id").val();
+    var dt_amount_total = dt_get_amount_total();
+    var ord_tax = numeral($("input[name=ord_tax]").val()).value();
+    var dt_amount_tax_total = dt_amount_total + (dt_amount_total * ord_tax / 100);
+    ord_set_total(dt_amount_total, dt_amount_tax_total);
+}
 
-            ubizapis('v1', '/departments/' + id, 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_input_page);
-        },
-        w_o_paging: function (page, rows_num, rows_per_page) {
-            var page = parseInt(page);
-            var f_num = (page * rows_per_page) + 1;
-            var m_num = (page + 1) * rows_per_page;
-            if (m_num > rows_num) m_num = rows_num;
-            if (f_num > rows_num) f_num = rows_num;
+function acce_row_add() {
 
-            var older_page = page - 1;
-            var newer_page = page + 1;
+    var copy_row = $("#dt-acce").find('div.dt-row:first');
+    var clone_row = copy_row.clone(false)
 
-            var max_page = Math.ceil(rows_num / rows_per_page);
+    clone_row.find('div.dt-row-body').removeClass('hide');
+    clone_row.find('div.dt-row-body').addClass('show');
+    clone_row.find("div.dt-row-head").find('label').text('');
+    clone_row.removeClass('hidden-content deleted')
 
-            var get_older_data_func = '';
-            var get_newer_data_func = '';
+    $("#dt-acce").append(clone_row.wrap('<p/>').parent().html());
+    var add_row = $("#dt-acce").find('div.dt-row:last')
 
-            var older_css = 'adS';
-            if (older_page > -1) {
-                older_css = 'aaT';
-                get_older_data_func = 'onclick="jQuery.UbizOIWidget.w_get_older_data(' + older_page + ')"';
-            }
+    acce_row_set_no();
+    acce_row_clean(add_row);
+    nicescroll_resize("#nicescroll-iput");
+    add_row.find('input[name=dt_acce_code]').focus();
+}
 
-            var newer_css = 'adS';
-            if (newer_page < max_page) {
-                newer_css = 'aaT';
-                get_newer_data_func = 'onclick="jQuery.UbizOIWidget.w_get_newer_data(' + newer_page + ')"';
-            }
+function acce_row_del(self) {
 
-            var paging_label = '<div id="paging-label" class="amH" style="user-select: none"><span class="Dj"><span><span class="ts">' + f_num + '</span>–<span class="ts">' + m_num + '</span></span> / <span class="ts">' + rows_num + '</span></span></div>';
-            var paging_older = '<div id="paging-older" ' + get_older_data_func + ' class="amD utooltip" title="' + i18next.t('Older') + '"><span class="amF">&nbsp;</span><img class="amI ' + older_css + '" src="http://ubiz.local/images/cleardot.gif" alt=""></div>';
-            var paging_newer = '<div id="paging-newer" ' + get_newer_data_func + ' class="amD utooltip" title="' + i18next.t('Newer') + '"><span class="amF">&nbsp;</span><img class="amJ ' + newer_css + '" src="http://ubiz.local/images/cleardot.gif" alt=""></div>';
+    var del_row = $(self).closest('div.dt-row');
+    var visible_rows_length = $("#dt-acce").find('div.dt-row').not('div.deleted').length;
 
-            jQuery("#paging-label").replaceWith(paging_label);
-            jQuery("#paging-older").replaceWith(paging_older);
-            jQuery("#paging-newer").replaceWith(paging_newer);
-        },
-        w_i_paging: function () {
+    if (del_row.attr('dt_id') == '0') {
+        if (visible_rows_length == 1) {
+            acce_row_clean(del_row);
+        } else {
+            del_row.remove();
+        }
+    } else {
+        del_row.addClass('hidden-content deleted');
+        if (visible_rows_length == 1) {
+            acce_row_add();
+        }
+    }
+    acce_row_set_no();
+    nicescroll_resize("#nicescroll-iput");
 
-            var pos = jQuery.UbizOIWidget.pos;
-            var rows_num = jQuery.UbizOIWidget.rows_num;
-            var w_get_next_detail_data = '';
-            var w_get_prev_detail_data = '';
+    var dt_amount_total = dt_get_amount_total();
+    var ord_tax = numeral($("input[name=ord_tax]").val()).value();
+    var dt_amount_tax_total = dt_amount_total + (dt_amount_total * ord_tax / 100);
+    ord_set_total(dt_amount_total, dt_amount_tax_total);
+}
 
-            var prev_css = 'adS';
-            if (pos > 1) {
-                prev_css = 'aaT';
-                w_get_prev_detail_data = 'onclick="jQuery.UbizOIWidget.w_get_detail_data(' + (pos - 1) + ')"';
-            }
+function acce_row_clean(row) {
+    row.attr('dt_id', '0');
+    row.find("input[name=dt_acce_code]").val('');
+    row.find("input[name=dt_acce_name]").val('');
+    row.find("textarea[name=dt_note]").val('');
+    row.find("input[name=dt_unit]").val('');
+    row.find("input[name=dt_quantity]").val('');
+    row.find("textarea[name=dt_delivery_time]").val('');
+    row.find("select[name=dt_status]").val('');
+    row.find("input[name=dt_price]").val('');
+    row.find("input[name=dt_amount]").val('');
+}
 
-            var next_css = 'adS';
-            if (pos < rows_num) {
-                next_css = 'aaT';
-                w_get_next_detail_data = 'onclick="jQuery.UbizOIWidget.w_get_detail_data(' + (pos + 1) + ')"';
-            }
+function acce_row_get_data(row) {
 
-            var paging_label = '<div id="i-paging-label" class="amH" style="user-select: none"><span class="Dj"><span class="Dj"><span><span class="ts">' + pos + '</span></span> / <span class="ts">' + jQuery.UbizOIWidget.rows_num + '</span></span></div>';
-            var paging_older = '<div id="i-paging-older" ' + w_get_prev_detail_data + ' class="amD itooltip" title="' + i18next.t('Older') + '"><span class="amF">&nbsp;</span><img class="amI ' + prev_css + '" src="/images/cleardot.gif" alt=""></div>';
-            var paging_newer = '<div id="i-paging-newer" ' + w_get_next_detail_data + ' class="amD itooltip" title="' + i18next.t('Newer') + '"><span class="amF">&nbsp;</span><img class="amJ ' + next_css + '" src="/images/cleardot.gif" alt=""></div>';
+    var data = {};
 
-            jQuery("#i-paging-label").replaceWith(paging_label);
-            jQuery("#i-paging-older").replaceWith(paging_older);
-            jQuery("#i-paging-newer").replaceWith(paging_newer);
-            jQuery('.itooltip').tooltipster({
-                side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
-            });
-        },
-        w_tab_click: function(tab_id, self){
-            var utb = jQuery(self).closest('div.utb');
-            utb.find('div.tuv').find('ul').find('div').removeClass('active');
-            utb.find('div.rhb').find('div.active').removeClass('active');
+    data.dt_id = row.attr('dt_id');
+    data.dt_acce_code = row.find("input[name=dt_acce_code]").val();
+    data.dt_acce_name = row.find("input[name=dt_acce_name]").val();
+    data.dt_note = row.find("textarea[name=dt_note]").val();
+    data.dt_unit = row.find("input[name=dt_unit]").val();
+    data.dt_quantity = numeral(row.find("input[name=dt_quantity]").val()).value();
+    data.dt_delivery_time = row.find("textarea[name=dt_delivery_time]").val();
+    data.dt_status = row.find("select[name=dt_status]").val();
+    data.dt_price = numeral(row.find("input[name=dt_price]").val()).value();
+    data.dt_amount = numeral(row.find("input[name=dt_amount]").val()).value();
+    data.dt_type = '2';
 
-            jQuery(self).addClass('active');
-            utb.find('div.rhb').find('div[id=tab-' + tab_id + ']').addClass('active');
+    return data;
+
+}
+
+function acce_row_set_data(row, data) {
+    row.attr('dt_id', data.dt_id);
+    row.find("input[name=dt_acce_code]").val(data.dt_acce_code);
+    row.find("input[name=dt_acce_name]").val(data.dt_acce_name);
+    row.find("textarea[name=dt_note]").val(data.dt_note);
+    row.find("input[name=dt_unit]").val(data.dt_unit);
+    row.find("input[name=dt_quantity]").val(data.dt_quantity);
+    row.find("textarea[name=dt_delivery_time]").val(data.dt_delivery_time);
+    row.find("select[name=dt_status]").val(data.dt_status);
+    row.find("input[name=dt_price]").val(data.dt_price);
+    row.find("input[name=dt_amount]").val(data.dt_amount);
+}
+
+function acce_row_set_no() {
+    var cur_rows = $("#dt-acce").find('div.dt-row').not('div.deleted');
+    $.each(cur_rows, function (idx, row) {
+        var row_no = idx + 1;
+        $(row).find("div.dt-row-head").find('label').text('No.' + row_no);
+    });
+}
+
+function acce_row_validate_data(data) {
+
+    if (numeral(data.dt_id).value() > 0)
+        return true;
+
+    if (data.dt_acce_code == ""
+        && data.dt_acce_name == ""
+        && data.dt_note == ""
+        && data.dt_unit == ""
+        && data.dt_quantity == ""
+        && data.dt_delivery_time == ""
+        && (data.dt_status == "1" || data.dt_status == "")
+        && data.dt_price == ""
+        && data.dt_amount == ""
+    ) return false;
+    return true;
+}
+
+function dt_row_add() {
+    var active_tab = $('a[data-toggle="tab"].active');
+    if (active_tab.length == 0) {
+        return false;
+        console.log("Can not find active tab.!!");
+    }
+    var aria_controls = active_tab.attr('aria-controls');
+    switch (aria_controls) {
+        case 'dt-prod':
+            prod_row_add();
+            break;
+        case 'dt-acce':
+            acce_row_add();
+            break;
+        default:
+            console.log("Tab [" + aria_controls + "] is not supported.!!");
+            break;
+    }
+}
+
+function dt_quantity_change(self) {
+
+    var dt_row = $(self).closest('div.dt-row');
+
+    var dt_quantity = numeral($(self).val()).value();
+    if (max_validator(dt_quantity, max_integer, 'integer') == false) {
+
+        dt_row_rollback(dt_row);
+        var message = i18next.t("System doesn't support quantity bigger than :max.", {
+            'max': numeral(max_integer).format('0,0')
+        });
+        swal({
+            type: 'error',
+            text: message
+        });
+        return false;
+    }
+
+    var dt_price = numeral(dt_row.find('input[name=dt_price]').val()).value();
+    var dt_amount = dt_quantity * dt_price;
+    if (max_validator(dt_amount, max_double, 'double') == false) {
+
+        dt_row_rollback(dt_row);
+        var message = i18next.t("System doesn't support money bigger than :max.", {
+            'max': numeral(max_double).format('0,0')
+        });
+        swal({
+            type: 'error',
+            text: message
+        });
+        return false;
+    }
+    dt_row.find('input[name=dt_amount]').val(numeral(dt_amount).format('0,0'));
+
+    var dt_amount_total = dt_get_amount_total();
+    if (max_validator(dt_amount_total, max_double, 'double') == false) {
+
+        dt_row_rollback(dt_row);
+        var message = i18next.t("System doesn't support money bigger than :max.", {
+            'max': numeral(max_double).format('0,0')
+        });
+        swal({
+            type: 'error',
+            text: message
+        });
+        return false;
+    }
+
+    var ord_tax = numeral($("input[name=ord_tax]").val()).value();
+    var dt_amount_tax_total = dt_amount_total + (dt_amount_total * ord_tax / 100);
+    if (max_validator(dt_amount_tax_total, max_double, 'double') == false) {
+
+        dt_row_rollback(dt_row);
+        var message = i18next.t("System doesn't support money bigger than :max.", {
+            'max': numeral(max_double).format('0,0')
+        });
+        swal({
+            type: 'error',
+            text: message
+        });
+        return false;
+    }
+
+    dt_row_set_old_data(dt_row);
+    ord_set_total(dt_amount_total, dt_amount_tax_total);
+
+}
+
+function dt_price_change(self) {
+    var dt_row = $(self).closest('div.dt-row');
+
+    var dt_price = numeral($(self).val()).value();
+    if (max_validator(dt_price, max_double, 'double') == false) {
+
+        dt_row_rollback(dt_row);
+        var message = i18next.t("System doesn't support money bigger than :max.", {
+            'max': numeral(max_double).format('0,0')
+        });
+        swal({
+            type: 'error',
+            text: message
+        });
+        return false;
+    }
+
+    var dt_quantity = numeral(dt_row.find('input[name=dt_quantity]').val()).value();
+    var dt_amount = dt_quantity * dt_price;
+    if (max_validator(dt_amount, max_double, 'double') == false) {
+
+        dt_row_rollback(dt_row);
+        var message = i18next.t("System doesn't support money bigger than :max.", {
+            'max': numeral(max_double).format('0,0')
+        });
+        swal({
+            type: 'error',
+            text: message
+        });
+        return false;
+    }
+    dt_row.find('input[name=dt_amount]').val(numeral(dt_amount).format('0,0'));
+
+    var dt_amount_total = dt_get_amount_total();
+    if (max_validator(dt_amount_total, max_double, 'double') == false) {
+
+        dt_row_rollback(dt_row);
+        var message = i18next.t("System doesn't support money bigger than :max.", {
+            'max': numeral(max_double).format('0,0')
+        });
+        swal({
+            type: 'error',
+            text: message
+        });
+        return false;
+    }
+
+    var ord_tax = numeral($("input[name=ord_tax]").val()).value();
+    var dt_amount_tax_total = dt_amount_total + (dt_amount_total * ord_tax / 100);
+    if (max_validator(dt_amount_tax_total, max_double, 'double') == false) {
+
+        dt_row_rollback(dt_row);
+        var message = i18next.t("System doesn't support money bigger than :max.", {
+            'max': numeral(max_double).format('0,0')
+        });
+        swal({
+            type: 'error',
+            text: message
+        });
+        return false;
+    }
+
+    dt_row_set_old_data(dt_row);
+    ord_set_total(dt_amount_total, dt_amount_tax_total);
+}
+
+function dt_amount_change(self) {
+
+    var dt_row = $(self).closest('div.dt-row');
+    var dt_amount = numeral($(self).val()).value();
+    if (max_validator(dt_amount, max_double, 'double') == false) {
+
+        dt_row_rollback(dt_row);
+        var message = i18next.t("System doesn't support money bigger than :max.", {
+            'max': numeral(max_double).format('0,0')
+        });
+        swal({
+            type: 'error',
+            text: message
+        });
+        return false;
+    }
+
+    var dt_amount_total = dt_get_amount_total();
+    if (max_validator(dt_amount_total, max_double, 'double') == false) {
+
+        dt_row_rollback(dt_row);
+        var message = i18next.t("System doesn't support money bigger than :max.", {
+            'max': numeral(max_double).format('0,0')
+        });
+        swal({
+            type: 'error',
+            text: message
+        });
+        return false;
+    }
+
+    var ord_tax = numeral($("input[name=ord_tax]").val()).value();
+    var dt_amount_tax_total = dt_amount_total + (dt_amount_total * ord_tax / 100);
+    if (max_validator(dt_amount_tax_total, max_double, 'double') == false) {
+
+        dt_row_rollback(dt_row);
+        var message = i18next.t("System doesn't support money bigger than :max.", {
+            'max': numeral(max_double).format('0,0')
+        });
+        swal({
+            type: 'error',
+            text: message
+        });
+        return false;
+    }
+
+    dt_row_set_old_data(dt_row);
+    ord_set_total(dt_amount_total, dt_amount_tax_total);
+}
+
+function dt_get_amount_total() {
+    var prod_amount_total = dt_get_prod_amount_total();
+    var acce_amount_total = dt_get_acce_amount_total();
+    return prod_amount_total + acce_amount_total;
+}
+
+function dt_get_prod_amount_total() {
+    var dt_amount_total = 0;
+    var cur_rows = $("#dt-prod").find('div.dt-row').not('div.deleted');
+    $.each(cur_rows, function (idx, row) {
+        var dt_amount = $(row).find('input[name=dt_amount]').val();
+        dt_amount = numeral(dt_amount).value();
+        if (dt_amount != null && isNaN(dt_amount) == false) {
+            dt_amount_total += dt_amount;
         }
     });
-})(jQuery);
-jQuery(document).ready(function () {
-    jQuery.UbizOIWidget.w_init();
+    return dt_amount_total;
+}
+
+function dt_get_acce_amount_total() {
+    var dt_amount_total = 0;
+    var cur_rows = $("#dt-acce").find('div.dt-row').not('div.deleted');
+    $.each(cur_rows, function (idx, row) {
+        var dt_amount = $(row).find('input[name=dt_amount]').val();
+        dt_amount = numeral(dt_amount).value();
+        if (dt_amount != null && isNaN(dt_amount) == false) {
+            dt_amount_total += dt_amount;
+        }
+    });
+    return dt_amount_total;
+}
+
+function dt_row_rollback(row) {
+    var dt_quantity_old = numeral(row.find('input[name=dt_quantity_old]').val()).format('0,0');
+    var dt_price_old = numeral(row.find('input[name=dt_price_old]').val()).format('0,0');
+    var dt_amount_old = numeral(row.find('input[name=dt_amount_old]').val()).format('0,0');
+
+    row.find('input[name=dt_quantity]').val(dt_quantity_old);
+    row.find('input[name=dt_price]').val(dt_price_old);
+    row.find('input[name=dt_amount]').val(dt_amount_old);
+}
+
+function dt_row_set_old_data(row) {
+
+    var dt_quantity = row.find('input[name=dt_quantity]').val();
+    var dt_price = row.find('input[name=dt_price]').val();
+    var dt_amount = row.find('input[name=dt_amount]').val();
+
+    row.find('input[name=dt_quantity_old]').val(dt_quantity);
+    row.find('input[name=dt_price_old]').val(dt_price);
+    row.find('input[name=dt_amount_old]').val(dt_amount);
+}
+
+function dt_row_colect_data() {
+
+    var dt_rows = new Array();
+
+    var dt_prod_rows = $("#dt-prod").find('div.dt-row');
+    $.each(dt_prod_rows, function (idx, row) {
+
+        var dt_prod_row_data = prod_row_get_data($(row));
+        dt_prod_row_data.dt_sort_no = idx + 1;
+        var is_pass = prod_row_validate_data(dt_prod_row_data);
+        if (is_pass == false)
+            return;
+
+        var is_deleted = $(row).hasClass('deleted');
+        dt_prod_row_data.action = 'insert';
+        if (numeral(dt_prod_row_data.dt_id).value() > 0 && is_deleted == true) {
+            dt_prod_row_data.action = 'delete';
+        }
+        if (numeral(dt_prod_row_data.dt_id).value() > 0 && is_deleted == false) {
+            dt_prod_row_data.action = 'update';
+        }
+        dt_rows.push(dt_prod_row_data);
+    });
+
+    var dt_acce_rows = $("#dt-acce").find('div.dt-row');
+    $.each(dt_acce_rows, function (idx, row) {
+
+        var dt_acce_row_data = acce_row_get_data($(row));
+        dt_acce_row_data.dt_sort_no = idx + 1;
+        var is_pass = acce_row_validate_data(dt_acce_row_data);
+        if (is_pass == false)
+            return;
+
+        var is_deleted = $(row).hasClass('deleted');
+        dt_acce_row_data.action = 'insert';
+        if (numeral(dt_acce_row_data.dt_id).value() > 0 && is_deleted == true) {
+            dt_acce_row_data.action = 'delete';
+        }
+        if (numeral(dt_acce_row_data.dt_id).value() > 0 && is_deleted == false) {
+            dt_acce_row_data.action = 'update';
+        }
+        dt_rows.push(dt_acce_row_data);
+    });
+
+    return dt_rows;
+}
+
+function ord_set_total(ord_amount, ord_amount_tax) {
+
+    var ord_paid = numeral($('input[name=ord_paid]').val()).value();
+    var ord_debt = ord_amount_tax - ord_paid;
+
+    $('input[name=ord_amount]').val(numeral(ord_amount).format('0,0'));
+    $('input[name=ord_amount_tax]').val(numeral(ord_amount_tax).format('0,0'));
+    $('input[name=ord_debt]').val(numeral(ord_debt).format('0,0'));
+
+    $('input[name=ord_amount_old]').val(numeral(ord_amount).format('0,0'));
+    $('input[name=ord_amount_tax_old]').val(numeral(ord_amount_tax).format('0,0'));
+    $('input[name=ord_debt_old]').val(numeral(ord_debt).format('0,0'));
+}
+
+function ord_no_change(self) {
+
+    var ord_no = $(self).val();
+    if (ord_no == '') {
+
+        var ord_no_old = $('input[name=ord_no_old]').val();
+        $(self).val(ord_no_old);
+
+        var message = i18next.t("Order No is required.");
+        swal({
+            type: 'error',
+            text: message
+        });
+        return false;
+    }
+
+    $('input[name=ord_no_old]').val(ord_no);
+}
+
+function ord_date_change(self) {
+
+    var ord_date = $(self).val();
+    if (ord_date == '') {
+
+        var ord_date_old = $('input[name=ord_date_old]').val();
+        $(self).val(ord_date_old);
+
+        var message = i18next.t("Order Date is required.");
+        swal({
+            type: 'error',
+            text: message
+        });
+        return false;
+    }
+
+    if (moment(ord_date).isValid() == false) {
+        var ord_date_old = $('input[name=ord_date_old]').val();
+        $(self).val(ord_date_old);
+
+        var message = i18next.t("Order Date is wrong format YYYY/MM/DD");
+        swal({
+            type: 'error',
+            text: message
+        });
+        return false;
+    }
+
+    ord_date = moment(ord_date).format('YYYY/MM/DD');
+    $(self).val(ord_date);
+    $('input[name=ord_date_old]').val(ord_date);
+}
+
+function ord_tax_change(self) {
+
+    var ord_tax = numeral($(self).val()).value();
+    if (max_validator(ord_tax, 100, 'integer') == false) {
+
+        var ord_tax_old = numeral($('input[name=ord_tax_old]').val()).format('0,0');
+        $(self).val(ord_tax_old);
+
+        var message = i18next.t("System doesn't support tax bigger than :max.", {
+            'max': 100
+        });
+        swal({
+            type: 'error',
+            text: message
+        });
+        return false;
+    }
+
+    var ord_amount = numeral($('input[name=ord_amount]').val()).value();
+    var ord_amount_tax = ord_amount + (ord_amount * ord_tax / 100);
+    if (max_validator(ord_amount_tax, max_double, 'double') == false) {
+
+        var ord_tax_old = numeral($('input[name=ord_tax_old]').val()).format('0,0');
+        $(self).val(ord_tax_old);
+
+        var message = i18next.t("System doesn't support money bigger than :max.", {
+            'max': numeral(max_double).format('0,0')
+        });
+        swal({
+            type: 'error',
+            text: message
+        });
+        return false;
+    }
+    $('input[name=ord_tax_old]').val(ord_tax);
+    ord_set_total(ord_amount, ord_amount_tax);
+}
+
+function ord_paid_change(self) {
+
+    var ord_paid = numeral($(self).val()).value();
+    if (max_validator(ord_paid, max_double, 'double') == false) {
+
+        ord_rollback_total();
+        var message = i18next.t("System doesn't support money bigger than :max.", {
+            'max': numeral(max_double).format('0,0')
+        });
+        swal({
+            type: 'error',
+            text: message
+        });
+        return false;
+    }
+    $('input[name=ord_paid_old]').val(ord_paid);
+    var ord_amount = numeral($('input[name=ord_amount]').val()).value();
+    var ord_amount_tax = numeral($('input[name=ord_amount_tax]').val()).value();
+    ord_set_total(ord_amount, ord_amount_tax);
+}
+
+function ord_colect_data() {
+    var data = {};
+    data.ord_id = $("input[name=ord_id]").val();
+    data.ord_no = $("input[name=ord_no]").val();
+    data.ord_date = $("input[name=ord_date]").val();
+    data.ord_note = $("textarea[name=ord_note]").val();
+    data.ord_tax = numeral($("input[name=ord_tax]").val()).value();
+    data.ord_amount = numeral($("input[name=ord_amount]").val()).value();
+    data.ord_amount_tax = numeral($("input[name=ord_amount_tax]").val()).value();
+    data.ord_paid = numeral($("input[name=ord_paid]").val()).value();
+    data.ord_debt = numeral($("input[name=ord_debt]").val()).value();
+    return data;
+}
+
+function ord_rollback_total() {
+    var ord_amount_old = numeral($('input[name=ord_amount_old]').val()).format('0,0');
+    var ord_amount_tax_old = numeral($('input[name=ord_amount_tax_old]').val()).format('0,0');
+    var ord_paid_old = numeral($('input[name=ord_paid_old]').val()).format('0,0');
+    var ord_debt_old = numeral($('input[name=ord_debt_old]').val()).format('0,0');
+
+    $('input[name=ord_amount]').val(ord_amount_old);
+    $('input[name=ord_amount_tax]').val(ord_amount_tax_old);
+    $('input[name=ord_paid]').val(ord_paid_old);
+    $('input[name=ord_debt]').val(ord_debt_old);
+}
+
+function ord_back_to_output() {
+    window.location.href = "/orders";
+}
+
+function ord_save() {
+    swal({
+        title: i18next.t('Do you want to save the data.?'),
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: i18next.t('No'),
+        confirmButtonText: i18next.t('Yes'),
+        reverseButtons: true
+    }).then((result) => {
+        if (result.value) {
+            var data = {};
+            data.order = ord_colect_data();
+            data.order_detail = dt_row_colect_data();
+            ubizapis('v1', '/orders/' + data.order.ord_id + '/update', 'post', {'data': data}, null, ord_save_callback);
+        }
+    })
+}
+
+function ord_save_callback(response) {
+    if (response.data.success == true) {
+        swal.fire({
+            type: 'success',
+            title: response.data.message,
+            onClose: () => {
+                ord_back_to_output();
+            }
+        })
+
+    } else {
+        swal.fire({
+            type: 'error',
+            title: response.data.message
+        })
+    }
+}
+
+function ord_delete() {
+    swal({
+        title: i18next.t('Do you want to delete the data?'),
+        text: i18next.t('Once deleted, you will not be able to recover this data!'),
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: i18next.t('No'),
+        confirmButtonText: i18next.t('Yes'),
+        reverseButtons: true
+    }).then((result) => {
+        if (result.value) {
+            var ord_id = $("input[name=ord_id]").val();
+            ubizapis('v1', '/orders/' + ord_id + '/delete', 'delete', null, null, ord_delete_callback);
+        }
+    })
+}
+
+function ord_delete_callback(response) {
+    if (response.data.success == true) {
+        swal.fire({
+            type: 'success',
+            title: response.data.message,
+            onClose: () => {
+                ord_back_to_output();
+            }
+        })
+
+    } else {
+        swal.fire({
+            type: 'error',
+            title: response.data.message
+        })
+    }
+}
+
+function ord_refresh() {
+    swal({
+        title: i18next.t('Do you want to refresh the data.?'),
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: i18next.t('No'),
+        confirmButtonText: i18next.t('Yes'),
+        reverseButtons: true
+    }).then((result) => {
+        if (result.value) {
+            window.location.reload();
+        }
+    })
+
+}
+
+$(document).ready(function () {
+
+    prod_spec_no = $("#dt-prod").find('div.dt-row').length;
+
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        nicescroll_resize("#nicescroll-iput");
+    })
+
+    tinymce.init({
+        width: 350,
+        min_height: 246,
+        max_height: 246,
+        menubar: false,
+        toolbar_drawer: 'floating',
+        selector: 'textarea[name=dt_prod_specs_mce]',
+        plugins: [
+            'advlist autolink lists link image charmap print preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code wordcount autoresize'
+        ],
+        toolbar: 'undo redo | bold italic forecolor backcolor | formatselect | fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat',
+        content_css: [
+            '/fonts/roboto/v18/roboto.css'
+        ]
+    });
+    $('#nicescroll-iput').niceScroll({
+        cursorcolor: "#9fa8b0",
+        cursorwidth: "5px",
+        cursorborder: "none",
+        cursorborderradius: 5,
+        cursoropacitymin: 0.4,
+        scrollbarid: 'nc-oput',
+        autohidemode: false,
+        horizrailenabled: false
+    });
+    fnc_datepicker('.datepicker');
 });

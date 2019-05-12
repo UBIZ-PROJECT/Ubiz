@@ -76,7 +76,7 @@
   cursor: pointer;
 }
 
-.total-info input{
+.order-input .total-info input {
     border-top: none;
     border-right: none;
     border-left: none;
@@ -85,10 +85,12 @@
     color: black !important;
 }
 
-.add-btn{
+.order-input .add-btn {
     position: fixed;
-    right: 10px;
-    color: #FA6800;
-    cursor: pointer;
-    z-index: 1151px;
+    right: 15px;
+    z-index: 999;
+}
+
+.dp-clear{
+    display: none;
 }
