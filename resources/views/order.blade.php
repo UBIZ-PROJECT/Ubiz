@@ -176,7 +176,7 @@
 								<div class="dcB col-3" role="presentation">
                                     <div class="dWB dWT" role="button" sort-name="sale_name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">Sale</div>
+                                            <div class="tDv">{{ __('Sale person') }}</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
