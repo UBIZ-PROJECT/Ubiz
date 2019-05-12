@@ -158,10 +158,12 @@
                 for (let i = 0; i < orders.length; i++) {
                     var cols = [];
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, orders[i].ord_no, 1));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, orders[i].cus_name, 2));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, moment(orders[i].ord_date).format('YYYY/MM/DD'), 2));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, orders[i].sale_name, 3));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, orders[i].ord_date, 4));
-
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, orders[i].cus_name, 4));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, numeral(orders[i].ord_amount_tax).format('0,0'), 5));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, numeral(orders[i].ord_paid).format('0,0'), 6));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, numeral(orders[i].ord_debt).format('0,0'), 7));
                     rows.push(jQuery.UbizOIWidget.w_make_row_html(orders[i].ord_id, cols));
                 }
                 table_html += rows.join("");

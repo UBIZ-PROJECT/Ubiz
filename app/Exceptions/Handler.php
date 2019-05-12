@@ -55,7 +55,7 @@ class Handler extends ExceptionHandler
         // custom error message
         $trace = $exception->getTraceAsString();
         $message = __("There was an error.\nPlease contact administrator.");
-        if ($exception instanceof QueryException || $exception instancmessage = "Undefined variable: order_detail"eof \ErrorException) {
+        if ($exception instanceof QueryException || $exception instanceof \ErrorException) {
             if ($request->expectsJson() === true) {
                 return response()->json(['success' => false, 'message' => $message, 'trace' => $trace], 500);
             }

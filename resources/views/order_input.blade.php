@@ -215,8 +215,7 @@
                             </button>
                         </ul>
                         <div class="tab-content" id="tab-ord-inp-content">
-                            <div class="tab-pane fade show active" id="dt-prod" role="tabpanel"
-                                 aria-labelledby="dt-prod-tab">
+                            <div class="tab-pane fade show active" id="dt-prod" role="tabpanel" aria-labelledby="dt-prod-tab">
                                 @php $idx = 0; @endphp
                                 @foreach($orderDetail as $item)
                                     @if($item->type == '1')
@@ -265,6 +264,50 @@
                                         </div>
                                     @endif
                                 @endforeach
+                                @if($idx == 0)
+                                    <div class="dt-row" dt_id="0">
+                                        <div class="row dt-row-head zero-mgl zero-mgr" onclick="my_collapse(this)">
+                                            <div class="col text-left">
+                                                <label class="lbl-primary z-mgb">No.1</label>
+                                            </div>
+                                            <div class="col text-right">
+                                                <i class="fas fa-caret-down"></i>
+                                            </div>
+                                        </div>
+                                        <div class="row dt-row-body zero-mgl zero-mgr collapse hide">
+                                            <div class="col-md-auto">
+                                                <label class="lbl-primary">{{ __('Specification') }}:</label>
+                                                <textarea name="dt_prod_specs_mce" id="dt_prod_specs_mce_1"></textarea>
+                                            </div>
+                                            <div class="col-md-auto">
+                                                @include('components.input',['value'=>'', 'control_id'=>'dt_prod_model','width'=> '250', 'lbl_width'=>'70', 'label'=>__('Model'), 'i_focus'=>'', 'i_blur'=>''])
+                                                @include('components.textarea',['value'=>'', 'width'=>'250', 'height'=>'100', 'control_id'=>'dt_prod_series', 'resize'=>'none', 'label'=>__('Series')])
+                                                @include('components.textarea',['value'=>'', 'width'=>'250', 'height'=>'100', 'control_id'=>'dt_note', 'resize'=>'none', 'label'=>__('Note')])
+                                            </div>
+                                            <div class="col-md-auto">
+                                                @include('components.input',['value'=>'', 'control_id'=>'dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit'), 'class'=> 'text-right', 'i_focus'=>'', 'i_blur'=>''])
+                                                @include('components.number',['value'=>'', 'onchange'=>'dt_quantity_change(this)', 'control_id'=>'dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity'), 'class'=> 'text-right'])
+                                                @include('components.textarea',['value'=>'', 'control_id'=>'dt_delivery_time', 'width'=>'250', 'height'=>'50', 'resize'=>'none', 'class'=> 'margin-bottom-15', 'label'=>__('Delivery time')])
+                                                @include('components.dropdown',['value'=>'', 'control_id'=>'dt_status', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Status') ,'data'=> $statusList])
+                                                @include('components.money',['value'=> '', 'onchange'=>'dt_price_change(this)', 'control_id'=>'dt_price', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price'), 'class'=> 'text-right'])
+                                                @include('components.money',['value'=>'', 'onchange'=>'dt_amount_change(this)', 'control_id'=>'dt_amount', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Amount'), 'class'=> 'text-right'])
+                                            </div>
+                                            <div class="col-md-auto z-pdr text-center">
+                                                <i onclick="prod_row_copy(this)"
+                                                   class="material-icons text-primary i-btn"
+                                                   title="{{ __("Copy") }}">
+                                                    copyright
+                                                </i>
+                                                <br>
+                                                <i onclick="prod_row_del(this)"
+                                                   class="material-icons text-danger i-btn"
+                                                   title="{{ __("Delete") }}">
+                                                    delete
+                                                </i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                             <div class="tab-pane fade" id="dt-acce" role="tabpanel" aria-labelledby="dt-acce-tab">
                                 @php $idx = 0; @endphp
@@ -312,6 +355,48 @@
                                         </div>
                                     @endif
                                 @endforeach
+                                @if($idx == 0)
+                                    <div class="dt-row" dt_id="0">
+                                        <div class="row dt-row-head zero-mgl zero-mgr" onclick="my_collapse(this)">
+                                            <div class="col text-left">
+                                                <label class="lbl-primary z-mgb">No.1</label>
+                                            </div>
+                                            <div class="col text-right">
+                                                <i class="fas fa-caret-down"></i>
+                                            </div>
+                                        </div>
+                                        <div class="row dt-row-body zero-mgl zero-mgr collapse hide">
+                                            <div class="col-md-auto">
+                                                @include('components.input',['value'=>'', 'control_id'=>'dt_acce_code','width'=> '250', 'lbl_width'=>'70', 'label'=>__('Code'), 'i_focus'=>'', 'i_blur'=>''])
+                                                @include('components.input',['value'=>'', 'control_id'=>'dt_acce_name','width'=> '250', 'lbl_width'=>'70', 'label'=>__('Name'), 'i_focus'=>'', 'i_blur'=>''])
+                                                @include('components.textarea',['value'=>'', 'control_id'=>'dt_note', 'width'=>'300', 'height'=>'73', 'resize'=>'none', 'label'=>__('Note'), 'lable_class'=>'hidden-content'])
+                                            </div>
+                                            <div class="col-md-auto">
+                                                @include('components.input',['value'=>'', 'control_id'=>'dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit'), 'class'=> 'text-right', 'i_focus'=>'', 'i_blur'=>''])
+                                                @include('components.number',['value'=>'', 'onchange'=>'dt_quantity_change(this)', 'control_id'=>'dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity'), 'class'=> 'text-right'])
+                                                @include('components.textarea',['value'=>'', 'control_id'=>'dt_delivery_time', 'width'=>'250', 'height'=>'50', 'resize'=>'none', 'class'=> 'margin-bottom-15', 'label'=>__('Delivery time')])
+                                            </div>
+                                            <div class="col-md-auto">
+                                                @include('components.dropdown',['value'=>'', 'control_id'=>'dt_status', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Status') ,'data'=> $statusList])
+                                                @include('components.money',['value'=> '', 'onchange'=>'dt_price_change(this)', 'control_id'=>'dt_price', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price'), 'class'=> 'text-right'])
+                                                @include('components.money',['value'=>'', 'onchange'=>'dt_amount_change(this)', 'control_id'=>'dt_amount', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Amount'), 'class'=> 'text-right'])
+                                            </div>
+                                            <div class="col-md-auto z-pdr text-center">
+                                                <i onclick="acce_row_copy(this)"
+                                                   class="material-icons text-primary i-btn"
+                                                   title="{{ __("Copy") }}">
+                                                    copyright
+                                                </i>
+                                                <br>
+                                                <i onclick="acce_row_del(this)"
+                                                   class="material-icons text-danger i-btn"
+                                                   title="{{ __("Delete") }}">
+                                                    delete
+                                                </i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                         <hr>

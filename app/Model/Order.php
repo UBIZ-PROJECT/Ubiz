@@ -451,8 +451,36 @@ class Order
 
         if ($search != '') {
             $search_val = "%" . $search . "%";
-            $where_raw .= " AND order.ord_no like ? ";
+            $where_raw .= " AND ( ";
+            $where_raw .= " order.ord_no like ? ";
             $params[] = $search_val;
+            if (Carbon::createFromFormat('Y/m/d', $search) == true || Carbon::createFromFormat('Y-m-d', $search) == true) {
+                $where_raw .= " OR order.ord_date = ? ";
+                $params[] = $search;
+            } else {
+                if (is_numeric(str_replace(',', '', $search)) == false) {
+
+                    $where_raw .= " OR users.name like ? ";
+                    $params[] = $search_val;
+
+                    $where_raw .= " OR customer.cus_name like ? ";
+                    $params[] = $search_val;
+                } else {
+                    $where_raw .= " OR order.ord_amount = ? ";
+                    $params[] = $search;
+
+                    $where_raw .= " OR order.ord_amount_tax = ? ";
+                    $params[] = str_replace(',', '', $search);
+
+                    $where_raw .= " OR order.ord_paid = ? ";
+                    $params[] = str_replace(',', '', $search);
+
+                    $where_raw .= " OR order.ord_debt = ? ";
+                    $params[] = str_replace(',', '', $search);
+                }
+            }
+            $where_raw .= " ) ";
+
         }
         return [$where_raw, $params];
     }

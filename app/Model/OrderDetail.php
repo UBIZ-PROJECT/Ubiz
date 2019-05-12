@@ -74,7 +74,7 @@ class OrderDetail
             DB::table('order_detail')
                 ->where([
                     ['owner_id', '=', Auth::user()->id],
-                    ['ordt_id', '=',$ordt_id]
+                    ['ordt_id', '=', $ordt_id]
                 ])
                 ->update($order_detail);
         } catch (\Throwable $e) {
