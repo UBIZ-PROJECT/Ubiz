@@ -119,6 +119,9 @@ class UsersController extends Controller
         }
 
         $user = [];
+        if ($request->has("txt_com_id")) {
+            $user['com_id'] =$request->txt_com_id;
+        }
         if ($request->has('txt_code')) {
             $user['code'] = $request->txt_code;
         }
@@ -135,7 +138,7 @@ class UsersController extends Controller
             $user['dep_id'] = $request->txt_dep_id;
         }
         if ($request->has('txt_join_date')) {
-            $user['join_date'] = $request->txt_join_date;
+            $user['join_date'] = $this->convertWebDateToDbDate($request->txt_join_date);
         }
         if ($request->has('txt_salary')) {
             $user['salary'] = $request->txt_salary;
@@ -154,5 +157,18 @@ class UsersController extends Controller
         }
 
         return [$page, $sort, $search, $user];
+    }
+
+    private function convertWebDateToDbDate($webDate) {
+        if ($webDate != null && $webDate != "") {
+            $date = explode("/", $webDate);
+            $year = $date[2];
+            $month = strlen($date[1]) == 2 ? $date[1] : "0" . $date[1];
+            $day = strlen($date[0]) == 2 ? $date[0] : "0" . $date[0] ;
+            $sqlDate = date("Y-m-d", strtotime($year . "-" . $month . "-" . $day));
+            return $sqlDate;
+        }
+        return date(strtotime("0000-00-00"));
+
     }
 }

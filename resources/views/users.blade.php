@@ -249,6 +249,29 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="dcB col-5" role="presentation">
+                                    <div class="dWB" role="button">
+                                        <div class="dvJ" sort-name="com_nm" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                            <div class="tDv">{{ __('Company') }}</div>
+                                            <div class="mhH">
+                                                <div class="acD">
+                                                    <div class="huK">
+                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
+                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                        </svg>
+                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
+                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="dcB col-6" role="presentation">
                                     <div class="dWB" role="button" sort-name="address" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
@@ -316,6 +339,13 @@
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$user->dep_name}}">
                                                     <span>{{$user->dep_name}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tcB col-5">
+                                            <div class="cbo">
+                                                <div class="nCj" title="{{$user->com_nm}}">
+                                                    <span>{{$user->com_nm}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -396,6 +426,7 @@
                                 @include('components.input',['control_id'=>'txt_code', 'width'=>'150', 'label'=>__('Code')])
                                 @include('components.input',['control_id'=>'txt_name', 'label'=>__('Name')])
                                 @include('components.dropdown',['control_id'=>'txt_dep_id', 'label'=>__('Department'), 'data'=> Helper::convertDataToDropdownOptions($departments, 'id', 'dep_name')])
+                                @include('components.dropdown',['control_id'=>'txt_com_id', 'label'=>__('Company'), 'data'=> Helper::convertDataToDropdownOptions($companies, 'com_id', 'com_nm')])
                                 @include('components.input',['control_id'=>'txt_phone', 'label'=>__('Phone')])
                                 @include('components.input',['control_id'=>'txt_email', 'label'=>__('E-Mail')])
                             </div>

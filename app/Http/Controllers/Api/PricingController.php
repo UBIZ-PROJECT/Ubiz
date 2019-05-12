@@ -155,12 +155,18 @@ class PricingController extends Controller
             $search['pri_date'] = $request->pri_date;
         }
 		if ($request->has('exp_date')) {
-            $search['exp_date'] = $request->exp_date;
+		    $search['exp_date'] = substr($request->exp_date,6,4).'-'.substr($request->exp_date,3,2).'-'.substr($request->exp_date,0,2);
         }
         if ($request->has('contain')) {
+            if (preg_match("/^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/[0-9]{4}$/",$request->contain)){
+                $request->contain = substr($request->contain,6,4).'-'.substr($request->contain,3,2).'-'.substr($request->contain,0,2);
+            }
             $search['contain'] = $request->contain;
         }
         if ($request->has('notcontain')) {
+            if (preg_match("/^(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/[0-9]{4}$/",$request->notcontain)){
+                $request->notcontain = substr($request->notcontain,6,4).'-'.substr($request->notcontain,3,2).'-'.substr($request->notcontain,0,2);
+            }
             $search['notcontain'] = $request->notcontain;
         }
         return [$page, $sort, $search];

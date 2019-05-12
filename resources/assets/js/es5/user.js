@@ -399,7 +399,8 @@
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(users[i].id, users[i].email, 3));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(users[i].id, users[i].phone, 4));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(users[i].id, users[i].dep_name, 5));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(users[i].id, users[i].address, 6));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(users[i].id, users[i].com_nm, 6));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(users[i].id, users[i].address, 7));
                     rows.push(jQuery.UbizOIWidget.w_make_row_html(users[i].id, cols, i, paging.page, paging.rows_per_page));
                 }
                 table_html += rows.join("");
@@ -456,22 +457,23 @@
             jQuery.UbizOIWidget.i_page.find("#txt_phone").val(data.phone);
             jQuery.UbizOIWidget.i_page.find("#txt_email").val(data.email);
             jQuery.UbizOIWidget.i_page.find("#txt_dep_id").val(data.dep_id);
+            jQuery.UbizOIWidget.i_page.find("#txt_com_id").val(data.com_id);
             jQuery.UbizOIWidget.i_page.find("#txt_address").val(data.address);
             jQuery.UbizOIWidget.i_page.find("#txt_join_date").val(format_date(data.join_date, 'YYYY/MM/DD'));
             jQuery.UbizOIWidget.i_page.find("#txt_salary").val(numeral(data.salary).format('0,0'));
-            if (data.bhxh == '0') {
-                jQuery.UbizOIWidget.i_page.find("#txt_bhxh").prop('checked', false);
-                jQuery.UbizOIWidget.i_page.find("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
-            } else {
+            if (data.bhxh == '1') {
                 jQuery.UbizOIWidget.i_page.find("#txt_bhxh").prop('checked', true);
                 jQuery.UbizOIWidget.i_page.find("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('suc').addClass('sck');
-            }
-            if (data.bhxh == '0') {
-                jQuery.UbizOIWidget.i_page.find("#txt_bhyt").prop('checked', false);
-                jQuery.UbizOIWidget.i_page.find("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
             } else {
+                jQuery.UbizOIWidget.i_page.find("#txt_bhxh").prop('checked', false);
+                jQuery.UbizOIWidget.i_page.find("#txt_bhxh").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
+            }
+            if (data.bhyt == '1') {
                 jQuery.UbizOIWidget.i_page.find("#txt_bhyt").prop('checked', true);
                 jQuery.UbizOIWidget.i_page.find("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('suc').addClass('sck');
+            } else {
+                jQuery.UbizOIWidget.i_page.find("#txt_bhyt").prop('checked', false);
+                jQuery.UbizOIWidget.i_page.find("#txt_bhyt").closest('div.fieldGroup').find('div').removeClass('sck').addClass('suc');
             }
             if(data.avatar != ''){
                 jQuery.UbizOIWidget.i_page.find("img.img-thumbnail").attr('src', data.avatar);
@@ -573,7 +575,7 @@
             if (jQuery('input[name=inp-upload-image]')[0].files.length > 0) {
                 form_data.append('avatar', jQuery('input[name=inp-upload-image]')[0].files[0]);
             }
-
+            form_data.append('txt_com_id', jQuery("#txt_com_id").val());
             form_data.append('txt_dep_id', jQuery("#txt_dep_id").val());
             form_data.append('txt_phone', jQuery("#txt_phone").val());
             form_data.append('txt_email', jQuery("#txt_email").val());
@@ -581,10 +583,10 @@
             form_data.append('txt_join_date', jQuery("#txt_join_date").val());
             form_data.append('txt_salary', numeral(jQuery("#txt_salary").val()).format('0'));
 
-            var txt_bhxh = jQuery("#txt_bhxh").is(':checked') ? jQuery("#txt_bhxh").val() : 0;
+            var txt_bhxh = jQuery("#txt_bhxh").is(':checked') ? 1 : 0;
             form_data.append('txt_bhxh', txt_bhxh);
 
-            var txt_bhyt = jQuery("#txt_bhyt").is(':checked') ? jQuery("#txt_bhyt").val() : 0;
+            var txt_bhyt = jQuery("#txt_bhyt").is(':checked') ? 1 : 0;
             form_data.append('txt_bhyt', txt_bhyt);
             return form_data;
         },

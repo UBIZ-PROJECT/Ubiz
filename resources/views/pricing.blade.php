@@ -288,14 +288,14 @@
                                         <div class="tcB col-3">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$pricing->pri_date}}">
-                                                    <span>{{substr($pricing->pri_date,0,10)}}</span>
+                                                    <span>{{$pricing->pri_date}}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="tcB col-3">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$pricing->exp_date}}">
-                                                    <span>{{substr($pricing->exp_date,0,10)}}</span>
+                                                    <span>{{substr($pricing->exp_date,8,2).'/'.substr($pricing->exp_date,5,2).'/'.substr($pricing->exp_date,0,4)}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -383,7 +383,7 @@
 									@include('components.input',['type'=>'disabled', 'control_id'=>'cus_code', 'label'=>'Mã'])
 									@include('components.input',['type'=>'disabled', 'control_id'=>'cus_name', 'label'=>'Tên khách hàng'])
 									@include('components.input',['type'=>'disabled', 'control_id'=>'cus_type', 'label'=>'Loại khách hàng'])
-									@include('components.input',['type'=>'required', 'control_id'=>'exp_date', 'label'=>'Ngày hết hạn', 'length'=>10])
+									@include('components.input',['type'=>'required', 'control_id'=>'exp_date', 'label'=>'Ngày hết hạn', 'class' => 'i-date', 'length'=>10])
 								</div>
 								<div class="col-sm-5 col-md-5 col-xl-5 z-pdr cus-part-2">
 									@include('components.input',['type'=>'disabled', 'control_id'=>'cus_phone', 'label'=>'Số điện thoại'])

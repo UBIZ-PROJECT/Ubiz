@@ -343,11 +343,12 @@ class Pricing implements JWTSubject
 	
 	public function updatePricing($param) {
 // 	    print_r($param->request);exit;
+	    $exp_date = explode('/', $param['exp_date']);
 		try {
 			DB::table('pricing')->where('pri_id', $param['pri_id'])->update(
 			  [
 				  'user_id'=>'1',
-				  'exp_date'=>$param['exp_date'],
+			      'exp_date'=>$exp_date[2].'-'.$exp_date[1].'-'.$exp_date[0],
 				  'upd_date'=>now(),
 				  'upd_user'=>'1'
 			  ]
