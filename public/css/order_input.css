@@ -8,10 +8,6 @@
   font-size: 24px;
 }
 
-.material-icons.md-33 {
-  font-size: 33px;
-}
-
 .material-icons.md-36 {
   font-size: 36px;
 }
@@ -39,9 +35,8 @@
 }
 
 .order-input .dt-row {
-  padding-right: 15px;
-  margin-top: 5px;
-  margin-bottom: 5px;
+  padding: 0px 15px;
+  margin-bottom: 10px;
 }
 
 .order-input .dt-row .row {
@@ -53,7 +48,7 @@
 }
 
 .order-input .dt-row .dt-row-body {
-  /*display: none;*/
+  display: none;
   padding: 5px 0px;
   border-top: 1px solid #a6a6a6;
 }
@@ -61,7 +56,7 @@
 .order-input .dt-row .root-56 {
   padding-top: 2px !important;
   padding-bottom: 2px !important;
-  height: 23px;
+  height: 22px;
 }
 
 .order-input .dt-row .fieldGroup {
@@ -72,25 +67,25 @@
   height: 25px;
 }
 
-.order-input .dt-row i.i-btn {
-  cursor: pointer;
+.order-input .dt-row .fa-copy {
+  color: #00C853;
+}
+
+.order-input .dt-row .fa-trash {
+  color: #FF3D00;
 }
 
 .order-input .total-info input {
-    border-top: none;
-    border-right: none;
-    border-left: none;
-    border-bottom: 1px solid #a6a6a6;
-    background: none;
-    color: black !important;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-bottom: 1px solid #a6a6a6;
+  background: none;
+  color: black !important;
 }
 
 .order-input .add-btn {
-    position: fixed;
-    right: 15px;
-    z-index: 999;
-}
-
-.dp-clear{
-    display: none;
+  position: fixed;
+  right: 15px;
+  z-index: 999;
 }

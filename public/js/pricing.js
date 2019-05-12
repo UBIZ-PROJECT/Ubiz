@@ -654,6 +654,8 @@ var del_list = new Array();
 			var data = jQuery.UbizOIWidget.w_get_data_input_form();
 			var pri_id = jQuery('input[name="pri_id"]').val();
 			
+			
+			
 			swal({
 				title: "Bạn có chắc chắn muốn lưu dữ liệu?",
 				type: 'warning',
