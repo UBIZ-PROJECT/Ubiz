@@ -1,9 +1,11 @@
 // Variables
 @import "variables";
+
 .order-input {
   .dt-row {
     padding: 0px 15px;
-    margin-bottom: 10px;
+    padding-left: 0px;
+    margin-top: 5px;
     .row {
       background-color: #e8f0fe;
     }
@@ -11,7 +13,6 @@
       padding: 3px 0px;
     }
     .dt-row-body {
-      display: none;
       padding: 5px 0px;
       border-top: 1px solid #a6a6a6;
     }
@@ -32,5 +33,20 @@
     .fa-trash {
       color: $mdc-deep-orange-A400;
     }
+  }
+
+  .total-info input {
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-bottom: 1px solid #a6a6a6;
+    background: none;
+    color: black !important;
+  }
+
+  .add-btn {
+    position: fixed;
+    right: 15px;
+    z-index: 999;
   }
 }

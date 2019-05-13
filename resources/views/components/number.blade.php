@@ -41,6 +41,10 @@ $html_onchange = "";
 if(isset($onchange)){
     $html_onchange = $onchange;
 }
+$html_suffix = "";
+if(isset($suffix)){
+    $html_suffix = $suffix;
+}
 
 switch ($type) {
     case 'disabled':
@@ -63,6 +67,7 @@ switch ($type) {
             <input is-change="false" onchange="{{ $html_onchange }}" onfocus="num_focus(this)" onblur="num_blur(this)" onkeydown="num_keydown(event)" min="{{ $html_min }}" max="{{ $html_max }}" placeholder="{{$html_placeholder}}" spellcheck="false" type="text" maxlength="{{ $html_max_length }}" {{$html_control_type}} id="{{$control_id}}" name="{{$control_id}}" value="{{ $html_value }}" class="input_field {{ $html_class }}">
             <input type="hidden" name="{{$control_id}}_old" value="{{ $html_value }}">
         </div>
+        <label class="ms-Label root-56">{{$html_suffix}}</label>
     </div>
     <span class="error_message hidden-content">
        <div class="message-container">

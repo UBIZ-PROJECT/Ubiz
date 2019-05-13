@@ -16,10 +16,10 @@ class OrderController extends Controller
     {
         try {
             $order = new Order();
-            $orders = $order->getOrders();
-            $paging = $order->getPagingInfo();
-            $paging['page'] = 0;
-            return view('order_output', ['orders' => $orders, 'paging' => $paging]);
+            $orderData = $order->getOrders();
+            $pagingData = $order->getPagingInfo();
+            $pagingData['page'] = 0;
+            return view('order', ['orders' => $orderData, 'paging' => $pagingData]);
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -34,7 +34,7 @@ class OrderController extends Controller
             return response()->view('errors.404', [], 404);
         }
         $orderDetail = new OrderDetail();
-        $orderDetailData = $orderDetail->getOrderDetails($ord_id);
+        $orderDetailData = $orderDetail->getOrderDetailsByOrdId($ord_id);
 
         $productStatus = new ProductStatus();
         $statusList = $productStatus->getAllStatus();

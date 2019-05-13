@@ -141,9 +141,9 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
                 console.log(error.response.status);
                 console.log(error.response.headers);
                 if (error.response.status === 401) {
-                    let timerInterval
+                    let timerInterval;
                     swal({
-                        title: i18next.t("Authentication failed.\nYou will be taken back to the login page for 5 seconds."),
+                        title: error.response.data.message,
                         html: '<strong></strong> ' + i18next.t('seconds') + '.',
                         timer: 5000,
                         onOpen: () => {
@@ -156,6 +156,10 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
                             clearInterval(timerInterval)
                             window.location.href = '/login';
                         }
+                    });
+                } else {
+                    swal({
+                        type: 'error', title: error.response.data.message
                     });
                 }
             } else if (error.request) {
@@ -319,31 +323,31 @@ function fnc_datepicker(ele) {
         // in the calendar. You can use this to display a different language.
         lang: {
             days: [
-                i18next.t('A00017'),
-                i18next.t('A00018'),
-                i18next.t('A00019'),
-                i18next.t('A00020'),
-                i18next.t('A00021'),
-                i18next.t('A00022'),
-                i18next.t('A00023')
+                i18next.t('Su'),
+                i18next.t('Mo'),
+                i18next.t('Tu'),
+                i18next.t('We'),
+                i18next.t('Th'),
+                i18next.t('Fr'),
+                i18next.t('Sa')
             ],
             months: [
-                i18next.t('A00024'),
-                i18next.t('A00025'),
-                i18next.t('A00026'),
-                i18next.t('A00027'),
-                i18next.t('A00028'),
-                i18next.t('A00029'),
-                i18next.t('A00030'),
-                i18next.t('A00031'),
-                i18next.t('A00032'),
-                i18next.t('A00033'),
-                i18next.t('A00034'),
-                i18next.t('A00035')
+                i18next.t('Jan'),
+                i18next.t('Feb'),
+                i18next.t('Mar'),
+                i18next.t('Apr'),
+                i18next.t('May'),
+                i18next.t('Jun'),
+                i18next.t('Jul'),
+                i18next.t('Aug'),
+                i18next.t('Sep'),
+                i18next.t('Oct'),
+                i18next.t('Nov'),
+                i18next.t('Dec')
             ],
-            today: i18next.t('A00036'),
-            clear: i18next.t('A00037'),
-            close: i18next.t('A00038')
+            today: i18next.t('Today'),
+            clear: i18next.t('Clear'),
+            close: i18next.t('Close')
         },
 
         // format {Date} -> string is a function which takes a date and returns a string. It can be used to customize
@@ -371,6 +375,16 @@ function fnc_datepicker(ele) {
         // associated input has no value.
         hilightedDate: new Date()
     });
+}
+
+function nicescroll_resize(ele){
+    setTimeout(function(){
+        $(ele).getNiceScroll().resize();
+    },10);
+}
+
+function fnc_format_date(date){
+    return moment(date).format('YYYY/MM/DD');
 }
 
 jQuery.fn.forceNumeric = function () {

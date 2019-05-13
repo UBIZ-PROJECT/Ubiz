@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Customer;
+use App\Model\CustomerType;
 
 class CustomerController extends Controller
 {
@@ -12,15 +13,23 @@ class CustomerController extends Controller
     {
 		try {
 			$customer = new Customer();
-			$customers = $customer->getCustomers();
+            $customerType = new CustomerType();
+
+            $customerList = $customer->getCustomers();
+            $customerTypeList = $customerType->getAllTypes();
+
 			$users = $customer->getUsers();
 			$paging = $customer->getPagingInfo();
 			$paging['page'] = 0;
-			foreach($customers as $key => $item){
-				$customerAddress = $customer->getCustomerAddress($item->cus_id);
-				$customers[$key]->address = $customerAddress;
+			foreach($customerList as $key => $item){
+                $customerList[$key]->address = $customer->getCustomerAddress($item->cus_id);
 			}
-			return view('customer', ['customers' => $customers, 'users' => $users, 'paging' => $paging]);
+			return view('customer', [
+			    'customers' => $customerList,
+                'customerTypeList' => $customerTypeList,
+                'users' => $users,
+                'paging' => $paging
+            ]);
 		} catch (\Throwable $e) {
             throw $e;
         }

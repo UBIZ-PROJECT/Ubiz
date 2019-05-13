@@ -11,21 +11,12 @@
 @section('headbar')
     @section('search')
         @include('order_search')
-        @section('headbar-icon')
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                <path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"/>
-                <path fill="none" d="M0 0h24v24H0z"/>
-            </svg>
-        @endsection
     @endsection
     @include('layouts/headbar')
 @endsection
 @section('content')
     <div class="main-content">
         <div class="l-content">
-            <div class="zY">
-                <div class="yP" onclick="jQuery.UbizOIWidget.w_create()">Thêm mới</div>
-            </div>
             <div id="nicescroll-sidebar" class="zX nicescroll">
                 <nav role="navigation">
                     <div class="kL"></div>
@@ -132,10 +123,12 @@
                                 <div class="col-2" role="presentation"></div>
                                 <div class="col-3" role="presentation"></div>
                                 <div class="col-4" role="presentation"></div>
+                                <div class="col-5" role="presentation"></div>
+                                <div class="col-6" role="presentation"></div>
                             </div>
                             <div class="hdG">
                                 <div class="dcB col-1" role="presentation">
-                                    <div class="dWB dWT" role="button" sort-name="ord_code" order-by="asc" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                    <div class="dWB dWT" role="button" sort-name="ord_no" order-by="asc" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Mã đơn hàng</div>
                                             <div class="mhH">
@@ -158,6 +151,52 @@
                                     </div>
                                 </div>
 								<div class="dcB col-2" role="presentation">
+                                    <div class="dWB" role="button" sort-name="ord_date" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                        <div class="dvJ">
+                                            <div class="tDv">Ngày Tạo</div>
+                                            <div class="mhH">
+                                                <div class="acD">
+                                                    <div class="huK">
+                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
+                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                        </svg>
+                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
+                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>	
+								<div class="dcB col-3" role="presentation">
+                                    <div class="dWB dWT" role="button" sort-name="sale_name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                        <div class="dvJ">
+                                            <div class="tDv">{{ __('Sale person') }}</div>
+                                            <div class="mhH">
+                                                <div class="acD">
+                                                    <div class="huK">
+                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
+                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                        </svg>
+                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
+                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>								
+                                <div class="dcB col-4" role="presentation">
                                     <div class="dWB dWT" role="button" sort-name="cus_name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Khách Hàng</div>
@@ -179,11 +218,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>	
-								<div class="dcB col-3" role="presentation">
-                                    <div class="dWB dWT" role="button" sort-name="name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                </div>
+                                <div class="dcB col-5" role="presentation">
+                                    <div class="dWB dWT" role="button" sort-name="ord_amount_tax" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">Sale</div>
+                                            <div class="tDv">Tổng tiền</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -202,11 +241,34 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>								
-                                <div class="dcB col-4" role="presentation">
-                                    <div class="dWB" role="button" sort-name="ord_date" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                </div>
+                                <div class="dcB col-6" role="presentation">
+                                    <div class="dWB dWT" role="button" sort-name="ord_paid" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">Ngày Báo Giá</div>
+                                            <div class="tDv">Đã trả</div>
+                                            <div class="mhH">
+                                                <div class="acD">
+                                                    <div class="huK">
+                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
+                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                        </svg>
+                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
+                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dcB col-7" role="presentation">
+                                    <div class="dWB dWT" role="button" sort-name="ord_debt" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                        <div class="dvJ">
+                                            <div class="tDv">Còn nợ</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -241,29 +303,50 @@
                                                     <input type="checkbox" class="ckb-i" value="{{$order->ord_id}}" style="display: none"/>
                                                     <div class="asU ckb-c"></div>
                                                 </div>
-                                                <div class="nCT" title="{{$order->ord_code}}">
-                                                    <span>{{$order->ord_code}}</span>
+                                                <div class="nCT" title="{{$order->ord_no}}">
+                                                    <span>{{$order->ord_no}}</span>
                                                 </div>
                                             </div>
                                         </div>
 										<div class="tcB col-2">
+                                            <div class="cbo">
+                                                <div class="nCj" title="{{$order->ord_date}}">
+                                                    <span>{{date('Y/m/d',strtotime($order->ord_date))}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+										<div class="tcB col-3">
+                                            <div class="cbo">
+                                                <div class="nCj" title="{{$order->sale_name}}">
+                                                    <span>{{$order->sale_name}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tcB col-4">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$order->cus_name}}">
                                                     <span>{{$order->cus_name}}</span>
                                                 </div>
                                             </div>
                                         </div>
-										<div class="tcB col-3">
+                                        <div class="tcB col-5">
                                             <div class="cbo">
-                                                <div class="nCj" title="{{$order->name}}">
-                                                    <span>{{$order->name}}</span>
+                                                <div class="nCj" title="{{$order->ord_amount_tax}}">
+                                                    <span>{{number_format($order->ord_amount_tax)}}</span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tcB col-4">
+                                        <div class="tcB col-6">
                                             <div class="cbo">
-                                                <div class="nCj" title="{{$order->ord_date}}">
-                                                    <span>{{$order->ord_date}}</span>
+                                                <div class="nCj" title="{{$order->ord_paid}}">
+                                                    <span>{{number_format($order->ord_paid)}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tcB col-7">
+                                            <div class="cbo">
+                                                <div class="nCj" title="{{$order->ord_debt}}">
+                                                    <span>{{number_format($order->ord_debt)}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -334,111 +417,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="jAQ">
-                    <div class="aqI nicescroll" id="nicescroll-iput">
-						<form id="f-input">
-							<div class="row z-mgl z-mgr">
-								<div class="col-sm-2 col-md-2 col-xl-2 z-pdl">
-									<div class="image-upload mb-1" style="max-width: 150px; max-height: 150px">
-										<img id="avt_img" src="{{ asset("images/avatar.png") }}" img-name="" style="height: 150px; width:150px" alt="" class="img-thumbnail img-show ">
-										<input  id="avatar" type="file" accept="image/*" name="cus_avatar" is-change="true" style="display:none">
-									</div>
-								</div>
-								<div class="col-sm-5 col-md-5 col-xl-5">
-									<input type="hidden" name="cus_id" value="0"/>
-									@include('components.input',['type'=>'disabled', 'control_id'=>'cus_code', 'label'=>'Mã'])
-									@include('components.input',['type'=>'disabled', 'control_id'=>'cus_name', 'label'=>'Tên khách hàng'])
-									@include('components.input',['type'=>'disabled', 'control_id'=>'cus_type', 'label'=>'Loại khách hàng'])
-									@include('components.input',['type'=>'required', 'control_id'=>'exp_date', 'label'=>'Ngày hết hạn', 'length'=>10])
-								</div>
-								<div class="col-sm-5 col-md-5 col-xl-5 z-pdr cus-part-2">
-									@include('components.input',['type'=>'disabled', 'control_id'=>'cus_phone', 'label'=>'Số điện thoại'])
-									@include('components.input',['type'=>'disabled', 'control_id'=>'cus_fax', 'label'=>'Fax'])
-									@include('components.input',['type'=>'disabled', 'control_id'=>'cus_mail', 'label'=>'Email'])
-								</div>
-							</div>
-								
-							<div class="row z-mgl z-mgr" style="margin-top:30px;border:1px solid #f1f1f1;width:98%; padding:10px">
-								<h3 style="color:#194078;width:100%"><b>Bơm:<b></h3>
-								<table class="pro-table" id="p_tab">
-									<tr>
-										<th>STT</th>
-										<th>Thông số kĩ thuật</th>
-										<th>Đơn vị</th>
-										<th>Số lượng</th>
-										<th>Thời gian giao hàng</th>
-										<th>Trạng thái</th>
-										<th>Đơn giá (VNĐ)</th>
-										<th>Thành tiền (VNĐ)</th>
-										<th>Xóa</th>
-									</tr>
-									<tr>
-										<td class="index_no">1</td>
-										<td><textarea size="5" name="new_p_specs[]" class="inp-specs"></textarea></td>
-										<td><input type="text" name="new_p_unit[]" class="inp70"/></td>
-										<td><input type="text" name="new_p_amount[]" class="inp70"/></td>
-										<td><input type="text" name="new_p_delivery_date[]" class="inp100"/></td>
-										<td>
-											<select name="status" class="inp100">
-												<option value="1" selected>Sẵn có</option>
-												<option value="0">Order</option>
-											</select>
-										</td>
-										<td><input type="text" name="new_p_price[]" class="inp100"/></td>
-										<td><input type="text" name="new_p_total[]" class="inp130"/></td>
-										<td><a href="#" class="delete_p_row"><i class="far fa-trash-alt" style="color:red"></i></a></td>
-									</tr>
-								</table>
-							</div>
-							
-							<div id="add-pump" style="margin-top:30px" class="btn-a" onclick="jQuery.UbizOIWidget.w_add_p_row()">Thêm bơm</div>
-						
-							<div class="row z-mgl z-mgr" style="margin-top:30px;border:1px solid #f1f1f1;width:98%; padding:10px">
-								<h3 style="color:#194078;width:100%"><b>Phụ tùng:<b></h3>
-								<table class="pro-table" id="f_tab">
-									<tr>
-										<th>STT</th>
-										<th>Mã</th>
-										<th>Tên</th>
-										<th>Đơn vị</th>
-										<th>Số lượng</th>
-										<th>Thời gian giao hàng</th>
-										<th>Trạng thái</th>
-										<th>Đơn giá (VNĐ)</th>
-										<th>Thành tiền (VNĐ)</th>
-										<th>Xóa</th>
-									</tr>
-									<tr>
-										<td class="index_f_no">1</td>
-										<td><input type="text" name="new_f_code[]" class="inp70"/></td>
-										<td><input type="text" name="new_f_name[]" class="inp130"/></td>
-										<td><input type="text" name="new_f_unit[]" class="inp70"/></td>
-										<td><input type="text" name="new_f_amount[]" class="inp70"/></td>
-										<td><input type="text" name="new_f_delivery_date[]" class="inp100"/></td>
-										<td>
-											<select name="new_f_status[]" class="inp100">
-												<option value="1" selected>Sẵn có</option>
-												<option value="0">Order</option>
-											</select>
-										</td>
-										<td><input type="text" name="new_f_price[]" class="inp100"/></td>
-										<td><input type="text" name="new_f_total[]" class="inp110"/></td>
-										<td><a href="#" class="delete_f_row"><i class="far fa-trash-alt" style="color:red"></i></a></td>
-									</tr>
-								</table>
-								
-								<div id="add-accessory" style="margin-top:30px" class="btn-a" onclick="jQuery.UbizOIWidget.w_add_f_row()">Thêm phụ tùng</div>
-							</div>
-							<input type="hidden" name="ord_id" value=""/>
-						</form>
-						
-						<div id="total_price" style="float:right; margin-right: 50px; color: #195BA8; font-weight: 500">
-							<table id="total-table">
-								
-                    		</table>
-                    	</div>
                     </div>
                 </div>
             </div>

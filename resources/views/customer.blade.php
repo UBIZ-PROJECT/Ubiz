@@ -455,10 +455,10 @@
                                         <div class="wrapper">
                                             <label for="user_id" class="ms-Label root-56 lbl-primary" style="">Loại khách hàng:&nbsp;&nbsp;&nbsp;</label>
                                             <div class="fieldGroup">
-                                                <select name="cus_type">
-                                    				<option value="1">Khách hàng mới</option>
-                                    				<option value="2">Khách hàng cũ</option>
-                                    				<option value="3">Khách hàng thân thiết</option>
+                                                <select class="dropdown_field" name="cus_type">
+                                                    @foreach($customerTypeList as $item)
+                                                        <option value="{{ $item->id }}">{{ $item->title }}</option>
+                                                    @endforeach
                                     			</select>
                                             </div>
                                         </div>
@@ -479,9 +479,9 @@
                                         <div class="wrapper">
                                             <label for="user_id" class="ms-Label root-56 lbl-primary" style="">Nhân viên phụ trách:&nbsp;&nbsp;&nbsp;</label>
                                             <div class="fieldGroup">
-                                                <select name="user_id">
+                                                <select class="dropdown_field" name="user_id">
                                     				@foreach($users as $user)
-                                    				<option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    				    <option value="{{ $user->id }}">{{ $user->name }}</option>
                                     				@endforeach
                                     			</select>
                                             </div>
