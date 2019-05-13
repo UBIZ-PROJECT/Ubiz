@@ -35,8 +35,8 @@ function prod_row_copy(self) {
         });
         return false;
     }
-    var qp_tax = numeral($("input[name=qp_tax]").val()).value();
-    var dt_amount_tax_total = dt_amount_total + (dt_amount_total * qp_tax / 100);
+    var ord_tax = numeral($("input[name=ord_tax]").val()).value();
+    var dt_amount_tax_total = dt_amount_total + (dt_amount_total * ord_tax / 100);
     if (max_validator(dt_amount_tax_total, max_double, 'double') == false) {
 
         var message = i18next.t("System doesn't support money bigger than :max.", {
@@ -80,7 +80,7 @@ function prod_row_copy(self) {
             var copy_tinymce_content = tinyMCE.get(copy_tinymce_selector).getContent();
             tinyMCE.get(dt_prod_specs_mce_id).setContent(copy_tinymce_content);
             add_row.find('input[name=dt_prod_model]').focus();
-            qp_set_total(dt_amount_total, dt_amount_tax_total);
+            ord_set_total(dt_amount_total, dt_amount_tax_total);
             nicescroll_resize("#nicescroll-iput");
         },
         plugins: [
@@ -162,9 +162,9 @@ function prod_row_del(self) {
     }
 
     var dt_amount_total = dt_get_amount_total();
-    var qp_tax = numeral($("input[name=qp_tax]").val()).value();
-    var dt_amount_tax_total = dt_amount_total + (dt_amount_total * qp_tax / 100);
-    qp_set_total(dt_amount_total, dt_amount_tax_total);
+    var ord_tax = numeral($("input[name=ord_tax]").val()).value();
+    var dt_amount_tax_total = dt_amount_total + (dt_amount_total * ord_tax / 100);
+    ord_set_total(dt_amount_total, dt_amount_tax_total);
 
     prod_row_set_no();
     nicescroll_resize("#nicescroll-iput");
@@ -273,8 +273,8 @@ function acce_row_copy(self) {
         });
         return false;
     }
-    var qp_tax = numeral($("input[name=qp_tax]").val()).value();
-    var dt_amount_tax_total = dt_amount_total + (dt_amount_total * qp_tax / 100);
+    var ord_tax = numeral($("input[name=ord_tax]").val()).value();
+    var dt_amount_tax_total = dt_amount_total + (dt_amount_total * ord_tax / 100);
     if (max_validator(dt_amount_tax_total, max_double, 'double') == false) {
 
         var message = i18next.t("System doesn't support money bigger than :max.", {
@@ -303,9 +303,9 @@ function acce_row_copy(self) {
     copy_row.next('div.dt-row').attr('dt_id', '0');
 
     var dt_amount_total = dt_get_amount_total();
-    var qp_tax = numeral($("input[name=qp_tax]").val()).value();
-    var dt_amount_tax_total = dt_amount_total + (dt_amount_total * qp_tax / 100);
-    qp_set_total(dt_amount_total, dt_amount_tax_total);
+    var ord_tax = numeral($("input[name=ord_tax]").val()).value();
+    var dt_amount_tax_total = dt_amount_total + (dt_amount_total * ord_tax / 100);
+    ord_set_total(dt_amount_total, dt_amount_tax_total);
 }
 
 function acce_row_add() {
@@ -348,9 +348,9 @@ function acce_row_del(self) {
     nicescroll_resize("#nicescroll-iput");
 
     var dt_amount_total = dt_get_amount_total();
-    var qp_tax = numeral($("input[name=qp_tax]").val()).value();
-    var dt_amount_tax_total = dt_amount_total + (dt_amount_total * qp_tax / 100);
-    qp_set_total(dt_amount_total, dt_amount_tax_total);
+    var ord_tax = numeral($("input[name=ord_tax]").val()).value();
+    var dt_amount_tax_total = dt_amount_total + (dt_amount_total * ord_tax / 100);
+    ord_set_total(dt_amount_total, dt_amount_tax_total);
 }
 
 function acce_row_clean(row) {
@@ -493,8 +493,8 @@ function dt_quantity_change(self) {
         return false;
     }
 
-    var qp_tax = numeral($("input[name=qp_tax]").val()).value();
-    var dt_amount_tax_total = dt_amount_total + (dt_amount_total * qp_tax / 100);
+    var ord_tax = numeral($("input[name=ord_tax]").val()).value();
+    var dt_amount_tax_total = dt_amount_total + (dt_amount_total * ord_tax / 100);
     if (max_validator(dt_amount_tax_total, max_double, 'double') == false) {
 
         dt_row_rollback(dt_row);
@@ -509,7 +509,7 @@ function dt_quantity_change(self) {
     }
 
     dt_row_set_old_data(dt_row);
-    qp_set_total(dt_amount_total, dt_amount_tax_total);
+    ord_set_total(dt_amount_total, dt_amount_tax_total);
 
 }
 
@@ -560,8 +560,8 @@ function dt_price_change(self) {
         return false;
     }
 
-    var qp_tax = numeral($("input[name=qp_tax]").val()).value();
-    var dt_amount_tax_total = dt_amount_total + (dt_amount_total * qp_tax / 100);
+    var ord_tax = numeral($("input[name=ord_tax]").val()).value();
+    var dt_amount_tax_total = dt_amount_total + (dt_amount_total * ord_tax / 100);
     if (max_validator(dt_amount_tax_total, max_double, 'double') == false) {
 
         dt_row_rollback(dt_row);
@@ -576,7 +576,7 @@ function dt_price_change(self) {
     }
 
     dt_row_set_old_data(dt_row);
-    qp_set_total(dt_amount_total, dt_amount_tax_total);
+    ord_set_total(dt_amount_total, dt_amount_tax_total);
 }
 
 function dt_amount_change(self) {
@@ -610,8 +610,8 @@ function dt_amount_change(self) {
         return false;
     }
 
-    var qp_tax = numeral($("input[name=qp_tax]").val()).value();
-    var dt_amount_tax_total = dt_amount_total + (dt_amount_total * qp_tax / 100);
+    var ord_tax = numeral($("input[name=ord_tax]").val()).value();
+    var dt_amount_tax_total = dt_amount_total + (dt_amount_total * ord_tax / 100);
     if (max_validator(dt_amount_tax_total, max_double, 'double') == false) {
 
         dt_row_rollback(dt_row);
@@ -626,7 +626,7 @@ function dt_amount_change(self) {
     }
 
     dt_row_set_old_data(dt_row);
-    qp_set_total(dt_amount_total, dt_amount_tax_total);
+    ord_set_total(dt_amount_total, dt_amount_tax_total);
 }
 
 function dt_get_amount_total() {
@@ -729,24 +729,29 @@ function dt_row_colect_data() {
     return dt_rows;
 }
 
-function qp_set_total(qp_amount, qp_amount_tax) {
+function ord_set_total(ord_amount, ord_amount_tax) {
 
-    $('input[name=qp_amount]').val(numeral(qp_amount).format('0,0'));
-    $('input[name=qp_amount_tax]').val(numeral(qp_amount_tax).format('0,0'));
+    var ord_paid = numeral($('input[name=ord_paid]').val()).value();
+    var ord_debt = ord_amount_tax - ord_paid;
 
-    $('input[name=qp_amount_old]').val(numeral(qp_amount).format('0,0'));
-    $('input[name=qp_amount_tax_old]').val(numeral(qp_amount_tax).format('0,0'));
+    $('input[name=ord_amount]').val(numeral(ord_amount).format('0,0'));
+    $('input[name=ord_amount_tax]').val(numeral(ord_amount_tax).format('0,0'));
+    $('input[name=ord_debt]').val(numeral(ord_debt).format('0,0'));
+
+    $('input[name=ord_amount_old]').val(numeral(ord_amount).format('0,0'));
+    $('input[name=ord_amount_tax_old]').val(numeral(ord_amount_tax).format('0,0'));
+    $('input[name=ord_debt_old]').val(numeral(ord_debt).format('0,0'));
 }
 
-function qp_no_change(self) {
+function ord_no_change(self) {
 
-    var qp_no = $(self).val();
-    if (qp_no == '') {
+    var ord_no = $(self).val();
+    if (ord_no == '') {
 
-        var qp_no_old = $('input[name=qp_no_old]').val();
-        $(self).val(qp_no_old);
+        var ord_no_old = $('input[name=ord_no_old]').val();
+        $(self).val(ord_no_old);
 
-        var message = i18next.t("QP No is required.");
+        var message = i18next.t("Order No is required.");
         swal({
             type: 'error',
             text: message
@@ -754,18 +759,18 @@ function qp_no_change(self) {
         return false;
     }
 
-    $('input[name=qp_no_old]').val(qp_no);
+    $('input[name=ord_no_old]').val(ord_no);
 }
 
-function qp_date_change(self) {
+function ord_date_change(self) {
 
-    var qp_date = $(self).val();
-    if (qp_date == '') {
+    var ord_date = $(self).val();
+    if (ord_date == '') {
 
-        var qp_date_old = $('input[name=qp_date_old]').val();
-        $(self).val(qp_date_old);
+        var ord_date_old = $('input[name=ord_date_old]').val();
+        $(self).val(ord_date_old);
 
-        var message = i18next.t("QP Date is required.");
+        var message = i18next.t("Order Date is required.");
         swal({
             type: 'error',
             text: message
@@ -773,11 +778,11 @@ function qp_date_change(self) {
         return false;
     }
 
-    if (moment(qp_date).isValid() == false) {
-        var qp_date_old = $('input[name=qp_date_old]').val();
-        $(self).val(qp_date_old);
+    if (moment(ord_date).isValid() == false) {
+        var ord_date_old = $('input[name=ord_date_old]').val();
+        $(self).val(ord_date_old);
 
-        var message = i18next.t("QP Date is wrong format YYYY/MM/DD");
+        var message = i18next.t("Order Date is wrong format YYYY/MM/DD");
         swal({
             type: 'error',
             text: message
@@ -785,51 +790,18 @@ function qp_date_change(self) {
         return false;
     }
 
-    qp_date = moment(qp_date).format('YYYY/MM/DD');
-    $(self).val(qp_date);
-    $('input[name=qp_date_old]').val(qp_date);
+    ord_date = moment(ord_date).format('YYYY/MM/DD');
+    $(self).val(ord_date);
+    $('input[name=ord_date_old]').val(ord_date);
 }
 
-function qp_exp_date_change(self) {
+function ord_tax_change(self) {
 
-    var qp_exp_date = $(self).val();
-    if (qp_exp_date == '') {
+    var ord_tax = numeral($(self).val()).value();
+    if (max_validator(ord_tax, 100, 'integer') == false) {
 
-        var qp_exp_date_old = $('input[name=qp_exp_date_old]').val();
-        $(self).val(qp_exp_date_old);
-
-        var message = i18next.t("QP Exp Date is required.");
-        swal({
-            type: 'error',
-            text: message
-        });
-        return false;
-    }
-
-    if (moment(qp_exp_date).isValid() == false) {
-        var qp_exp_date_old = $('input[name=qp_exp_date_old]').val();
-        $(self).val(qp_exp_date_old);
-
-        var message = i18next.t("QP Date is wrong format YYYY/MM/DD");
-        swal({
-            type: 'error',
-            text: message
-        });
-        return false;
-    }
-
-    qp_exp_date = moment(qp_exp_date).format('YYYY/MM/DD');
-    $(self).val(qp_exp_date);
-    $('input[name=qp_exp_date_old]').val(qp_exp_date);
-}
-
-function qp_tax_change(self) {
-
-    var qp_tax = numeral($(self).val()).value();
-    if (max_validator(qp_tax, 100, 'integer') == false) {
-
-        var qp_tax_old = numeral($('input[name=qp_tax_old]').val()).format('0,0');
-        $(self).val(qp_tax_old);
+        var ord_tax_old = numeral($('input[name=ord_tax_old]').val()).format('0,0');
+        $(self).val(ord_tax_old);
 
         var message = i18next.t("System doesn't support tax bigger than :max.", {
             'max': 100
@@ -841,12 +813,12 @@ function qp_tax_change(self) {
         return false;
     }
 
-    var qp_amount = numeral($('input[name=qp_amount]').val()).value();
-    var qp_amount_tax = qp_amount + (qp_amount * qp_tax / 100);
-    if (max_validator(qp_amount_tax, max_double, 'double') == false) {
+    var ord_amount = numeral($('input[name=ord_amount]').val()).value();
+    var ord_amount_tax = ord_amount + (ord_amount * ord_tax / 100);
+    if (max_validator(ord_amount_tax, max_double, 'double') == false) {
 
-        var qp_tax_old = numeral($('input[name=qp_tax_old]').val()).format('0,0');
-        $(self).val(qp_tax_old);
+        var ord_tax_old = numeral($('input[name=ord_tax_old]').val()).format('0,0');
+        $(self).val(ord_tax_old);
 
         var message = i18next.t("System doesn't support money bigger than :max.", {
             'max': numeral(max_double).format('0,0')
@@ -857,35 +829,62 @@ function qp_tax_change(self) {
         });
         return false;
     }
-    $('input[name=qp_tax_old]').val(qp_tax);
-    qp_set_total(qp_amount, qp_amount_tax);
+    $('input[name=ord_tax_old]').val(ord_tax);
+    ord_set_total(ord_amount, ord_amount_tax);
 }
 
-function qp_colect_data() {
+function ord_paid_change(self) {
+
+    var ord_paid = numeral($(self).val()).value();
+    if (max_validator(ord_paid, max_double, 'double') == false) {
+
+        ord_rollback_total();
+        var message = i18next.t("System doesn't support money bigger than :max.", {
+            'max': numeral(max_double).format('0,0')
+        });
+        swal({
+            type: 'error',
+            text: message
+        });
+        return false;
+    }
+    $('input[name=ord_paid_old]').val(ord_paid);
+    var ord_amount = numeral($('input[name=ord_amount]').val()).value();
+    var ord_amount_tax = numeral($('input[name=ord_amount_tax]').val()).value();
+    ord_set_total(ord_amount, ord_amount_tax);
+}
+
+function ord_colect_data() {
     var data = {};
-    data.qp_id = $("input[name=qp_id]").val();
-    data.qp_no = $("input[name=qp_no]").val();
-    data.qp_date = $("input[name=qp_date]").val();
-    data.qp_exp_date = $("input[name=qp_exp_date]").val();
-    data.qp_note = $("textarea[name=qp_note]").val();
-    data.qp_tax = numeral($("input[name=qp_tax]").val()).value();
-    data.qp_amount = numeral($("input[name=qp_amount]").val()).value();
-    data.qp_amount_tax = numeral($("input[name=qp_amount_tax]").val()).value();
+    data.ord_id = $("input[name=ord_id]").val();
+    data.ord_no = $("input[name=ord_no]").val();
+    data.ord_date = $("input[name=ord_date]").val();
+    data.ord_note = $("textarea[name=ord_note]").val();
+    data.ord_tax = numeral($("input[name=ord_tax]").val()).value();
+    data.ord_amount = numeral($("input[name=ord_amount]").val()).value();
+    data.ord_amount_tax = numeral($("input[name=ord_amount_tax]").val()).value();
+    data.ord_paid = numeral($("input[name=ord_paid]").val()).value();
+    data.ord_debt = numeral($("input[name=ord_debt]").val()).value();
     return data;
 }
 
-function qp_rollback_total() {
-    var qp_amount_old = numeral($('input[name=qp_amount_old]').val()).format('0,0');
-    var qp_amount_tax_old = numeral($('input[name=qp_amount_tax_old]').val()).format('0,0');
-    $('input[name=qp_amount]').val(qp_amount_old);
-    $('input[name=qp_amount_tax]').val(qp_amount_tax_old);
+function ord_rollback_total() {
+    var ord_amount_old = numeral($('input[name=ord_amount_old]').val()).format('0,0');
+    var ord_amount_tax_old = numeral($('input[name=ord_amount_tax_old]').val()).format('0,0');
+    var ord_paid_old = numeral($('input[name=ord_paid_old]').val()).format('0,0');
+    var ord_debt_old = numeral($('input[name=ord_debt_old]').val()).format('0,0');
+
+    $('input[name=ord_amount]').val(ord_amount_old);
+    $('input[name=ord_amount_tax]').val(ord_amount_tax_old);
+    $('input[name=ord_paid]').val(ord_paid_old);
+    $('input[name=ord_debt]').val(ord_debt_old);
 }
 
-function qp_back_to_output() {
-    window.location.href = "/quoteprices";
+function ord_back_to_output() {
+    window.location.href = "/orders";
 }
 
-function qp_save() {
+function ord_save() {
     swal({
         title: i18next.t('Do you want to save the data.?'),
         type: 'warning',
@@ -898,20 +897,20 @@ function qp_save() {
     }).then((result) => {
         if (result.value) {
             var data = {};
-            data.quoteprice = qp_colect_data();
-            data.quoteprice_detail = dt_row_colect_data();
-            ubizapis('v1', '/quoteprices/' + data.quoteprice.qp_id + '/update', 'post', {'data': data}, null, qp_save_callback);
+            data.order = ord_colect_data();
+            data.order_detail = dt_row_colect_data();
+            ubizapis('v1', '/orders/' + data.order.ord_id + '/update', 'post', {'data': data}, null, ord_save_callback);
         }
     })
 }
 
-function qp_save_callback(response) {
+function ord_save_callback(response) {
     if (response.data.success == true) {
         swal.fire({
             type: 'success',
             title: response.data.message,
             onClose: () => {
-                qp_back_to_output();
+                ord_back_to_output();
             }
         })
 
@@ -923,7 +922,7 @@ function qp_save_callback(response) {
     }
 }
 
-function qp_delete() {
+function ord_delete() {
     swal({
         title: i18next.t('Do you want to delete the data?'),
         text: i18next.t('Once deleted, you will not be able to recover this data!'),
@@ -936,19 +935,19 @@ function qp_delete() {
         reverseButtons: true
     }).then((result) => {
         if (result.value) {
-            var qp_id = $("input[name=qp_id]").val();
-            ubizapis('v1', '/quoteprices/' + qp_id + '/delete', 'delete', null, null, qp_delete_callback);
+            var ord_id = $("input[name=ord_id]").val();
+            ubizapis('v1', '/orders/' + ord_id + '/delete', 'delete', null, null, ord_delete_callback);
         }
     })
 }
 
-function qp_delete_callback(response) {
+function ord_delete_callback(response) {
     if (response.data.success == true) {
         swal.fire({
             type: 'success',
             title: response.data.message,
             onClose: () => {
-                qp_back_to_output();
+                ord_back_to_output();
             }
         })
 
@@ -960,7 +959,7 @@ function qp_delete_callback(response) {
     }
 }
 
-function qp_refresh() {
+function ord_refresh() {
     swal({
         title: i18next.t('Do you want to refresh the data.?'),
         type: 'warning',

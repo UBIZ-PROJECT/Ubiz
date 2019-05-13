@@ -75,6 +75,11 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::post('pricing-update', ['as' => 'update-pricing', 'uses' => 'Api\PricingController@updatePricing']);
         Route::delete('pricing/{ids}/delete', ['as' => 'delete-pricing', 'uses' => 'Api\PricingController@deletePricing']);
 
+        Route::get('quoteprices', ['as' => 'api-get-quoteprices', 'uses' => 'Api\QuotepriceController@getQuoteprices']);
+        Route::post('quoteprices/{cus_id}/insert', ['as' => 'api-insert-quoteprice', 'uses' => 'Api\QuotepriceController@insertQuoteprice'])->where('cus_id', '[0-9]+');
+        Route::post('quoteprices/{qp_id}/update', ['as' => 'api-update-quoteprice', 'uses' => 'Api\QuotepriceController@updateQuoteprice'])->where('cus_id', '[0-9]+');
+        Route::delete('quoteprices/{qp_ids}/delete', ['as' => 'api-delete-quoteprices', 'uses' => 'Api\QuotepriceController@deleteQuoteprices'])->where('qp_ids', '^([0-9]+,)+[0-9]+|[0-9]+');
+
         Route::get('orders', ['as' => 'api-get-orders', 'uses' => 'Api\OrderController@getOrders']);
         Route::post('orders/{ord_id}/update', ['as' => 'api-update-order', 'uses' => 'Api\OrderController@updateOrder'])->where('ord_id', '[0-9]+');
         Route::delete('orders/{ord_ids}/delete', ['as' => 'api-delete-orders', 'uses' => 'Api\OrderController@deleteOrders'])->where('ord_ids', '^([0-9]+,)+[0-9]+|[0-9]+');
