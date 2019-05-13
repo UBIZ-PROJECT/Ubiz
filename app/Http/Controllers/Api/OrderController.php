@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Model\Order;
+use App\Model\Quoteprice;
+use App\Model\QuotepriceDetail;
 
 class OrderController extends Controller
 {
@@ -23,6 +25,29 @@ class OrderController extends Controller
                 'success' => true,
                 'message' => __('Successfully processed.')
             ], 200);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function createOrder($qp_id, Request $request)
+    {
+        try {
+
+            $qp = new Quoteprice();
+            $qpData = $qp->getQuoteprice($qp_id);
+            if (empty($qpData) == true || $qpData == null) {
+                return response()->json(['success' => false, 'message' => __('Data is wrong.!')], 200);
+            }
+
+            $qpDetail = new QuotepriceDetail();
+            $qpDetailData = $qpDetail->getQuotepriceDetailsByQpId($qp_id);
+
+            //create order
+            $order = new Order();
+            $ord_id = $order->transactionCreateOrder($qpData, $qpDetailData);
+
+            return response()->json(['ord_id' => $ord_id,'success' => true, 'message' => __('Successfully processed.')], 200);
         } catch (\Throwable $e) {
             throw $e;
         }

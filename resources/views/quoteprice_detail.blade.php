@@ -89,6 +89,13 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="GNi" onclick="qp_send()">
+                                    <div class="ax7 poK utooltip" title="{{ __("Send QP to customer") }}">
+                                        <div class="asA">
+                                            <div class="arF"></div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div id="btn-delete" class="GNi" onclick="qp_delete()">
                                     <div class="ax7 poK utooltip" title="{{ __("Delete") }}">
                                         <div class="asA">
@@ -100,7 +107,7 @@
                             <div class="col-7 text-left pdt-5">
                                 <ul class="nav nav-wizard">
                                     <li class="done"><a href="#">{{ __('QP') }}</a></li>
-                                    <li class="active"><a href="#">{{ __('Order') }}</a></li>
+                                    <li class="undone"><a href="#" onclick="qp_create_order()">{{ __('Order') }}</a></li>
                                     <li class="undone"><a href="#">{{ __('Import') }}</a></li>
                                     <li class="undone"><a href="#">{{ __('Contract') }}</a></li>
                                     <li class="undone"><a href="#">{{ __('Delivery') }}</a></li>
@@ -170,25 +177,25 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-auto">
-                                        @include('components.dropdown',['value'=>$quoteprice->cad_id, 'control_id'=>'qp_cad_id', 'width'=> '630', 'lbl_width'=>'90', 'label'=>__('Address') ,'data'=> $cusAddress])
+                                        @include('components.dropdown',['value'=>$quoteprice->cad_id, 'control_id'=>'qp_cad_id', 'width'=> '630', 'lbl_width'=>'50', 'label'=>__('Address') ,'data'=> $cusAddress])
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-auto">
                                         <div class="row">
                                             <div class="col-md-auto">
-                                                @include('components.input',['control_id'=>'contact_name', 'value'=> '', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Contact person'), 'i_focus'=>'', 'i_blur'=>''])
+                                                @include('components.input',['control_id'=>'qp_contact_name', 'value'=> $quoteprice->contact_name, 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Contact person'), 'i_focus'=>'', 'i_blur'=>''])
                                             </div>
                                             <div class="col-md-auto">
-                                                @include('components.input',['control_id'=>'contact_duty', 'value'=> '', 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Duty'), 'i_focus'=>'', 'i_blur'=>''])
+                                                @include('components.input',['control_id'=>'qp_contact_rank', 'value'=> $quoteprice->contact_rank, 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Duty'), 'i_focus'=>'', 'i_blur'=>''])
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-auto">
-                                                @include('components.input',['control_id'=>'contact_mobile', 'value'=> '', 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Phone'), 'i_focus'=>'', 'i_blur'=>''])
+                                                @include('components.input',['control_id'=>'qp_contact_phone', 'value'=> $quoteprice->contact_phone, 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Phone'), 'i_focus'=>'', 'i_blur'=>''])
                                             </div>
                                             <div class="col-md-auto">
-                                                @include('components.input',['control_id'=>'contact_email', 'value'=> '', 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Email'), 'i_focus'=>'', 'i_blur'=>''])
+                                                @include('components.input',['control_id'=>'qp_contact_email', 'value'=> $quoteprice->contact_email, 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Email'), 'i_focus'=>'', 'i_blur'=>''])
                                             </div>
                                         </div>
                                         <div class="row">
@@ -237,15 +244,15 @@
                                                     <textarea name="dt_prod_specs_mce" id="dt_prod_specs_mce_1">{{ $item->prod_specs_mce }}</textarea>
                                                 </div>
                                                 <div class="col-md-auto">
-                                                    @include('components.textarea',['value'=>$item->note, 'width'=>'250', 'height'=>'100', 'control_id'=>'dt_note', 'resize'=>'none', 'label'=>__('Note')])
-                                                </div>
-                                                <div class="col-md-auto">
                                                     @include('components.input',['value'=>$item->unit, 'control_id'=>'dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit'), 'class'=> 'text-right', 'i_focus'=>'', 'i_blur'=>''])
                                                     @include('components.number',['value'=>number_format($item->quantity), 'onchange'=>'dt_quantity_change(this)', 'control_id'=>'dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity'), 'class'=> 'text-right'])
                                                     @include('components.textarea',['value'=>$item->delivery_time, 'control_id'=>'dt_delivery_time', 'width'=>'250', 'height'=>'50', 'resize'=>'none', 'class'=> 'margin-bottom-15', 'label'=>__('Delivery time')])
                                                     @include('components.dropdown',['value'=>$item->status, 'control_id'=>'dt_status', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Status') ,'data'=> $prdStatus])
                                                     @include('components.money',['value'=> number_format($item->price), 'onchange'=>'dt_price_change(this)', 'control_id'=>'dt_price', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price'), 'class'=> 'text-right'])
                                                     @include('components.money',['value'=>number_format($item->amount), 'onchange'=>'dt_amount_change(this)', 'control_id'=>'dt_amount', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Amount'), 'class'=> 'text-right'])
+                                                </div>
+                                                <div class="col-md-auto">
+                                                    @include('components.textarea',['value'=>$item->note, 'width'=>'250', 'height'=>'100', 'control_id'=>'dt_note', 'resize'=>'none', 'label'=>__('Note')])
                                                 </div>
                                                 <div class="col-md-auto z-pdr text-center">
                                                     <i onclick="prod_row_copy(this)"
@@ -443,5 +450,5 @@
     </div>
 @endsection
 @section('end-javascript')
-    <script type="text/javascript" src="{{ asset('js/quoteprice_input.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/quoteprice_detail.js') }}"></script>
 @endsection

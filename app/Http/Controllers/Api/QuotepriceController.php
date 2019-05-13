@@ -5,20 +5,21 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-use App\Model\Order;
+use App\Model\Quoteprice;
+use App\Model\Customer;
 
 class QuotepriceController extends Controller
 {
-    public function getOrders(Request $request)
+    public function getQuoteprices(Request $request)
     {
         try {
-            $order = new Order();
+            $qp = new Quoteprice();
             list($page, $sort, $search) = $this->getRequestData($request);
-            $orderData = $order->getOrders($page, $sort, $search);
-            $pagingData = $order->getPagingInfo($search);
+            $qpData = $qp->getQuoteprices($page, $sort, $search);
+            $pagingData = $qp->getPagingInfo($search);
             $pagingData['page'] = $page;
             return response()->json([
-                'orders' => $orderData,
+                'quoteprices' => $qpData,
                 'paging' => $pagingData,
                 'success' => true,
                 'message' => __('Successfully processed.')
@@ -28,7 +29,7 @@ class QuotepriceController extends Controller
         }
     }
 
-    public function updateOrder($ord_id, Request $request)
+    public function createQuoteprice($cus_id, Request $request)
     {
         try {
 
@@ -37,14 +38,20 @@ class QuotepriceController extends Controller
                 return response()->json(['success' => false, 'message' => __('Data is wrong.!')], 200);
             }
 
-            $order = new Order();
-            $validator = $order->validateData($data);
+            $cus = new Customer();
+            $cusData = $cus->getCustomerById($cus_id);
+            if ($cusData == null) {
+                return response()->json(['success' => false, 'message' => __('Data is wrong.!')], 200);
+            }
+
+            $qp = new Quoteprice();
+            $validator = $qp->validateData($data);
             if ($validator['success'] == false) {
                 return response()->json(['success' => false, 'message' => $validator['message']], 200);
             }
 
-            //update order
-            $order->transactionUpdateOrder($ord_id, $data);
+            //create quoteprice
+            $qp->transactionCreateQuoteprice($cus_id, $data);
 
             return response()->json(['success' => true, 'message' => __('Successfully processed.')], 200);
         } catch (\Throwable $e) {
@@ -52,7 +59,31 @@ class QuotepriceController extends Controller
         }
     }
 
-    public function deleteOrders($ord_ids, Request $request)
+    public function updateQuoteprice($ord_id, Request $request)
+    {
+        try {
+
+            $data = $request->get('data', null);
+            if (empty($data) == true || $data == null) {
+                return response()->json(['success' => false, 'message' => __('Data is wrong.!')], 200);
+            }
+
+            $qp = new Quoteprice();
+            $validator = $qp->validateData($data);
+            if ($validator['success'] == false) {
+                return response()->json(['success' => false, 'message' => $validator['message']], 200);
+            }
+
+            //update quoteprice
+            $qp->transactionUpdateQuoteprice($ord_id, $data);
+
+            return response()->json(['success' => true, 'message' => __('Successfully processed.')], 200);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function deleteQuoteprices($ord_ids, Request $request)
     {
         try {
 
@@ -60,8 +91,8 @@ class QuotepriceController extends Controller
                 return response()->json(['success' => false, 'message' => __('Successfully processed.')], 200);
             }
 
-            $order = new Order();
-            $order->transactionDeleteOrdersByIds($ord_ids);
+            $qp = new Quoteprice();
+            $qp->transactionDeleteQuotepricesByIds($ord_ids);
 
             return response()->json(['success' => true, 'message' => __('Successfully processed.')], 200);
         } catch (\Throwable $e) {

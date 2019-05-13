@@ -194,7 +194,7 @@ class Quoteprice
                         $insert_quoteprice_detail_data[] = $quoteprice_detail_data;
                         break;
                     case'update':
-                        $quoteprice_detail_data["ordt_id"] = $item['dt_id'];
+                        $quoteprice_detail_data["qpdt_id"] = $item['dt_id'];
                         $update_quoteprice_detail_data[] = $quoteprice_detail_data;
                         break;
                     case'delete':
@@ -229,6 +229,68 @@ class Quoteprice
         }
     }
 
+    public function transactionCreateQuoteprice($cus_id, $data)
+    {
+        DB::beginTransaction();
+        try {
+
+            //insert quoteprice
+            $data['quoteprice']['cus_id'] = $cus_id;
+            $data['quoteprice']['sale_id'] = Auth::user()->id;
+            $data['quoteprice']['owner_id'] = Auth::user()->id;
+            $data['quoteprice']['inp_user'] = Auth::user()->id;
+            $data['quoteprice']['upd_user'] = Auth::user()->id;
+            $qp_id = $this->createQuoteprice($data['quoteprice']);
+
+            $insert_quoteprice_detail_data = [];
+            foreach ($data['quoteprice_detail'] as $item) {
+
+
+                $quoteprice_detail_data = [
+                    "qp_id" => $qp_id,
+                    "note" => $item['dt_note'],
+                    "unit" => $item['dt_unit'],
+                    "quantity" => $item['dt_quantity'],
+                    "status" => $item['dt_status'],
+                    "delivery_time" => $item['dt_delivery_time'],
+                    "price" => $item['dt_price'],
+                    "amount" => $item['dt_amount'],
+                    "type" => $item['dt_type'],
+                    "sort_no" => $item['dt_sort_no'],
+                    "owner_id" => Auth::user()->id,
+                    "upd_user" => Auth::user()->id,
+                    "inp_user" => Auth::user()->id
+                ];
+
+                if ($item['dt_type'] == '1') {
+                    $quoteprice_detail_data["prod_specs"] = $item['dt_prod_specs'];
+                    $quoteprice_detail_data["prod_specs_mce"] = $item['dt_prod_specs_mce'];
+                    $quoteprice_detail_data["acce_code"] = null;
+                    $quoteprice_detail_data["acce_name"] = null;
+                }
+
+                if ($item['dt_type'] == '2') {
+                    $quoteprice_detail_data["prod_specs"] = null;
+                    $quoteprice_detail_data["prod_specs_mce"] = null;
+                    $quoteprice_detail_data["acce_code"] = $item['dt_acce_code'];
+                    $quoteprice_detail_data["acce_name"] = $item['dt_acce_name'];
+                }
+                $insert_quoteprice_detail_data[] = $quoteprice_detail_data;
+            }
+
+            //insert quoteprice detail
+            $quotepriceDetail = new QuotepriceDetail();
+            if (!empty($insert_quoteprice_detail_data)) {
+                $quotepriceDetail->insertQuotepriceDetail($insert_quoteprice_detail_data);
+            }
+
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
     public function validateData($data)
     {
         try {
@@ -245,34 +307,34 @@ class Quoteprice
             $quoteprice = $data['quoteprice'];
             if (!array_key_exists('qp_no', $quoteprice) || $quoteprice['qp_no'] == '' || $quoteprice['qp_no'] == null) {
                 $res['success'] = false;
-                $message[] = __('QD No is required.');
+                $message[] = __('QP No is required.');
             }
             if (array_key_exists('qp_no', $quoteprice) && mb_strlen($quoteprice['qp_no'], "utf-8") > 10) {
                 $res['success'] = false;
-                $message[] = __('QD No is too long.');
+                $message[] = __('QP No is too long.');
             }
             if (!array_key_exists('qp_date', $quoteprice) || $quoteprice['qp_date'] == '' || $quoteprice['qp_date'] == null) {
                 $res['success'] = false;
-                $message[] = __('QD Date is required.');
+                $message[] = __('QP Date is required.');
             }
             if (array_key_exists('qp_date', $quoteprice) && Carbon::createFromFormat('Y/m/d', $quoteprice['qp_date']) == false) {
                 $res['success'] = false;
-                $message[] = __('QD Date is wrong format YYYY/MM/DD.');
+                $message[] = __('QP Date is wrong format YYYY/MM/DD.');
             }
-            if (!array_key_exists('qp_ex_date', $quoteprice) || $quoteprice['qp_ex_date'] == '' || $quoteprice['qp_ex_date'] == null) {
+            if (!array_key_exists('qp_exp_date', $quoteprice) || $quoteprice['qp_exp_date'] == '' || $quoteprice['qp_exp_date'] == null) {
                 $res['success'] = false;
-                $message[] = __('QD Exp Date is required.');
+                $message[] = __('QP Exp Date is required.');
             }
-            if (array_key_exists('qp_ex_date', $quoteprice) && Carbon::createFromFormat('Y/m/d', $quoteprice['qp_ex_date']) == false) {
+            if (array_key_exists('qp_exp_date', $quoteprice) && Carbon::createFromFormat('Y/m/d', $quoteprice['qp_exp_date']) == false) {
                 $res['success'] = false;
-                $message[] = __('QD Exp Date is wrong format YYYY/MM/DD.');
+                $message[] = __('QP Exp Date is wrong format YYYY/MM/DD.');
             }
 
             $amount_check = true;
             if (!array_key_exists('qp_tax', $quoteprice)) {
                 $amount_check = false;
                 $res['success'] = false;
-                $message[] = __('QD Tax is required.');
+                $message[] = __('QP Tax is required.');
             }
             if (!array_key_exists('qp_amount', $quoteprice)) {
                 $amount_check = false;
@@ -287,7 +349,7 @@ class Quoteprice
             if (array_key_exists('qp_tax', $quoteprice) && (is_numeric($quoteprice['qp_tax']) == false || intval($quoteprice['qp_tax']) < 0 || intval($quoteprice['qp_tax']) > 2147483647)) {
                 $amount_check = false;
                 $res['success'] = false;
-                $message[] = __('QD Tax is wrong data.');
+                $message[] = __('QP Tax is wrong data.');
             }
             if (array_key_exists('qp_amount', $quoteprice) && (is_numeric($quoteprice['qp_amount']) == false || floatval($quoteprice['qp_amount']) < 0 || floatval($quoteprice['qp_amount']) > 9223372036854775807)) {
                 $amount_check = false;
@@ -344,8 +406,6 @@ class Quoteprice
                     case '1':
                         if (!array_key_exists('dt_prod_specs_mce', $item)
                             || !array_key_exists('dt_prod_specs', $item)
-                            || !array_key_exists('dt_prod_model', $item)
-                            || !array_key_exists('dt_prod_series', $item)
                         ) {
                             $res['success'] = false;
                             $message[] = __('[Row : :line ] pump detail is wrong data.', ['line' => "No." + ($line_no + 1)]);
@@ -398,14 +458,13 @@ class Quoteprice
         }
     }
 
-    public function insertQuoteprice()
+    public function createQuoteprice($data)
     {
         try {
-
+            return DB::table('quoteprice')->insertGetId($data);
         } catch (\Throwable $e) {
             throw $e;
         }
-        return $id;
     }
 
     public function updateQuoteprice($quoteprice)

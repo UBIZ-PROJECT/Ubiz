@@ -100,7 +100,7 @@
                             <div class="col-7 text-left pdt-5">
                                 <ul class="nav nav-wizard">
                                     <li class="done"><a href="#">{{ __('Pricing') }}</a></li>
-                                    <li class="active"><a href="#">{{ __('Order') }}</a></li>
+                                    <li class="done"><a href="#">{{ __('Order') }}</a></li>
                                     <li class="undone"><a href="#">{{ __('Import') }}</a></li>
                                     <li class="undone"><a href="#">{{ __('Contract') }}</a></li>
                                     <li class="undone"><a href="#">{{ __('Delivery') }}</a></li>
@@ -174,18 +174,18 @@
                                     <div class="col-md-auto">
                                         <div class="row">
                                             <div class="col-md-auto">
-                                                @include('components.input',['control_id'=>'contact_name', 'value'=> '', 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Contact person'), 'i_focus'=>'', 'i_blur'=>''])
+                                                @include('components.input',['control_id'=>'ord_contact_name', 'value'=> $order->contact_name, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Contact person'), 'i_focus'=>'', 'i_blur'=>''])
                                             </div>
                                             <div class="col-md-auto">
-                                                @include('components.input',['control_id'=>'contact_duty', 'value'=> '', 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Duty'), 'i_focus'=>'', 'i_blur'=>''])
+                                                @include('components.input',['control_id'=>'ord_contact_rank', 'value'=> $order->contact_rank, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Duty'), 'i_focus'=>'', 'i_blur'=>''])
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-auto">
-                                                @include('components.input',['control_id'=>'contact_mobile', 'value'=> '', 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Mobile'), 'i_focus'=>'', 'i_blur'=>''])
+                                                @include('components.input',['control_id'=>'ord_contact_phone', 'value'=> $order->contact_phone, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Mobile'), 'i_focus'=>'', 'i_blur'=>''])
                                             </div>
                                             <div class="col-md-auto">
-                                                @include('components.input',['control_id'=>'contact_email', 'value'=> '', 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Email'), 'i_focus'=>'', 'i_blur'=>''])
+                                                @include('components.input',['control_id'=>'ord_contact_email', 'value'=> $order->contact_email, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Email'), 'i_focus'=>'', 'i_blur'=>''])
                                             </div>
                                         </div>
                                         <div class="row">

@@ -233,6 +233,85 @@ class Order
         }
     }
 
+    public function transactionCreateOrder($quoteprice, $quoteprice_details)
+    {
+        DB::beginTransaction();
+        try {
+
+            //create orders
+            $order = [
+                "ord_no" => '',
+                "ord_date" => date('Y-m-d'),
+                "ord_tax" => $quoteprice->qp_tax,
+                "ord_amount" => $quoteprice->qp_amount,
+                "ord_amount_tax" => $quoteprice->qp_amount_tax,
+                "ord_paid" => '0',
+                "ord_debt" => '0',
+                "ord_note" => $quoteprice->qp_note,
+                "qp_id" => $quoteprice->qp_id,
+                "cus_id" => $quoteprice->cus_id,
+                "cad_id" => $quoteprice->cad_id,
+                "step" => '2',
+                "sale_id" => Auth::user()->id,
+                "contact_name" => $quoteprice->contact_name,
+                "contact_rank" => $quoteprice->contact_rank,
+                "contact_phone" => $quoteprice->contact_phone,
+                "contact_email" => $quoteprice->contact_email,
+                "owner_id" => Auth::user()->id,
+                "inp_user" => Auth::user()->id,
+                "upd_user" => Auth::user()->id
+            ];
+            $ord_id = $this->insertOrder($order);
+
+            $insert_order_detail_data = [];
+            foreach ($quoteprice_details as $item) {
+
+                $order_detail_data = [
+                    "ord_id" => $ord_id,
+                    "note" => $item->note,
+                    "unit" => $item->unit,
+                    "quantity" => $item->quantity,
+                    "status" => $item->status,
+                    "delivery_time" => $item->delivery_time,
+                    "price" => $item->price,
+                    "amount" => $item->amount,
+                    "type" => $item->type,
+                    "sort_no" => $item->sort_no,
+                    "owner_id" => Auth::user()->id,
+                    "inp_user" => Auth::user()->id,
+                    "upd_user" => Auth::user()->id
+                ];
+
+                if ($item->type == '1') {
+                    $order_detail_data["prod_specs"] = $item->prod_specs;
+                    $order_detail_data["prod_specs_mce"] = $item->prod_specs_mce;
+                    $order_detail_data["acce_code"] = null;
+                    $order_detail_data["acce_name"] = null;
+                }
+
+                if ($item->type == '2') {
+                    $order_detail_data["prod_specs"] = null;
+                    $order_detail_data["prod_specs_mce"] = null;
+                    $order_detail_data["acce_code"] = $item->acce_code;
+                    $order_detail_data["acce_name"] = $item->acce_name;
+                }
+
+                $insert_order_detail_data[] = $order_detail_data;
+            }
+            $orderDetail = new OrderDetail();
+            //insert order detail
+            if (!empty($insert_order_detail_data)) {
+                $orderDetail->insertOrderDetail($insert_order_detail_data);
+            }
+
+            DB::commit();
+            return $ord_id;
+        } catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
     public function validateData($data)
     {
         try {
@@ -416,10 +495,10 @@ class Order
         }
     }
 
-    public function insertOrder()
+    public function insertOrder($data)
     {
         try {
-
+            return DB::table('order')->insertGetId($data);
         } catch (\Throwable $e) {
             throw $e;
         }

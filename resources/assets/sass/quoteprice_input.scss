@@ -27,11 +27,8 @@
     .tox-tbtn {
       height: 25px;
     }
-    .fa-copy {
-      color: $mdc-green-A700;
-    }
-    .fa-trash {
-      color: $mdc-deep-orange-A400;
+    i {
+      cursor: pointer;
     }
   }
 

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\User;
 use App\Helper;
+use App\Model\Customer;
 use App\Model\Quoteprice;
 use App\Model\QuotepriceDetail;
 use App\Model\ProductStatus;
@@ -42,7 +44,7 @@ class QuotepriceController extends Controller
 
         $cusAddress = new CustomerAddress();
         $cusAddressData = $cusAddress->getAddressByCusId($qpData->cus_id);
-        return view('quoteprice_input', [
+        return view('quoteprice_detail', [
             'quoteprice' => $qpData,
             'quotepriceDetail' => $qpDetailData,
             'prdStatus' => Helper::convertDataToDropdownOptions($prdStatusData, 'id', 'title'),
@@ -52,21 +54,25 @@ class QuotepriceController extends Controller
 
     public function create(Request $request, $cus_id)
     {
-        $qp = new Quoteprice();
-        $qpData = $qp->getQuoteprice($qp_id);
-
-        if ($qpData == null) {
+        $cus = new Customer();
+        $cusData = $cus->getCustomerById($cus_id);
+        if ($cusData == null) {
             return response()->view('errors.404', [], 404);
         }
-        $qpDetail = new QuotepriceDetail();
-        $qpDetailData = $qpDetail->getQuotepriceDetailsByQpId($qp_id);
 
-        $productStatus = new ProductStatus();
-        $statusList = $productStatus->getAllStatus();
-        return view('quoteprice_input', [
-            'quoteprice' => $qpData,
-            'auotepriceDetail' => $qpDetailData,
-            'statusList' => Helper::convertDataToDropdownOptions($statusList, 'id', 'title')
+        $user = new User();
+        $userData = $user->getCurrentUser();
+
+        $prdStatus = new ProductStatus();
+        $prdStatusData = $prdStatus->getAllStatus();
+
+        $cusAddress = new CustomerAddress();
+        $cusAddressData = $cusAddress->getAddressByCusId($cus_id);
+        return view('quoteprice_create', [
+            'customer' => $cusData,
+            'user' => $userData,
+            'prdStatus' => Helper::convertDataToDropdownOptions($prdStatusData, 'id', 'title'),
+            'cusAddress' => Helper::convertDataToDropdownOptions($cusAddressData, 'cad_id', 'cad_address'),
         ]);
     }
 }

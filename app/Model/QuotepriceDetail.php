@@ -27,12 +27,12 @@ class QuotepriceDetail
         }
     }
 
-    public function deleteQuotepriceDetailsByIds($qddt_ids = [])
+    public function deleteQuotepriceDetailsByIds($qpdt_ids = [])
     {
         try {
             DB::table('quoteprice_detail')
                 ->where('owner_id', Auth::user()->id)
-                ->whereIn('qddt_id', $qddt_ids)
+                ->whereIn('qpdt_id', $qpdt_ids)
                 ->update([
                     'delete_flg' => '1',
                     'upd_user' => Auth::user()->id
@@ -69,12 +69,12 @@ class QuotepriceDetail
     public function updateQuotepriceDetail($quoteprice_detail)
     {
         try {
-            $qddt_id = $quoteprice_detail['qddt_id'];
-            unset($quoteprice_detail['qddt_id']);
+            $qpdt_id = $quoteprice_detail['qpdt_id'];
+            unset($quoteprice_detail['qpdt_id']);
             DB::table('quoteprice_detail')
                 ->where([
                     ['owner_id', '=', Auth::user()->id],
-                    ['qddt_id', '=', $qddt_id]
+                    ['qpdt_id', '=', $qpdt_id]
                 ])
                 ->update($quoteprice_detail);
         } catch (\Throwable $e) {
