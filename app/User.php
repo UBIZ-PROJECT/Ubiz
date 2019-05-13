@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -181,6 +182,25 @@ class User extends Authenticatable implements JWTSubject
                 ->select('users.*', 'm_department.dep_name')
                 ->leftJoin('m_department', 'users.dep_id', '=', 'm_department.id')
                 ->where([['users.delete_flg', '=', '0'], ['users.id', '=', $id]])
+                ->first();
+
+            if ($user != null && !empty($user->avatar)) {
+                $user->avatar = \Helper::readImage($user->avatar, 'usr');
+            }
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return $user;
+    }
+
+    public function getCurrentUser()
+    {
+        try {
+
+            $user = DB::table('users')
+                ->select('users.*', 'm_department.dep_name')
+                ->leftJoin('m_department', 'users.dep_id', '=', 'm_department.id')
+                ->where([['users.delete_flg', '=', '0'], ['users.id', '=', Auth::user()->id]])
                 ->first();
 
             if ($user != null && !empty($user->avatar)) {

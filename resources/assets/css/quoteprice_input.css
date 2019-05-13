@@ -34,50 +34,44 @@
   color: rgba(255, 255, 255, 0.3);
 }
 
-.order-input .dt-row {
+.quoteprice-input .dt-row {
   padding: 0px 15px;
   padding-left: 0px;
   margin-top: 5px;
 }
 
-.order-input .dt-row .row {
+.quoteprice-input .dt-row .row {
   background-color: #e8f0fe;
 }
 
-.order-input .dt-row .dt-row-head {
+.quoteprice-input .dt-row .dt-row-head {
   padding: 3px 0px;
 }
 
-.order-input .dt-row .dt-row-body {
+.quoteprice-input .dt-row .dt-row-body {
   padding: 5px 0px;
   border-top: 1px solid #a6a6a6;
 }
 
-.order-input .dt-row .root-56 {
+.quoteprice-input .dt-row .root-56 {
   padding-top: 2px !important;
   padding-bottom: 2px !important;
   height: 22px;
 }
 
-.order-input .dt-row .fieldGroup {
+.quoteprice-input .dt-row .fieldGroup {
   height: 22px !important;
 }
 
-.order-input .dt-row .tox-tbtn {
+.quoteprice-input .dt-row .tox-tbtn {
   height: 25px;
 }
 
-.order-input .dt-row .fa-copy {
-  color: #00C853;
+.quoteprice-input .dt-row i {
   cursor: pointer;
 }
 
-.order-input .dt-row .fa-trash {
-  color: #FF3D00;
-  cursor: pointer;
-}
-
-.order-input .total-info input {
+.quoteprice-input .total-info input {
   border-top: none;
   border-right: none;
   border-left: none;
@@ -86,7 +80,7 @@
   color: black !important;
 }
 
-.order-input .add-btn {
+.quoteprice-input .add-btn {
   position: fixed;
   right: 15px;
   z-index: 999;
