@@ -100,13 +100,7 @@
                                 </div>
                             </div>
                             <div class="col-7 text-left pdt-5">
-                                <ul class="nav nav-wizard">
-                                    <li class="done"><a href="#">{{ __('Pricing') }}</a></li>
-                                    <li class="done"><a href="#">{{ __('Order') }}</a></li>
-                                    <li class="undone"><a href="#">{{ __('Import') }}</a></li>
-                                    <li class="undone"><a href="#">{{ __('Contract') }}</a></li>
-                                    <li class="undone"><a href="#">{{ __('Delivery') }}</a></li>
-                                </ul>
+                                @include('components.sale_step', ['sale_step'=>$order->sale_step])
                             </div>
                             <div class="col-2 text-right">
 

@@ -206,5 +206,6 @@
   "Total value of quoteprices (before VAT)": "Tổng giá trị báo giá( trước thuế VAT )",
   "Total value of quoteprices (VAT included)": "Tổng giá trị báo giá( đã bao gồm thuế VAT )",
   "Send QP to customer": "Gửi báo giá cho khách hàng.",
-  "Do you want to create order the data.?": "Bạn có muốn tạo đơn hàng không?"
+  "Do you want to create order the data.?": "Bạn có muốn tạo đơn hàng không?",
+  "Order is existed.\nYou can not create it.!": "Đơn hàng đã tồn tại."
 }

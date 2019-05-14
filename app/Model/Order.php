@@ -151,12 +151,13 @@ class Order
         DB::beginTransaction();
         try {
 
+            $imp_step = 0;
             $insert_order_detail_data = [];
             $delete_order_detail_data = [];
             $update_order_detail_data = [];
 
-            foreach ($data['order_detail'] as $item) {
-
+            $order_detail = array_key_exists('order_detail', $data) ? $data['order_detail'] : [];
+            foreach ($order_detail as $item) {
 
                 $order_detail_data = [
                     "note" => $item['dt_note'],
@@ -193,11 +194,17 @@ class Order
                 $action = $item['action'];
                 switch ($action) {
                     case'insert':
+                        if ($item['dt_status'] == '2') {
+                            $imp_step = '1';
+                        }
                         $order_detail_data["ord_id"] = $ord_id;
                         $order_detail_data["inp_user"] = Auth::user()->id;
                         $insert_order_detail_data[] = $order_detail_data;
                         break;
                     case'update':
+                        if ($item['dt_status'] == '2') {
+                            $imp_step = '1';
+                        }
                         $order_detail_data["ordt_id"] = $item['dt_id'];
                         $update_order_detail_data[] = $order_detail_data;
                         break;
@@ -208,7 +215,9 @@ class Order
             }
 
             //update orders
-            $this->updateOrder($data['order']);
+            $order = $data['order'];
+            $order['imp_step'] = $imp_step;
+            $this->updateOrder($order);
 
             $orderDetail = new OrderDetail();
             //insert order detail
@@ -251,7 +260,7 @@ class Order
                 "qp_id" => $quoteprice->qp_id,
                 "cus_id" => $quoteprice->cus_id,
                 "cad_id" => $quoteprice->cad_id,
-                "step" => '2',
+                "sale_step" => '2',
                 "sale_id" => Auth::user()->id,
                 "contact_name" => $quoteprice->contact_name,
                 "contact_rank" => $quoteprice->contact_rank,
@@ -263,8 +272,13 @@ class Order
             ];
             $ord_id = $this->insertOrder($order);
 
+            $imp_step = 0;
             $insert_order_detail_data = [];
             foreach ($quoteprice_details as $item) {
+
+                if ($item['dt_status'] == '2') {
+                    $imp_step = '1';
+                }
 
                 $order_detail_data = [
                     "ord_id" => $ord_id,
@@ -303,6 +317,12 @@ class Order
             if (!empty($insert_order_detail_data)) {
                 $orderDetail->insertOrderDetail($insert_order_detail_data);
             }
+
+            $order = [];
+            $order['ord_id'] = $ord_id;
+            $order['imp_step'] = $imp_step;
+            $order['upd_user'] = Auth::user()->id;
+            $this->updateOrder($order);
 
             DB::commit();
             return $ord_id;

@@ -105,13 +105,7 @@
                                 </div>
                             </div>
                             <div class="col-7 text-left pdt-5">
-                                <ul class="nav nav-wizard">
-                                    <li class="done"><a href="#">{{ __('QP') }}</a></li>
-                                    <li class="undone"><a href="#" onclick="qp_create_order()">{{ __('Order') }}</a></li>
-                                    <li class="undone"><a href="#">{{ __('Import') }}</a></li>
-                                    <li class="undone"><a href="#">{{ __('Contract') }}</a></li>
-                                    <li class="undone"><a href="#">{{ __('Delivery') }}</a></li>
-                                </ul>
+                                @include('components.sale_step', ['sale_step'=>$quoteprice->sale_step])
                             </div>
                             <div class="col-2 text-right">
 

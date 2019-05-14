@@ -155,8 +155,8 @@ class Quoteprice
             $delete_quoteprice_detail_data = [];
             $update_quoteprice_detail_data = [];
 
-            foreach ($data['quoteprice_detail'] as $item) {
-
+            $quoteprice_detail = array_key_exists('quoteprice_detail', $data) ? $data['quoteprice_detail'] : [];
+            foreach ($quoteprice_detail as $item) {
 
                 $quoteprice_detail_data = [
                     "note" => $item['dt_note'],
@@ -204,7 +204,8 @@ class Quoteprice
             }
 
             //update quoteprices
-            $this->updateQuoteprice($data['quoteprice']);
+            $quoteprice = $data['quoteprice'];
+            $this->updateQuoteprice($quoteprice);
 
             $quotepriceDetail = new QuotepriceDetail();
             //insert quoteprice detail
@@ -243,8 +244,8 @@ class Quoteprice
             $qp_id = $this->createQuoteprice($data['quoteprice']);
 
             $insert_quoteprice_detail_data = [];
-            foreach ($data['quoteprice_detail'] as $item) {
-
+            $quoteprice_detail = array_key_exists('quoteprice_detail', $data) ? $data['quoteprice_detail'] : [];
+            foreach ($quoteprice_detail as $item) {
 
                 $quoteprice_detail_data = [
                     "qp_id" => $qp_id,
