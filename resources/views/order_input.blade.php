@@ -6,6 +6,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/headbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/common.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/order_input.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/order_input.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('dist/tageditor/jquery.tag-editor.css') }}">
 @endsection
 @section('headbar')
     @include('layouts/headbar')
@@ -469,5 +471,7 @@
     </div>
 @endsection
 @section('end-javascript')
+    <script type="text/javascript" src="{{ asset('dist/tageditor/jquery.tag-editor.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('dist/tageditor/jquery.caret.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/order_input.js') }}"></script>
 @endsection

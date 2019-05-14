@@ -40,11 +40,16 @@ class OrderController extends Controller
                 return response()->json(['success' => false, 'message' => __('Data is wrong.!')], 200);
             }
 
+            $order = new Order();
+            $is_exists = $order->checkOrderIsExistsByQpId($qp_id);
+            if ($is_exists == false) {
+                return response()->json(['success' => false, 'message' => __("Order is existed.\nYou can not create it.!")], 200);
+            }
+
             $qpDetail = new QuotepriceDetail();
             $qpDetailData = $qpDetail->getQuotepriceDetailsByQpId($qp_id);
 
             //create order
-            $order = new Order();
             $ord_id = $order->transactionCreateOrder($qpData, $qpDetailData);
 
             return response()->json(['ord_id' => $ord_id,'success' => true, 'message' => __('Successfully processed.')], 200);

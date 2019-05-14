@@ -479,6 +479,24 @@ class Order
 
     }
 
+    public function checkOrderIsExistsByQpId($qp_id)
+    {
+        try {
+            $cnt = DB::table('order')
+                ->where([
+                    ['order.qp_id', '=', $qp_id],
+                    ['order.delete_flg', '=', '0'],
+                    ['order.owner_id', '=', Auth::user()->id]
+                ])
+                ->count();
+            if ($cnt > 0)
+                return false;
+            return true;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
     public function deleteOrdersByIds($ord_ids = '')
     {
         try {
