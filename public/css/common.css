@@ -2550,7 +2550,7 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
     position: relative;
     background-color: #eeeeee;
     text-decoration: none;
-    cursor: default;
+    cursor: pointer;
 }
 
 .nav-wizard > li > a .badge {

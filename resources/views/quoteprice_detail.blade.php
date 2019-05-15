@@ -64,6 +64,7 @@
         <div class="r-content">
             <div class="jAQ" id="i-put">
                 <input type="hidden" name="qp_id" value="{{ $quoteprice->qp_id }}">
+                <input type="hidden" name="ord_id" value="{{ $quoteprice->ord_id }}">
                 <div class="bkK">
                     <div class="rwq">
                         <div class="row z-mgr z-mgl">

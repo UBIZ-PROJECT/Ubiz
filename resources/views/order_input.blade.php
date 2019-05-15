@@ -6,7 +6,6 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/headbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/common.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/order_input.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/order_input.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('dist/tageditor/jquery.tag-editor.css') }}">
 @endsection
 @section('headbar')
@@ -66,6 +65,7 @@
         <div class="r-content">
             <div class="jAQ" id="i-put">
                 <input type="hidden" name="ord_id" value="{{ $order->ord_id }}">
+                <input type="hidden" name="qp_id" value="{{ $order->qp_id }}">
                 <div class="bkK">
                     <div class="rwq">
                         <div class="row z-mgr z-mgl">
@@ -99,11 +99,24 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-7 text-left pdt-5">
+                            <div class="col-6 text-left pdt-5">
                                 @include('components.sale_step', ['sale_step'=>$order->sale_step])
                             </div>
-                            <div class="col-2 text-right">
+                            <div class="col-3 text-right pdt-5">
+                                <input type="hidden" name="sale_step" value="{{ $order->imp_step }}">
+                                @switch($order->imp_step)
+                                    @case('1')
+                                    <button type="button" onclick="ord_order_supplier()" class="btn btn-info btn-sm" title="{{ __("Order supplier.") }}">
+                                        {{ __("Order supplier.") }}
+                                    </button>
+                                    @break
 
+                                    @case('2')
+                                    <button type="button" onclick="ord_reorder_supplier()" class="btn btn-info btn-sm" title="{{ __("Order supplier.") }}">
+                                        {{ __("Ordered supplier.") }}
+                                    </button>
+                                    @break
+                                @endswitch
                             </div>
                         </div>
                     </div>

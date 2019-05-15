@@ -207,5 +207,7 @@
   "Total value of quoteprices (VAT included)": "Tổng giá trị báo giá( đã bao gồm thuế VAT )",
   "Send QP to customer": "Gửi báo giá cho khách hàng.",
   "Do you want to create order the data.?": "Bạn có muốn tạo đơn hàng không?",
-  "Order is existed.\nYou can not create it.!": "Đơn hàng đã tồn tại."
+  "Order is existed.\nYou can not create it.!": "Đơn hàng đã tồn tại.",
+  "Order supplier.": "Đặt hàng nhà cung cấp.",
+  "Ordered supplier.": "Đã đặt hàng nhà cung cấp."
 }

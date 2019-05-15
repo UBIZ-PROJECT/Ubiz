@@ -1,7 +1,6 @@
 <?php
 $quoteprice_step = "undone";
 $order_step = "undone";
-$import_step = "undone";
 $contract_step = "undone";
 $delivery_step = "undone";
 
@@ -32,8 +31,8 @@ switch ($sale_step) {
         break;
 }
 ?>
+<input type="hidden" name="sale_step" value="{{ $sale_step }}">
 <ul class="nav nav-wizard">
-    <input type="hidden" name="sale_step" value="{{ $sale_step }}">
     <li class="{{ $quoteprice_step }}"><a name="quoteprice_step" href="#">{{ __('QP') }}</a></li>
     <li class="{{ $order_step }}"><a name="order_step" href="#">{{ __('Order') }}</a></li>
     <li class="{{ $contract_step }}"><a name="contract_step" href="#">{{ __('Contract') }}</a></li>

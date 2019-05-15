@@ -53,12 +53,14 @@ class Quoteprice
     {
         try {
             $quoteprice = DB::table('quoteprice')
+                ->leftJoin('order', 'order.qp_id', '=', 'quoteprice.qp_id')
                 ->leftJoin('customer', 'customer.cus_id', '=', 'quoteprice.cus_id')
                 ->leftJoin('m_customer_type', 'customer.cus_type', '=', 'm_customer_type.id')
                 ->leftJoin('customer_address', 'customer_address.cad_id', '=', 'quoteprice.cad_id')
                 ->leftJoin('users', 'users.id', '=', 'quoteprice.sale_id')
                 ->select(
                     'quoteprice.*',
+                    'order.ord_id',
                     'customer.cus_code',
                     'customer.cus_name',
                     'customer.cus_phone',
