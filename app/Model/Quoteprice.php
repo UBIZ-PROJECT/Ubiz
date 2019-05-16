@@ -6,6 +6,7 @@ use App\Helper;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use App\Model\QuotepriceDetail;
 
 class Quoteprice
@@ -320,7 +321,7 @@ class Quoteprice
                 $res['success'] = false;
                 $message[] = __('QP Date is required.');
             }
-            if (array_key_exists('qp_date', $quoteprice) && Carbon::createFromFormat('Y/m/d', $quoteprice['qp_date']) == false) {
+            if (array_key_exists('qp_date', $quoteprice) && $this->dateValidator($quoteprice['qp_date']) == false) {
                 $res['success'] = false;
                 $message[] = __('QP Date is wrong format YYYY/MM/DD.');
             }
@@ -328,7 +329,7 @@ class Quoteprice
                 $res['success'] = false;
                 $message[] = __('QP Exp Date is required.');
             }
-            if (array_key_exists('qp_exp_date', $quoteprice) && Carbon::createFromFormat('Y/m/d', $quoteprice['qp_exp_date']) == false) {
+            if (array_key_exists('qp_exp_date', $quoteprice) && $this->dateValidator($quoteprice['qp_exp_date']) == false) {
                 $res['success'] = false;
                 $message[] = __('QP Exp Date is wrong format YYYY/MM/DD.');
             }
@@ -486,6 +487,23 @@ class Quoteprice
         }
     }
 
+    public function dateValidator($date)
+    {
+        $credential_name = "name";
+        $credential_data = $date;
+        $rules = [
+            $credential_name => 'date'
+        ];
+        $credentials = [
+            $credential_name => $credential_data
+        ];
+        $validator = Validator::make($credentials, $rules);
+        if ($validator->fails()) {
+            return false;
+        }
+        return true;
+    }
+
     public function makeWhereRaw($search = '')
     {
         $params = [0];
@@ -498,7 +516,7 @@ class Quoteprice
             $where_raw .= " AND ( ";
             $where_raw .= " quoteprice.qp_no like ? ";
             $params[] = $search_val;
-            if (Carbon::createFromFormat('Y/m/d', $search) == true || Carbon::createFromFormat('Y-m-d', $search) == true) {
+            if ($this->dateValidator($search) == true) {
                 $where_raw .= " OR quoteprice.qp_date = ? ";
                 $params[] = $search;
                 $where_raw .= " OR quoteprice.qp_exp_date = ? ";

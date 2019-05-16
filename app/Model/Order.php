@@ -3,9 +3,11 @@
 namespace App\Model;
 
 use App\Helper;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use App\Model\Product;
+use App\Model\Quoteprice;
 use App\Model\OrderDetail;
 
 class Order
@@ -255,7 +257,7 @@ class Order
                 "ord_amount" => $quoteprice->qp_amount,
                 "ord_amount_tax" => $quoteprice->qp_amount_tax,
                 "ord_paid" => '0',
-                "ord_debt" => '0',
+                "ord_debt" => $quoteprice->qp_amount_tax,
                 "ord_note" => $quoteprice->qp_note,
                 "qp_id" => $quoteprice->qp_id,
                 "cus_id" => $quoteprice->cus_id,
@@ -276,7 +278,7 @@ class Order
             $insert_order_detail_data = [];
             foreach ($quoteprice_details as $item) {
 
-                if ($item['dt_status'] == '2') {
+                if ($item->status == '2') {
                     $imp_step = '1';
                 }
 
@@ -324,6 +326,13 @@ class Order
             $order['upd_user'] = Auth::user()->id;
             $this->updateOrder($order);
 
+            $qpModel = new Quoteprice();
+            $qpUpdateData = [
+                'qp_id' => $quoteprice->qp_id,
+                'sale_step' => '2'
+            ];
+            $qpModel->updateQuoteprice($qpUpdateData);
+
             DB::commit();
             return $ord_id;
         } catch (\Throwable $e) {
@@ -358,7 +367,7 @@ class Order
                 $res['success'] = false;
                 $message[] = __('Order Date is required.');
             }
-            if (array_key_exists('ord_date', $order) && Carbon::createFromFormat('Y/m/d', $order['ord_date']) == false) {
+            if (array_key_exists('ord_date', $order) && $this->dateValidator($order['ord_date']) == false) {
                 $res['success'] = false;
                 $message[] = __('Order Date is wrong format YYYY/MM/DD.');
             }
@@ -431,6 +440,7 @@ class Order
                 }
             }
 
+            $prdModel = new Product();
             $dt_total_amount = 0;
             $order_details = array_key_exists('order_detail', $data) ? $data['order_detail'] : [];
             foreach ($order_details as $line_no => $item) {
@@ -482,6 +492,37 @@ class Order
 
                 if ($item['action'] == 'delete')
                     continue;
+
+                if ($item['dt_type'] == 1 && $item['dt_prod_model'] != '') {
+                    $is_exists = $prdModel->checkProductIsExistsByModel($item['dt_prod_model']);
+                    if ($is_exists == false) {
+                        $res['success'] = false;
+                        $message[] = __('[Row : :line ] model [ :model ] is not exists.', ['line' => "No." + ($line_no + 1), 'model' => $item['dt_prod_model']]);
+                    }
+                }
+
+                if ($item['dt_type'] == 1 && $item['dt_prod_model'] != '' && $item['dt_prod_series'] != '') {
+
+                    $prdSeriesObjData = $prdModel->getProductSeriesByModel($item['dt_prod_model']);
+                    $prdSeriesArrData = [];
+                    foreach ($prdSeriesObjData as $seri) {
+                        $prdSeriesArrData[] = $seri->serial_no;
+                    }
+
+                    $dt_prod_series = explode(",", $item['dt_prod_series']);
+                    $not_exists_series = [];
+                    foreach ($dt_prod_series as $seri) {
+                        if (in_array($seri, $prdSeriesArrData) == false) {
+                            $not_exists_series[] = $seri;
+                        }
+                    }
+
+                    if (sizeof($not_exists_series) > 0) {
+                        $res['success'] = false;
+                        $message[] = __('[Row : :line ] series [ :series ] is not exists.', ['line' => "No." + ($line_no + 1), 'series' => implode(",", $not_exists_series)]);
+                    }
+                }
+
                 $dt_total_amount += $item['dt_amount'] == null || $item['dt_amount'] == '' ? 0 : doubleval($item['dt_amount']);
             }
 
@@ -571,7 +612,7 @@ class Order
             $where_raw .= " AND ( ";
             $where_raw .= " order.ord_no like ? ";
             $params[] = $search_val;
-            if (Carbon::createFromFormat('Y/m/d', $search) == true || Carbon::createFromFormat('Y-m-d', $search) == true) {
+            if ($this->dateValidator($search) == true) {
                 $where_raw .= " OR order.ord_date = ? ";
                 $params[] = $search;
             } else {
@@ -600,6 +641,23 @@ class Order
 
         }
         return [$where_raw, $params];
+    }
+
+    public function dateValidator($date)
+    {
+        $credential_name = "name";
+        $credential_data = $date;
+        $rules = [
+            $credential_name => 'date'
+        ];
+        $credentials = [
+            $credential_name => $credential_data
+        ];
+        $validator = Validator::make($credentials, $rules);
+        if ($validator->fails()) {
+            return false;
+        }
+        return true;
     }
 
     public function makeOrderBy($sort = '')

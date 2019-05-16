@@ -50,11 +50,11 @@
 }
 
 .main-content .r-content .col-3 {
-	width: 200px;
+	width: 180px;
 }
 
 .main-content .r-content .col-4 {
-	width: 200px;
+	width: 180px;
 }
 
 .main-content .r-content .col-5 {
@@ -66,5 +66,9 @@
 }
 
 .main-content .r-content .col-7 {
+	width: 120px;
+}
+
+.main-content .r-content .col-8 {
 	width: auto;
 }

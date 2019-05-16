@@ -240,12 +240,26 @@
                                             <div class="row dt-row-body zero-mgl zero-mgr collapse hide">
                                                 <div class="col-md-auto">
                                                     <label class="lbl-primary">{{ __('Specification') }}:</label>
-                                                    <textarea name="dt_prod_specs_mce"
-                                                              id="dt_prod_specs_mce_1">{{ $item->prod_specs_mce }}</textarea>
+                                                    <textarea name="dt_prod_specs_mce" id="dt_prod_specs_mce_{{ $idx }}">{{ $item->prod_specs_mce }}</textarea>
                                                 </div>
                                                 <div class="col-md-auto">
                                                     @include('components.input',['value'=>$item->prod_model, 'control_id'=>'dt_prod_model','width'=> '250', 'lbl_width'=>'70', 'label'=>__('Model'), 'i_focus'=>'', 'i_blur'=>''])
-                                                    @include('components.textarea',['value'=>$item->prod_series, 'width'=>'250', 'height'=>'100', 'control_id'=>'dt_prod_series', 'resize'=>'none', 'label'=>__('Series')])
+                                                    <div class="textarea  root_textarea rootIsUnderlined dt_prod_series_container"
+                                                         style="width: 250px">
+                                                        <label for="dt_prod_series" class="ms-Label root-56 lbl-primary ">
+                                                            {{ __('Series') }}
+                                                        </label>
+                                                        <div class="wrapper">
+                                                            <div class="fieldGroup_area">
+                                                            <textarea style="height: 100px;width: 250px; resize: none"
+                                                                      is-change="false" placeholder=""
+                                                                      id="dt_prod_series_{{ $idx }}" name="dt_prod_series"
+                                                                      class="input-textarea ">{{ $item->prod_series }}</textarea>
+                                                                <textarea style="display: none"
+                                                                          name="dt_prod_series_old"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     @include('components.textarea',['value'=>$item->note, 'width'=>'250', 'height'=>'100', 'control_id'=>'dt_note', 'resize'=>'none', 'label'=>__('Note')])
                                                 </div>
                                                 <div class="col-md-auto">
@@ -291,6 +305,22 @@
                                             <div class="col-md-auto">
                                                 @include('components.input',['value'=>'', 'control_id'=>'dt_prod_model','width'=> '250', 'lbl_width'=>'70', 'label'=>__('Model'), 'i_focus'=>'', 'i_blur'=>''])
                                                 @include('components.textarea',['value'=>'', 'width'=>'250', 'height'=>'100', 'control_id'=>'dt_prod_series', 'resize'=>'none', 'label'=>__('Series')])
+                                                <div class="textarea  root_textarea rootIsUnderlined dt_prod_series_container"
+                                                     style="width: 250px">
+                                                    <label for="dt_prod_series" class="ms-Label root-56 lbl-primary ">
+                                                        {{ __('Series') }}
+                                                    </label>
+                                                    <div class="wrapper">
+                                                        <div class="fieldGroup_area">
+                                                            <textarea style="height: 100px;width: 250px; resize: none"
+                                                                      is-change="false" placeholder=""
+                                                                      id="dt_prod_series" name="dt_prod_series"
+                                                                      class="input-textarea "></textarea>
+                                                            <textarea style="display: none"
+                                                                      name="dt_prod_series_old"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 @include('components.textarea',['value'=>'', 'width'=>'250', 'height'=>'100', 'control_id'=>'dt_note', 'resize'=>'none', 'label'=>__('Note')])
                                             </div>
                                             <div class="col-md-auto">

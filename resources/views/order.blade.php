@@ -125,6 +125,8 @@
                                 <div class="col-4" role="presentation"></div>
                                 <div class="col-5" role="presentation"></div>
                                 <div class="col-6" role="presentation"></div>
+                                <div class="col-7" role="presentation"></div>
+                                <div class="col-8" role="presentation"></div>
                             </div>
                             <div class="hdG">
                                 <div class="dcB col-1" role="presentation">
@@ -245,7 +247,7 @@
                                 <div class="dcB col-6" role="presentation">
                                     <div class="dWB dWT" role="button" sort-name="ord_paid" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">Đã trả</div>
+                                            <div class="tDv">{{ __('Paid') }}</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -268,7 +270,30 @@
                                 <div class="dcB col-7" role="presentation">
                                     <div class="dWB dWT" role="button" sort-name="ord_debt" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">Còn nợ</div>
+                                            <div class="tDv">{{ __('Debt') }}</div>
+                                            <div class="mhH">
+                                                <div class="acD">
+                                                    <div class="huK">
+                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
+                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                        </svg>
+                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
+                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dcB col-8" role="presentation">
+                                    <div class="dWB dWT" role="button" sort-name="sale_step" order-by="">
+                                        <div class="dvJ">
+                                            <div class="tDv">{{ __('Status') }}</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -347,6 +372,13 @@
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$order->ord_debt}}">
                                                     <span>{{number_format($order->ord_debt)}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tcB col-8">
+                                            <div class="cbo">
+                                                <div class="nCj" title="{{$order->sale_step}}">
+                                                    @include('components.badge_sale_step', ['sale_step'=>$order->sale_step])
                                                 </div>
                                             </div>
                                         </div>

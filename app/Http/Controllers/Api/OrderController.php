@@ -52,7 +52,7 @@ class OrderController extends Controller
             //create order
             $ord_id = $order->transactionCreateOrder($qpData, $qpDetailData);
 
-            return response()->json(['ord_id' => $ord_id,'success' => true, 'message' => __('Successfully processed.')], 200);
+            return response()->json(['ord_id' => $ord_id, 'success' => true, 'message' => __('Successfully processed.')], 200);
         } catch (\Throwable $e) {
             throw $e;
         }

@@ -975,11 +975,11 @@ function qp_refresh() {
 
 }
 
-function qp_send(){
+function qp_send() {
 
 }
 
-function qp_create_order(){
+function qp_create_order() {
     swal({
         title: i18next.t('Do you want to create order the data.?'),
         type: 'question',
@@ -997,13 +997,14 @@ function qp_create_order(){
     })
 }
 
-function qp_create_order_callback(response){
+function qp_create_order_callback(response) {
     if (response.data.success == true) {
+        var ord_id = response.data.ord_id;
         swal.fire({
             type: 'success',
             title: response.data.message,
             onClose: () => {
-                qp_back_to_output();
+                window.location.href = "/orders/" + ord_id;
             }
         })
 
@@ -1051,5 +1052,8 @@ $(document).ready(function () {
     fnc_datepicker('.datepicker');
     jQuery('.utooltip').tooltipster({
         side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
+    });
+    $("a[name=order_step]").on("click", function () {
+        qp_create_order();
     });
 });
