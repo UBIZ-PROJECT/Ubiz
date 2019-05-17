@@ -211,5 +211,6 @@
   "Order supplier.": "Đặt hàng nhà cung cấp.",
   "Ordered supplier.": "Đã đặt hàng nhà cung cấp.",
   "[Row : :line ] model [ :model ] is not exists.": "[ Dòng : :line ] Kiểu mẫu [ :model ] không tồn tại.",
-  "[Row : :line ] series [ :series ] is not exists.": "[ Dòng : :line ] Số sêri [ :series ] không tồn tại."
+  "[Row : :line ] series [ :series ] is not exists.": "[ Dòng : :line ] Số sêri [ :series ] không tồn tại.",
+  "Do you want to send quoteprice to the customer.?": "Bạn có muốn gửi báo giá tới khách hàng không?"
 }

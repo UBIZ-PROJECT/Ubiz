@@ -78,6 +78,7 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::get('quoteprices', ['as' => 'api-get-quoteprices', 'uses' => 'Api\QuotepriceController@getQuoteprices']);
         Route::post('quoteprices/{cus_id}/create', ['as' => 'api-create-quoteprice', 'uses' => 'Api\QuotepriceController@createQuoteprice'])->where('cus_id', '[0-9]+');
         Route::post('quoteprices/{qp_id}/update', ['as' => 'api-update-quoteprice', 'uses' => 'Api\QuotepriceController@updateQuoteprice'])->where('qp_id', '[0-9]+');
+        Route::post('quoteprices/{qp_id}/send', ['as' => 'api-update-quoteprice', 'uses' => 'Api\QuotepriceController@sendQuoteprice'])->where('qp_id', '[0-9]+');
         Route::delete('quoteprices/{qp_ids}/delete', ['as' => 'api-delete-quoteprices', 'uses' => 'Api\QuotepriceController@deleteQuoteprices'])->where('qp_ids', '^([0-9]+,)+[0-9]+|[0-9]+');
 
         Route::get('orders', ['as' => 'api-get-orders', 'uses' => 'Api\OrderController@getOrders']);

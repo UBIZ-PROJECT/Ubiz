@@ -2,10 +2,12 @@
 
 namespace App\Model;
 
+use App\User;
 use App\Helper;
-use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Model\QuotepriceDetail;
 
@@ -487,6 +489,16 @@ class Quoteprice
         }
     }
 
+    public function sendQuoteprice($quoteprice, $quoteprices_detail)
+    {
+        try {
+            $this->makeFilePDF($quoteprice, $quoteprices_detail);
+
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
     public function dateValidator($date)
     {
         $credential_name = "name";
@@ -502,6 +514,22 @@ class Quoteprice
             return false;
         }
         return true;
+    }
+
+    public function makeFilePDF($quoteprice, $quoteprices_detail)
+    {
+        try {
+            $user = new User();
+            $userData = $user->getCurrentUser();
+            $pdf = PDF::loadView('quoteprice_pdf', [
+                'user' => $userData,
+                'quoteprice' => $quoteprice,
+                'quoteprices_detail' => $quoteprices_detail
+            ])->setPaper('a4');
+            Storage::put('quoteprices/' . uniqid() . ".pdf", $pdf->output());
+        } catch (\Throwable $e) {
+            throw $e;
+        }
     }
 
     public function makeWhereRaw($search = '')
