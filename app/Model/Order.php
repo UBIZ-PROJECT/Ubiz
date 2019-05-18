@@ -6,6 +6,7 @@ use App\Helper;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\User;
 use App\Model\Product;
 use App\Model\Quoteprice;
 use App\Model\OrderDetail;
@@ -250,8 +251,9 @@ class Order
         try {
 
             //create orders
+            $ord_no = $this->generateOrdNo();
             $order = [
-                "ord_no" => '',
+                "ord_no" => $ord_no,
                 "ord_date" => date('Y-m-d'),
                 "ord_tax" => $quoteprice->qp_tax,
                 "ord_amount" => $quoteprice->qp_amount,
@@ -359,7 +361,7 @@ class Order
                 $res['success'] = false;
                 $message[] = __('Order No is required.');
             }
-            if (array_key_exists('ord_no', $order) && mb_strlen($order['ord_no'], "utf-8") > 10) {
+            if (array_key_exists('ord_no', $order) && mb_strlen($order['ord_no'], "utf-8") > 30) {
                 $res['success'] = false;
                 $message[] = __('Order No is too long.');
             }
@@ -538,6 +540,26 @@ class Order
             throw $e;
         }
 
+    }
+
+    public function generateOrdNo()
+    {
+        try {
+            $user = new User();
+            $curUser = $user->getCurrentUser();
+            $pre_reg = strtoupper(explode('@', $curUser->email)[0]) . 'DH' . date('y');
+            $reg = '^' . $pre_reg . '[0-9]{5,}$';
+            $order = DB::select("SELECT MAX(ord_no) AS ord_no FROM `order` WHERE ord_no REGEXP :reg;", ['reg' => $reg]);
+            if ($order[0]->ord_no == null) {
+                $ord_no_num = 1;
+            } else {
+                $ord_no_num = intval(str_replace($pre_reg, '', $order[0]->ord_no)) + 1;
+            }
+            $ord_no = $pre_reg . str_pad($ord_no_num, 5, '0', STR_PAD_LEFT);
+            return $ord_no;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
     }
 
     public function checkOrderIsExistsByQpId($qp_id)

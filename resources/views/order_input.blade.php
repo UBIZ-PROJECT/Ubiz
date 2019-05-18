@@ -127,7 +127,7 @@
                             <div class="col-md-auto">
                                 <div class="row">
                                     <div class="col-md-auto">
-                                        @include('components.input',['control_id'=>'ord_no', 'value'=> $order->ord_no, 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Order No'), 'i_focus'=>'', 'i_blur'=>'', 'onchange'=>"ord_no_change(this)"])
+                                        @include('components.input',['control_id'=>'ord_no', 'value'=> $order->ord_no, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Order No'), 'i_focus'=>'', 'i_blur'=>'', 'onchange'=>"ord_no_change(this)"])
                                     </div>
                                 </div>
                                 <div class="row">

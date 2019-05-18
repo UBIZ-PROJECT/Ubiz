@@ -106,7 +106,7 @@
                             <div class="col-md-auto">
                                 <div class="row">
                                     <div class="col-md-auto">
-                                        @include('components.input',['control_id'=>'qp_no', 'value'=> '', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('QP No'), 'i_focus'=>'', 'i_blur'=>'', 'onchange'=>"qp_no_change(this)"])
+                                        @include('components.input',['control_id'=>'qp_no', 'value'=> $qp_no, 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('QP No'), 'i_focus'=>'', 'i_blur'=>'', 'onchange'=>"qp_no_change(this)"])
                                     </div>
                                 </div>
                                 <div class="row">

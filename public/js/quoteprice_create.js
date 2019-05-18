@@ -886,7 +886,7 @@ function qp_back_to_output() {
 function qp_save() {
     swal({
         title: i18next.t('Do you want to save the data.?'),
-        type: 'warning',
+        type: 'question',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
@@ -914,10 +914,32 @@ function qp_save_callback(response) {
         })
 
     } else {
-        swal.fire({
-            type: 'error',
-            title: response.data.message
-        })
+        if (typeof response.data.qp_no == "undefined") {
+            swal.fire({
+                type: 'error',
+                title: response.data.message
+            })
+        } else {
+            swal({
+                title: response.data.message,
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: i18next.t('No'),
+                confirmButtonText: i18next.t('Yes'),
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    $("input[name=qp_no]").val(response.data.qp_no);
+                    $("input[name=qp_no_old]").val(response.data.qp_no);
+                    var data = {};
+                    data.quoteprice = qp_colect_data();
+                    data.quoteprice_detail = dt_row_colect_data();
+                    ubizapis('v1', '/quoteprices/' + data.quoteprice.cus_id + '/create', 'post', {'data': data}, null, qp_save_callback);
+                }
+            })
+        }
     }
 }
 
