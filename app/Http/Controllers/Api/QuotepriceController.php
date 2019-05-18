@@ -115,9 +115,12 @@ class QuotepriceController extends Controller
             $qpDetailData = $qpDetailModel->getQuotepriceDetailsByQpId($qp_id);
 
             //send quoteprice
-            $qpModel->sendQuoteprice($qpData, $qpDetailData);
+            $uniqid = $qpModel->sendQuoteprice($qpData, $qpDetailData);
+            if($uniqid == false){
+                return response()->json(['success' => false, 'message' => __('Send quoteprices fail.')], 200);
+            }
 
-            return response()->json(['success' => true, 'message' => __('Successfully processed.')], 200);
+            return response()->json(['uniqid' => $uniqid, 'success' => true, 'message' => __('Successfully processed.')], 200);
         } catch (\Throwable $e) {
             throw $e;
         }

@@ -976,7 +976,40 @@ function qp_refresh() {
 }
 
 function qp_send() {
+    swal({
+        title: i18next.t('Do you want to send quoteprice to the customer.?'),
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: i18next.t('No'),
+        confirmButtonText: i18next.t('Yes'),
+        reverseButtons: true
+    }).then((result) => {
+        if (result.value) {
+            var qp_id = $("input[name=qp_id]").val();
+            ubizapis('v1', '/quoteprices/' + qp_id + '/send', 'post', null, null, qp_send_callback);
+        }
+    })
+}
 
+function qp_send_callback(response) {
+    if (response.data.success == true) {
+        swal.fire({
+            type: 'success',
+            title: response.data.message,
+            onClose: () => {
+                var qp_id = $("input[name=qp_id]").val();
+                window.open('/quoteprices/' + qp_id + '/pdf/' + response.data.uniqid);
+            }
+        })
+
+    } else {
+        swal.fire({
+            type: 'error',
+            title: response.data.message
+        })
+    }
 }
 
 function qp_create_order() {

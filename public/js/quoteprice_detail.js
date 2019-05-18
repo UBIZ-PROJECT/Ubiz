@@ -993,11 +993,15 @@ function qp_send() {
     })
 }
 
-function qp_send_callback(response){
+function qp_send_callback(response) {
     if (response.data.success == true) {
         swal.fire({
             type: 'success',
-            title: response.data.message
+            title: response.data.message,
+            onClose: () => {
+                var qp_id = $("input[name=qp_id]").val();
+                window.open('/quoteprices/' + qp_id + '/pdf/' + response.data.uniqid);
+            }
         })
 
     } else {

@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use Mail;
 use App\User;
 use App\Helper;
 use Barryvdh\DomPDF\Facade as PDF;
@@ -69,6 +70,7 @@ class Quoteprice
                     'customer.cus_phone',
                     'customer.cus_fax',
                     'customer.cus_mail',
+                    'customer.cus_sex',
                     'customer.cus_avatar',
                     'customer_address.cad_address as cus_addr',
                     'm_customer_type.title as cus_type',
@@ -491,10 +493,46 @@ class Quoteprice
 
     public function sendQuoteprice($quoteprice, $quoteprices_detail)
     {
+        DB::beginTransaction();
         try {
-            $this->makeFilePDF($quoteprice, $quoteprices_detail);
 
+            $file = $this->makeFilePDF($quoteprice, $quoteprices_detail);
+            if ($file == false)
+                return false;
+
+            $user = new User();
+            $curUser = $user->getCurrentUser();
+
+            $data = [
+                'cus_sex' => $quoteprice->cus_sex == '0' ? 'chị' : 'anh',
+                'company' => $curUser->com_nm_shot,
+                'cus_name' => $quoteprice->cus_name,
+                'user_name' => $quoteprice->sale_name
+            ];
+
+            Mail::send('quoteprice_mail', $data, function ($message) use ($quoteprice, $file) {
+                $message->subject('[TKP] Báo giá');
+                $message->from($quoteprice->sale_email, $quoteprice->sale_name);
+                $message->to($quoteprice->cus_mail);
+                $message->attach($file['file_path'], ['as' => $file['file_name']]);
+            });
+
+            if (Mail::failures())
+                return false;
+
+            DB::table('quoteprice_file')
+                ->insert([
+                    'qp_id' => $quoteprice->qp_id,
+                    'uniqid' => $file['uniqid'],
+                    'file_name' => $file['file_name'],
+                    'upd_user' => Auth::user()->id,
+                    'inp_user' => Auth::user()->id
+                ]);
+
+            DB::commit();
+            return $file['uniqid'];
         } catch (\Throwable $e) {
+            DB::rollback();
             throw $e;
         }
     }
@@ -516,17 +554,65 @@ class Quoteprice
         return true;
     }
 
+    public function getPdfFile($qp_id, $uniqid)
+    {
+        try {
+            $file = DB::table('quoteprice_file')
+                ->where([
+                    ['quoteprice_file.qp_id', '=', $qp_id],
+                    ['quoteprice_file.uniqid', '=', $uniqid],
+                    ['quoteprice_file.delete_flg', '=', '0']
+                ])
+                ->first();
+
+            if ($file == null)
+                return;
+
+            $is_exists = Storage::disk('quoteprices')->exists("$uniqid.pdf");
+            if ($is_exists == false)
+                return null;
+
+            return [
+                'name' => $file->file_name,
+                'path' => Storage::disk('quoteprices')->path("$uniqid.pdf")
+            ];
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
     public function makeFilePDF($quoteprice, $quoteprices_detail)
     {
         try {
             $user = new User();
             $userData = $user->getCurrentUser();
+
+            $tmp_quoteprices_detail = [];
+            foreach ($quoteprices_detail as $idx => $item) {
+
+                if (array_key_exists($item->type, $tmp_quoteprices_detail) == false) {
+                    $tmp_quoteprices_detail[$item->type] = [];
+                }
+                $tmp_quoteprices_detail[$item->type][] = $item;
+            }
+
+            $uniqid = uniqid();
+            $file_name = '[TKP] ' . date('d.m.Y') . '_' . $quoteprice->qp_no . '_' . $quoteprice->cus_code;
             $pdf = PDF::loadView('quoteprice_pdf', [
                 'user' => $userData,
+                'title' => $file_name,
                 'quoteprice' => $quoteprice,
-                'quoteprices_detail' => $quoteprices_detail
+                'quoteprices_detail' => $tmp_quoteprices_detail
             ])->setPaper('a4');
-            Storage::put('quoteprices/' . uniqid() . ".pdf", $pdf->output());
+            $is_put = Storage::put("quoteprices/$uniqid.pdf", $pdf->output());
+            if ($is_put == false)
+                return false;
+
+            return [
+                'uniqid' => $uniqid,
+                'file_path' => Storage::disk('quoteprices')->path("$uniqid.pdf"),
+                'file_name' => $file_name
+            ];
         } catch (\Throwable $e) {
             throw $e;
         }
