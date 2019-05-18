@@ -317,7 +317,7 @@ class Quoteprice
                 $res['success'] = false;
                 $message[] = __('QP No is required.');
             }
-            if (array_key_exists('qp_no', $quoteprice) && mb_strlen($quoteprice['qp_no'], "utf-8") > 10) {
+            if (array_key_exists('qp_no', $quoteprice) && mb_strlen($quoteprice['qp_no'], "utf-8") > 30) {
                 $res['success'] = false;
                 $message[] = __('QP No is too long.');
             }
@@ -448,6 +448,43 @@ class Quoteprice
             throw $e;
         }
 
+    }
+
+    public function isQpNoExists($qp_no)
+    {
+        try {
+            $cnt = DB::table('quoteprice')
+                ->where([
+                    ['quoteprice.qp_no', '=', $qp_no],
+                    ['quoteprice.delete_flg', '=', '0']
+                ])
+                ->count();
+            if ($cnt > 0)
+                return true;
+            return false;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function generateQpNo()
+    {
+        try {
+            $user = new User();
+            $curUser = $user->getCurrentUser();
+            $pre_reg = strtoupper(explode('@', $curUser->email)[0]) . 'BG' . date('y');
+            $reg = '^' . $pre_reg . '[0-9]{5,}$';
+            $quoteprice = DB::select("SELECT MAX(qp_no) AS qp_no FROM quoteprice WHERE qp_no REGEXP :reg;", ['reg' => $reg]);
+            if ($quoteprice[0]->qp_no == null) {
+                $qp_no_num = 1;
+            } else {
+                $qp_no_num = intval(str_replace($pre_reg, '', $quoteprice[0]->qp_no)) + 1;
+            }
+            $qp_no = $pre_reg . str_pad($qp_no_num, 5, '0', STR_PAD_LEFT);
+            return $qp_no;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
     }
 
     public function deleteQuotepricesByIds($qp_ids = '')

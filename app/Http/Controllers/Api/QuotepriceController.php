@@ -51,6 +51,12 @@ class QuotepriceController extends Controller
                 return response()->json(['success' => false, 'message' => $validator['message']], 200);
             }
 
+            $is_exists = $qpModel->isQpNoExists($data['quoteprice']['qp_no']);
+            if ($is_exists == true) {
+                $qp_no = $qpModel->generateQpNo();
+                return response()->json(['qp_no' => $qp_no, 'success' => false, 'message' => __('QP No is exists.', ['qp_no_old' => $data['quoteprice']['qp_no'], 'qp_no_new' => $qp_no])], 200);
+            }
+
             //create quoteprice
             $qpModel->transactionCreateQuoteprice($cus_id, $data);
 
@@ -116,7 +122,7 @@ class QuotepriceController extends Controller
 
             //send quoteprice
             $uniqid = $qpModel->sendQuoteprice($qpData, $qpDetailData);
-            if($uniqid == false){
+            if ($uniqid == false) {
                 return response()->json(['success' => false, 'message' => __('Send quoteprices fail.')], 200);
             }
 

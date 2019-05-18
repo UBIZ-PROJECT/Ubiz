@@ -195,6 +195,7 @@
   "QP No": "Mã báo giá",
   "QP No is too long.": "Mã báo quá dài.",
   "QP No is required.": "Mã báo quá không được để trống.",
+  "QP No is exists.": "Mã báo giá [:qp_no_old] đã tồn tại.\nMã báo giá mới [:qp_no_new] được tạo ra để thay thế.\nBạn có muốn tiếp tục không?",
   "QP Tax is required.": "Thuế VAT không được để trống.",
   "QP Date": "Ngày tạo",
   "QP Exp Date": "Hết hạn",

@@ -18,9 +18,9 @@ class QuotepriceController extends Controller
     public function index(Request $request)
     {
         try {
-            $qp = new Quoteprice();
-            $qpData = $qp->getQuoteprices();
-            $pagingData = $qp->getPagingInfo();
+            $qpModel = new Quoteprice();
+            $qpData = $qpModel->getQuoteprices();
+            $pagingData = $qpModel->getPagingInfo();
             $pagingData['page'] = 0;
             return view('quoteprice', ['quoteprices' => $qpData, 'paging' => $pagingData]);
         } catch (\Throwable $e) {
@@ -30,8 +30,8 @@ class QuotepriceController extends Controller
 
     public function detail(Request $request, $qp_id)
     {
-        $qp = new Quoteprice();
-        $qpData = $qp->getQuoteprice($qp_id);
+        $qpModel = new Quoteprice();
+        $qpData = $qpModel->getQuoteprice($qp_id);
 
         if ($qpData == null) {
             return response()->view('errors.404', [], 404);
@@ -63,14 +63,18 @@ class QuotepriceController extends Controller
         $user = new User();
         $userData = $user->getCurrentUser();
 
+        $qpModel = new Quoteprice();
+        $qp_no = $qpModel->generateQpNo();
+
         $prdStatus = new ProductStatus();
         $prdStatusData = $prdStatus->getAllStatus();
 
         $cusAddress = new CustomerAddress();
         $cusAddressData = $cusAddress->getAddressByCusId($cus_id);
         return view('quoteprice_create', [
-            'customer' => $cusData,
+            'qp_no' => $qp_no,
             'user' => $userData,
+            'customer' => $cusData,
             'prdStatus' => Helper::convertDataToDropdownOptions($prdStatusData, 'id', 'title'),
             'cusAddress' => Helper::convertDataToDropdownOptions($cusAddressData, 'cad_id', 'cad_address'),
         ]);
@@ -78,13 +82,13 @@ class QuotepriceController extends Controller
 
     public function pdf(Request $request, $qp_id, $uniqid)
     {
-        $qp = new Quoteprice();
-        $qpData = $qp->getQuoteprice($qp_id);
+        $qpModel = new Quoteprice();
+        $qpData = $qpModel->getQuoteprice($qp_id);
         if ($qpData == null) {
             return response()->view('errors.404', [], 404);
         }
 
-        $file = $qp->getPdfFile($qp_id, $uniqid);
+        $file = $qpModel->getPdfFile($qp_id, $uniqid);
         if ($file == null) {
             return response()->view('errors.404', [], 404);
         }

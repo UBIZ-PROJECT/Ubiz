@@ -1087,6 +1087,12 @@ $(document).ready(function () {
         side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
     });
     $("a[name=order_step]").on("click", function () {
-        qp_create_order();
+        var ord_id = numeral($("input[name=ord_id]").val()).value();
+        if (ord_id > 0) {
+            window.location.href = "/orders/" + ord_id;
+        } else {
+            qp_create_order();
+        }
+
     });
 });
