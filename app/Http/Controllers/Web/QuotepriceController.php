@@ -75,4 +75,20 @@ class QuotepriceController extends Controller
             'cusAddress' => Helper::convertDataToDropdownOptions($cusAddressData, 'cad_id', 'cad_address'),
         ]);
     }
+
+    public function pdf(Request $request, $qp_id, $uniqid)
+    {
+        $qp = new Quoteprice();
+        $qpData = $qp->getQuoteprice($qp_id);
+        if ($qpData == null) {
+            return response()->view('errors.404', [], 404);
+        }
+
+        $file = $qp->getPdfFile($qp_id, $uniqid);
+        if ($file == null) {
+            return response()->view('errors.404', [], 404);
+        }
+
+        return response()->file($file['path'], ['Content-Disposition' => 'filename="' . $file['name'] . '.pdf"']);
+    }
 }

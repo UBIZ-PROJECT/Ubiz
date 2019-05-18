@@ -3,9 +3,11 @@
 namespace App\Model;
 
 use App\Helper;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use App\Model\Product;
+use App\Model\Quoteprice;
 use App\Model\OrderDetail;
 
 class Order
@@ -151,12 +153,13 @@ class Order
         DB::beginTransaction();
         try {
 
+            $imp_step = 0;
             $insert_order_detail_data = [];
             $delete_order_detail_data = [];
             $update_order_detail_data = [];
 
-            foreach ($data['order_detail'] as $item) {
-
+            $order_detail = array_key_exists('order_detail', $data) ? $data['order_detail'] : [];
+            foreach ($order_detail as $item) {
 
                 $order_detail_data = [
                     "note" => $item['dt_note'],
@@ -193,11 +196,17 @@ class Order
                 $action = $item['action'];
                 switch ($action) {
                     case'insert':
+                        if ($item['dt_status'] == '2') {
+                            $imp_step = '1';
+                        }
                         $order_detail_data["ord_id"] = $ord_id;
                         $order_detail_data["inp_user"] = Auth::user()->id;
                         $insert_order_detail_data[] = $order_detail_data;
                         break;
                     case'update':
+                        if ($item['dt_status'] == '2') {
+                            $imp_step = '1';
+                        }
                         $order_detail_data["ordt_id"] = $item['dt_id'];
                         $update_order_detail_data[] = $order_detail_data;
                         break;
@@ -208,7 +217,9 @@ class Order
             }
 
             //update orders
-            $this->updateOrder($data['order']);
+            $order = $data['order'];
+            $order['imp_step'] = $imp_step;
+            $this->updateOrder($order);
 
             $orderDetail = new OrderDetail();
             //insert order detail
@@ -246,12 +257,12 @@ class Order
                 "ord_amount" => $quoteprice->qp_amount,
                 "ord_amount_tax" => $quoteprice->qp_amount_tax,
                 "ord_paid" => '0',
-                "ord_debt" => '0',
+                "ord_debt" => $quoteprice->qp_amount_tax,
                 "ord_note" => $quoteprice->qp_note,
                 "qp_id" => $quoteprice->qp_id,
                 "cus_id" => $quoteprice->cus_id,
                 "cad_id" => $quoteprice->cad_id,
-                "step" => '2',
+                "sale_step" => '2',
                 "sale_id" => Auth::user()->id,
                 "contact_name" => $quoteprice->contact_name,
                 "contact_rank" => $quoteprice->contact_rank,
@@ -263,8 +274,13 @@ class Order
             ];
             $ord_id = $this->insertOrder($order);
 
+            $imp_step = 0;
             $insert_order_detail_data = [];
             foreach ($quoteprice_details as $item) {
+
+                if ($item->status == '2') {
+                    $imp_step = '1';
+                }
 
                 $order_detail_data = [
                     "ord_id" => $ord_id,
@@ -304,6 +320,19 @@ class Order
                 $orderDetail->insertOrderDetail($insert_order_detail_data);
             }
 
+            $order = [];
+            $order['ord_id'] = $ord_id;
+            $order['imp_step'] = $imp_step;
+            $order['upd_user'] = Auth::user()->id;
+            $this->updateOrder($order);
+
+            $qpModel = new Quoteprice();
+            $qpUpdateData = [
+                'qp_id' => $quoteprice->qp_id,
+                'sale_step' => '2'
+            ];
+            $qpModel->updateQuoteprice($qpUpdateData);
+
             DB::commit();
             return $ord_id;
         } catch (\Throwable $e) {
@@ -338,7 +367,7 @@ class Order
                 $res['success'] = false;
                 $message[] = __('Order Date is required.');
             }
-            if (array_key_exists('ord_date', $order) && Carbon::createFromFormat('Y/m/d', $order['ord_date']) == false) {
+            if (array_key_exists('ord_date', $order) && $this->dateValidator($order['ord_date']) == false) {
                 $res['success'] = false;
                 $message[] = __('Order Date is wrong format YYYY/MM/DD.');
             }
@@ -411,6 +440,7 @@ class Order
                 }
             }
 
+            $prdModel = new Product();
             $dt_total_amount = 0;
             $order_details = array_key_exists('order_detail', $data) ? $data['order_detail'] : [];
             foreach ($order_details as $line_no => $item) {
@@ -462,6 +492,37 @@ class Order
 
                 if ($item['action'] == 'delete')
                     continue;
+
+                if ($item['dt_type'] == 1 && $item['dt_prod_model'] != '') {
+                    $is_exists = $prdModel->checkProductIsExistsByModel($item['dt_prod_model']);
+                    if ($is_exists == false) {
+                        $res['success'] = false;
+                        $message[] = __('[Row : :line ] model [ :model ] is not exists.', ['line' => "No." + ($line_no + 1), 'model' => $item['dt_prod_model']]);
+                    }
+                }
+
+                if ($item['dt_type'] == 1 && $item['dt_prod_model'] != '' && $item['dt_prod_series'] != '') {
+
+                    $prdSeriesObjData = $prdModel->getProductSeriesByModel($item['dt_prod_model']);
+                    $prdSeriesArrData = [];
+                    foreach ($prdSeriesObjData as $seri) {
+                        $prdSeriesArrData[] = $seri->serial_no;
+                    }
+
+                    $dt_prod_series = explode(",", $item['dt_prod_series']);
+                    $not_exists_series = [];
+                    foreach ($dt_prod_series as $seri) {
+                        if (in_array($seri, $prdSeriesArrData) == false) {
+                            $not_exists_series[] = $seri;
+                        }
+                    }
+
+                    if (sizeof($not_exists_series) > 0) {
+                        $res['success'] = false;
+                        $message[] = __('[Row : :line ] series [ :series ] is not exists.', ['line' => "No." + ($line_no + 1), 'series' => implode(",", $not_exists_series)]);
+                    }
+                }
+
                 $dt_total_amount += $item['dt_amount'] == null || $item['dt_amount'] == '' ? 0 : doubleval($item['dt_amount']);
             }
 
@@ -477,6 +538,24 @@ class Order
             throw $e;
         }
 
+    }
+
+    public function checkOrderIsExistsByQpId($qp_id)
+    {
+        try {
+            $cnt = DB::table('order')
+                ->where([
+                    ['order.qp_id', '=', $qp_id],
+                    ['order.delete_flg', '=', '0'],
+                    ['order.owner_id', '=', Auth::user()->id]
+                ])
+                ->count();
+            if ($cnt > 0)
+                return false;
+            return true;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
     }
 
     public function deleteOrdersByIds($ord_ids = '')
@@ -533,7 +612,7 @@ class Order
             $where_raw .= " AND ( ";
             $where_raw .= " order.ord_no like ? ";
             $params[] = $search_val;
-            if (Carbon::createFromFormat('Y/m/d', $search) == true || Carbon::createFromFormat('Y-m-d', $search) == true) {
+            if ($this->dateValidator($search) == true) {
                 $where_raw .= " OR order.ord_date = ? ";
                 $params[] = $search;
             } else {
@@ -562,6 +641,23 @@ class Order
 
         }
         return [$where_raw, $params];
+    }
+
+    public function dateValidator($date)
+    {
+        $credential_name = "name";
+        $credential_data = $date;
+        $rules = [
+            $credential_name => 'date'
+        ];
+        $credentials = [
+            $credential_name => $credential_data
+        ];
+        $validator = Validator::make($credentials, $rules);
+        if ($validator->fails()) {
+            return false;
+        }
+        return true;
     }
 
     public function makeOrderBy($sort = '')

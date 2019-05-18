@@ -92,13 +92,7 @@
                                 </div>
                             </div>
                             <div class="col-7 text-left pdt-5">
-                                <ul class="nav nav-wizard">
-                                    <li class="active"><a href="#">{{ __('QP') }}</a></li>
-                                    <li class="undone"><a href="#">{{ __('Order') }}</a></li>
-                                    <li class="undone"><a href="#">{{ __('Import') }}</a></li>
-                                    <li class="undone"><a href="#">{{ __('Contract') }}</a></li>
-                                    <li class="undone"><a href="#">{{ __('Delivery') }}</a></li>
-                                </ul>
+                                @include('components.sale_step', ['sale_step'=>0])
                             </div>
                             <div class="col-2 text-right">
 
@@ -212,7 +206,8 @@
                             </button>
                         </ul>
                         <div class="tab-content" id="tab-ord-inp-content">
-                            <div class="tab-pane fade show active" id="dt-prod" role="tabpanel" aria-labelledby="dt-prod-tab">
+                            <div class="tab-pane fade show active" id="dt-prod" role="tabpanel"
+                                 aria-labelledby="dt-prod-tab">
                                 <div class="dt-row" dt_id="0">
                                     <div class="row dt-row-head zero-mgl zero-mgr" onclick="my_collapse(this)">
                                         <div class="col text-left">
@@ -311,7 +306,8 @@
                                             <span>{{ __('Total value of quoteprices (before VAT)') }}</span>
                                         </div>
                                         <div class="col-md-auto z-pdr z-pdl" style="width: 150px">
-                                            <input type="text" name="qp_amount" readonly class="w-100 text-right" value="0">
+                                            <input type="text" name="qp_amount" readonly class="w-100 text-right"
+                                                   value="0">
                                             <input type="hidden" value="0" name="qp_amount_old">
                                         </div>
                                         <div class="col-md-auto z-mgr z-mgl">
@@ -323,7 +319,8 @@
                                             <span>{{ __('Total value of quoteprices (VAT included)') }}</span>
                                         </div>
                                         <div class="col-md-auto z-pdr z-pdl" style="width: 150px">
-                                            <input type="text" name="qp_amount_tax" readonly class="w-100 text-right" value="0">
+                                            <input type="text" name="qp_amount_tax" readonly class="w-100 text-right"
+                                                   value="0">
                                             <input type="hidden" value="" name="qp_amount_tax_old">
                                         </div>
                                         <div class="col-md-auto z-mgr z-mgl">

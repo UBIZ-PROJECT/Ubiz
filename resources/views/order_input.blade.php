@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/headbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/common.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/order_input.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('dist/tageditor/jquery.tag-editor.css') }}">
 @endsection
 @section('headbar')
     @include('layouts/headbar')
@@ -64,6 +65,7 @@
         <div class="r-content">
             <div class="jAQ" id="i-put">
                 <input type="hidden" name="ord_id" value="{{ $order->ord_id }}">
+                <input type="hidden" name="qp_id" value="{{ $order->qp_id }}">
                 <div class="bkK">
                     <div class="rwq">
                         <div class="row z-mgr z-mgl">
@@ -97,17 +99,24 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-7 text-left pdt-5">
-                                <ul class="nav nav-wizard">
-                                    <li class="done"><a href="#">{{ __('Pricing') }}</a></li>
-                                    <li class="done"><a href="#">{{ __('Order') }}</a></li>
-                                    <li class="undone"><a href="#">{{ __('Import') }}</a></li>
-                                    <li class="undone"><a href="#">{{ __('Contract') }}</a></li>
-                                    <li class="undone"><a href="#">{{ __('Delivery') }}</a></li>
-                                </ul>
+                            <div class="col-6 text-left pdt-5">
+                                @include('components.sale_step', ['sale_step'=>$order->sale_step])
                             </div>
-                            <div class="col-2 text-right">
+                            <div class="col-3 text-right pdt-5">
+                                <input type="hidden" name="sale_step" value="{{ $order->imp_step }}">
+                                @switch($order->imp_step)
+                                    @case('1')
+                                    <button type="button" onclick="ord_order_supplier()" class="btn btn-info btn-sm" title="{{ __("Order supplier.") }}">
+                                        {{ __("Order supplier.") }}
+                                    </button>
+                                    @break
 
+                                    @case('2')
+                                    <button type="button" onclick="ord_reorder_supplier()" class="btn btn-info btn-sm" title="{{ __("Order supplier.") }}">
+                                        {{ __("Ordered supplier.") }}
+                                    </button>
+                                    @break
+                                @endswitch
                             </div>
                         </div>
                     </div>
@@ -231,12 +240,26 @@
                                             <div class="row dt-row-body zero-mgl zero-mgr collapse hide">
                                                 <div class="col-md-auto">
                                                     <label class="lbl-primary">{{ __('Specification') }}:</label>
-                                                    <textarea name="dt_prod_specs_mce"
-                                                              id="dt_prod_specs_mce_1">{{ $item->prod_specs_mce }}</textarea>
+                                                    <textarea name="dt_prod_specs_mce" id="dt_prod_specs_mce_{{ $idx }}">{{ $item->prod_specs_mce }}</textarea>
                                                 </div>
                                                 <div class="col-md-auto">
                                                     @include('components.input',['value'=>$item->prod_model, 'control_id'=>'dt_prod_model','width'=> '250', 'lbl_width'=>'70', 'label'=>__('Model'), 'i_focus'=>'', 'i_blur'=>''])
-                                                    @include('components.textarea',['value'=>$item->prod_series, 'width'=>'250', 'height'=>'100', 'control_id'=>'dt_prod_series', 'resize'=>'none', 'label'=>__('Series')])
+                                                    <div class="textarea  root_textarea rootIsUnderlined dt_prod_series_container"
+                                                         style="width: 250px">
+                                                        <label for="dt_prod_series" class="ms-Label root-56 lbl-primary ">
+                                                            {{ __('Series') }}
+                                                        </label>
+                                                        <div class="wrapper">
+                                                            <div class="fieldGroup_area">
+                                                            <textarea style="height: 100px;width: 250px; resize: none"
+                                                                      is-change="false" placeholder=""
+                                                                      id="dt_prod_series_{{ $idx }}" name="dt_prod_series"
+                                                                      class="input-textarea ">{{ $item->prod_series }}</textarea>
+                                                                <textarea style="display: none"
+                                                                          name="dt_prod_series_old"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     @include('components.textarea',['value'=>$item->note, 'width'=>'250', 'height'=>'100', 'control_id'=>'dt_note', 'resize'=>'none', 'label'=>__('Note')])
                                                 </div>
                                                 <div class="col-md-auto">
@@ -282,6 +305,22 @@
                                             <div class="col-md-auto">
                                                 @include('components.input',['value'=>'', 'control_id'=>'dt_prod_model','width'=> '250', 'lbl_width'=>'70', 'label'=>__('Model'), 'i_focus'=>'', 'i_blur'=>''])
                                                 @include('components.textarea',['value'=>'', 'width'=>'250', 'height'=>'100', 'control_id'=>'dt_prod_series', 'resize'=>'none', 'label'=>__('Series')])
+                                                <div class="textarea  root_textarea rootIsUnderlined dt_prod_series_container"
+                                                     style="width: 250px">
+                                                    <label for="dt_prod_series" class="ms-Label root-56 lbl-primary ">
+                                                        {{ __('Series') }}
+                                                    </label>
+                                                    <div class="wrapper">
+                                                        <div class="fieldGroup_area">
+                                                            <textarea style="height: 100px;width: 250px; resize: none"
+                                                                      is-change="false" placeholder=""
+                                                                      id="dt_prod_series" name="dt_prod_series"
+                                                                      class="input-textarea "></textarea>
+                                                            <textarea style="display: none"
+                                                                      name="dt_prod_series_old"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 @include('components.textarea',['value'=>'', 'width'=>'250', 'height'=>'100', 'control_id'=>'dt_note', 'resize'=>'none', 'label'=>__('Note')])
                                             </div>
                                             <div class="col-md-auto">
@@ -469,5 +508,7 @@
     </div>
 @endsection
 @section('end-javascript')
+    <script type="text/javascript" src="{{ asset('dist/tageditor/jquery.tag-editor.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('dist/tageditor/jquery.caret.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/order_input.js') }}"></script>
 @endsection

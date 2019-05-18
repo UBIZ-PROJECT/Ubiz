@@ -163,6 +163,7 @@
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(quoteprices[i].qp_id, quoteprices[i].sale_name, 4));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(quoteprices[i].qp_id, quoteprices[i].cus_name, 5));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(quoteprices[i].qp_id, numeral(quoteprices[i].qp_amount_tax).format('0,0'), 6));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(quoteprices[i].qp_id, jQuery.UbizOIWidget.w_render_sale_step(quoteprices[i].sale_step), 7));
                     rows.push(jQuery.UbizOIWidget.w_make_row_html(quoteprices[i].qp_id, cols));
                 }
                 table_html += rows.join("");
@@ -172,6 +173,24 @@
             jQuery.UbizOIWidget.w_reset_f_checkbox_status();
             jQuery.UbizOIWidget.page = response.data.paging.page;
             jQuery.UbizOIWidget.w_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
+        },
+        w_render_sale_step: function (sale_step) {
+            var sale_step_name = "";
+            switch (sale_step) {
+                case '1':
+                    sale_step_name = i18next.t('QP');
+                    break;
+                case '1':
+                    sale_step_name = i18next.t('Order');
+                    break;
+                case '1':
+                    sale_step_name = i18next.t('Contract');
+                    break;
+                case '1':
+                    sale_step_name = i18next.t('Delivery');
+                    break;
+            }
+            return '<span className="badge badge-success">' + sale_step_name + '</span>';
         },
         w_go_to_input_page: function (id) {
             window.location.href = '/quoteprices/' + id;

@@ -17,6 +17,7 @@
     "cross-env": "^5.1",
     "jodit": "^3.1.95",
     "jquery": "^3.2",
+    "jquery-tageditor": "^1.0.1",
     "laravel-mix": "^1.0",
     "lodash": "^4.17.4",
     "popper.js": "^1.14.3",

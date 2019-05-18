@@ -2,10 +2,14 @@
 
 namespace App\Model;
 
+use Mail;
+use App\User;
 use App\Helper;
-use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use App\Model\QuotepriceDetail;
 
 class Quoteprice
@@ -53,17 +57,20 @@ class Quoteprice
     {
         try {
             $quoteprice = DB::table('quoteprice')
+                ->leftJoin('order', 'order.qp_id', '=', 'quoteprice.qp_id')
                 ->leftJoin('customer', 'customer.cus_id', '=', 'quoteprice.cus_id')
                 ->leftJoin('m_customer_type', 'customer.cus_type', '=', 'm_customer_type.id')
                 ->leftJoin('customer_address', 'customer_address.cad_id', '=', 'quoteprice.cad_id')
                 ->leftJoin('users', 'users.id', '=', 'quoteprice.sale_id')
                 ->select(
                     'quoteprice.*',
+                    'order.ord_id',
                     'customer.cus_code',
                     'customer.cus_name',
                     'customer.cus_phone',
                     'customer.cus_fax',
                     'customer.cus_mail',
+                    'customer.cus_sex',
                     'customer.cus_avatar',
                     'customer_address.cad_address as cus_addr',
                     'm_customer_type.title as cus_type',
@@ -155,8 +162,8 @@ class Quoteprice
             $delete_quoteprice_detail_data = [];
             $update_quoteprice_detail_data = [];
 
-            foreach ($data['quoteprice_detail'] as $item) {
-
+            $quoteprice_detail = array_key_exists('quoteprice_detail', $data) ? $data['quoteprice_detail'] : [];
+            foreach ($quoteprice_detail as $item) {
 
                 $quoteprice_detail_data = [
                     "note" => $item['dt_note'],
@@ -204,7 +211,8 @@ class Quoteprice
             }
 
             //update quoteprices
-            $this->updateQuoteprice($data['quoteprice']);
+            $quoteprice = $data['quoteprice'];
+            $this->updateQuoteprice($quoteprice);
 
             $quotepriceDetail = new QuotepriceDetail();
             //insert quoteprice detail
@@ -243,8 +251,8 @@ class Quoteprice
             $qp_id = $this->createQuoteprice($data['quoteprice']);
 
             $insert_quoteprice_detail_data = [];
-            foreach ($data['quoteprice_detail'] as $item) {
-
+            $quoteprice_detail = array_key_exists('quoteprice_detail', $data) ? $data['quoteprice_detail'] : [];
+            foreach ($quoteprice_detail as $item) {
 
                 $quoteprice_detail_data = [
                     "qp_id" => $qp_id,
@@ -317,7 +325,7 @@ class Quoteprice
                 $res['success'] = false;
                 $message[] = __('QP Date is required.');
             }
-            if (array_key_exists('qp_date', $quoteprice) && Carbon::createFromFormat('Y/m/d', $quoteprice['qp_date']) == false) {
+            if (array_key_exists('qp_date', $quoteprice) && $this->dateValidator($quoteprice['qp_date']) == false) {
                 $res['success'] = false;
                 $message[] = __('QP Date is wrong format YYYY/MM/DD.');
             }
@@ -325,7 +333,7 @@ class Quoteprice
                 $res['success'] = false;
                 $message[] = __('QP Exp Date is required.');
             }
-            if (array_key_exists('qp_exp_date', $quoteprice) && Carbon::createFromFormat('Y/m/d', $quoteprice['qp_exp_date']) == false) {
+            if (array_key_exists('qp_exp_date', $quoteprice) && $this->dateValidator($quoteprice['qp_exp_date']) == false) {
                 $res['success'] = false;
                 $message[] = __('QP Exp Date is wrong format YYYY/MM/DD.');
             }
@@ -483,6 +491,133 @@ class Quoteprice
         }
     }
 
+    public function sendQuoteprice($quoteprice, $quoteprices_detail)
+    {
+        DB::beginTransaction();
+        try {
+
+            $file = $this->makeFilePDF($quoteprice, $quoteprices_detail);
+            if ($file == false)
+                return false;
+
+            $user = new User();
+            $curUser = $user->getCurrentUser();
+
+            $data = [
+                'cus_sex' => $quoteprice->cus_sex == '0' ? 'chị' : 'anh',
+                'company' => $curUser->com_nm_shot,
+                'cus_name' => $quoteprice->cus_name,
+                'user_name' => $quoteprice->sale_name
+            ];
+
+            Mail::send('quoteprice_mail', $data, function ($message) use ($quoteprice, $file) {
+                $message->subject('[TKP] Báo giá');
+                $message->from($quoteprice->sale_email, $quoteprice->sale_name);
+                $message->to($quoteprice->cus_mail);
+                $message->attach($file['file_path'], ['as' => $file['file_name']]);
+            });
+
+            if (Mail::failures())
+                return false;
+
+            DB::table('quoteprice_file')
+                ->insert([
+                    'qp_id' => $quoteprice->qp_id,
+                    'uniqid' => $file['uniqid'],
+                    'file_name' => $file['file_name'],
+                    'upd_user' => Auth::user()->id,
+                    'inp_user' => Auth::user()->id
+                ]);
+
+            DB::commit();
+            return $file['uniqid'];
+        } catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    public function dateValidator($date)
+    {
+        $credential_name = "name";
+        $credential_data = $date;
+        $rules = [
+            $credential_name => 'date'
+        ];
+        $credentials = [
+            $credential_name => $credential_data
+        ];
+        $validator = Validator::make($credentials, $rules);
+        if ($validator->fails()) {
+            return false;
+        }
+        return true;
+    }
+
+    public function getPdfFile($qp_id, $uniqid)
+    {
+        try {
+            $file = DB::table('quoteprice_file')
+                ->where([
+                    ['quoteprice_file.qp_id', '=', $qp_id],
+                    ['quoteprice_file.uniqid', '=', $uniqid],
+                    ['quoteprice_file.delete_flg', '=', '0']
+                ])
+                ->first();
+
+            if ($file == null)
+                return;
+
+            $is_exists = Storage::disk('quoteprices')->exists("$uniqid.pdf");
+            if ($is_exists == false)
+                return null;
+
+            return [
+                'name' => $file->file_name,
+                'path' => Storage::disk('quoteprices')->path("$uniqid.pdf")
+            ];
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function makeFilePDF($quoteprice, $quoteprices_detail)
+    {
+        try {
+            $user = new User();
+            $userData = $user->getCurrentUser();
+
+            $tmp_quoteprices_detail = [];
+            foreach ($quoteprices_detail as $idx => $item) {
+
+                if (array_key_exists($item->type, $tmp_quoteprices_detail) == false) {
+                    $tmp_quoteprices_detail[$item->type] = [];
+                }
+                $tmp_quoteprices_detail[$item->type][] = $item;
+            }
+
+            $uniqid = uniqid();
+            $file_name = '[TKP] ' . date('d.m.Y') . '_' . $quoteprice->qp_no . '_' . $quoteprice->cus_code;
+            $pdf = PDF::loadView('quoteprice_pdf', [
+                'user' => $userData,
+                'title' => $file_name,
+                'quoteprice' => $quoteprice,
+                'quoteprices_detail' => $tmp_quoteprices_detail
+            ])->setPaper('a4');
+            $is_put = Storage::put("quoteprices/$uniqid.pdf", $pdf->output());
+            if ($is_put == false)
+                return false;
+
+            return [
+                'uniqid' => $uniqid,
+                'file_path' => Storage::disk('quoteprices')->path("$uniqid.pdf"),
+                'file_name' => $file_name
+            ];
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
     public function makeWhereRaw($search = '')
     {
         $params = [0];
@@ -495,7 +630,7 @@ class Quoteprice
             $where_raw .= " AND ( ";
             $where_raw .= " quoteprice.qp_no like ? ";
             $params[] = $search_val;
-            if (Carbon::createFromFormat('Y/m/d', $search) == true || Carbon::createFromFormat('Y-m-d', $search) == true) {
+            if ($this->dateValidator($search) == true) {
                 $where_raw .= " OR quoteprice.qp_date = ? ";
                 $params[] = $search;
                 $where_raw .= " OR quoteprice.qp_exp_date = ? ";

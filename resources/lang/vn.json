@@ -187,7 +187,7 @@
   "Total value of orders (VAT included) is required.": "Tổng giá trị đơn hàng ( đã bao gồm thuế VAT ) không được để trống..",
   "Paid is required.": "Đã thanh toán không được để trống..",
   "Debt is required.": "Còn nợ không được để trống..",
-  "Amount total is wrong.": "Tổng số tiền là sai.",
+  "Amount total is wrong.": "Tổng số tiền không đúng.",
   "[Row : :line ] pump detail is wrong data.": "[ Dòng : :line ] chi tiết bơm bị sai dữ liệu.",
   "[Row : :line ] accessory detail is wrong data.": "[ Dòng : :line ] chi tiết phụ tùng bị sai dữ liệu.",
   "Amount total of order details is not equal amount total of order.": "Tổng số tiền đơn đặt hàng không bằng tổng số tiền chi tiết đơn hàng.",
@@ -206,5 +206,12 @@
   "Total value of quoteprices (before VAT)": "Tổng giá trị báo giá( trước thuế VAT )",
   "Total value of quoteprices (VAT included)": "Tổng giá trị báo giá( đã bao gồm thuế VAT )",
   "Send QP to customer": "Gửi báo giá cho khách hàng.",
-  "Do you want to create order the data.?": "Bạn có muốn tạo đơn hàng không?"
+  "Do you want to create order the data.?": "Bạn có muốn tạo đơn hàng không?",
+  "Order is existed.\nYou can not create it.!": "Đơn hàng đã tồn tại.",
+  "Order supplier.": "Đặt hàng nhà cung cấp.",
+  "Ordered supplier.": "Đã đặt hàng nhà cung cấp.",
+  "Send quoteprices fail.": "Gửi báo giá thất bại.\nXin vui lòng kiểm tra mail của khách hàng và của bạn.\nHãy chắc chắn tài khoảng mail còn khả dụng.",
+  "[Row : :line ] model [ :model ] is not exists.": "[ Dòng : :line ] Kiểu mẫu [ :model ] không tồn tại.",
+  "[Row : :line ] series [ :series ] is not exists.": "[ Dòng : :line ] Số sêri [ :series ] không tồn tại.",
+  "Do you want to send quoteprice to the customer.?": "Bạn có muốn gửi báo giá tới khách hàng không?"
 }

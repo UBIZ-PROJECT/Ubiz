@@ -11,6 +11,7 @@ use App\Helper;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Support\Facades\Auth;
 
 class Product implements JWTSubject
 {
@@ -402,6 +403,44 @@ class Product implements JWTSubject
             'rows_num' => $rows_num,
             'rows_per_page' => $rows_per_page
         ];
+    }
+
+    public function checkProductIsExistsByModel($prd_model)
+    {
+        try {
+            $cnt = DB::table('product')
+                ->where([
+                    ['prd_model', '=', $prd_model],
+                    ['delete_flg', '=', '0'],
+                ])
+                ->count();
+            if($cnt > 0)
+                return true;
+            return false;
+        } catch(\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function getProductSeriesByModel($prd_model)
+    {
+        try {
+            $data = DB::table('product_series')
+                ->join('product', 'product_series.prd_id', '=', 'product.prd_id')
+                ->where([
+                    ['product.prd_model', '=', $prd_model],
+                    ['product_series.serial_keeper', '=', Auth::user()->id],
+                    ['product.delete_flg', '=', '0'],
+                    ['product_series.delete_flg', '=', '0']
+                ])
+                ->select(
+                    'product_series.serial_no'
+                )
+                ->get();
+            return $data;
+        } catch(\Throwable $e) {
+            throw $e;
+        }
     }
 
     public function getPagingInfoDetailProductWithConditionSearch($sort = '', $search = []) {

@@ -22,6 +22,9 @@ mix.copyDirectory('node_modules/material-design-icons/iconfont', 'public/iconfon
 mix.copyDirectory('node_modules/air-datepicker/dist', 'public/dist/air-datepicker');
 mix.copyDirectory('node_modules/@fortawesome/fontawesome-free/webfonts', 'public/iconfont/fontawesome');
 mix.copyDirectory('node_modules/tinymce', 'public/dist/tinymce');
+mix.copyDirectory('node_modules/jquery-tageditor/jquery.tag-editor.css', 'public/dist/tageditor');
+mix.copyDirectory('node_modules/jquery-tageditor/jquery.caret.min.js', 'public/dist/tageditor');
+mix.copyDirectory('node_modules/jquery-tageditor/jquery.tag-editor.min.js', 'public/dist/tageditor');
 mix.copyDirectory('resources/assets/fonts/roboto/v18', 'public/fonts/roboto/v18');
 mix.copyDirectory('resources/assets/dist', 'public/dist');
 mix.copyDirectory('resources/assets/js/es5', 'public/js');

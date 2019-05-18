@@ -1,4 +1,4 @@
-var prod_spec_no = 1;
+var prod_row_no = 1;
 var max_integer = 2147483647;
 var max_double = 9223372036854775807;
 
@@ -15,9 +15,11 @@ function my_collapse(self) {
 
 function prod_row_copy(self) {
 
-    prod_spec_no++;
-    var dt_prod_specs_mce_id = "dt_prod_specs_mce_" + prod_spec_no;
+    prod_row_no++;
+    var dt_prod_specs_mce_id = "dt_prod_specs_mce_" + prod_row_no;
     var tinymce_selector = "#" + dt_prod_specs_mce_id;
+    var dt_prod_series_id = "dt_prod_series_" + prod_row_no;
+    var tagEditor_selector = "#" + dt_prod_series_id;
 
     var copy_row = $(self).closest('div.dt-row');
 
@@ -52,11 +54,16 @@ function prod_row_copy(self) {
     var copy_tinymce_selector = copy_row.find('textarea[name=dt_prod_specs_mce]').attr('id');
     var clone_row = copy_row.clone(false)
 
-
     clone_row.find('div.tox-tinymce').remove();
     clone_row.find('textarea[name=dt_prod_specs_mce]').attr('id', dt_prod_specs_mce_id);
     clone_row.find('textarea[name=dt_prod_specs_mce]').removeAttr('style');
     clone_row.find('textarea[name=dt_prod_specs_mce]').removeAttr('aria-hidden');
+
+    clone_row.find('ul.tag-editor').remove();
+    clone_row.find('textarea[name=dt_prod_series]').attr('id', dt_prod_series_id);
+    clone_row.find('textarea[name=dt_prod_series]').text('');
+    clone_row.find('textarea[name=dt_prod_series]').removeClass('tag-editor-hidden-src');
+
     $(self).closest('div.dt-row').after(clone_row.wrap('<p/>').parent().html());
 
     var add_row = copy_row.next('div.dt-row');
@@ -82,6 +89,7 @@ function prod_row_copy(self) {
             add_row.find('input[name=dt_prod_model]').focus();
             ord_set_total(dt_amount_total, dt_amount_tax_total);
             nicescroll_resize("#nicescroll-iput");
+            $(tagEditor_selector).tagEditor();
         },
         plugins: [
             'advlist autolink lists link image charmap print preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code wordcount autoresize'
@@ -95,19 +103,24 @@ function prod_row_copy(self) {
 
 function prod_row_add() {
 
-    prod_spec_no++;
-    var dt_prod_specs_mce_id = "dt_prod_specs_mce_" + prod_spec_no;
+    prod_row_no++;
+    var dt_prod_specs_mce_id = "dt_prod_specs_mce_" + prod_row_no;
     var tinymce_selector = "#" + dt_prod_specs_mce_id;
-
+    var dt_prod_series_id = "dt_prod_series_" + prod_row_no;
+    var tagEditor_selector = "#" + dt_prod_series_id;
     var copy_row = $("#dt-prod").find('div.dt-row:first');
-    var copy_tinymce_selector = copy_row.find('textarea[name=dt_prod_specs_mce]').attr('id');
+    var clone_row = copy_row.clone(true)
 
-    var clone_row = copy_row.clone(false)
     clone_row.find('div.tox-tinymce').remove();
     clone_row.find('textarea[name=dt_prod_specs_mce]').attr('id', dt_prod_specs_mce_id);
     clone_row.find('textarea[name=dt_prod_specs_mce]').text('');
     clone_row.find('textarea[name=dt_prod_specs_mce]').removeAttr('style');
     clone_row.find('textarea[name=dt_prod_specs_mce]').removeAttr('aria-hidden');
+
+    clone_row.find('ul.tag-editor').remove();
+    clone_row.find('textarea[name=dt_prod_series]').attr('id', dt_prod_series_id);
+    clone_row.find('textarea[name=dt_prod_series]').text('');
+    clone_row.find('textarea[name=dt_prod_series]').removeClass('tag-editor-hidden-src');
 
     $("#dt-prod").append(clone_row.wrap('<p/>').parent().html());
     var add_row = $("#dt-prod").find('div.dt-row:last');
@@ -125,11 +138,10 @@ function prod_row_add() {
         toolbar_drawer: 'floating',
         selector: tinymce_selector,
         init_instance_callback: function (inst) {
-
             add_row.find('input[name=dt_prod_model]').focus();
-
-            prod_row_set_no();
             nicescroll_resize("#nicescroll-iput");
+            $(tagEditor_selector).tagEditor();
+            prod_row_set_no();
         },
         plugins: [
             'advlist autolink lists link image charmap print preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code wordcount autoresize'
@@ -171,6 +183,7 @@ function prod_row_del(self) {
 }
 
 function prod_row_clean(row) {
+
     row.attr('dt_id', '0');
     var tinymce_selector = row.find('textarea[name=dt_prod_specs_mce]').attr('id');
     if (tinyMCE.get(tinymce_selector) != null) {
@@ -178,7 +191,19 @@ function prod_row_clean(row) {
     }
     row.find('textarea[name=dt_prod_specs_mce]').val("")
     row.find("input[name=dt_prod_model]").val('');
+
+    var dt_prod_series_id = row.find('textarea[name=dt_prod_series]').attr('id');
+    var tagEditor_selector = "#" + dt_prod_series_id;
+
+    var tagEditor = $(tagEditor_selector).tagEditor('getTags');
+    if (tagEditor.length == 1) {
+        var tags = typeof tagEditor[0].tags == "undefined" ? new Array() : tagEditor[0].tags;
+        for (i = 0; i < tags.length; i++) {
+            $(tagEditor_selector).tagEditor('removeTag', tags[i]);
+        }
+    }
     row.find("textarea[name=dt_prod_series]").val('');
+
     row.find("textarea[name=dt_note]").val('');
     row.find("input[name=dt_unit]").val('');
     row.find("input[name=dt_quantity]").val('');
@@ -979,7 +1004,7 @@ function ord_refresh() {
 
 $(document).ready(function () {
 
-    prod_spec_no = $("#dt-prod").find('div.dt-row').length;
+    prod_row_no = $("#dt-prod").find('div.dt-row').length;
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         nicescroll_resize("#nicescroll-iput");
@@ -1011,4 +1036,12 @@ $(document).ready(function () {
         horizrailenabled: false
     });
     fnc_datepicker('.datepicker');
+    $("textarea[name=dt_prod_series]").tagEditor();
+    jQuery('.utooltip').tooltipster({
+        side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
+    });
+    $("a[name=quoteprice_step]").on("click", function () {
+        var qp_id = $('input[name=qp_id]').val();
+        window.location.href = "/quoteprices/" + qp_id;
+    });
 });
