@@ -50,11 +50,11 @@
 }
 
 .main-content .r-content .col-3 {
-	width: 180px;
+	width: 160px;
 }
 
 .main-content .r-content .col-4 {
-	width: 180px;
+	width: 160px;
 }
 
 .main-content .r-content .col-5 {
@@ -71,4 +71,7 @@
 
 .main-content .r-content .col-8 {
 	width: auto;
+}
+.badge {
+	font-size: 100% !important;
 }

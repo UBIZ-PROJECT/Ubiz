@@ -1,5 +1,5 @@
 .main-content .r-content .col-1 {
-    width: 100%;
+    width: 150px;
 }
 
 .main-content .r-content .col-2 {
@@ -11,15 +11,19 @@
 }
 
 .main-content .r-content .col-4 {
-    width: 110px;
+    width: 150px;
 }
 
 .main-content .r-content .col-5 {
-    width: 200px;
+    width: 130px;
 }
 
 .main-content .r-content .col-6 {
-    width: 250px;
+    width: 130px;
+}
+
+.main-content .r-content .col-7 {
+    width: 100%;
 }
 
 div.btn-a, div.btn-b {

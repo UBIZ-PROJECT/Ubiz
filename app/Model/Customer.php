@@ -5,7 +5,10 @@ namespace App\Model;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use App\Helper;
+
 
 class Customer implements JWTSubject
 {
@@ -203,11 +206,12 @@ class Customer implements JWTSubject
                     'cus_phone' => $param['cus_phone'],
                     'cus_fax' => $param['cus_fax'],
                     'cus_mail' => $param['cus_mail'],
+                    'cus_sex' => $param['cus_sex'],
                     'user_id' => $param['user_id'],
                     'inp_date' => now(),
                     'upd_date' => now(),
-                    'inp_user' => '1',
-                    'upd_user' => '1'
+                    'inp_user' => Auth::user()->id,
+                    'upd_user' => Auth::user()->id
                 ]
             );
             foreach ($param['cus_address'] as $cad_address) {
@@ -267,6 +271,7 @@ class Customer implements JWTSubject
                     'cus_phone' => $param['cus_phone'],
                     'cus_fax' => $param['cus_fax'],
                     'cus_mail' => $param['cus_mail'],
+                    'cus_sex' => $param['cus_sex'],
                     'user_id' => $param['user_id'],
                     'upd_date' => now(),
                     'upd_user' => '1'
@@ -286,6 +291,47 @@ class Customer implements JWTSubject
         }
     }
 
+    public function validateData($request)
+    {
+        try {
+
+            $res = ['success' => true, 'message' => ''];
+            $message = [];
+
+            $data = $request->all();
+            if (!array_key_exists('cus_code', $data) || $data['cus_code'] == '' || $data['cus_code'] == null) {
+                $res['success'] = false;
+                $message[] = __('Customer code is required.');
+            }
+            if (array_key_exists('cus_code', $data) && mb_strlen($data['cus_code'], "utf-8") > 5) {
+                $res['success'] = false;
+                $message[] = __('Customer code is too long.');
+            }
+            if (!array_key_exists('cus_name', $data) || $data['cus_name'] == '' || $data['cus_name'] == null) {
+                $res['success'] = false;
+                $message[] = __('Customer name is required.');
+            }
+            if (array_key_exists('cus_name', $data) && mb_strlen($data['cus_name'], "utf-8") > 100) {
+                $res['success'] = false;
+                $message[] = __('Customer name is too long.');
+            }
+            if (array_key_exists('cus_mail', $data) && $this->mailValidator($data['cus_mail']) == false) {
+                $res['success'] = false;
+                $message[] = __('Customer mail is wrong format.');
+            }
+            if (array_key_exists('cus_mail', $data) && mb_strlen($data['cus_mail'], "utf-8") > 100) {
+                $res['success'] = false;
+                $message[] = __('Customer mail is too long.');
+            }
+
+            $res['message'] = implode("\n", $message);
+            return $res;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+
+    }
+
     public function getUsers()
     {
         $users = DB::table('users')
@@ -293,6 +339,23 @@ class Customer implements JWTSubject
             ->get();
 
         return $users;
+    }
+
+    public function mailValidator($mail)
+    {
+        $credential_name = "name";
+        $credential_data = $mail;
+        $rules = [
+            $credential_name => 'email'
+        ];
+        $credentials = [
+            $credential_name => $credential_data
+        ];
+        $validator = Validator::make($credentials, $rules);
+        if ($validator->fails()) {
+            return false;
+        }
+        return true;
     }
 
     public function makeWhereRaw($search = [])
