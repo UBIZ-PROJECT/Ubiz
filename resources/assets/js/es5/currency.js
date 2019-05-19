@@ -102,8 +102,7 @@
 
             swal({
                 title: i18next.t('Do you want to delete the data?'),
-                text: i18next.t('Once deleted, you will not be able to recover this data!'),
-                type: 'warning',
+                type: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
@@ -120,8 +119,7 @@
             var id = jQuery("#txt_id").val();
             swal({
                 title: i18next.t('Do you want to delete the data?'),
-                text: i18next.t('Once deleted, you will not be able to recover this data!'),
-                type: 'warning',
+                type: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',

@@ -63,7 +63,6 @@ var lst_image_delete = [];
 
             swal({
                 title: i18next.t('Do you want to delete the data?'),
-                text: i18next.t('Once deleted, you will not be able to recover this data!'),
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',

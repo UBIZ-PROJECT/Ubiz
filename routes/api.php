@@ -67,13 +67,14 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::delete('products/{ids}/delete', ['as' => 'product-delete', 'uses' => 'Api\ProductController@deleteProduct']);
 
         Route::get('pricing', ['as' => 'api-pricing', 'uses' => 'Api\PricingController@getPricingList']);
-
         Route::get('pricing/{id}', ['as' => 'delete-pricing', 'uses' => 'Api\PricingController@deletePricing']);
         Route::get('pricing-list', ['as' => 'api-pricing', 'uses' => 'Api\PricingController@getPricingList']);
         Route::get('pricing-edit', ['as' => 'get-pricing', 'uses' => 'Api\PricingController@getPricing']);
         Route::post('pricing-create', ['as' => 'insert-pricing', 'uses' => 'Api\PricingController@insertPricing']);
         Route::post('pricing-update', ['as' => 'update-pricing', 'uses' => 'Api\PricingController@updatePricing']);
         Route::delete('pricing/{ids}/delete', ['as' => 'delete-pricing', 'uses' => 'Api\PricingController@deletePricing']);
+        Route::get('pricing-cus', ['as' => 'get-pricing-cus', 'uses' => 'Api\PricingController@getPricingCustomer']);
+        Route::post('pricing-pdf', ['as' => 'export-pdf', 'uses' => 'Api\PdfController@exportPdf']);
 
         Route::get('quoteprices', ['as' => 'api-get-quoteprices', 'uses' => 'Api\QuotepriceController@getQuoteprices']);
         Route::post('quoteprices/{cus_id}/create', ['as' => 'api-create-quoteprice', 'uses' => 'Api\QuotepriceController@createQuoteprice'])->where('cus_id', '[0-9]+');
@@ -85,10 +86,6 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::post('orders/{qp_id}/create', ['as' => 'api-create-order', 'uses' => 'Api\OrderController@createOrder'])->where('qp_id', '[0-9]+');
         Route::post('orders/{ord_id}/update', ['as' => 'api-update-order', 'uses' => 'Api\OrderController@updateOrder'])->where('ord_id', '[0-9]+');
         Route::delete('orders/{ord_ids}/delete', ['as' => 'api-delete-orders', 'uses' => 'Api\OrderController@deleteOrders'])->where('ord_ids', '^([0-9]+,)+[0-9]+|[0-9]+');
-
-        Route::get('pricing-cus', ['as' => 'get-pricing-cus', 'uses' => 'Api\PricingController@getPricingCustomer']);
-
-        Route::post('pricing-pdf', ['as' => 'export-pdf', 'uses' => 'Api\PdfController@exportPdf']);
 
         Route::post('permission', ['as' => 'set-permission', 'uses' => 'Api\PermissionController@setPermissions']);
         Route::get('permission/{dep_id}/{scr_id}', ['as' => 'get-dep-permission', 'uses' => 'Api\PermissionController@getDepPermissions']);

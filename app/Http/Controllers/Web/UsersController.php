@@ -17,7 +17,12 @@ class UsersController extends Controller
             $departments = $user->getDepartments();
             $comapnies = $user->getCompanies();
             $paging['page'] = 0;
-            return view('users', ['users' => $users, 'paging' => $paging, 'departments' => $departments, "companies"=>$comapnies]);
+            return view('users', [
+                'users' => $users,
+                'paging' => $paging,
+                'departments' => $departments,
+                "companies" => $comapnies
+            ]);
         } catch (\Throwable $e) {
             throw $e;
         }
