@@ -193,7 +193,7 @@
   "Amount total of order details is not equal amount total of order.": "Tổng số tiền đơn đặt hàng không bằng tổng số tiền chi tiết đơn hàng.",
   "QP": "Báo giá",
   "QP No": "Mã báo giá",
-  "QP No is too long.": "Mã báo quá dài.",
+  "QP No is too long.": "Mã báo giá quá dài.",
   "QP No is required.": "Mã báo quá không được để trống.",
   "QP No is exists.": "Mã báo giá [:qp_no_old] đã tồn tại.\nMã báo giá mới [:qp_no_new] được tạo ra để thay thế.\nBạn có muốn tiếp tục không?",
   "QP Tax is required.": "Thuế VAT không được để trống.",
