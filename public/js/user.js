@@ -273,8 +273,12 @@
                     autohidemode: false,
                     horizrailenabled: false
                 });
+                $("input[name=txt_code]").attr('disabled', false);
+                $("input[name=txt_code]").closest('div.root_textfield').removeClass('rootIsDisabled');
             } else {
                 jQuery("#btn-delete").show();
+                $("input[name=txt_code]").attr('disabled', true);
+                $("input[name=txt_code]").closest('div.root_textfield').addClass('rootIsDisabled');
                 ubizapis('v1', '/users/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
             }
         },
