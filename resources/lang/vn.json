@@ -214,5 +214,12 @@
   "Send quoteprices fail.": "Gửi báo giá thất bại.\nXin vui lòng kiểm tra mail của khách hàng và của bạn.\nHãy chắc chắn tài khoảng mail còn khả dụng.",
   "[Row : :line ] model [ :model ] is not exists.": "[ Dòng : :line ] Kiểu mẫu [ :model ] không tồn tại.",
   "[Row : :line ] series [ :series ] is not exists.": "[ Dòng : :line ] Số sêri [ :series ] không tồn tại.",
-  "Do you want to send quoteprice to the customer.?": "Bạn có muốn gửi báo giá tới khách hàng không?"
+  "Do you want to send quoteprice to the customer.?": "Bạn có muốn gửi báo giá tới khách hàng không?",
+  "Customer code is required.": "Mã khách hàng không được để trống",
+  "Customer code is too long.": "Mã khách hàng quá dài",
+  "Customer name is required.": "Tên khách hàng không được để trống",
+  "Customer name is too long.": "Tên khách hàng quá dài",
+  "Customer mail is wrong format.": "Mail khách hàng không đúng",
+  "Customer mail is too long.": "Mail khách hàng quá dài",
+  "Do you want to create a new quoteprices.": "Bạn có muốn tạo báo giá không"
 }

@@ -65,7 +65,13 @@ class CustomerController extends Controller
 	public function insertCustomer(Request $request)
     {
         try {
+
             $customer = new Customer();
+            $validator = $customer->validateData($request);
+            if ($validator['success'] == false) {
+                return response()->json(['success' => false, 'message' => $validator['message']], 200);
+            }
+
             $customer->insertCustomer($request);
 			$customers = $customer->getCustomers(0);
             $paging = $customer->getPagingInfo();

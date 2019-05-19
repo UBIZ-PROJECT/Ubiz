@@ -10,12 +10,6 @@
 @section('headbar')
     @section('search')
         @include('customer_search')
-        @section('headbar-icon')
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                <path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"/>
-                <path fill="none" d="M0 0h24v24H0z"/>
-            </svg>
-        @endsection
     @endsection
     @include('layouts/headbar')
 @endsection
@@ -132,22 +126,27 @@
                                 <div class="col-3" role="presentation"></div>
                                 <div class="col-4" role="presentation"></div>
                                 <div class="col-5" role="presentation"></div>
+                                <div class="col-6" role="presentation"></div>
+                                <div class="col-7" role="presentation"></div>
                             </div>
                             <div class="hdG">
-                                <div class="dcB col-3" role="presentation">
-                                    <div class="dWB dWT" role="button" sort-name="cus_id" order-by="asc" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                <div class="dcB col-1" role="presentation">
+                                    <div class="dWB dWT" role="button" sort-name="cus_id" order-by="asc"
+                                         onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Mã Khách Hàng</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
-                                                        <svg class="faH asc sVGT" x="0px" y="0px" width="18px" height="18px"
+                                                        <svg class="faH asc sVGT" x="0px" y="0px" width="18px"
+                                                             height="18px"
                                                              viewBox="0 0 48 48" focusable="false" fill="#000000">
                                                             <path fill="none" d="M0 0h48v48H0V0z"></path>
                                                             <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
                                                         </svg>
                                                         <svg class="faH desc" x="0px" y="0px" width="18px"
-                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                             height="18px" viewBox="0 0 48 48" focusable="false"
+                                                             fill="#000000">
                                                             <path fill="none" d="M0 0h48v48H0V0z"></path>
                                                             <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
                                                         </svg>
@@ -157,8 +156,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="dcB col-3" role="presentation">
-                                    <div class="dWB" role="button" sort-name="cus_name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                <div class="dcB col-2" role="presentation">
+                                    <div class="dWB" role="button" sort-name="cus_name" order-by=""
+                                         onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Tên Khách Hàng</div>
                                             <div class="mhH">
@@ -170,7 +170,8 @@
                                                             <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
                                                         </svg>
                                                         <svg class="faH desc" x="0px" y="0px" width="18px"
-                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                             height="18px" viewBox="0 0 48 48" focusable="false"
+                                                             fill="#000000">
                                                             <path fill="none" d="M0 0h48v48H0V0z"></path>
                                                             <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
                                                         </svg>
@@ -180,8 +181,9 @@
                                         </div>
                                     </div>
                                 </div>
-								<div class="dcB col-3" role="presentation">
-                                    <div class="dWB" role="button" sort-name="cus_type" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                <div class="dcB col-3" role="presentation">
+                                    <div class="dWB" role="button" sort-name="cus_type" order-by=""
+                                         onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Loại Khách Hàng</div>
                                             <div class="mhH">
@@ -193,7 +195,8 @@
                                                             <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
                                                         </svg>
                                                         <svg class="faH desc" x="0px" y="0px" width="18px"
-                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                             height="18px" viewBox="0 0 48 48" focusable="false"
+                                                             fill="#000000">
                                                             <path fill="none" d="M0 0h48v48H0V0z"></path>
                                                             <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
                                                         </svg>
@@ -203,8 +206,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="dcB col-3" role="presentation">
-                                    <div class="dWB" role="button" sort-name="cus_phone" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                <div class="dcB col-4" role="presentation">
+                                    <div class="dWB" role="button" sort-name="cus_phone" order-by=""
+                                         onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Số Điện Thoại</div>
                                             <div class="mhH">
@@ -216,7 +220,8 @@
                                                             <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
                                                         </svg>
                                                         <svg class="faH desc" x="0px" y="0px" width="18px"
-                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                             height="18px" viewBox="0 0 48 48" focusable="false"
+                                                             fill="#000000">
                                                             <path fill="none" d="M0 0h48v48H0V0z"></path>
                                                             <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
                                                         </svg>
@@ -226,8 +231,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="dcB col-3" role="presentation">
-                                    <div class="dWB" role="button" sort-name="cus_fax" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                <div class="dcB col-5" role="presentation">
+                                    <div class="dWB" role="button" sort-name="cus_fax" order-by=""
+                                         onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Fax</div>
                                             <div class="mhH">
@@ -239,7 +245,8 @@
                                                             <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
                                                         </svg>
                                                         <svg class="faH desc" x="0px" y="0px" width="18px"
-                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                             height="18px" viewBox="0 0 48 48" focusable="false"
+                                                             fill="#000000">
                                                             <path fill="none" d="M0 0h48v48H0V0z"></path>
                                                             <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
                                                         </svg>
@@ -249,9 +256,10 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="dcB col-3" role="presentation">
+                                <div class="dcB col-6" role="presentation">
                                     <div class="dWB" role="button">
-                                        <div class="dvJ" sort-name="cus_mail" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                        <div class="dvJ" sort-name="cus_mail" order-by=""
+                                             onclick="jQuery.UbizOIWidget.w_sort(this)">
                                             <div class="tDv">Email</div>
                                             <div class="mhH">
                                                 <div class="acD">
@@ -262,7 +270,8 @@
                                                             <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
                                                         </svg>
                                                         <svg class="faH desc" x="0px" y="0px" width="18px"
-                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                             height="18px" viewBox="0 0 48 48" focusable="false"
+                                                             fill="#000000">
                                                             <path fill="none" d="M0 0h48v48H0V0z"></path>
                                                             <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
                                                         </svg>
@@ -272,8 +281,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="dcB col-3" role="presentation">
-                                    <div class="dWB" role="button" sort-name="address" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                <div class="dcB col-7" role="presentation">
+                                    <div class="dWB" role="button" sort-name="address" order-by=""
+                                         onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Địa chỉ</div>
                                             <div class="mhH">
@@ -285,7 +295,8 @@
                                                             <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
                                                         </svg>
                                                         <svg class="faH desc" x="0px" y="0px" width="18px"
-                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                             height="18px" viewBox="0 0 48 48" focusable="false"
+                                                             fill="#000000">
                                                             <path fill="none" d="M0 0h48v48H0V0z"></path>
                                                             <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
                                                         </svg>
@@ -297,17 +308,19 @@
                                 </div>
                             </div>
                         </div>
-						<input type="hidden" id="pageno" name="pageno" value="0">
+                        <input type="hidden" id="pageno" name="pageno" value="0">
                     </div>
                     <div class="aqB nicescroll" id="nicescroll-oput">
                         <div class="yTP">
                             <div id="table-content" class="jFr">
                                 @foreach($customers as $customer)
-                                    <div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{$customer->cus_id}}, this)">
-                                        <div class="tcB col-3">
+                                    <div class="jvD"
+                                         ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{$customer->cus_id}}, this)">
+                                        <div class="tcB col-1">
                                             <div class="cbo">
                                                 <div class="jgQ" onclick="jQuery.UbizOIWidget.w_c_checkbox_click(this)">
-                                                    <input type="checkbox" class="ckb-i" value="{{$customer->cus_id}}" style="display: none"/>
+                                                    <input type="checkbox" class="ckb-i" value="{{$customer->cus_id}}"
+                                                           style="display: none"/>
                                                     <div class="asU ckb-c"></div>
                                                 </div>
                                                 <div class="nCT" title="{{$customer->cus_code}}">
@@ -315,7 +328,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tcB col-3">
+                                        <div class="tcB col-2">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$customer->cus_name}}">
                                                     <span>{{$customer->cus_name}}</span>
@@ -325,40 +338,41 @@
                                         <div class="tcB col-3">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$customer->cus_type}}">
-                                                	@if ($customer->cus_type == 1)
-                                                    <span>Khách hàng mới</span>
+                                                    @if ($customer->cus_type == 1)
+                                                        <span>Khách hàng mới</span>
                                                     @elseif ($customer->cus_type == 2)
-                                                    <span>Khách hàng cũ</span>
+                                                        <span>Khách hàng cũ</span>
                                                     @else
-                                                    <span>Khách hàng thân thiết</span>
+                                                        <span>Khách hàng thân thiết</span>
                                                     @endif
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tcB col-3">
+                                        <div class="tcB col-4">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$customer->cus_phone}}">
                                                     <span>{{$customer->cus_phone}}</span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tcB col-3">
+                                        <div class="tcB col-5">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$customer->cus_fax}}">
                                                     <span>{{$customer->cus_fax}}</span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tcB col-3">
+                                        <div class="tcB col-6">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$customer->cus_mail}}">
                                                     <span>{{$customer->cus_mail}}</span>
                                                 </div>
                                             </div>
                                         </div>
-										<div class="tcB col-3">
+                                        <div class="tcB col-7">
                                             <div class="cbo">
-                                                <div class="nCj" title="{{count($customer->address) ? $customer->address[0]->cad_address : ''}}">
+                                                <div class="nCj"
+                                                     title="{{count($customer->address) ? $customer->address[0]->cad_address : ''}}">
                                                     <span>{{count($customer->address) ? $customer->address[0]->cad_address : ''}}</span>
                                                 </div>
                                             </div>
@@ -370,7 +384,7 @@
                     </div>
                 </div>
             </div>
-            <div class="jAQ" id="i-put"  style="display: none">
+            <div class="jAQ" id="i-put" style="display: none">
                 <div class="bkK">
                     <div class="aeH">
                         <div class="aqK">
@@ -411,7 +425,8 @@
                                 <span class="Di">
                                     <div class="amH" style="user-select: none">
                                         <span class="Dj">
-                                            <span><span class="ts curindex"></span></span> / <span class="ts totalindex"></span>
+                                            <span><span class="ts curindex"></span></span> / <span
+                                                    class="ts totalindex"></span>
                                         </span>
                                     </div>
                                     <div class="amD utooltip" title="Cũ hơn">
@@ -434,32 +449,39 @@
                 </div>
                 <div class="jAQ">
                     <div class="aqI nicescroll" id="nicescroll-iput">
-						<form id="f-input">
-							<div class="row z-mgl z-mgr">
-								<div class="col-sm-2 col-md-2 col-xl-2 z-pdl">
-									<div class="image-upload mb-1" style="max-width: 150px; max-height: 150px">
-										<img id="avt_img" src="{{ asset("images/avatar.png") }}" img-name="" style="height: 150px; width:150px" alt="" class="img-thumbnail img-show ">
-										<input  id="avatar" type="file" accept="image/*" name="cus_avatar" style="display:none">
-										<input  id="avatar_flg" type="text" name="cus_avatar_flg" value="0" style="display:none">
-										<button type="button" style="top: -150px;" class="close" aria-label="Close" onclick="removeImage(this, jQuery.UbizOIWidget.w_callback_remove_image)">
-											<span aria-hidden="true">×</span>
-										</button>
-										<span id="change_avt" class="label-change" style="width: 150px;">{{ __("Change") }}</span>
-									</div>
-								</div>
-								<div class="col-sm-5 col-md-5 col-xl-5">
-									<input type="hidden" name="cus_id" value="0"/>
-									@include('components.input',['type'=>'required', 'control_id'=>'cus_code', 'label'=>'Mã', 'length'=>5])
-									@include('components.input',['type'=>'required', 'control_id'=>'cus_name', 'label'=>'Tên khách hàng', 'length'=>100])
-									<div class="textfield  root_textfield rootIsUnderlined cus_type_container" style="width: 300px">
+                        <form id="f-input">
+                            <div class="row z-mgl z-mgr">
+                                <div class="col-sm-2 col-md-2 col-xl-2 z-pdl">
+                                    <div class="image-upload mb-1" style="max-width: 150px; max-height: 150px">
+                                        <img id="avt_img" src="{{ asset("images/avatar.png") }}" img-name=""
+                                             style="height: 150px; width:150px" alt="" class="img-thumbnail img-show ">
+                                        <input id="avatar" type="file" accept="image/*" name="cus_avatar"
+                                               style="display:none">
+                                        <input id="avatar_flg" type="text" name="cus_avatar_flg" value="0"
+                                               style="display:none">
+                                        <button type="button" style="top: -150px;" class="close" aria-label="Close"
+                                                onclick="removeImage(this, jQuery.UbizOIWidget.w_callback_remove_image)">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                        <span id="change_avt" class="label-change"
+                                              style="width: 150px;">{{ __("Change") }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-5 col-md-5 col-xl-5">
+                                    <input type="hidden" name="cus_id" value="0"/>
+                                    @include('components.input',['type'=>'required', 'control_id'=>'cus_code', 'label'=>'Mã', 'length'=>5])
+                                    @include('components.input',['type'=>'required', 'control_id'=>'cus_name', 'label'=>'Tên khách hàng', 'length'=>100])
+                                    <div class="textfield  root_textfield rootIsUnderlined cus_type_container"
+                                         style="width: 300px">
                                         <div class="wrapper">
-                                            <label for="user_id" class="ms-Label root-56 lbl-primary" style="">Loại khách hàng:&nbsp;&nbsp;&nbsp;</label>
+                                            <label for="user_id" class="ms-Label root-56 lbl-primary" style="">Loại
+                                                khách hàng:&nbsp;&nbsp;&nbsp;</label>
                                             <div class="fieldGroup">
                                                 <select class="dropdown_field" name="cus_type">
                                                     @foreach($customerTypeList as $item)
                                                         <option value="{{ $item->id }}">{{ $item->title }}</option>
                                                     @endforeach
-                                    			</select>
+                                                </select>
                                             </div>
                                         </div>
                                         <span class="error_message hidden-content">
@@ -470,20 +492,17 @@
                                            </div>
                                         </span>
                                     </div>
-									@include('components.input',['control_id'=>'cus_phone', 'label'=>'Số điện thoại', 'length'=>15])
-								</div>
-								<div class="col-sm-5 col-md-5 col-xl-5 z-pdr cus-part-2">
-									@include('components.input',['control_id'=>'cus_fax', 'label'=>'Fax', 'length'=>20])
-									@include('components.input',['control_id'=>'cus_mail', 'label'=>'Email', 'length'=>100])
-									<div class="textfield  root_textfield rootIsUnderlined user_id_container" style="width: 300px">
+                                    @include('components.input',['control_id'=>'cus_phone', 'label'=>'Số điện thoại', 'length'=>15])
+                                    <div class="textfield  root_textfield rootIsUnderlined cus_type_container"
+                                         style="width: 130px">
                                         <div class="wrapper">
-                                            <label for="user_id" class="ms-Label root-56 lbl-primary" style="">Nhân viên phụ trách:&nbsp;&nbsp;&nbsp;</label>
+                                            <label for="user_id" class="ms-Label root-56 lbl-primary" style="">Giới
+                                                tính:&nbsp;&nbsp;&nbsp;</label>
                                             <div class="fieldGroup">
-                                                <select class="dropdown_field" name="user_id">
-                                    				@foreach($users as $user)
-                                    				    <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                    				@endforeach
-                                    			</select>
+                                                <select class="dropdown_field" name="cus_sex">
+                                                    <option value="0">Nữ</option>
+                                                    <option value="1">Nam</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <span class="error_message hidden-content">
@@ -493,15 +512,40 @@
                                               </p>
                                            </div>
                                         </span>
-                                    </div>									
-									@include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 1', 'length'=>250])
-									@include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 2', 'length'=>250])
-									@include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 3', 'length'=>250])
-								</div>
-							</div>
-							
-							<div class="btn-b price-report" onclick="">Tạo báo giá</div>
-						</form>
+                                    </div>
+                                </div>
+                                <div class="col-sm-5 col-md-5 col-xl-5 z-pdr cus-part-2">
+                                    @include('components.input',['control_id'=>'cus_fax', 'label'=>'Fax', 'length'=>20])
+                                    @include('components.input',['control_id'=>'cus_mail', 'label'=>'Email', 'length'=>100])
+                                    <div class="textfield  root_textfield rootIsUnderlined user_id_container"
+                                         style="width: 300px">
+                                        <div class="wrapper">
+                                            <label for="user_id" class="ms-Label root-56 lbl-primary" style="">Nhân viên
+                                                phụ trách:&nbsp;&nbsp;&nbsp;</label>
+                                            <div class="fieldGroup">
+                                                <select class="dropdown_field" name="user_id">
+                                                    @foreach($users as $user)
+                                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <span class="error_message hidden-content">
+                                           <div class="message-container">
+                                              <p class="label_errorMessage css-57 errorMessage">
+                                                  <span class="error-message-text"></span>
+                                              </p>
+                                           </div>
+                                        </span>
+                                    </div>
+                                    @include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 1', 'length'=>250])
+                                    @include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 2', 'length'=>250])
+                                    @include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 3', 'length'=>250])
+                                </div>
+                            </div>
+
+                            <div class="btn-b price-report" onclick="">Tạo báo giá</div>
+                        </form>
                     </div>
                 </div>
             </div>
