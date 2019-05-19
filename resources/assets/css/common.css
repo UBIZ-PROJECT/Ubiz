@@ -2649,7 +2649,7 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
     padding: 10px 15px;
 }
 
-.nav-wizard>li>a {
+.nav-wizard > li > a {
     position: relative;
     display: block;
     padding: 5px 15px;
@@ -2677,7 +2677,15 @@ input[type=number]::-webkit-outer-spin-button {
     width: 250px;
 }
 
-.swal2-popup{
+.swal2-popup {
     min-width: 32em !important;
     width: fit-content !important;
+}
+
+#nicescroll-sidebar .sP .aW a {
+    padding: 0 !important;
+    width: 100% !important;
+    text-align: left !important;
+    border-radius: 0 66px 66px 0 !important;
+    text-decoration: none !important;
 }

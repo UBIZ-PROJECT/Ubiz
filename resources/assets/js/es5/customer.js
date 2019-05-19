@@ -319,11 +319,13 @@
         },
         w_delete_callback: function (response) {
             if (response.data.success == true) {
-                jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
-                jQuery.UbizOIWidget.w_go_back_to_output_page(this);
                 swal.fire({
                     type: 'success',
-                    title: response.data.message
+                    title: response.data.message,
+                    onClose: () => {
+                        jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
+                        jQuery.UbizOIWidget.w_go_back_to_output_page(this);
+                    }
                 });
             } else {
                 swal.fire({
@@ -573,11 +575,13 @@
         },
         w_save_callback: function (response) {
             if (response.data.success == true) {
-                jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
-                jQuery.UbizOIWidget.w_go_back_to_output_page(this);
                 swal.fire({
                     type: 'success',
-                    title: response.data.message
+                    title: response.data.message,
+                    onClose: () => {
+                        jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
+                        jQuery.UbizOIWidget.w_go_back_to_output_page(this);
+                    }
                 })
             } else {
                 swal.fire({

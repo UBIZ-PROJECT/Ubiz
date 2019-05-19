@@ -33,12 +33,48 @@
                                 <div class="bvo">
                                     <ul class="cto">
                                         <li class="who">
-                                            <a class="ruo" role="button" href="/users">
+                                            <a class="ruo" role="button" href="/setting/company">
+                                                <div class="pto">
+                                                    <img src="{{asset('images/app_bg.png')}}">
+                                                    <div class="zro">
+                                                        <div class="rco">
+                                                            <div class="kko">{{ __("Company") }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="who">
+                                            <a class="ruo" role="button" href="/setting/departments">
+                                                <div class="pto">
+                                                    <img src="{{asset('images/app_bg.png')}}">
+                                                    <div class="zro">
+                                                        <div class="rco">
+                                                            <div class="kko">{{ __("Department") }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="who">
+                                            <a class="ruo" role="button" href="/setting/users">
                                                 <div class="pto">
                                                     <img src="{{asset('images/app_bg.png')}}">
                                                     <div class="zro">
                                                         <div class="rco">
                                                             <div class="kko">{{ __("Employee") }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="who">
+                                            <a class="ruo" role="button" href="/setting/currency">
+                                                <div class="pto">
+                                                    <img src="{{asset('images/app_bg.png')}}">
+                                                    <div class="zro">
+                                                        <div class="rco">
+                                                            <div class="kko">{{ __("Currency") }}</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -63,30 +99,6 @@
                                                     <div class="zro">
                                                         <div class="rco">
                                                             <div class="kko">{{ __("Supplier") }}</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li class="who">
-                                            <a class="ruo" role="button" href="/currency">
-                                                <div class="pto">
-                                                    <img src="{{asset('images/app_bg.png')}}">
-                                                    <div class="zro">
-                                                        <div class="rco">
-                                                            <div class="kko">{{ __("Currency") }}</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li class="who">
-                                            <a class="ruo" role="button" href="/departments">
-                                                <div class="pto">
-                                                    <img src="{{asset('images/app_bg.png')}}">
-                                                    <div class="zro">
-                                                        <div class="rco">
-                                                            <div class="kko">{{ __("Department") }}</div>
                                                         </div>
                                                     </div>
                                                 </div>

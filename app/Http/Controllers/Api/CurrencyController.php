@@ -103,26 +103,7 @@ class CurrencyController extends Controller
             $sort = $request->sort;
         }
 
-        $search = [];
-        if ($request->has('cur_ctr_nm')) {
-            $search['cur_ctr_nm'] = $request->cur_ctr_nm;
-        }
-        if ($request->has('cur_nm')) {
-            $search['cur_nm'] = $request->cur_nm;
-        }
-        if ($request->has('cur_cd_alpha')) {
-            $search['cur_cd_alpha'] = $request->cur_cd_alpha;
-        }
-        if ($request->has('cur_symbol')) {
-            $search['cur_symbol'] = $request->cur_symbol;
-        }
-        if ($request->has('contain')) {
-            $search['contain'] = $request->contain;
-        }
-        if ($request->has('notcontain')) {
-            $search['notcontain'] = $request->notcontain;
-        }
-
+        $search = $request->get('search', '');
 
         $currency = [];
         if ($request->has('txt_cur_id')) {

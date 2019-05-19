@@ -18,7 +18,7 @@ class Currency
         return $currency;
     }
 
-    public function getCurrency($page = 0, $sort = '', $search = [])
+    public function getCurrency($page = 0, $sort = '', $search = '')
     {
         try {
             list($where_raw, $params) = $this->makeWhereRaw($search);
@@ -49,7 +49,7 @@ class Currency
         return $currency;
     }
 
-    public function getCurrencyByPos($pos = 0, $sort = '', $search = [])
+    public function getCurrencyByPos($pos = 0, $sort = '', $search = '')
     {
         try {
 
@@ -80,7 +80,7 @@ class Currency
         return $count;
     }
 
-    public function countCurrency($search = [])
+    public function countCurrency($search = '')
     {
         try {
             list($where_raw, $params) = $this->makeWhereRaw($search);
@@ -93,7 +93,7 @@ class Currency
         return $count;
     }
 
-    public function getPagingInfo($search=[])
+    public function getPagingInfo($search='')
     {
         try {
             $rows_per_page = env('ROWS_PER_PAGE', 10);
@@ -108,60 +108,22 @@ class Currency
         ];
     }
 
-    public function makeWhereRaw($search = [])
+    public function makeWhereRaw($search = '')
     {
         $params = ['1','0'];
         $where_raw = 'm_currency.active_flg = ? AND m_currency.delete_flg = ?';
-        if (sizeof($search) > 0) {
-            if (isset($search['contain']) || isset($search['notcontain'])) {
-                if (isset($search['contain'])) {
-                    $search_val = "%" . $search['contain'] . "%";
-                    $where_raw .= " AND (";
-                    $where_raw .= "m_currency.cur_ctr_nm like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR m_currency.cur_nm like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR m_currency.cur_cd_alpha like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR m_currency.cur_symbol like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " ) ";
-                }
-                if (isset($search['notcontain'])) {
-                    $search_val = "%" . $search['notcontain'] . "%";
-                    $where_raw .= " AND m_currency.cur_ctr_nm not like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " AND m_currency.cur_nm not like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " AND m_currency.cur_cd_alpha not like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " AND m_currency.cur_symbol not like ?";
-                    $params[] = $search_val;
-                }
-
-            } else {
-
-                $where_raw_tmp = [];
-                if (isset($search['cur_ctr_nm'])) {
-                    $where_raw_tmp[] = "m_currency.cur_ctr_nm = ?";
-                    $params[] = $search['cur_ctr_nm'];
-                }
-                if (isset($search['cur_nm'])) {
-                    $where_raw_tmp[] = "m_currency.cur_nm = ?";
-                    $params[] = $search['cur_nm'];
-                }
-                if (isset($search['cur_cd_alpha'])) {
-                    $where_raw_tmp[] = "m_currency.cur_cd_alpha = ?";
-                    $params[] = $search['cur_cd_alpha'];
-                }
-                if (isset($search['cur_symbol'])) {
-                    $where_raw_tmp[] = "m_currency.cur_symbol = ?";
-                    $params[] = $search['cur_symbol'];
-                }
-                if (sizeof($where_raw_tmp) > 0) {
-                    $where_raw .= " AND ( " . implode(" OR ", $where_raw_tmp) . " )";
-                }
-            }
+        if ($search != '') {
+            $search_val = "%" . $search . "%";
+            $where_raw .= " AND (";
+            $where_raw .= "m_currency.cur_ctr_nm like ?";
+            $params[] = $search_val;
+            $where_raw .= " OR m_currency.cur_nm like ?";
+            $params[] = $search_val;
+            $where_raw .= " OR m_currency.cur_cd_alpha like ?";
+            $params[] = $search_val;
+            $where_raw .= " OR m_currency.cur_symbol like ?";
+            $params[] = $search_val;
+            $where_raw .= " ) ";
         }
         return [$where_raw, $params];
     }

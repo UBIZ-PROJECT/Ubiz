@@ -83,7 +83,7 @@ class CustomerController extends Controller
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['customers' => $customers, 'paging' => $paging, 'success' => true, 'message' => 'Xử lý thành công'], 200);
+        return response()->json(['customers' => $customers, 'paging' => $paging, 'success' => true, 'message' => __('Successfully processed.')], 200);
     }
 	
 	public function updateCustomer(Request $request)
@@ -101,7 +101,7 @@ class CustomerController extends Controller
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['customers' => $customers, 'paging' => $paging, 'success' => true, 'message' => 'Xử lý thành công'], 200);
+        return response()->json(['customers' => $customers, 'paging' => $paging, 'success' => true, 'message' => __('Successfully processed.')], 200);
     }
 
     public function deleteCustomer($ids, Request $request)
@@ -119,7 +119,7 @@ class CustomerController extends Controller
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['customers' => $customers, 'paging' => $paging, 'success' => true, 'message' => 'Xử lý thành công'], 200);
+        return response()->json(['customers' => $customers, 'paging' => $paging, 'success' => true, 'message' => __('Successfully processed.')], 200);
     }
 	
 	public function getRequestData(Request $request)
