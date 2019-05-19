@@ -391,7 +391,7 @@
                 for (let i = 0; i < company.length; i++) {
                     var cols = [];
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(company[i].com_id, company[i].com_id, 1));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html_company(company[i].com_id, company[i].com_nm, 2));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html_company(company[i].com_id, company[i].com_nm, company[i].com_logo, 2));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(company[i].com_id, company[i].com_phone, 3));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(company[i].com_id, company[i].com_fax, 4));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(company[i].com_id, company[i].com_mst, 5));
@@ -439,6 +439,8 @@
             jQuery.UbizOIWidget.i_page.find("#txt_com_email").val("");
             jQuery.UbizOIWidget.i_page.find("#txt_com_mst").val("");
             jQuery.UbizOIWidget.i_page.find("#txt_com_hotline").val("");
+            $("#i-put #nicescroll-iput .image-upload .img-show").attr("src", "../images/avatar.png");
+            $("#i-put #nicescroll-iput .image-upload .img-show").attr("img-name", 'com_logo');
         },
         w_set_input_page: function (data) {
             jQuery.UbizOIWidget.i_page.find("#txt_id").val(data.com_id);
@@ -450,6 +452,8 @@
             jQuery.UbizOIWidget.i_page.find("#txt_com_email").val(data.com_email);
             jQuery.UbizOIWidget.i_page.find("#txt_com_mst").val(data.com_mst);
             jQuery.UbizOIWidget.i_page.find("#txt_com_hotline").val(data.com_hotline);
+            $("#i-put #nicescroll-iput .image-upload .img-show").attr("src", data.com_logo);
+            $("#i-put #nicescroll-iput .image-upload .img-show").attr("img-name", 'com_logo');
         },
         w_make_row_html: function (id, cols, row_no, page_no, rows_per_page) {
             var row_html = '';
@@ -482,12 +486,12 @@
             col_html += '</div>';
             return col_html;
         },
-        w_make_col_html_company: function (col_id, col_val, col_idx) {
+        w_make_col_html_company: function (col_id, col_val, col_logo, col_idx) {
             var col_html = "";
             col_html += '<div class="tcB col-' + col_idx + '">';
             col_html += '<div class="cbo">';
             col_html += '<div class="nCj" title="' + col_val + '">';
-            col_html += '<img src="/images/logo-' + col_id + '.png"/>';
+            col_html += '<img src="' + col_logo + '"/>';
             col_html += '<span> ' + col_val + '</span>';
             col_html += '</div>';
             col_html += '</div>';
@@ -553,6 +557,10 @@
         },
         w_get_form_data: function () {
             var form_data = new FormData();
+
+            if (jQuery('input[name=inp-upload-image]')[0].files.length > 0) {
+                form_data.append('com_logo', jQuery('input[name=inp-upload-image]')[0].files[0]);
+            }
 
             form_data.append('txt_com_id', jQuery("#txt_id").val());
             form_data.append('txt_com_nm', jQuery("#txt_com_nm").val());

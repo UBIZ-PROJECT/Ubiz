@@ -101,7 +101,7 @@ class LoginComponent extends React.Component {
                                         <img className='img-logo' src={`.${logo_img}`}/>
                                     </div>
                                     <div className="col-md-9">
-                                        <label className="txt-logo">Ubiz</label>
+                                        <label className="txt-logo">TKP</label>
                                     </div>
                                 </div>
                                 <div className="row margin-bottom-15">

@@ -140,12 +140,13 @@ class Supplier implements JWTSubject
             if (!empty($param['addresses'])) {
                 $addresses = $param['addresses'];
                 foreach ($addresses as $address) {
-                    if (empty($addressd)) continue;
-                    $this->insertSupplierAddress($id, $address);
+                    if (empty($address)) continue;
+                    $this->insertSupplierAddress($address,$id);
                 }
             }
-
-            Helper::resizeImage($param['tmp_name'], $sup_ava, 200,200, 'sup');
+            if (!empty($param['tmp_name'])) {
+                Helper::resizeImage($param['tmp_name'], $sup_ava, 200,200, 'sup');
+            }
             DB::commit();
         } catch(\Throwable $e) {
             DB::rollback();

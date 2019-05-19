@@ -23,23 +23,51 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
+
+        $success = true;
+        $message = [];
+
         $rules = [
-            'email' => 'required|email',
+            'email' => 'required'
+        ];
+        $validator = Validator::make($credentials, $rules);
+        if ($validator->fails()) {
+            $success = false;
+            $message[] = __('Email is required.');
+        }
+
+        if($validator->fails() == false) {
+            $rules = [
+                'email' => 'email'
+            ];
+            $validator = Validator::make($credentials, $rules);
+            if ($validator->fails()) {
+                $success = false;
+                $message[] = __('Email is wrong format.');
+            }
+        }
+
+        $rules = [
             'password' => 'required',
         ];
         $validator = Validator::make($credentials, $rules);
         if ($validator->fails()) {
-            return response()->json(['success' => false, 'message' => $validator->messages()]);
+            $success = false;
+            $message[] = __('Password is required.');
+        }
+
+        if($success == false){
+            return response()->json(['success' => false, 'message' => implode("\n", $message)]);
         }
 
         try {
             // attempt to verify the credentials and create a token for the user
             if (!$token = JWTAuth::attempt($credentials)) {
-                return response()->json(['success' => false, 'message' => 'We cant find an account with this credentials. Please make sure you entered the right information and you have verified your email address.'], 401);
+                return response()->json(['success' => false, 'message' => __('We can not find an account with this credentials.')], 200);
             }
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
-            return response()->json(['success' => false, 'message' => 'Failed to login, please try again.'], 500);
+            return response()->json(['success' => false, 'message' => __('Failed to login, please try again.')], 500);
         }
         // all good so return the token
         return response()->json(['success' => true])->cookie('Authorization', $token);

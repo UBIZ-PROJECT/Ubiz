@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMPermissionTable extends Migration
+class CreatePermissionFunctionStatusTable extends Migration
 {
     /**
      * Run the migrations.
@@ -34,6 +34,6 @@ class CreateMPermissionTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('m_permission');
+        Schema::dropIfExists('permission_function_status');
     }
 }

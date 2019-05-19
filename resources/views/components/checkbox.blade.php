@@ -52,6 +52,7 @@ switch ($type) {
                    style="display: none"
                    class="checkbox_field"
             />
+            <input type="hidden" name="{{$control_id}}_old" value="{{ $html_value }}">
         </div>
     </div>
 </div>

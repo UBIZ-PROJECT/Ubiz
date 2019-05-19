@@ -4,7 +4,9 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Database\QueryException;
+use Illuminate\Session\TokenMismatchException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Auth\AuthenticationException;
 
 class Handler extends ExceptionHandler
@@ -51,22 +53,56 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         // custom error message
-        if (env('APP_ENV') == 'production' && (
-                $exception instanceof QueryException ||
-                $exception instanceof \ErrorException)
-        ) {
+        $trace = $exception->getTraceAsString();
+        $message = __("There was an error.\nPlease contact administrator.");
+        if ($exception instanceof QueryException || $exception instanceof \ErrorException) {
             if ($request->expectsJson() === true) {
-                return response()->json(['success' => false, 'message' => $exception->getMessage()], 500);
+                return response()->json(['success' => false, 'message' => $message, 'trace' => $trace], 500);
             }
-            return response()->view('errors.500', [], 500);
+            if (env('APP_ENV') == 'local') {
+                return parent::render($request, $exception);
+            }
+            return response()->view('errors.500', 500);
+        }
+        if ($exception instanceof HttpException || $exception instanceof TokenMismatchException) {
+            switch ($exception->getStatusCode()) {
+                case 500:
+                    if ($request->expectsJson() === true) {
+                        return response()->json(['success' => false, 'message' => $message, 'trace' => $trace], 500);
+                    }
+                    if (env('APP_ENV') == 'local') {
+                        return parent::render($request, $exception);
+                    }
+                    return response()->view('errors.500', 500);
+                    break;
+                case 404:
+                    $message = __("The page your are looking for can not be found.");
+                    if ($request->expectsJson() === true) {
+                        return response()->json(['success' => false, 'message' => $message, 'trace' => $trace], 404);
+                    }
+                    if (env('APP_ENV') == 'local') {
+                        return parent::render($request, $exception);
+                    }
+                    return response()->view('errors.404', 404);
+                    break;
+                case 401:
+                    $message = __('Authentication failed.\nYou will be taken back to the login page for 5 seconds.');
+                    if ($request->expectsJson() === true) {
+                        return response()->json(['success' => false, 'message' => $message, 'trace' => $trace], 401);
+                    }
+                    return redirect()->guest(route('login'));
+                    break;
+                default:
+                    if ($request->expectsJson() === true) {
+                        return response()->json(['success' => false, 'message' => $message, 'trace' => $trace], 500);
+                    }
+                    return parent::render($request, $exception);
+                    break;
+            }
+        }
+        if ($request->expectsJson() === true) {
+            return response()->json(['success' => false, 'message' => $message, 'trace' => $trace], 500);
         }
         return parent::render($request, $exception);
-    }
-
-    protected function unauthenticated($request, AuthenticationException $exception)
-    {
-        return $request->expectsJson()
-            ? response()->json(['message' => $exception->getMessage()], 401)
-            : redirect()->guest(route('login'));
     }
 }

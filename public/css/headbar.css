@@ -199,6 +199,10 @@
     opacity: .8;
 }
 
+.headbar .ayo i{
+    color: #D1D9E4;
+}
+
 .headbar .qyo {
     background-color: #fff;
     -webkit-transition: background-color .4s;

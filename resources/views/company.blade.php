@@ -264,7 +264,7 @@
                                         <div class="tcB col-2">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$company->com_nm}}">
-                                                    <img src="{{asset('images/logo-' . $company->com_id . '.png')}}"/>
+                                                    <img src="{{ $company->com_logo}}"/>
                                                     <span> {{$company->com_nm}}</span>
                                                 </div>
                                             </div>
@@ -374,10 +374,12 @@
                                     <div class="col-sm-5 col-md-5 col-xl-5 z-pdl">
                                         @include('components.input',['control_id'=>'txt_com_phone', 'lbl_width'=> '70', 'label'=>__('Phone')])
                                         @include('components.input',['control_id'=>'txt_com_hotline', 'lbl_width'=> '70', 'label'=>__('Hotline')])
+                                        @include('components.input',['control_id'=>'txt_com_web', 'lbl_width'=> '70', 'label'=>__('Website')])
                                     </div>
                                     <div class="col-sm-7 col-md-7 col-xl-7">
                                         @include('components.input',['control_id'=>'txt_com_fax', 'lbl_width'=> '90', 'label'=>__('Fax')])
                                         @include('components.input',['control_id'=>'txt_com_mst', 'lbl_width'=> '90', 'label'=>__('Tax code')])
+                                        @include('components.input',['control_id'=>'txt_com_email', 'lbl_width'=> '90', 'label'=>__('Email')])
                                     </div>
                                 </div>
                             </div>
