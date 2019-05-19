@@ -83,14 +83,13 @@ var del_list = new Array();
                 return false;
 			
 			swal({
-				title: "Bạn có muốn xóa dữ liệu không?",
-				text: "Một khi xóa, bạn sẽ không có khả năng khôi phục dữ liệu này!",
-				type: 'warning',
+				title: i18next.t('Do you want to delete the data?'),
+				type: 'question',
 				showCancelButton: true,
 				confirmButtonColor: '#3085d6',
 				cancelButtonColor: '#d33',
-				cancelButtonText: 'Không',
-				confirmButtonText: 'Có',
+                cancelButtonText: i18next.t('No'),
+                confirmButtonText: i18next.t('Yes'),
 				reverseButtons: true
 			}).then((result) => {
 				if (result.value) {
@@ -655,13 +654,13 @@ var del_list = new Array();
 			var pri_id = jQuery('input[name="pri_id"]').val();
 			
 			swal({
-				title: "Bạn có chắc chắn muốn lưu dữ liệu?",
-				type: 'warning',
+				title: i18next.t('Do you want to save the data.?'),
+				type: 'question',
 				showCancelButton: true,
 				confirmButtonColor: '#3085d6',
 				cancelButtonColor: '#d33',
-				cancelButtonText: 'Không',
-				confirmButtonText: 'Có',
+                cancelButtonText: i18next.t('No'),
+                confirmButtonText: i18next.t('Yes'),
 				reverseButtons: true
 			}).then((result) => {
 				if (result.value) {
@@ -798,12 +797,12 @@ var del_list = new Array();
 			
 			swal({
 				title: "Bạn có muốn xuất báo giá?",
-				type: 'warning',
+				type: 'question',
 				showCancelButton: true,
 				confirmButtonColor: '#3085d6',
 				cancelButtonColor: '#d33',
-				cancelButtonText: 'Không',
-				confirmButtonText: 'Có',
+                cancelButtonText: i18next.t('No'),
+                confirmButtonText: i18next.t('Yes'),
 				reverseButtons: true
 			}).then((result) => {
 				if (result.value) {

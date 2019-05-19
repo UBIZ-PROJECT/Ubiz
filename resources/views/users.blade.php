@@ -132,6 +132,8 @@
                                 <div class="col-3" role="presentation"></div>
                                 <div class="col-4" role="presentation"></div>
                                 <div class="col-5" role="presentation"></div>
+                                <div class="col-6" role="presentation"></div>
+                                <div class="col-7" role="presentation"></div>
                             </div>
                             <div class="hdG">
                                 <div class="dcB col-1" role="presentation">
@@ -249,7 +251,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="dcB col-5" role="presentation">
+                                <div class="dcB col-6" role="presentation">
                                     <div class="dWB" role="button">
                                         <div class="dvJ" sort-name="com_nm" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                             <div class="tDv">{{ __('Company') }}</div>
@@ -272,7 +274,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="dcB col-6" role="presentation">
+                                <div class="dcB col-7" role="presentation">
                                     <div class="dWB" role="button" sort-name="address" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">{{ __('Address') }}</div>
@@ -342,14 +344,14 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tcB col-5">
+                                        <div class="tcB col-6">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$user->com_nm}}">
                                                     <span>{{$user->com_nm}}</span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tcB col-6">
+                                        <div class="tcB col-7">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$user->address}}">
                                                     <span>{{$user->address}}</span>
@@ -425,6 +427,7 @@
                             <div class="col-sm-5 col-md-5 col-xl-5">
                                 @include('components.input',['control_id'=>'txt_code', 'width'=>'150', 'label'=>__('Code')])
                                 @include('components.input',['control_id'=>'txt_name', 'label'=>__('Name')])
+                                @include('components.input',['control_id'=>'txt_rank', 'label'=>__('Duty')])
                                 @include('components.dropdown',['control_id'=>'txt_dep_id', 'label'=>__('Department'), 'data'=> Helper::convertDataToDropdownOptions($departments, 'id', 'dep_name')])
                                 @include('components.dropdown',['control_id'=>'txt_com_id', 'label'=>__('Company'), 'data'=> Helper::convertDataToDropdownOptions($companies, 'com_id', 'com_nm')])
                                 @include('components.input',['control_id'=>'txt_phone', 'label'=>__('Phone')])

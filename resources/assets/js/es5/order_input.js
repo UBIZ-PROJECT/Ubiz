@@ -912,7 +912,7 @@ function ord_back_to_output() {
 function ord_save() {
     swal({
         title: i18next.t('Do you want to save the data.?'),
-        type: 'warning',
+        type: 'question',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
@@ -950,8 +950,7 @@ function ord_save_callback(response) {
 function ord_delete() {
     swal({
         title: i18next.t('Do you want to delete the data?'),
-        text: i18next.t('Once deleted, you will not be able to recover this data!'),
-        type: 'warning',
+        type: 'question',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
@@ -987,7 +986,7 @@ function ord_delete_callback(response) {
 function ord_refresh() {
     swal({
         title: i18next.t('Do you want to refresh the data.?'),
-        type: 'warning',
+        type: 'question',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',

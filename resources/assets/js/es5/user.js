@@ -37,7 +37,7 @@
                 side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
             });
             jQuery(".i-numeric").forceNumeric();
-            TinyDatePicker('.i-date', {mode: 'dp-below'});
+            fnc_datepicker('.i-date');
         },
         w_sort: function (self) {
 
@@ -60,41 +60,54 @@
             ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_save: function () {
-            var form_data = jQuery.UbizOIWidget.w_get_form_data();
-            var id = jQuery("#txt_id").val();
-            form_data.append("id", id);
-            if (id == "0") {
-                form_data.append('_method', 'put');
-                ubizapis('v1', '/users', 'post', form_data, null, function(response){
-                    if (response.data.success == true) {
-                        swal({
-                            title: i18next.t('Successfully processed.'),
-                            text: i18next.t('Do you want to continue or go back to the list page?'),
-                            type: 'question',
-                            showCancelButton: true,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#3085d6',
-                            cancelButtonText: i18next.t('Back to the list page'),
-                            confirmButtonText: i18next.t('Continue'),
-                            reverseButtons: true
-                        }).then((result) => {
-                            if (result.value) {
-                                jQuery.UbizOIWidget.w_clean_input_page();
-                            } else if (result.dismiss === swal.DismissReason.cancel) {
-                                jQuery.UbizOIWidget.w_go_back_to_output_page();
-                                jQuery.UbizOIWidget.w_refresh_output_page();
+            swal({
+                title: i18next.t('Do you want to save the data.?'),
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: i18next.t('No'),
+                confirmButtonText: i18next.t('Yes'),
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    var form_data = jQuery.UbizOIWidget.w_get_form_data();
+                    var id = jQuery("#txt_id").val();
+                    form_data.append("id", id);
+                    if (id == "0") {
+                        form_data.append('_method', 'put');
+                        ubizapis('v1', '/users', 'post', form_data, null, function(response){
+                            if (response.data.success == true) {
+                                swal({
+                                    title: i18next.t('Successfully processed.'),
+                                    text: i18next.t('Do you want to continue or go back to the list page?'),
+                                    type: 'question',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#3085d6',
+                                    cancelButtonText: i18next.t('Back to the list page'),
+                                    confirmButtonText: i18next.t('Continue'),
+                                    reverseButtons: true
+                                }).then((result) => {
+                                    if (result.value) {
+                                        jQuery.UbizOIWidget.w_clean_input_page();
+                                    } else if (result.dismiss === swal.DismissReason.cancel) {
+                                        jQuery.UbizOIWidget.w_go_back_to_output_page();
+                                        jQuery.UbizOIWidget.w_refresh_output_page();
+                                    }
+                                })
+                            } else {
+                                swal.fire({
+                                    type: 'error',
+                                    title: response.data.message
+                                });
                             }
-                        })
-                    } else {
-                        swal({
-                            type: 'error',
-                            text: response.data.message
                         });
+                    } else {
+                        ubizapis('v1', '/users/' + id + '/update', 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
                     }
-                });
-            } else {
-                ubizapis('v1', '/users/' + id + '/update', 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
-            }
+                }
+            })
         },
         w_o_delete: function () {
             var ids = jQuery.UbizOIWidget.w_get_checked_rows();
@@ -103,8 +116,7 @@
 
             swal({
                 title: i18next.t('Do you want to delete the data?'),
-                text: i18next.t('Once deleted, you will not be able to recover this data!'),
-                type: 'warning',
+                type: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
@@ -121,8 +133,7 @@
             var id = jQuery("#txt_id").val();
             swal({
                 title: i18next.t('Do you want to delete the data?'),
-                text: i18next.t('Once deleted, you will not be able to recover this data!'),
-                type: 'warning',
+                type: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
@@ -136,21 +147,40 @@
             })
         },
         w_refresh: function () {
-            var id = jQuery("#txt_id").val();
-            if (id == '0') {
-                jQuery.UbizOIWidget.w_clean_input_page();
-            } else {
-                ubizapis('v1', '/users/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
-            }
+            swal({
+                title: i18next.t('Do you want to refresh the data.?'),
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: i18next.t('No'),
+                confirmButtonText: i18next.t('Yes'),
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    var id = jQuery("#txt_id").val();
+                    if (id == '0') {
+                        jQuery.UbizOIWidget.w_clean_input_page();
+                    } else {
+                        ubizapis('v1', '/users/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
+                    }
+                }
+            })
         },
         w_save_callback: function (response) {
             if (response.data.success == true) {
-                jQuery.UbizOIWidget.w_go_back_to_output_page();
-                jQuery.UbizOIWidget.w_refresh_output_page();
+                swal.fire({
+                    type: 'success',
+                    title: response.data.message,
+                    onClose: () => {
+                        jQuery.UbizOIWidget.w_go_back_to_output_page();
+                        jQuery.UbizOIWidget.w_refresh_output_page();
+                    }
+                });
             } else {
-                swal({
+                swal.fire({
                     type: 'error',
-                    text: response.data.message
+                    title: response.data.message
                 });
             }
         },
@@ -243,8 +273,12 @@
                     autohidemode: false,
                     horizrailenabled: false
                 });
+                $("input[name=txt_code]").attr('disabled', false);
+                $("input[name=txt_code]").closest('div.root_textfield').removeClass('rootIsDisabled');
             } else {
                 jQuery("#btn-delete").show();
+                $("input[name=txt_code]").attr('disabled', true);
+                $("input[name=txt_code]").closest('div.root_textfield').addClass('rootIsDisabled');
                 ubizapis('v1', '/users/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
             }
         },
@@ -357,32 +391,34 @@
         },
         w_o_delete_callback: function (response) {
             if (response.data.success == true) {
-                jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
-                swal({
+                swal.fire({
                     type: 'success',
-                    text: response.data.message
+                    title: response.data.message,
+                    onClose: () => {
+                        jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
+                    }
                 });
             } else {
-                swal({
+                swal.fire({
                     type: 'error',
-                    text: response.data.message
+                    title: response.data.message,
                 });
             }
         },
         w_i_delete_callback: function (response) {
             if (response.data.success == true) {
-                swal({
+                swal.fire({
                     type: 'success',
-                    text: response.data.message,
-                    onClose: function(){
+                    title: response.data.message,
+                    onClose: () => {
                         jQuery.UbizOIWidget.w_go_back_to_output_page();
                         jQuery.UbizOIWidget.w_refresh_output_page();
                     }
                 });
             } else {
-                swal({
+                swal.fire({
                     type: 'error',
-                    text: response.data.message
+                    title: response.data.message,
                 });
             }
         },
@@ -438,6 +474,7 @@
             jQuery.UbizOIWidget.i_page.find("#txt_id").val("0");
             jQuery.UbizOIWidget.i_page.find("#txt_code").val("");
             jQuery.UbizOIWidget.i_page.find("#txt_name").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_rank").val("");
             jQuery.UbizOIWidget.i_page.find("#txt_phone").val("");
             jQuery.UbizOIWidget.i_page.find("#txt_email").val("");
             jQuery.UbizOIWidget.i_page.find("#txt_dep_id").val("");
@@ -454,6 +491,7 @@
             jQuery.UbizOIWidget.i_page.find("#txt_id").val(data.id);
             jQuery.UbizOIWidget.i_page.find("#txt_code").val(data.code);
             jQuery.UbizOIWidget.i_page.find("#txt_name").val(data.name);
+            jQuery.UbizOIWidget.i_page.find("#txt_rank").val(data.rank);
             jQuery.UbizOIWidget.i_page.find("#txt_phone").val(data.phone);
             jQuery.UbizOIWidget.i_page.find("#txt_email").val(data.email);
             jQuery.UbizOIWidget.i_page.find("#txt_dep_id").val(data.dep_id);
@@ -571,6 +609,7 @@
             var form_data = new FormData();
             form_data.append('txt_code', jQuery("#txt_code").val());
             form_data.append('txt_name', jQuery("#txt_name").val());
+            form_data.append('txt_rank', jQuery("#txt_rank").val());
 
             if (jQuery('input[name=inp-upload-image]')[0].files.length > 0) {
                 form_data.append('avatar', jQuery('input[name=inp-upload-image]')[0].files[0]);

@@ -946,7 +946,7 @@ function qp_save_callback(response) {
 function qp_refresh() {
     swal({
         title: i18next.t('Do you want to refresh the data.?'),
-        type: 'warning',
+        type: 'question',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',

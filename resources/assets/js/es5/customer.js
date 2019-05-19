@@ -59,14 +59,13 @@
                 return false;
 
             swal({
-                title: "Bạn có muốn xóa dữ liệu không?",
-                text: "Một khi xóa, bạn sẽ không có khả năng khôi phục dữ liệu này!",
+                title: i18next.t('Do you want to delete the data?'),
                 type: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                cancelButtonText: 'Không',
-                confirmButtonText: 'Có',
+                cancelButtonText: i18next.t('No'),
+                confirmButtonText: i18next.t('Yes'),
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
@@ -408,8 +407,8 @@
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    cancelButtonText: 'Không',
-                    confirmButtonText: 'Có',
+                    cancelButtonText: i18next.t('No'),
+                    confirmButtonText: i18next.t('Yes'),
                     reverseButtons: true
                 }).then((result) => {
                     if (result.value) {
@@ -552,13 +551,13 @@
             var cus_id = jQuery('input[name="cus_id"]').val();
 
             swal({
-                title: "Bạn có chắc chắn muốn lưu dữ liệu?",
+                title: i18next.t('Do you want to save the data.?'),
                 type: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                cancelButtonText: 'Không',
-                confirmButtonText: 'Có',
+                cancelButtonText: i18next.t('No'),
+                confirmButtonText: i18next.t('Yes'),
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
