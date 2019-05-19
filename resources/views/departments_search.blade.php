@@ -22,46 +22,4 @@
             </svg>
         </button>
     </div>
-    <div id="search-form" class="eyo">
-        <div class="hvo">
-            <div class="gvo">
-                <div class="rvo">
-                    <span class="yvo">
-                        <label for="code">{{ __('Code') }}</label>
-                    </span>
-                    <span class="avo">
-                        <input type="text" spellcheck="false" id="dep_code" value="" autocomplete="off">
-                    </span>
-                </div>
-                <div class="rvo">
-                    <span class="yvo">
-                        <label for="name">{{ __('Department Name') }}</label>
-                    </span>
-                    <span class="avo">
-                        <input type="text" spellcheck="false" id="dep_name" value="" autocomplete="off">
-                    </span>
-                </div>
-                <div class="rvo">
-                    <span class="yvo">
-                        <label for="contain">{{ __('Includes the words') }}</label>
-                    </span>
-                    <span class="avo">
-                        <input type="text" spellcheck="false" spellcheck="false" id="contain" value="" autocomplete="off">
-                    </span>
-                </div>
-                <div class="rvo">
-                    <span class="yvo">
-                        <label for="notcontain">{{ __("Doesn't have") }}</label>
-                    </span>
-                    <span class="avo">
-                        <input type="text" spellcheck="false" id="notcontain" value="" autocomplete="off">
-                    </span>
-                </div>
-                <div class="rvo fvo">
-                    <button type="button" class="btn btn-primary btn-sm" onclick="jQuery.UbizOIWidget.w_search()">{{ __("Search") }}</button>
-                    <button type="button" class="btn btn-link btn-sm text-secondary" onclick="jQuery.UbizOIWidget.w_clear_search_form()">{{ __("Clear filter") }}</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
