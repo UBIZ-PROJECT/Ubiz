@@ -7,6 +7,9 @@ const _NO = i18next.t("No");
         this.o_page = null;
         this.i_page = null;
         this.defaultImage = "../images/avatar.png";
+        this.sidebar_scrollbars = null;
+        this.output_scrollbars = null;
+        this.input_scrollbars = null;
     };
 
     jQuery.UbizOIWidget = new UbizOIWidget();
@@ -14,26 +17,9 @@ const _NO = i18next.t("No");
         w_init: function () {
             jQuery.UbizOIWidget.o_page = jQuery("#o-put");
             jQuery.UbizOIWidget.i_page = jQuery("#i-put");
-            jQuery('#nicescroll-sidebar').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-sidebar',
-                autohidemode: false,
-                horizrailenabled: false
-            });
-            jQuery('#nicescroll-oput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-oput',
-                autohidemode: false,
-                horizrailenabled: false
-            });
+            jQuery.UbizOIWidget.sidebar_scrollbars = fnc_set_scrollbars("nicescroll-sidebar");
+            jQuery.UbizOIWidget.output_scrollbars = fnc_set_scrollbars("nicescroll-oput");
+            jQuery.UbizOIWidget.input_scrollbars = fnc_set_scrollbars("nicescroll-iput");
             jQuery('.utooltip').tooltipster({
                 side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
             });
@@ -333,21 +319,10 @@ const _NO = i18next.t("No");
                 $("#i-put .GtF .save").attr("onclick", "jQuery.UbizOIWidget.w_save(0)");
             }
 
-
+            jQuery.UbizOIWidget.w_sleep_scrollbars(jQuery.UbizOIWidget.output_scrollbars);
+            jQuery.UbizOIWidget.w_update_scrollbars(jQuery.UbizOIWidget.input_scrollbars);
             jQuery.UbizOIWidget.o_page.hide();
             jQuery.UbizOIWidget.i_page.fadeIn("slow");
-            jQuery('#nicescroll-oput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-input',
-                autohidemode: false,
-                horizrailenabled: false
-            });
         },
         w_set_paging_for_detail_page: function(page, totalPage, isReset = false) {
             var previous = $("#i-put .aqK .previous");
@@ -386,18 +361,8 @@ const _NO = i18next.t("No");
         w_go_back_to_output_page: function (self) {
             jQuery.UbizOIWidget.o_page.fadeIn("slow");
             jQuery.UbizOIWidget.i_page.hide();
-            jQuery('#nicescroll-oput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').getNiceScroll().remove();
-            jQuery('#nicescroll-oput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-oput',
-                autohidemode: false,
-                horizrailenabled: false
-            });
+            jQuery.UbizOIWidget.w_sleep_scrollbars(jQuery.UbizOIWidget.input_scrollbars);
+            jQuery.UbizOIWidget.w_update_scrollbars(jQuery.UbizOIWidget.output_scrollbars);
             jQuery.UbizOIWidget.w_clear_input_page();
         },
         w_refresh_output_page: function () {
@@ -773,6 +738,17 @@ const _NO = i18next.t("No");
             jQuery("#paging-label").replaceWith(paging_label);
             jQuery("#paging-older").replaceWith(paging_older);
             jQuery("#paging-newer").replaceWith(paging_newer);
+        },
+        w_sleep_scrollbars: function (instance) {
+            if (typeof instance == "undefined")
+                return false;
+            instance.sleep();
+        },
+        w_update_scrollbars: function (instance) {
+
+            if (typeof instance == "undefined")
+                return false;
+            instance.update();
         }
     });
 })(jQuery);
