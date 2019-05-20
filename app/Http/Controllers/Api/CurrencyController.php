@@ -18,7 +18,7 @@ class CurrencyController extends Controller
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['currency' => $data, 'success' => true, 'message' => ''], 200);
+        return response()->json(['currency' => $data, 'success' => true, 'message' => __("Successfully processed.")], 200);
     }
 
     public function getCurrency(Request $request)
@@ -33,7 +33,7 @@ class CurrencyController extends Controller
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['currency' => $currencies, 'paging' => $paging, 'success' => true, 'message' => ''], 200);
+        return response()->json(['currency' => $currencies, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed.")], 200);
     }
 
     public function getCurrencyById($id, Request $request)
@@ -49,7 +49,7 @@ class CurrencyController extends Controller
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['currency' => $data, 'success' => true, 'message' => ''], 200);
+        return response()->json(['currency' => $data, 'success' => true, 'message' => __("Successfully processed.")], 200);
     }
 
     public function insertCurrency(Request $request)
@@ -73,7 +73,7 @@ class CurrencyController extends Controller
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['success' => true, 'message' => ''], 200);
+        return response()->json(['success' => true, 'message' => __("Successfully processed.")], 200);
     }
 
     public function deleteCurrency($ids, Request $request)
