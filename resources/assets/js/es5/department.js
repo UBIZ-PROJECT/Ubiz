@@ -91,7 +91,7 @@
                                         jQuery.UbizOIWidget.w_clean_input_page();
                                     } else if (result.dismiss === swal.DismissReason.cancel) {
                                         jQuery.UbizOIWidget.w_go_back_to_output_page();
-                                        jQuery.UbizOIWidget.w_refresh_output_page();
+                                        jQuery.UbizOIWidget.w_fuzzy_search();
                                     }
                                 })
                             } else {
@@ -172,7 +172,7 @@
                     title: response.data.message,
                     onClose: () => {
                         jQuery.UbizOIWidget.w_go_back_to_output_page();
-                        jQuery.UbizOIWidget.w_refresh_output_page();
+                        jQuery.UbizOIWidget.w_fuzzy_search();
                     }
                 })
             } else {
@@ -250,6 +250,7 @@
             });
         },
         w_refresh_output_page: function () {
+            jQuery('#fuzzy').val('');
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
             ubizapis('v1', '/departments', 'get', null, {
@@ -306,7 +307,7 @@
                     title: response.data.message,
                     onClose: () => {
                         jQuery.UbizOIWidget.w_go_back_to_output_page();
-                        jQuery.UbizOIWidget.w_refresh_output_page();
+                        jQuery.UbizOIWidget.w_fuzzy_search();
                     }
                 });
             } else {

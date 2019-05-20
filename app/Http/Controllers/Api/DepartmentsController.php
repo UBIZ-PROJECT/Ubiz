@@ -23,7 +23,7 @@ class DepartmentsController extends Controller
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['departments' => $departments, 'paging' => $paging, 'success' => true, 'message' => ''], 200);
+        return response()->json(['departments' => $departments, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed.")], 200);
     }
 
     public function getDepartment($id, Request $request)
