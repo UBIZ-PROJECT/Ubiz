@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\User;
 
@@ -13,7 +14,7 @@ class Permission
         DB::beginTransaction();
         try {
 
-            $user_id = \Auth::user()->id;
+            $user_id = Auth::user()->id;
             foreach ($data as $permission) {
                 if (isset($permission['dep_allow']) && !isset($permission['usr_allow'])) {
                     DB::select(
