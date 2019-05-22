@@ -18,10 +18,10 @@ class PermissionController extends Controller
 
             $permission = new Permission();
             $permission->setPermissions($data);
+            return response()->json(['permissions' => $permissions, 'success' => true, 'message' => __('Successfully processed.')], 200);
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['permissions' => $permissions, 'success' => true, 'message' => ''], 200);
     }
 
     public function getDepPermissions($dep_id, $scr_id, Request $request)
@@ -34,10 +34,10 @@ class PermissionController extends Controller
 
             $permission = new Permission();
             $permissions = $permission->getDepPermissions($dep_id, $scr_id);
+            return response()->json(['permissions' => $permissions, 'success' => true, 'message' => __('Successfully processed.')], 200);
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['permissions' => $permissions, 'success' => true, 'message' => ''], 200);
     }
 
     public function getUsrPermissions($dep_id, $scr_id, $usr_id, Request $request)
@@ -50,9 +50,9 @@ class PermissionController extends Controller
 
             $permission = new Permission();
             $permissions = $permission->getUsrPermissions($dep_id, $scr_id, $usr_id);
+            return response()->json(['permissions' => $permissions, 'success' => true, 'message' => __('Successfully processed.')], 200);
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['permissions' => $permissions, 'success' => true, 'message' => ''], 200);
     }
 }
