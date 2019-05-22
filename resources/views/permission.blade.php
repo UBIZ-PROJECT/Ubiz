@@ -60,19 +60,19 @@
 
                     <div class="yTP">
                         <div class="row kuk">
-                            <div class="col lEF" style="max-width: 250px">
+                            <div class="col lEF" style="max-width: 300px">
                                 <i class="material-icons">
                                     business
                                 </i>
                                 <span>{{__('Department')}}</span>
                             </div>
-                            <div class="col lEF" style="max-width: 250px">
+                            <div class="col lEF" style="max-width: 300px">
                                 <i class="material-icons">
                                     vibration
                                 </i>
                                 <span>{{__('Screen')}}</span>
                             </div>
-                            <div class="col lEF" style="max-width: 400px">
+                            <div class="col lEF" style="max-width: 100%px">
                                 <i class="material-icons">
                                     extension
                                 </i>
@@ -80,7 +80,7 @@
                             </div>
                         </div>
                         <div class="row kuk">
-                            <div class="col twA" style="max-width: 250px">
+                            <div class="col twA" style="max-width: 300px">
                                 <div class="mOa nicescroll" id="nicescroll-1">
                                     <div id="dep-ctn">
                                         <table>
@@ -95,11 +95,11 @@
                                                             <div class="leo">
                                                                 <i onclick="jQuery.Permission.collapse_click(this, event)"
                                                                    class="material-icons">
-                                                                    arrow_right
+                                                                    chevron_right
                                                                 </i>
                                                                 <i onclick="jQuery.Permission.expand_click(this, event)"
                                                                    class="material-icons">
-                                                                    arrow_drop_down
+                                                                    expand_more
                                                                 </i>
                                                             </div>
                                                             <div class="pad">
@@ -135,7 +135,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col twA" style="max-width: 250px">
+                            <div class="col twA" style="max-width: 300px">
                                 <div class="mOa nicescroll" id="nicescroll-2">
                                     <div id="scr-ctn">
                                         <?php $sel_class = "scr-sel";?>
@@ -157,7 +157,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col twA" style="max-width: 400px">
+                            <div class="col twA" style="max-width: 100%">
                                 <div class="mOa nicescroll" id="nicescroll-3">
                                     <div id="fnc-ctn">
                                         <table class="ngv">

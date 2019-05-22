@@ -1,12 +1,7 @@
-.aKk {
-    display: block;
-    height: 100%;
-    table-layout: fixed;
-    border-spacing: 0;
-    width: 100%;
-}
-
-.aKk > tbody{
+.lEF {
+    border: solid transparent;
+    border-width: 1px 1px 1px 0;
+    height: 30px;
     -webkit-align-items: center;
     align-items: center;
     display: -webkit-box;
@@ -14,48 +9,172 @@
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
-    height: 100%;
-}
-
-.aKk .aAA{
-    padding-top: 0;
-    background: transparent;
-    border-bottom: none;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    cursor: pointer;
     white-space: nowrap;
-    -webkit-align-items: center;
-    align-items: center;
+    background-color: #cccccc54;
+    border-right: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+    color: #1967d2;
+    padding-left: 3px;
+}
+
+.twA {
+    border: solid transparent;
+    border-width: 1px 1px 1px 0;
     display: -webkit-box;
     display: -moz-box;
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    cursor: pointer;
+    white-space: nowrap;
+    border-right: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+    background-color: #cccccc54;
+    padding-left: 0px;
+    padding-right: 0px;
+    height: calc(100vh - 150px);
+}
+
+.twA .klo {
+    border: solid transparent;
+    border-width: 1px 1px 1px 0;
+    height: 30px;
+    line-height: 24px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    cursor: pointer;
+    white-space: nowrap;
+    padding-left: 3px;
+    color: rgba(0, 0, 0, .7);
+    width: 247px;
+}
+
+.twA .klk {
+    border: solid transparent;
+    border-width: 1px 1px 1px 0;
+    height: 30px;
+    line-height: 24px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    cursor: pointer;
+    white-space: nowrap;
+    padding-left: 3px;
+    color: rgba(0, 0, 0, .7);
+}
+
+.twA .klo.user-sel,
+.twA .klo.dep-sel,
+.twA .klo.scr-sel {
+    background-color: bisque;
+}
+
+.twA .klo:hover {
+    background-color: #ccccccad;
+}
+
+.lEF span {
+    padding-left: 10px;
+}
+
+.kuk {
+    margin: 0px;
+}
+
+.twA .klo span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    white-space: nowrap;
+    cursor: pointer;
+    width: 100%;
+    padding-left: 10px;
+}
+
+.twA .klo img {
+    width: 22px;
+    height: 22px;
+    border-radius: 50px;
+}
+
+.oiw {
+    padding-left: 40px;
+}
+
+.oiw .klo {
+    width: 207px;
+}
+
+.mOa {
     height: 100%;
-    margin: 0;
-    border: 0;
-    padding: 0;
-    list-style: none;
-    cursor: default;
-    outline: none;
+    overflow-x: hidden;
     width: 100%;
 }
-.aKk .aAA .aRz{
-    float: none;
-    margin: 0;
-    -webkit-align-items: center;
-    align-items: center;
-    display: -webkit-box;
-    display: -moz-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    height: 100%;
-    border: 0;
-    padding: 0;
-    background: transparent;
-    position: relative;
-    border: 1px solid #369;
-    padding: 4px 8px;
-    color: #333;
-    background: #ddd;
-    cursor: default;
+
+.ngv {
+    width: 100%;
+}
+
+.ngv th.cst-col-1,
+.ngv td.cst-col-1 {
+    width: 200px;
+}
+
+.ngv th.cst-col-2,
+.ngv td.cst-col-2 {
+    width: 100px;
+    text-align: center;
+}
+
+.ngv th.cst-col-3,
+.ngv td.cst-col-3 {
+    width: auto;
+    text-align: center;
+}
+
+.chk {
+    width: 20px;
+    height: 20px;
+}
+
+tr.clp .oiw {
+    display: none;
+}
+
+tr.clp .leo i:nth-child(1) {
+    display: block;
+}
+
+tr.clp .leo i:nth-child(2) {
+    display: none;
+}
+
+tr.exp .oiw {
+    display: block;
+}
+
+tr.exp .leo i:nth-child(1) {
+    display: none;
+}
+
+tr.exp .leo i:nth-child(2) {
+    display: block;
 }
