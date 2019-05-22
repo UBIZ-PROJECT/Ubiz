@@ -4,21 +4,15 @@
         this.sort = {};
         this.sort_default = {};
         this.o_page = null;
+        this.sidebar_scrollbars = null;
+        this.output_scrollbars = null;
     };
     jQuery.UbizOIWidget = new UbizOIWidget();
     jQuery.extend(UbizOIWidget.prototype, {
         w_init: function () {
             jQuery.UbizOIWidget.o_page = jQuery("#o-put");
-            jQuery('#nicescroll-oput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-oput',
-                autohidemode: false,
-                horizrailenabled: false
-            });
+            jQuery.UbizOIWidget.sidebar_scrollbars = fnc_set_scrollbars("nicescroll-sidebar");
+            jQuery.UbizOIWidget.output_scrollbars = fnc_set_scrollbars("nicescroll-oput");
             jQuery('.utooltip').tooltipster({
                 side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
             });
@@ -316,6 +310,17 @@
             jQuery("#paging-older").replaceWith(paging_older);
             jQuery("#paging-newer").replaceWith(paging_newer);
             jQuery('input[name="pageno"]').val(page);
+        },
+        w_sleep_scrollbars: function (instance) {
+            if (typeof instance == "undefined")
+                return false;
+            instance.sleep();
+        },
+        w_update_scrollbars: function (instance) {
+
+            if (typeof instance == "undefined")
+                return false;
+            instance.update();
         }
     });
 })(jQuery);

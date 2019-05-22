@@ -13,6 +13,9 @@ var is_image_delete = false;
         this.i_page = null;
         this.i_page_2 = null;
         this.defaultImage = "../images/avatar.png";
+        this.sidebar_scrollbars = null;
+        this.output_scrollbars = null;
+        this.input_scrollbars = null;
     };
 
     jQuery.UbizOIWidget = new UbizOIWidget();
@@ -21,26 +24,9 @@ var is_image_delete = false;
             jQuery.UbizOIWidget.o_page = jQuery("#o-put");
             jQuery.UbizOIWidget.i_page = jQuery("#i-put");
             jQuery.UbizOIWidget.i_page_2 = jQuery("#i-put-2");
-            jQuery('#nicescroll-sidebar').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-sidebar',
-                autohidemode: false,
-                horizrailenabled: false
-            });
-            jQuery('#nicescroll-oput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-oput',
-                autohidemode: false,
-                horizrailenabled: false
-            });
+            jQuery.UbizOIWidget.sidebar_scrollbars = fnc_set_scrollbars("nicescroll-sidebar");
+            jQuery.UbizOIWidget.output_scrollbars = fnc_set_scrollbars("nicescroll-oput");
+            jQuery.UbizOIWidget.input_scrollbars = fnc_set_scrollbars("nicescroll-iput");
             jQuery('.utooltip').tooltipster({
                 side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
             });
@@ -358,21 +344,12 @@ var is_image_delete = false;
             // if (isEmpty(index)) {
             $("#i-put .GtF .save").attr("onclick", "jQuery.UbizOIWidget.w_save(0)");
             // }
+            jQuery.UbizOIWidget.w_sleep_scrollbars(jQuery.UbizOIWidget.output_scrollbars);
+            jQuery.UbizOIWidget.w_update_scrollbars(jQuery.UbizOIWidget.input_scrollbars);
 
             jQuery.UbizOIWidget.o_page.hide();
             jQuery.UbizOIWidget.i_page.fadeIn("slow");
-            jQuery('#nicescroll-oput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput-2').getNiceScroll().remove();
-            jQuery('#nicescroll-iput-2').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-input',
-                autohidemode: false,
-                horizrailenabled: false
-            });
+
         },w_reset_input_change: function() {
             $("#i-put-2 #nicescroll-iput-2 #txt_name").val("").isChange("false");
             $("#i-put-2 #nicescroll-iput-2 #txt_model").val("").isChange("false");
@@ -417,18 +394,8 @@ var is_image_delete = false;
         w_go_back_to_output_page: function (self) {
             jQuery.UbizOIWidget.o_page.fadeIn("slow");
             jQuery.UbizOIWidget.i_page.hide();
-            jQuery('#nicescroll-oput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').getNiceScroll().remove();
-            jQuery('#nicescroll-oput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-oput',
-                autohidemode: false,
-                horizrailenabled: false
-            });
+            jQuery.UbizOIWidget.w_sleep_scrollbars(jQuery.UbizOIWidget.input_scrollbars);
+            jQuery.UbizOIWidget.w_update_scrollbars(jQuery.UbizOIWidget.output_scrollbars);
             jQuery.UbizOIWidget.w_clear_input_page();
         },
         w_refresh_output_page: function () {
@@ -724,6 +691,17 @@ var is_image_delete = false;
                     console.log("Thống Kê Tồn Kho");
                     break;
             }
+        },
+        w_sleep_scrollbars: function (instance) {
+            if (typeof instance == "undefined")
+                return false;
+            instance.sleep();
+        },
+        w_update_scrollbars: function (instance) {
+
+            if (typeof instance == "undefined")
+                return false;
+            instance.update();
         }
     });
 })(jQuery);
@@ -737,6 +715,9 @@ var lst_image_delete = [];
         this.i_page = null;
         this.i_page_2 = null;
         this.defaultImage = "../images/avatar.png";
+        this.sidebar_scrollbars = null;
+        this.output_scrollbars = null;
+        this.input_scrollbars = null;
     };
 
     jQuery.UbizOIWidgetPrd = new UbizOIWidgetPrd();
@@ -744,26 +725,9 @@ var lst_image_delete = [];
         w_init: function () {
             jQuery.UbizOIWidgetPrd.i_page = jQuery("#i-put");
             jQuery.UbizOIWidgetPrd.i_page_2 = jQuery("#i-put-2");
-            jQuery('#nicescroll-sidebar').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-sidebar',
-                autohidemode: false,
-                horizrailenabled: false
-            });
-            jQuery('#nicescroll-oput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-oput',
-                autohidemode: false,
-                horizrailenabled: false
-            });
+            jQuery.UbizOIWidgetPrd.sidebar_scrollbars = fnc_set_scrollbars("nicescroll-sidebar");
+            jQuery.UbizOIWidgetPrd.output_scrollbars = fnc_set_scrollbars("nicescroll-oput");
+            jQuery.UbizOIWidgetPrd.input_scrollbars = fnc_set_scrollbars("nicescroll-iput");
             jQuery('.utooltip').tooltipster({
                 side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
             });
@@ -1063,18 +1027,8 @@ var lst_image_delete = [];
 
             jQuery.UbizOIWidgetPrd.i_page.hide();
             jQuery.UbizOIWidgetPrd.i_page_2.fadeIn("slow");
-            jQuery('#nicescroll-oput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-input',
-                autohidemode: false,
-                horizrailenabled: false
-            });
+            jQuery.UbizOIWidgetPrd.w_sleep_scrollbars(jQuery.UbizOIWidgetPrd.output_scrollbars);
+            jQuery.UbizOIWidgetPrd.w_update_scrollbars(jQuery.UbizOIWidgetPrd.input_scrollbars);
         },w_reset_input_change: function() {
             $("#i-put-2 #nicescroll-iput-2 #txt_name").val("").isChange("false");
             $("#i-put-2 #nicescroll-iput-2 #txt_model").val("").isChange("false");
@@ -1120,18 +1074,8 @@ var lst_image_delete = [];
             changeCreateFunction(_ADD_PRODUCT);
             jQuery.UbizOIWidgetPrd.i_page.fadeIn("slow");
             jQuery.UbizOIWidgetPrd.i_page_2.hide();
-            jQuery('#nicescroll-oput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').getNiceScroll().remove();
-            jQuery('#nicescroll-oput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-oput',
-                autohidemode: false,
-                horizrailenabled: false
-            });
+            jQuery.UbizOIWidgetPrd.w_sleep_scrollbars(jQuery.UbizOIWidgetPrd.input_scrollbars);
+            jQuery.UbizOIWidgetPrd.w_update_scrollbars(jQuery.UbizOIWidgetPrd.output_scrollbars);
             jQuery.UbizOIWidgetPrd.w_clear_input_page();
         },
         w_refresh_output_page: function () {
@@ -1456,6 +1400,17 @@ var lst_image_delete = [];
             jQuery("#paging-label").replaceWith(paging_label);
             jQuery("#paging-older").replaceWith(paging_older);
             jQuery("#paging-newer").replaceWith(paging_newer);
+        },
+        w_sleep_scrollbars: function (instance) {
+            if (typeof instance == "undefined")
+                return false;
+            instance.sleep();
+        },
+        w_update_scrollbars: function (instance) {
+
+            if (typeof instance == "undefined")
+                return false;
+            instance.update();
         }
     });
 })(jQuery);

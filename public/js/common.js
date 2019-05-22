@@ -377,14 +377,62 @@ function fnc_datepicker(ele) {
     });
 }
 
-function nicescroll_resize(ele){
-    setTimeout(function(){
-        $(ele).getNiceScroll().resize();
-    },10);
-}
-
 function fnc_format_date(date){
     return moment(date).format('YYYY/MM/DD');
+}
+
+function fnc_set_scrollbars(ele_id, callbacks){
+
+    if (typeof callbacks == "undefined")
+        callbacks = {};
+
+    var ele_obj = document.getElementById(ele_id);
+    return OverlayScrollbars(ele_obj, {
+        className            : "os-theme-dark",
+        resize               : "none",
+        sizeAutoCapable      : true,
+        clipAlways           : true,
+        normalizeRTL         : true,
+        paddingAbsolute      : false,
+        autoUpdate           : null,
+        autoUpdateInterval   : 33,
+        nativeScrollbarsOverlaid : {
+            showNativeScrollbars   : false,
+            initialize             : true
+        },
+        overflowBehavior : {
+            x : "scroll",
+            y : "scroll"
+        },
+        scrollbars : {
+            visibility       : "auto",
+            autoHide         : "never",
+            autoHideDelay    : 800,
+            dragScrolling    : true,
+            clickScrolling   : false,
+            touchSupport     : true,
+            snapHandle       : false
+        },
+        textarea : {
+            dynWidth       : false,
+            dynHeight      : false,
+            inheritedAttrs : ["style", "class"]
+        },
+        callbacks : {
+            onInitialized               : typeof callbacks['onInitialized'] == "function" ? callbacks['onInitialized'] : null,
+            onInitializationWithdrawn   : typeof callbacks['onInitializationWithdrawn'] == "function" ? callbacks['onInitializationWithdrawn'] : null,
+            onDestroyed                 : typeof callbacks['onDestroyed'] == "function" ? callbacks['onDestroyed'] : null,
+            onScrollStart               : typeof callbacks['onScrollStart'] == "function" ? callbacks['onScrollStart'] : null,
+            onScroll                    : typeof callbacks['onScroll'] == "function" ? callbacks['onScroll'] : null,
+            onScrollStop                : typeof callbacks['onScrollStop'] == "function" ? callbacks['onScrollStop'] : null,
+            onOverflowChanged           : typeof callbacks['onOverflowChanged'] == "function" ? callbacks['onOverflowChanged'] : null,
+            onOverflowAmountChanged     : typeof callbacks['onOverflowAmountChanged'] == "function" ? callbacks['onOverflowAmountChanged'] : null,
+            onDirectionChanged          : typeof callbacks['onDirectionChanged'] == "function" ? callbacks['onDirectionChanged'] : null,
+            onContentSizeChanged        : typeof callbacks['onContentSizeChanged'] == "function" ? callbacks['onContentSizeChanged'] : null,
+            onHostSizeChanged           : typeof callbacks['onHostSizeChanged'] == "function" ? callbacks['onHostSizeChanged'] : null,
+            onUpdated                   : typeof callbacks['onUpdated'] == "function" ? callbacks['onUpdated'] : null
+        }
+    });
 }
 
 jQuery.fn.forceNumeric = function () {

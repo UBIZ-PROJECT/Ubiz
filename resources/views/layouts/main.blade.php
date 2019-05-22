@@ -16,9 +16,6 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('fonts/roboto/v18/roboto.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('iconfont/fontmaterial/material-icons.css') }}">
 
-    <!-- Nicescroll -->
-    <script type="text/javascript" src="{{ asset('dist/nicescroll/jquery.nicescroll.min.js') }}"></script>
-
     <!-- Tooltipster -->
     <link rel="stylesheet" type="text/css" href="{{ asset('dist/tooltipster/tooltipster.bundle.css') }}">
     <script type="text/javascript" src="{{ asset('dist/tooltipster/tooltipster.bundle.js') }}"></script>

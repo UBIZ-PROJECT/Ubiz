@@ -6,6 +6,9 @@
         this.rows_num = 0;
         this.o_page = null;
         this.i_page = null;
+        this.sidebar_scrollbars = null;
+        this.output_scrollbars = null;
+        this.input_scrollbars = null;
     };
 
     jQuery.UbizOIWidget = new UbizOIWidget();
@@ -13,26 +16,9 @@
         w_init: function () {
             jQuery.UbizOIWidget.o_page = jQuery("#o-put");
             jQuery.UbizOIWidget.i_page = jQuery("#i-put");
-            jQuery('#nicescroll-sidebar').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-sidebar',
-                autohidemode: false,
-                horizrailenabled: false
-            });
-            jQuery('#nicescroll-oput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-oput',
-                autohidemode: false,
-                horizrailenabled: false
-            });
+            jQuery.UbizOIWidget.sidebar_scrollbars = fnc_set_scrollbars("nicescroll-sidebar");
+            jQuery.UbizOIWidget.output_scrollbars = fnc_set_scrollbars("nicescroll-oput");
+            jQuery.UbizOIWidget.input_scrollbars = fnc_set_scrollbars("nicescroll-iput");
             jQuery('.utooltip').tooltipster({
                 side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
             });
@@ -210,20 +196,10 @@
                 jQuery("#i-paging-older").hide();
                 jQuery("#i-paging-newer").hide();
                 jQuery.UbizOIWidget.w_clean_input_page();
+                jQuery.UbizOIWidget.w_sleep_scrollbars(jQuery.UbizOIWidget.output_scrollbars);
+                jQuery.UbizOIWidget.w_update_scrollbars(jQuery.UbizOIWidget.input_scrollbars);
                 jQuery.UbizOIWidget.o_page.hide();
                 jQuery.UbizOIWidget.i_page.fadeIn("slow");
-                jQuery('#nicescroll-oput').getNiceScroll().remove();
-                jQuery('#nicescroll-iput').getNiceScroll().remove();
-                jQuery('#nicescroll-iput').niceScroll({
-                    cursorcolor: "#9fa8b0",
-                    cursorwidth: "5px",
-                    cursorborder: "none",
-                    cursorborderradius: 5,
-                    cursoropacitymin: 0.4,
-                    scrollbarid: 'nc-input',
-                    autohidemode: false,
-                    horizrailenabled: false
-                });
                 $("input[name=txt_dep_code]").attr('disabled', false);
                 $("input[name=txt_dep_code]").closest('div.root_textfield').removeClass('rootIsDisabled');
             } else {
@@ -236,18 +212,8 @@
         w_go_back_to_output_page: function () {
             jQuery.UbizOIWidget.o_page.fadeIn("slow");
             jQuery.UbizOIWidget.i_page.hide();
-            jQuery('#nicescroll-oput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').getNiceScroll().remove();
-            jQuery('#nicescroll-oput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-oput',
-                autohidemode: false,
-                horizrailenabled: false
-            });
+            jQuery.UbizOIWidget.w_sleep_scrollbars(jQuery.UbizOIWidget.input_scrollbars);
+            jQuery.UbizOIWidget.w_update_scrollbars(jQuery.UbizOIWidget.output_scrollbars);
         },
         w_refresh_output_page: function () {
             jQuery('#fuzzy').val('');
@@ -343,21 +309,8 @@
             jQuery.UbizOIWidget.w_clean_input_page();
             jQuery.UbizOIWidget.w_set_input_page(department);
             jQuery.UbizOIWidget.w_i_paging();
-
             jQuery.UbizOIWidget.o_page.hide();
             jQuery.UbizOIWidget.i_page.fadeIn("slow");
-            jQuery('#nicescroll-oput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-input',
-                autohidemode: false,
-                horizrailenabled: false
-            });
         },
         w_clean_input_page: function () {
             jQuery.UbizOIWidget.i_page.find("#txt_id").val("0");
@@ -546,6 +499,17 @@
             jQuery('.itooltip').tooltipster({
                 side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
             });
+        },
+        w_sleep_scrollbars: function (instance) {
+            if (typeof instance == "undefined")
+                return false;
+            instance.sleep();
+        },
+        w_update_scrollbars: function (instance) {
+
+            if (typeof instance == "undefined")
+                return false;
+            instance.update();
         }
     });
 })(jQuery);

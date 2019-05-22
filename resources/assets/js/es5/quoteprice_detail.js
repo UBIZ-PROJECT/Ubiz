@@ -1,14 +1,16 @@
 var prod_spec_no = 1;
 var max_integer = 2147483647;
 var max_double = 9223372036854775807;
+var sidebar_scrollbars = null;
+var input_scrollbars = null;
 
 function my_collapse(self) {
     var next_ele = $(self).next('div');
     next_ele.on('hidden.bs.collapse', function () {
-        nicescroll_resize("#nicescroll-iput");
+        w_update_scrollbars(input_scrollbars);
     })
     next_ele.on('shown.bs.collapse', function () {
-        nicescroll_resize("#nicescroll-iput");
+        w_update_scrollbars(input_scrollbars);
     });
     next_ele.collapse('toggle');
 }
@@ -81,7 +83,7 @@ function prod_row_copy(self) {
             tinyMCE.get(dt_prod_specs_mce_id).setContent(copy_tinymce_content);
             add_row.find('input[name=dt_unit]').focus();
             qp_set_total(dt_amount_total, dt_amount_tax_total);
-            nicescroll_resize("#nicescroll-iput");
+            w_update_scrollbars(input_scrollbars);
         },
         plugins: [
             'advlist autolink lists link image charmap print preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code wordcount autoresize'
@@ -129,7 +131,7 @@ function prod_row_add() {
             add_row.find('input[name=dt_unit]').focus();
 
             prod_row_set_no();
-            nicescroll_resize("#nicescroll-iput");
+            w_update_scrollbars(input_scrollbars);
         },
         plugins: [
             'advlist autolink lists link image charmap print preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code wordcount autoresize'
@@ -167,7 +169,7 @@ function prod_row_del(self) {
     qp_set_total(dt_amount_total, dt_amount_tax_total);
 
     prod_row_set_no();
-    nicescroll_resize("#nicescroll-iput");
+    w_update_scrollbars(input_scrollbars);
 }
 
 function prod_row_clean(row) {
@@ -290,7 +292,7 @@ function acce_row_copy(self) {
     acce_row_set_data(copy_row.next('div.dt-row'), copy_row_data);
 
     acce_row_set_no();
-    nicescroll_resize("#nicescroll-iput");
+    w_update_scrollbars(input_scrollbars);
     copy_row.next('div.dt-row').find('input[name=dt_acce_code]').focus();
     copy_row.next('div.dt-row').attr('dt_id', '0');
 
@@ -315,7 +317,7 @@ function acce_row_add() {
 
     acce_row_set_no();
     acce_row_clean(add_row);
-    nicescroll_resize("#nicescroll-iput");
+    w_update_scrollbars(input_scrollbars);
     add_row.find('input[name=dt_acce_code]').focus();
 }
 
@@ -337,7 +339,7 @@ function acce_row_del(self) {
         }
     }
     acce_row_set_no();
-    nicescroll_resize("#nicescroll-iput");
+    w_update_scrollbars(input_scrollbars);
 
     var dt_amount_total = dt_get_amount_total();
     var qp_tax = numeral($("input[name=qp_tax]").val()).value();
@@ -1048,12 +1050,25 @@ function qp_create_order_callback(response) {
     }
 }
 
+function w_sleep_scrollbars(instance) {
+    if (typeof instance == "undefined")
+        return false;
+    instance.sleep();
+}
+
+function w_update_scrollbars(instance) {
+
+    if (typeof instance == "undefined")
+        return false;
+    instance.update();
+}
+
 $(document).ready(function () {
 
     prod_spec_no = $("#dt-prod").find('div.dt-row').length;
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        nicescroll_resize("#nicescroll-iput");
+        w_update_scrollbars(input_scrollbars);
     })
 
     tinymce.init({
@@ -1071,16 +1086,8 @@ $(document).ready(function () {
             '/fonts/roboto/v18/roboto.css'
         ]
     });
-    $('#nicescroll-iput').niceScroll({
-        cursorcolor: "#9fa8b0",
-        cursorwidth: "5px",
-        cursorborder: "none",
-        cursorborderradius: 5,
-        cursoropacitymin: 0.4,
-        scrollbarid: 'nc-oput',
-        autohidemode: false,
-        horizrailenabled: false
-    });
+    sidebar_scrollbars = fnc_set_scrollbars("nicescroll-sidebar");
+    input_scrollbars = fnc_set_scrollbars("nicescroll-iput");
     fnc_datepicker('.datepicker');
     jQuery('.utooltip').tooltipster({
         side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
