@@ -85,6 +85,16 @@ class Handler extends ExceptionHandler
                     }
                     return response()->view('errors.404', 404);
                     break;
+                case 403:
+                    $message = __("You don't have permission to use this function.\nPlease contact with administrator.");
+                    if ($request->expectsJson() === true) {
+                        return response()->json(['success' => false, 'message' => $message, 'trace' => $trace], 404);
+                    }
+                    if (env('APP_ENV') == 'local') {
+                        return parent::render($request, $exception);
+                    }
+                    return response()->view('errors.403', 403);
+                    break;
                 case 401:
                     $message = __('Authentication failed.\nYou will be taken back to the login page for 5 seconds.');
                     if ($request->expectsJson() === true) {

@@ -7,8 +7,6 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use App\Helper;
-
 
 class Customer implements JWTSubject
 {
@@ -121,7 +119,7 @@ class Customer implements JWTSubject
             $customers = DB::table('customer')
                 ->where('cus_id', $id)
                 ->get();
-            $customers[0]->avt_src = Helper::readImage($customers[0]->cus_avatar, 'cus');
+            $customers[0]->avt_src = readImage($customers[0]->cus_avatar, 'cus');
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -137,7 +135,7 @@ class Customer implements JWTSubject
                 ->select('customer.*', 'm_customer_type.title as cus_type')
                 ->first();
             if ($data != null) {
-                $data->avt_src = Helper::readImage($data->cus_avatar, 'cus');
+                $data->avt_src = readImage($data->cus_avatar, 'cus');
             }
             return $data;
         } catch (\Throwable $e) {
@@ -154,7 +152,7 @@ class Customer implements JWTSubject
                 ->offset($index)
                 ->limit(1)
                 ->get();
-            $customers[0]->avt_src = Helper::readImage($customers[0]->cus_avatar, 'cus');
+            $customers[0]->avt_src = readImage($customers[0]->cus_avatar, 'cus');
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -193,7 +191,7 @@ class Customer implements JWTSubject
         try {
             if ($param['cus_avatar']) {
                 $avatar = $param['cus_id'] . '.' . $param['cus_avatar']->getClientOriginalExtension();
-                Helper::resizeImage($param['cus_avatar']->getRealPath(), $param['cus_id'] . '.' . $param['cus_avatar']->getClientOriginalExtension(), 200, 200, 'cus');
+                resizeImage($param['cus_avatar']->getRealPath(), $param['cus_id'] . '.' . $param['cus_avatar']->getClientOriginalExtension(), 200, 200, 'cus');
             } else {
                 $avatar = '';
             }
@@ -248,7 +246,7 @@ class Customer implements JWTSubject
         try {
             if ($param['cus_avatar'] && ($param['cus_avatar_flg'] == 2)) {
                 $avatar = $param['cus_id'] . '.' . $param['cus_avatar']->getClientOriginalExtension();
-                Helper::resizeImage($param['cus_avatar']->getRealPath(), $param['cus_id'] . '.' . $param['cus_avatar']->getClientOriginalExtension(), 200, 200, 'cus');
+                resizeImage($param['cus_avatar']->getRealPath(), $param['cus_id'] . '.' . $param['cus_avatar']->getClientOriginalExtension(), 200, 200, 'cus');
             } else {
                 if ($param['cus_avatar_flg'] == 0) {
                     $customerAvatar = DB::table('customer')

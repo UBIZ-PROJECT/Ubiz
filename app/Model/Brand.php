@@ -7,7 +7,6 @@
  */
 
 namespace App\Model;
-use App\Helper;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -68,7 +67,7 @@ class Brand implements JWTSubject
             foreach ($brands as &$brand) {
                 if (!empty($brand->brd_img)) {
                     $brdImageName = $brand->brd_id . '.' . $brand->brd_img;
-                    $brdImage['src'] = Helper::readImage($brdImageName, "brd");;
+                    $brdImage['src'] = readImage($brdImageName, "brd");;
                     $brdImage['name'] = $brdImageName;
                     $brand->brdImage = $brdImage;
                 }
@@ -89,7 +88,7 @@ class Brand implements JWTSubject
         foreach ($brands as &$brand) {
             if (!empty($brand->brd_img)) {
                 $brdImageName = $brand->brd_id . '.' . $brand->brd_img;
-                $brdImage['src'] = Helper::readImage($brdImageName, "brd");;
+                $brdImage['src'] = readImage($brdImageName, "brd");;
                 $brdImage['name'] = $brdImageName;
                 $brand->brdImage = $brdImage;
             }
@@ -177,7 +176,7 @@ class Brand implements JWTSubject
     }
 
     private function insertBrandImage($rederImageName, $temp_name) {
-        Helper::saveOriginalImage($temp_name, $rederImageName, 'brd');
+        saveOriginalImage($temp_name, $rederImageName, 'brd');
     }
 
     private function generateRandomString($length = 10) {

@@ -232,5 +232,6 @@
   "Company is required.": "Công ty không được trống.",
   "Department is required.": "Phòng ban không được trống.",
   "Join date is wrong format YYYY/MM/DD.": "Ngày vào làm bị sai định dạng YYYY/MM/DD.",
-  "E-mail is wrong format.": "Email không đúng."
+  "E-mail is wrong format.": "Email không đúng.",
+  "You don't have permission to use this function.\nPlease contact with administrator.": "Bạn không có quyền truy cập chức năng này.\nHãy liên hệ với quản trị viên."
 }

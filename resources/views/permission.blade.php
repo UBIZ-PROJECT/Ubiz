@@ -1,6 +1,6 @@
 @extends('layouts.main')
-@section('title',__("Permission"))
-@section('headbar-title', __("Permission"))
+@section('title',__("Permission Setting"))
+@section('headbar-title', __("Permission Setting"))
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/headbar.css') }}">

@@ -8,8 +8,6 @@
 
 namespace App\Http\Controllers\Api;
 
-
-use App\Helper;
 use App\Http\Controllers\Controller;
 use App\Model\Supplier;
 use Illuminate\Http\Request;
@@ -37,7 +35,7 @@ class SupplierController extends Controller
             $supplier = new Supplier();
             list($page, $sort,$search) = $this->getPageSortSearch($request);
             $data = $supplier->getEachSupplierByPaging($page, $sort,$search);
-            $image = Helper::readImage($data[0]->sup_avatar,'sup');
+            $image = readImage($data[0]->sup_avatar,'sup');
             $data[0]->src = $image;
             $paging = $supplier->getPagingInfo();
             $paging['page'] = $page;

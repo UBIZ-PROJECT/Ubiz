@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Web;
 
-use App\Helper;
 use App\Model\Order;
 use App\Model\OrderDetail;
 use App\Model\ProductStatus;
@@ -41,7 +40,7 @@ class OrderController extends Controller
         return view('order_input', [
             'order' => $orderData,
             'orderDetail' => $orderDetailData,
-            'statusList' => Helper::convertDataToDropdownOptions($statusList, 'id', 'title')
+            'statusList' => convertDataToDropdownOptions($statusList, 'id', 'title')
         ]);
     }
 }

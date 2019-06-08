@@ -4,7 +4,6 @@ namespace App\Model;
 
 use Mail;
 use App\User;
-use App\Helper;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;

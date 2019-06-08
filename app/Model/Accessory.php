@@ -7,7 +7,6 @@
  */
 
 namespace App\Model;
-use App\Helper;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -71,7 +70,7 @@ class Accessory implements JWTSubject
               ", $params);
         foreach ($accessory as &$item) {
             if (!empty($item->prd_img_id)) {
-                $item->image = Helper::readImage($item->id . '-' . $item->prd_img_id . '.' . $item->extension, "acs");
+                $item->image = readImage($item->id . '-' . $item->prd_img_id . '.' . $item->extension, "acs");
             }
         }
         return $accessory;
@@ -107,7 +106,7 @@ class Accessory implements JWTSubject
             $data[0]->acs_quantity = $item->acs_quantity;
             if (!empty($item->prd_img_id)) {
                 $imageName = $item->acs_id . '-' . $item->prd_img_id . '.' . $item->extension;
-                $images[$index]['src'] = Helper::readImage($imageName, "acs");
+                $images[$index]['src'] = readImage($imageName, "acs");
                 $images[$index]['name'] = $imageName;
                 $data[0]->images = $images;
             }
@@ -188,7 +187,7 @@ class Accessory implements JWTSubject
                 ]
             );
             $rederImageName = $acsId . '-' . $id . '.' . $extension;
-            Helper::saveOriginalImage($temp_name, $rederImageName, 'acs');
+            saveOriginalImage($temp_name, $rederImageName, 'acs');
             DB::commit();
         } catch(\Throwable $e) {
             DB::rollback();

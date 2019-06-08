@@ -94,9 +94,9 @@ class User extends Authenticatable implements JWTSubject
                 ->get();
 
             foreach ($users as &$user) {
-                $user->avatar = \Helper::readImage($user->avatar, 'usr');
+                $user->avatar = readImage($user->avatar, 'usr');
                 if ($user->avatar == "") {
-                    $user->avatar = \Helper::readImage("no_avatar.png", 'gen');
+                    $user->avatar = readImage("no_avatar.png", 'gen');
                 }
             }
             return $users;
@@ -130,7 +130,7 @@ class User extends Authenticatable implements JWTSubject
                 $path = $avatar->path();
                 $extension = $avatar->extension();
                 $avatar = $id . "." . $extension;
-                \Helper::resizeImage($path, $avatar, 200, 200, 'usr');
+                resizeImage($path, $avatar, 200, 200, 'usr');
                 $data['avatar'] = $avatar;
             }
 
@@ -155,7 +155,7 @@ class User extends Authenticatable implements JWTSubject
                 $path = $avatar->path();
                 $extension = $avatar->extension();
                 $avatar = $id . "." . $extension;
-                \Helper::resizeImage($path, $avatar, 200, 200, 'usr');
+                resizeImage($path, $avatar, 200, 200, 'usr');
                 $data['avatar'] = $avatar;
             }
             $data['password'] = bcrypt('123456');
@@ -231,7 +231,7 @@ class User extends Authenticatable implements JWTSubject
                 ->first();
 
             if ($user != null && !empty($user->avatar)) {
-                $user->avatar = \Helper::readImage($user->avatar, 'usr');
+                $user->avatar = readImage($user->avatar, 'usr');
             }
             return $user;
         } catch (\Throwable $e) {
@@ -269,7 +269,7 @@ class User extends Authenticatable implements JWTSubject
                 ->first();
 
             if ($user != null && !empty($user->avatar)) {
-                $user->avatar = \Helper::readImage($user->avatar, 'usr');
+                $user->avatar = readImage($user->avatar, 'usr');
             }
             return $user;
         } catch (\Throwable $e) {

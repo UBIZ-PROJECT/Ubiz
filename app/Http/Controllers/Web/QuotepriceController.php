@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Web;
 
 use App\User;
-use App\Helper;
 use App\Model\Customer;
 use App\Model\Quoteprice;
 use App\Model\QuotepriceDetail;
@@ -47,8 +46,8 @@ class QuotepriceController extends Controller
         return view('quoteprice_detail', [
             'quoteprice' => $qpData,
             'quotepriceDetail' => $qpDetailData,
-            'prdStatus' => Helper::convertDataToDropdownOptions($prdStatusData, 'id', 'title'),
-            'cusAddress' => Helper::convertDataToDropdownOptions($cusAddressData, 'cad_id', 'cad_address'),
+            'prdStatus' => convertDataToDropdownOptions($prdStatusData, 'id', 'title'),
+            'cusAddress' => convertDataToDropdownOptions($cusAddressData, 'cad_id', 'cad_address'),
         ]);
     }
 
@@ -75,8 +74,8 @@ class QuotepriceController extends Controller
             'qp_no' => $qp_no,
             'user' => $userData,
             'customer' => $cusData,
-            'prdStatus' => Helper::convertDataToDropdownOptions($prdStatusData, 'id', 'title'),
-            'cusAddress' => Helper::convertDataToDropdownOptions($cusAddressData, 'cad_id', 'cad_address'),
+            'prdStatus' => convertDataToDropdownOptions($prdStatusData, 'id', 'title'),
+            'cusAddress' => convertDataToDropdownOptions($cusAddressData, 'cad_id', 'cad_address'),
         ]);
     }
 

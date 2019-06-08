@@ -281,18 +281,34 @@
             return form_data;
         },
         save: function (self) {
-            var form_data = jQuery.Permission.collect_permission_data();
-            ubizapis('v1', '/permission', 'post', form_data, null, function (response) {
-                if (response.data.success == true) {
-                    swal.fire({
-                        type: 'success',
-                        title: response.data.message
-                    })
-                } else {
-                    swal.fire({
-                        type: 'error',
-                        title: response.data.message
-                    })
+            swal({
+                title: i18next.t('Do you want to save the data.?'),
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: i18next.t('No'),
+                confirmButtonText: i18next.t('Yes'),
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    var form_data = jQuery.Permission.collect_permission_data();
+                    ubizapis('v1', '/permission', 'post', form_data, null, function (response) {
+                        if (response.data.success == true) {
+                            swal.fire({
+                                type: 'success',
+                                title: response.data.message,
+                                onClose: () => {
+                                    jQuery.Permission.render_permissions(response.data.permissions, response.data.opt);
+                                }
+                            })
+                        } else {
+                            swal.fire({
+                                type: 'error',
+                                title: response.data.message
+                            })
+                        }
+                    });
                 }
             });
         }

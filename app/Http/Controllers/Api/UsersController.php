@@ -13,7 +13,7 @@ class UsersController extends Controller
     public function getUsers(Request $request)
     {
         try {
-
+            checkUserRight('3', '1');
             list($page, $sort, $search) = $this->getRequestData($request);
 
             $user = new User();

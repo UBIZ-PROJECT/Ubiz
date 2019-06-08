@@ -58,12 +58,10 @@
     white-space: nowrap;
     padding-left: 3px;
     color: rgba(0, 0, 0, .7);
-    width: 247px;
+    width: 297px;
 }
 
 .twA .klk {
-    border: solid transparent;
-    border-width: 1px 1px 1px 0;
     height: 30px;
     line-height: 24px;
     padding-top: 3px;
@@ -79,6 +77,10 @@
     white-space: nowrap;
     padding-left: 3px;
     color: rgba(0, 0, 0, .7);
+}
+
+.twA .klk .pad {
+    width: 30px;
 }
 
 .twA .klo.user-sel,
@@ -120,7 +122,7 @@
 }
 
 .oiw .klo {
-    width: 207px;
+    width: 257px;
 }
 
 .mOa {
@@ -131,6 +133,12 @@
 
 .ngv {
     width: 100%;
+}
+
+.ngv td, .ngv th {
+    padding: 0px;
+    height: 30px;
+    line-height: 1px;
 }
 
 .ngv th.cst-col-1,
@@ -150,9 +158,13 @@
     text-align: center;
 }
 
+.ngv tbody tr:hover {
+    background-color: #ccccccad;
+}
+
 .chk {
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 15px;
 }
 
 tr.clp .oiw {

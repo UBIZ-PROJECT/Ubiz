@@ -492,7 +492,7 @@
                                 @include('components.input',['width'=>'250','type'=>'disabled','control_id'=>'txt_code', 'label'=>__('Code'), 'length'=>100])
                                 @include('components.input',['width'=>'250','type'=>'required', 'control_id'=>'txt_name', 'label'=>__("Name"), 'length'=>100])
                                 @include('components.input',['width'=>'250','control_id'=>'txt_unit', 'label'=>__('Unit'), 'length'=>20])
-                                @include('components.dropdown',['width'=>'250','control_id'=>'txt_name_type', 'label'=>__('Type'), 'data'=> Helper::convertDataToDropdownOptions($product_type, 'id', 'name_type')])
+                                @include('components.dropdown',['width'=>'250','control_id'=>'txt_name_type', 'label'=>__('Type'), 'data'=> convertDataToDropdownOptions($product_type, 'id', 'name_type')])
                             </div>
                             <div class="col-sm-3 col-md-3 col-xl-3 z-pdr">
                                 @include('components.textarea',['width'=>'250', 'height'=>'80', 'control_id'=>'txt_acs_note', 'label'=>__('Note')])
@@ -544,7 +544,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    @include('components.dropdown',['width'=>'250','type'=>'required', 'control_id'=>'txt_keeper', 'label'=>__("Keeper"), 'data'=> Helper::convertDataToDropdownOptions($users, 'id', 'name')])
+                    @include('components.dropdown',['width'=>'250','type'=>'required', 'control_id'=>'txt_keeper', 'label'=>__("Keeper"), 'data'=> convertDataToDropdownOptions($users, 'id', 'name')])
                     @include('components.input',['width'=>'250','type'=>'required', 'control_id'=>'txt_quantity', 'label'=>__("Quantity"), 'length'=>10])
                     @include('components.input',['width'=>'250','type'=>'required', 'placeholder'=>__("Day/Month/Year"),'control_id'=>'expired_date', 'label'=>__("Expired Date"), 'length'=>10])
                     @include('components.textarea',['width'=>'250', 'control_id'=>'txt_note', 'label'=>__('Note')])

@@ -2,7 +2,6 @@
 
 namespace App\Model;
 
-use App\Helper;
 use Illuminate\Support\Facades\DB;
 
 class Company
@@ -19,7 +18,7 @@ class Company
 
         foreach ($companies as $key => $company) {
             if (!empty($company->com_logo)) {
-                $company->com_logo = \Helper::readImage($company->com_logo, 'com');
+                $company->com_logo = readImage($company->com_logo, 'com');
             }
             $companies[$key] = $company;
         }
@@ -43,7 +42,7 @@ class Company
 
             foreach ($companies as $key => $company) {
                 if (!empty($company->com_logo)) {
-                    $company->com_logo = \Helper::readImage($company->com_logo, 'com');
+                    $company->com_logo = readImage($company->com_logo, 'com');
                 }
                 $companies[$key] = $company;
             }
@@ -62,7 +61,7 @@ class Company
                 ->first();
 
             if ($company != null && !empty($company->com_logo)) {
-                $company->com_logo = \Helper::readImage($company->com_logo, 'com');
+                $company->com_logo = readImage($company->com_logo, 'com');
             }
 
         } catch (\Throwable $e) {
@@ -86,7 +85,7 @@ class Company
                 ->first();
 
             if ($company != null && !empty($company->com_logo)) {
-                $company->com_logo = \Helper::readImage($company->com_logo, 'com');
+                $company->com_logo = readImage($company->com_logo, 'com');
             }
 
         } catch (\Throwable $e) {
@@ -234,7 +233,7 @@ class Company
                 $extension = $com_logo->extension();
                 $com_logo = "logo-" . $param['com_id'] . '.' . $extension;
 
-                Helper::saveOriginalImage($path, $com_logo, 'com');
+                saveOriginalImage($path, $com_logo, 'com');
             }
 
             DB::table('m_company')->insert($param);
@@ -259,7 +258,7 @@ class Company
 
                 $param['com_logo'] = $com_logo;
 
-                Helper::saveOriginalImage($path, $com_logo, 'com');
+                saveOriginalImage($path, $com_logo, 'com');
             }
 
             DB::table('m_company')

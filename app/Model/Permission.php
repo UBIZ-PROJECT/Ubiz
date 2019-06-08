@@ -14,35 +14,65 @@ class Permission
         DB::beginTransaction();
         try {
 
+            $res = [
+                'dep_id' => '0',
+                'scr_id' => '0',
+                'usr_id' => '0'
+            ];
             $user_id = Auth::user()->id;
             foreach ($data as $permission) {
                 if (isset($permission['dep_allow']) && !isset($permission['usr_allow'])) {
-                    DB::select(
-                        DB::raw("call proc_setDepPermission(?,?,?,?,?,?)"),
-                        [
-                            $permission['id'],
-                            $permission['dep_id'],
-                            $permission['scr_id'],
-                            $permission['fnc_id'],
-                            $user_id,
-                            $permission['dep_allow']
-                        ]
-                    );
+                    if ($permission['id'] == '0') {
+                        DB::table('m_permission_department')->insert([
+                            'dep_id' => $permission['dep_id'],
+                            'scr_id' => $permission['scr_id'],
+                            'fnc_id' => $permission['fnc_id'],
+                            'dep_allow' => $permission['dep_allow'],
+                            'inp_user' => $user_id,
+                            'upd_user' => $user_id,
+                        ]);
+                    } else {
+                        DB::table('m_permission_department')
+                            ->where([
+                                ['id', '=', $permission['id']],
+                                ['delete_flg', '=', '0']
+                            ])
+                            ->update([
+                                'dep_allow' => $permission['dep_allow'],
+                                'upd_user' => $user_id
+                            ]);
+                    }
+                    $res['dep_id'] = $permission['dep_id'];
+                    $res['scr_id'] = $permission['scr_id'];
                 } else {
-                    DB::select(
-                        DB::raw("call proc_setUsrPermission(?,?,?,?,?,?)"),
-                        [
-                            $permission['id'],
-                            $permission['dep_id'],
-                            $permission['scr_id'],
-                            $permission['fnc_id'],
-                            $permission['usr_id'],
-                            $permission['dep_allow']
-                        ]
-                    );
+                    if ($permission['id'] == '0') {
+                        DB::table('m_permission_user')->insert([
+                            'dep_id' => $permission['dep_id'],
+                            'scr_id' => $permission['scr_id'],
+                            'fnc_id' => $permission['fnc_id'],
+                            'usr_id' => $permission['usr_id'],
+                            'usr_allow' => $permission['usr_allow'],
+                            'inp_user' => $user_id,
+                            'upd_user' => $user_id,
+                        ]);
+                    } else {
+                        DB::table('m_permission_user')
+                            ->where([
+                                ['id', '=', $permission['id']],
+                                ['delete_flg', '=', '0']
+                            ])
+                            ->update([
+                                'usr_allow' => $permission['usr_allow'],
+                                'upd_user' => $user_id
+                            ]);
+                    }
+                    $res['dep_id'] = $permission['dep_id'];
+                    $res['scr_id'] = $permission['scr_id'];
+                    $res['usr_id'] = $permission['usr_id'];
                 }
             }
             DB::commit();
+            return $res;
         } catch (\Throwable $e) {
             DB::rollback();
             throw $e;
