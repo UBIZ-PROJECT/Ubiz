@@ -166,7 +166,7 @@
                                 <div class="zho">
                                     <div class="ano">
                                         <a class="yno">
-                                            <img class="pno" src="{!!  readImage($cps_user->avatar, 'usr') !!}">
+                                            <img class="pno" src="{!! $cps_user->avatar !!}">
                                             <span class="wno">{{ __("Change") }}</span>
                                         </a>
                                         <div class="rho">
@@ -190,7 +190,11 @@
                             <img src="{{$cps_company->com_logo}}">
                         </div>
                         <div class="vyo">
-                            <a><span><img src="{!!  readImage($cps_user->avatar, 'usr') !!}"></span></a>
+                            <a>
+                                <span>
+                                    <img src="{!! $cps_user->avatar !!}">
+                                </span>
+                            </a>
                         </div>
                     </div>
                 </div>
