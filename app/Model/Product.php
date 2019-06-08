@@ -7,7 +7,6 @@
  */
 
 namespace App\Model;
-use App\Helper;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -74,7 +73,7 @@ class Product implements JWTSubject
              ", $params);
         foreach ($product as &$item) {
             if (!empty($item->prd_img_id)) {
-                $item->image = Helper::readImage($item->id . '-' . $item->prd_img_id . '.' . $item->extension, "prd");
+                $item->image = readImage($item->id . '-' . $item->prd_img_id . '.' . $item->extension, "prd");
             }
         }
         return $product;
@@ -114,14 +113,14 @@ class Product implements JWTSubject
             $data[0]->prd_unit = $item->prd_unit;
             if (!empty($item->prd_img_id)) {
                 $imageName = $item->prd_id . '-' . $item->prd_img_id . '.' . $item->extension;
-                $images[$index]['src'] = Helper::readImage($imageName, "prd");
+                $images[$index]['src'] = readImage($imageName, "prd");
                 $images[$index]['name'] = $imageName;
                 $data[0]->images = $images;
             }
         }
         if (!empty($data[0]->brd_img)) {
             $brdImageName = $data[0]->brd_id . "." . $data[0]->brd_img;
-            $brdImage['src'] = Helper::readImage($brdImageName, "brd");;
+            $brdImage['src'] = readImage($brdImageName, "brd");;
             $brdImage['name'] = $brdImageName;
             $data[0]->brdImage = $brdImage;
         }
@@ -203,7 +202,7 @@ class Product implements JWTSubject
                 ]
             );
             $rederImageName = $proId . '-' . $id . '.' . $extension;
-            Helper::saveOriginalImage($temp_name, $rederImageName, 'prd');
+            saveOriginalImage($temp_name, $rederImageName, 'prd');
             DB::commit();
         } catch(\Throwable $e) {
             DB::rollback();

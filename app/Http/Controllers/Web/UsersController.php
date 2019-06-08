@@ -11,6 +11,7 @@ class UsersController extends Controller
     public function index(Request $request)
     {
         try {
+            checkUserRight('3', '1');
             $user = new User();
             $users = $user->getUsers();
             $paging = $user->getPagingInfo();

@@ -380,8 +380,8 @@
                                 @include('components.input',['control_id'=>'txt_code', 'width'=>'150', 'label'=>__('Code')])
                                 @include('components.input',['control_id'=>'txt_name', 'label'=>__('Name')])
                                 @include('components.input',['control_id'=>'txt_rank', 'label'=>__('Duty')])
-                                @include('components.dropdown',['control_id'=>'txt_dep_id', 'label'=>__('Department'), 'data'=> Helper::convertDataToDropdownOptions($departments, 'id', 'dep_name')])
-                                @include('components.dropdown',['control_id'=>'txt_com_id', 'label'=>__('Company'), 'data'=> Helper::convertDataToDropdownOptions($companies, 'com_id', 'com_nm')])
+                                @include('components.dropdown',['control_id'=>'txt_dep_id', 'label'=>__('Department'), 'data'=> convertDataToDropdownOptions($departments, 'id', 'dep_name')])
+                                @include('components.dropdown',['control_id'=>'txt_com_id', 'label'=>__('Company'), 'data'=> convertDataToDropdownOptions($companies, 'com_id', 'com_nm')])
                                 @include('components.input',['control_id'=>'txt_phone', 'label'=>__('Phone')])
                                 @include('components.input',['control_id'=>'txt_email', 'label'=>__('E-Mail')])
                             </div>

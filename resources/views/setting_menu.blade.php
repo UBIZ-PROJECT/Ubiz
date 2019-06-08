@@ -77,7 +77,7 @@ if (!isset($employee)) {
                                 <div class="xT">
                                     <div class="oQ">
                                         <i class="material-icons">
-                                            border_all
+                                            business
                                         </i>
                                     </div>
                                 </div>
@@ -135,7 +135,7 @@ if (!isset($employee)) {
                 </div>
             </a>
         </div>
-        <div class="aW {{$permission}}" style="display: none;">
+        <div class="aW {{$permission}}">
             <a class="btn z-pdr z-pdl" href="/setting/permission">
                 <div class="mR">
                     <div class="eT">
@@ -155,7 +155,7 @@ if (!isset($employee)) {
                                 <div class="xT">
                                     <div class="oQ">
                                         <i class="material-icons">
-                                            perm_identity
+                                            security
                                         </i>
                                     </div>
                                 </div>
