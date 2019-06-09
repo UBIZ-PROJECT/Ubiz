@@ -106,6 +106,7 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::delete('keeper/{id}/delete', ['as' => 'api-keeper-delete', 'uses' => 'Api\KeeperController@deleteKeeper']);
 
         Route::get('events', ['as' => 'api-get-events', 'uses' => 'Api\EventController@getEvents']);
+        Route::get('events/pic', ['as' => 'api-get-events', 'uses' => 'Api\EventController@getPic']);
         Route::get('events/{id}', ['as' => 'api-get-event', 'uses' => 'Api\EventController@getEvent']);
         Route::post('events', ['as' => 'api-insert-event', 'uses' => 'Api\EventController@insertEvent']);
         Route::post('events/{id}/update', ['as' => 'api-update-event', 'uses' => 'Api\EventController@updateEvent']);

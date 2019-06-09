@@ -74,6 +74,12 @@ class User extends Authenticatable implements JWTSubject
                 ->where('users.delete_flg', '=', '0')
                 ->orderBy('id', 'asc')
                 ->get();
+            foreach ($users as &$user) {
+                $user->avatar = readImage($user->avatar, 'usr');
+                if ($user->avatar == "") {
+                    $user->avatar = readImage("no_avatar.png", 'gen');
+                }
+            }
             return $users;
         } catch (\Throwable $e) {
             throw $e;

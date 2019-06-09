@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -32,7 +33,7 @@ class EventController extends Controller
 
             $event = new Event();
             $events = $event->getEvents($start_fm, $end_fm);
-            return response()->json(['events' => $events, 'success' => true, 'message' => ''], 200);
+            return response()->json(['events' => $events, 'success' => true, 'message' => __("Successfully processed.")], 200);
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -52,6 +53,17 @@ class EventController extends Controller
             throw $e;
         }
         return response()->json(['department' => $data, 'message' => __("Successfully processed.")], 200);
+    }
+
+    public function getPic(Request $request)
+    {
+        try {
+            $usrModel = new User();
+            $usrData = $usrModel->getAllUsers();
+            return response()->json(['users' => $usrData, 'success' => true, 'message' => __("Successfully processed.")], 200);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
     }
 
     public function updateEvent($id, Request $request)

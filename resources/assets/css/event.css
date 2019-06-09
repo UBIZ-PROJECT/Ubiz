@@ -61,3 +61,15 @@
 .tag-body table tr{
     line-height: 1px;
 }
+
+.event-pic .dropdown-menu{
+    width: 300px;
+}
+
+.event-pic .dropdown-menu .dropdown-item i{
+    display: none;
+}
+
+.event-pic .dropdown-menu .dropdown-item .assigned i{
+    display: inline-flex;
+}
