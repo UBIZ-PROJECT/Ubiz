@@ -2689,3 +2689,9 @@ input[type=number]::-webkit-outer-spin-button {
     border-radius: 0 66px 66px 0 !important;
     text-decoration: none !important;
 }
+
+.light-color{
+    color: #212529;
+    background-color: #e9ecef;
+    border-color: #e9ecef;
+}

@@ -72,34 +72,18 @@
     </div>
 @endsection
 @section('end-javascript')
+    <script type="text/javascript" src="{{ asset('dist/rrule/rrule.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('dist/moment-timezone/moment-timezone.js') }}"></script>
     <script type="text/javascript" src="{{ asset('dist/air-datepicker/js/datepicker.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('dist/fullcalendar-4.0.2/packages/core/main.min.js') }}"></script>
-    <script type="text/javascript"
-            src="{{ asset('dist/fullcalendar-4.0.2/packages/core/locales-all.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('dist/fullcalendar-4.0.2/packages/core/main.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('dist/fullcalendar-4.0.2/packages/core/locales-all.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('dist/fullcalendar-4.0.2/packages/bootstrap/main.min.js') }}"></script>
-    <script type="text/javascript"
-            src="{{ asset('dist/fullcalendar-4.0.2/packages/interaction/main.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('dist/fullcalendar-4.0.2/packages/interaction/main.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('dist/fullcalendar-4.0.2/packages/daygrid/main.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('dist/fullcalendar-4.0.2/packages/timegrid/main.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('dist/fullcalendar-4.0.2/packages/list/main.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('dist/fullcalendar-4.0.2/packages/moment/main.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('dist/fullcalendar-4.0.2/packages/moment-timezone/main.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('dist/fullcalendar-4.0.2/packages/rrule/main.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/event.js') }}"></script>
-    <script type="text/javascript">
-        jQuery(document).ready(function () {
-            tinymce.init({
-                width: '100%',
-                min_height: 246,
-                max_height: 500,
-                menubar: false,
-                toolbar_drawer: 'floating',
-                selector: 'textarea[name=txt_desc]',
-                plugins: [
-                    'advlist autolink lists link image charmap print preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code wordcount autoresize'
-                ],
-                toolbar: 'undo redo | bold italic forecolor backcolor | formatselect | fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat',
-                content_css: [
-                    '{{ asset('fonts/roboto/v18/roboto.css') }}'
-                ]
-            });
-        });
-    </script>
 @endsection

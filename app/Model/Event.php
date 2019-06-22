@@ -12,19 +12,19 @@ class Event
         try {
             $data_tmp = DB::table('m_event')
                 ->leftJoin('m_event_pic', 'm_event.id', '=', 'm_event_pic.event_id')
-                ->leftJoin('users', 'm_event_pic.user_id', '=', 'users.id')
+                ->leftJoin('users as usr_1', 'm_event_pic.user_id', '=', 'usr_1.id')
+                ->leftJoin('users as usr_2', 'm_event.owner_id', '=', 'usr_2.id')
                 ->leftJoin('m_event_att', 'm_event.id', '=', 'm_event_att.event_id')
-                ->leftJoin('m_event_tag', 'm_event.id', '=', 'm_event_tag.event_id')
-                ->leftJoin('m_tag', 'm_event_tag.tag_id', '=', 'm_tag.id')
+                ->leftJoin('m_tag', 'm_event.tag_id', '=', 'm_tag.id')
                 ->select(
                     'm_event.*',
                     'm_event_pic.user_id',
-                    'users.name as user_name',
-                    'users.avatar as user_avatar',
+                    'usr_1.name as user_name',
+                    'usr_1.avatar as user_avatar',
+                    'usr_2.email as owner_email',
                     'm_event_att.id as att_id',
                     'm_event_att.file_v_name',
                     'm_event_att.file_d_name',
-                    'm_tag.id as tag_id',
                     'm_tag.title as tag_title',
                     'm_tag.color as tag_color'
                 )
@@ -48,11 +48,13 @@ class Event
                         'end' => $event->end,
                         'title' => $event->title,
                         'desc' => $event->desc,
-                        'allDay' => $event->all_day,
+                        'allDay' => ( $event->all_day == '1' ? true : false),
                         'tag_id' => $event->tag_id,
                         'tag_title' => $event->tag_title,
                         'tag_color' => $event->tag_color,
                         'owner_id' => $event->owner_id,
+                        'owner_email' => $event->owner_email,
+                        'rrule' => $event->rrule,
                         'pic' => [],
                         'att' => []
                     ];

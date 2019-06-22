@@ -1,36 +1,67 @@
 var pic_list = new Array();
-
-var debounce = function (func, wait, immediate) {
-    var timeout;
-    return function () {
-        var context = this, args = arguments;
-        var later = function () {
-            timeout = null;
-            if (!immediate) func.apply(context, args);
-        };
-        var callNow = immediate && !timeout;
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-        if (callNow) func.apply(context, args);
-    };
-};
-
-function event_pic_search(self) {
-
-    if (pic_list.length == 0)
-        return false;
-
-    var match_list = _.filter(pic_list, {name: $(self).val()});
-    event_load_pic_callback(match_list);
-}
-
+var time_zone = 'local';
 function event_edit(info) {
     console.log(info);
     moment.locale('vi');
     $("#event-title").val(info.event.title);
-    $("#event-start-date").val(moment().format('MMM DD, YYYY'));
-    $("#event-end-date").val(moment().format('MMM DD, YYYY'));
+    $("#event-start-date").val(moment(info.event.start).format('MMM DD, YYYY'));
+    $("#event-end-date").val(moment(info.event.end).format('MMM DD, YYYY'));
+    $("#event-start-time").val(moment(info.event.start).format('h:mma'));
+    $("#event-end-time").val(moment(info.event.end).format('h:mma'));
+    if (info.event.allDay == '0') {
+        $("#event-all-day").prop("checked", false);
+    } else {
+        $("#event-all-day").prop("checked", true);
+    }
+    $("#event-email").text(info.event.extendedProps.owner_email);
+    $("#event_tag").attr('tag_id', info.event.extendedProps.tag_id);
+    $("#event_tag").attr('title', info.event.extendedProps.tag_title);
+    $("#event_tag").addClass(info.event.extendedProps.tag_color);
+    $("#event-tag-dropdown").find("div.dropdown-menu").find("a.dropdown-item").removeClass('active');
+    $("#event-tag-dropdown").find("div.dropdown-menu").find("a[tag_id=" + info.event.extendedProps.tag_id + "].dropdown-item").addClass('active');
+
+    if (info.event.extendedProps.pic_edit == '0') {
+        $("#event_pic_edit").prop("checked", false);
+    } else {
+        $("#event_pic_edit").prop("checked", true);
+    }
+
+    if (info.event.extendedProps.pic_assign == '0') {
+        $("#event_pic_assign").prop("checked", false);
+    } else {
+        $("#event_pic_assign").prop("checked", true);
+    }
+
+    if (info.event.extendedProps.pic_see_list == '0') {
+        $("#event_pic_see_list").prop("checked", false);
+    } else {
+        $("#event_pic_see_list").prop("checked", true);
+    }
+
+    tinyMCE.get('event_desc').setContent(info.event.extendedProps.desc);
+
     $('#event-modal').modal();
+}
+
+function epic_clean_tag_class() {
+    $("#event_tag").attr('class', '');
+    $("#event_tag").addClass('fas fa-circle');
+}
+
+function epic_select_tag(self) {
+
+    $(self).closest('div.dropdown-menu').find('a.dropdown-item').removeClass('active');
+
+    $(self).addClass('active');
+    var tag_id = $(self).attr('tag_id');
+    var tag_title = $(self).attr('tag_title');
+    var tag_color = $(self).attr('tag_color');
+
+    epic_clean_tag_class();
+
+    $("#event_tag").attr('tag_id', tag_id);
+    $("#event_tag").attr('title', tag_title);
+    $("#event_tag").addClass(tag_color);
 }
 
 function event_pic_select(self, event) {
@@ -73,12 +104,12 @@ function event_load_pic_callback(users) {
     event_render_pic_dropdown_list(users, assigned_list);
 }
 
-function event_render_pic_dropdown_list(users, assigned_list) {
+function event_render_pic_dropdown_list(users, checked_list) {
     var html = "";
     $.map(users, function (user, idx) {
 
         var assigned_class = 'assigned';
-        if (typeof assigned_list[user.id] === "undefined") {
+        if (typeof checked_list[user.id] === "undefined") {
             assigned_class = '';
         }
 
@@ -112,20 +143,24 @@ function event_get_list_of_assigned_pic() {
     return assigned_list;
 }
 
-function event_get_list_of_selected_pic() {
-
-    var assigned_list = {};
+function event_get_list_of_checked_dropdown_pic() {
+    var checked_list = {};
     $(".event-pic").find('div.dropdown-menu').find('a').each(function (idx, ele) {
         if ($(ele).find('div:first').hasClass('assigned')) {
             var pic = $(ele).attr('pic');
-            assigned_list[pic] = pic;
+            checked_list[pic] = pic;
         }
     });
+    return checked_list;
+}
+
+function event_get_list_of_selected_pic() {
 
     var selected_list = new Array();
+    var checked_list = event_get_list_of_checked_dropdown_pic();
     $.map(pic_list, function (user, idx) {
 
-        if (typeof assigned_list[user.id] !== "undefined") {
+        if (typeof checked_list[user.id] !== "undefined") {
             selected_list.push(user);
         }
     });
@@ -161,13 +196,6 @@ function event_delete_selected_pic(self) {
     $(self).closest('li.list-group-item').remove();
 }
 
-function event_pic_keyup(self) {
-    var that = self;
-    debounce(function () {
-        event_pic_search(that);
-    }, 100);
-}
-
 moment.locale('vi', {
     months: 'Tháng 1_Tháng 2_Tháng 3_Tháng 4_Tháng 5_Tháng 6_Tháng 7_Tháng 8_Tháng 9_Tháng 10_Tháng 11_Tháng 12'.split('_'),
     monthsShort: 'Th1_Th2_Th3_Th4_Th5_Th6_Th7_Th8_Th9_Th1_Th11_Th12'.split('_'),
@@ -181,8 +209,8 @@ document.addEventListener('DOMContentLoaded', function () {
     var initialLocaleCode = 'vi';
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
-        timeZone: 'UTC +7',
-        plugins: ['interaction', 'bootstrap', 'dayGrid', 'timeGrid', 'list'],
+        timeZone: time_zone,
+        plugins: ['interaction', 'bootstrap', 'dayGrid', 'timeGrid', 'list', 'momentTimezone', 'rrule'],
         height: 'parent',
         header: {
             left: 'prev,next today',
@@ -226,7 +254,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     });
                 },
-                textColor: 'rgba(0, 0, 0, .7)',
                 className: 'my-event',
             }
         ],
@@ -310,4 +337,20 @@ document.addEventListener('DOMContentLoaded', function () {
     $('.event-pic').on('hide.bs.dropdown', function () {
         event_set_assigned_list();
     })
+
+    tinymce.init({
+        width: '100%',
+        min_height: 246,
+        max_height: 500,
+        menubar: false,
+        toolbar_drawer: 'floating',
+        selector: '#event_desc',
+        plugins: [
+            'advlist autolink lists link image charmap print preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code wordcount autoresize'
+        ],
+        toolbar: 'undo redo | bold italic forecolor backcolor | formatselect | fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat',
+        content_css: [
+            '/fonts/roboto/v18/roboto.css'
+        ]
+    });
 });
