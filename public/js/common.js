@@ -377,63 +377,87 @@ function fnc_datepicker(ele) {
     });
 }
 
-function fnc_format_date(date){
+function fnc_format_date(date) {
     return moment(date).format('YYYY/MM/DD');
 }
 
-function fnc_set_scrollbars(ele_id, callbacks){
+function fnc_set_scrollbars(ele_id, callbacks) {
 
     if (typeof callbacks == "undefined")
         callbacks = {};
 
     var ele_obj = document.getElementById(ele_id);
     return OverlayScrollbars(ele_obj, {
-        className            : "os-theme-dark",
-        resize               : "none",
-        sizeAutoCapable      : true,
-        clipAlways           : true,
-        normalizeRTL         : true,
-        paddingAbsolute      : false,
-        autoUpdate           : null,
-        autoUpdateInterval   : 33,
-        nativeScrollbarsOverlaid : {
-            showNativeScrollbars   : false,
-            initialize             : true
+        className: "os-theme-dark",
+        resize: "none",
+        sizeAutoCapable: true,
+        clipAlways: true,
+        normalizeRTL: true,
+        paddingAbsolute: false,
+        autoUpdate: null,
+        autoUpdateInterval: 33,
+        nativeScrollbarsOverlaid: {
+            showNativeScrollbars: false,
+            initialize: true
         },
-        overflowBehavior : {
-            x : "scroll",
-            y : "scroll"
+        overflowBehavior: {
+            x: "scroll",
+            y: "scroll"
         },
-        scrollbars : {
-            visibility       : "auto",
-            autoHide         : "never",
-            autoHideDelay    : 800,
-            dragScrolling    : true,
-            clickScrolling   : false,
-            touchSupport     : true,
-            snapHandle       : false
+        scrollbars: {
+            visibility: "auto",
+            autoHide: "never",
+            autoHideDelay: 800,
+            dragScrolling: true,
+            clickScrolling: false,
+            touchSupport: true,
+            snapHandle: false
         },
-        textarea : {
-            dynWidth       : false,
-            dynHeight      : false,
-            inheritedAttrs : ["style", "class"]
+        textarea: {
+            dynWidth: false,
+            dynHeight: false,
+            inheritedAttrs: ["style", "class"]
         },
-        callbacks : {
-            onInitialized               : typeof callbacks['onInitialized'] == "function" ? callbacks['onInitialized'] : null,
-            onInitializationWithdrawn   : typeof callbacks['onInitializationWithdrawn'] == "function" ? callbacks['onInitializationWithdrawn'] : null,
-            onDestroyed                 : typeof callbacks['onDestroyed'] == "function" ? callbacks['onDestroyed'] : null,
-            onScrollStart               : typeof callbacks['onScrollStart'] == "function" ? callbacks['onScrollStart'] : null,
-            onScroll                    : typeof callbacks['onScroll'] == "function" ? callbacks['onScroll'] : null,
-            onScrollStop                : typeof callbacks['onScrollStop'] == "function" ? callbacks['onScrollStop'] : null,
-            onOverflowChanged           : typeof callbacks['onOverflowChanged'] == "function" ? callbacks['onOverflowChanged'] : null,
-            onOverflowAmountChanged     : typeof callbacks['onOverflowAmountChanged'] == "function" ? callbacks['onOverflowAmountChanged'] : null,
-            onDirectionChanged          : typeof callbacks['onDirectionChanged'] == "function" ? callbacks['onDirectionChanged'] : null,
-            onContentSizeChanged        : typeof callbacks['onContentSizeChanged'] == "function" ? callbacks['onContentSizeChanged'] : null,
-            onHostSizeChanged           : typeof callbacks['onHostSizeChanged'] == "function" ? callbacks['onHostSizeChanged'] : null,
-            onUpdated                   : typeof callbacks['onUpdated'] == "function" ? callbacks['onUpdated'] : null
+        callbacks: {
+            onInitialized: typeof callbacks['onInitialized'] == "function" ? callbacks['onInitialized'] : null,
+            onInitializationWithdrawn: typeof callbacks['onInitializationWithdrawn'] == "function" ? callbacks['onInitializationWithdrawn'] : null,
+            onDestroyed: typeof callbacks['onDestroyed'] == "function" ? callbacks['onDestroyed'] : null,
+            onScrollStart: typeof callbacks['onScrollStart'] == "function" ? callbacks['onScrollStart'] : null,
+            onScroll: typeof callbacks['onScroll'] == "function" ? callbacks['onScroll'] : null,
+            onScrollStop: typeof callbacks['onScrollStop'] == "function" ? callbacks['onScrollStop'] : null,
+            onOverflowChanged: typeof callbacks['onOverflowChanged'] == "function" ? callbacks['onOverflowChanged'] : null,
+            onOverflowAmountChanged: typeof callbacks['onOverflowAmountChanged'] == "function" ? callbacks['onOverflowAmountChanged'] : null,
+            onDirectionChanged: typeof callbacks['onDirectionChanged'] == "function" ? callbacks['onDirectionChanged'] : null,
+            onContentSizeChanged: typeof callbacks['onContentSizeChanged'] == "function" ? callbacks['onContentSizeChanged'] : null,
+            onHostSizeChanged: typeof callbacks['onHostSizeChanged'] == "function" ? callbacks['onHostSizeChanged'] : null,
+            onUpdated: typeof callbacks['onUpdated'] == "function" ? callbacks['onUpdated'] : null
         }
     });
 }
+
+function html_escape(s) {
+    return (s + '').replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/'/g, '&#039;')
+        .replace(/"/g, '&quot;')
+        .replace(/\n/g, '<br />')
+}
+
+moment.locale('vi', {
+    months: 'Tháng 1_Tháng 2_Tháng 3_Tháng 4_Tháng 5_Tháng 6_Tháng 7_Tháng 8_Tháng 9_Tháng 10_Tháng 11_Tháng 12'.split('_'),
+    monthsShort: 'Th1_Th2_Th3_Th4_Th5_Th6_Th7_Th8_Th9_Th1_Th11_Th12'.split('_'),
+    monthsParseExact: true,
+    weekdays: 'Chủ nhật_Thứ hai_Thứ ba_Thứ tư_Thứ năm_Thứ sáu_Thứ bảy'.split('_'),
+    weekdaysShort: 'CN_T2_T3_T4_T5_T6_T7'.split('_'),
+    weekdaysMin: 'CN_T2_T3_T4_T5_T6_T7'.split('_'),
+});
+moment.locale('vi');
+moment.updateLocale('vi', {
+    meridiem: function (hours, minutes, isLower) {
+        return hours < 12 ? 'SA' : 'CH';
+    }
+});
 
 jQuery.fn.forceNumeric = function () {
     return this.each(function () {

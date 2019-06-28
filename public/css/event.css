@@ -79,3 +79,7 @@
 .event-pic .dropdown-menu .dropdown-item .assigned i {
     display: inline-flex;
 }
+
+.txt-hidden{
+    display: none !important;
+}

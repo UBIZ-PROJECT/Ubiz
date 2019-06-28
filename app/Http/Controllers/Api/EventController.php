@@ -69,38 +69,77 @@ class EventController extends Controller
     public function updateEvent($id, Request $request)
     {
         try {
-            $department = new Department();
-            list($page, $sort, $search, $Department_data) = $this->getRequestData($request);
-            $department->updateDepartment($id, $Department_data);
+            return response()->json(['departments' => $departments, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed.")], 200);
+
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['success' => true, 'message' => __("Successfully processed.")], 200);
     }
 
     public function insertEvent(Request $request)
     {
         try {
-            $department = new Department();
-            list($page, $sort, $search, $Department_data) = $this->getRequestData($request);
-            $department->insertDepartment($Department_data);
+
+            $data = $request->all();
+
+            $evModel = new Event();
+            $res = $evModel->validateData($data);
+            if ($res['success'] == false) {
+                return response()->json(['success' => false, 'message' => $res['message']], 200);
+            }
+
+            $map_data = $this->mapData($data);
+            $event_id = $evModel->insertEvent($map_data);
+            $event = $evModel->getEvent($event_id);
+
+            return response()->json([
+                'event' => $event,
+                'success' => true,
+                'message' => __("Successfully processed.")
+            ], 200);
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['success' => true, 'message' => __("Successfully processed.")], 200);
     }
 
     public function deleteEvent($id, Request $request)
     {
         try {
-            $department = new Department();
-            $department->deleteDepartments($ids);
-            $departments = $department->getDepartments();
-            $paging = $department->getPagingInfo();
-            $paging['page'] = 0;
+            return response()->json(['success' => true, 'message' => __("Successfully processed.")], 200);
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['departments' => $departments, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed.")], 200);
+    }
+
+    public function mapData($data)
+    {
+        try {
+
+            $map_data = [];
+            $map_data['event'] = [
+                'id' => $data['event_id'],
+                'start' => $data['event_start'],
+                'end' => $data['event_end'],
+                'title' => $data['event_title'],
+                'desc' => $data['event_desc'],
+                'all_day' => $data['event_all_day'],
+                'tag_id' => $data['event_tag'],
+                'rrule' => null,
+                'pic_edit' => $data['event_pic_edit'],
+                'pic_assign' => $data['event_pic_assign'],
+                'pic_see_list' => $data['event_pic_see_list']
+            ];
+
+            $map_data['event_pic'] = [];
+            foreach ($data['event_pic_list'] as $pic) {
+                $map_data['event_pic'][] = [
+                    'user_id' => $pic
+                ];
+            }
+
+            return $map_data;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
     }
 }

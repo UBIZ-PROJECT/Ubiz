@@ -1,6 +1,8 @@
 <div class="row">
+    <input type="hidden" id="event-id" value="0">
     <div class="col-md-6 col-lg-6">
-        <input type="text" style="width: 500px" class="form-control light-color" id="event-title" placeholder="Thêm tiêu đề">
+        <input type="text" style="width: 500px" class="form-control light-color" id="event-title"
+               placeholder="Thêm tiêu đề">
     </div>
     <div class="col-md-6 col-lg-6 text-right">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -11,107 +13,110 @@
 <hr>
 <div class="row margin-bottom-15">
     <div class="col-12">
-        <input type="text" readonly style="width: 120px" class="form-control light-color d-inline-flex text-center start-date" id="event-start-date">
-        <select readonly class="form-control light-color d-inline-flex justify-content-center w-auto" id="event-start-time">
-            <option value="12:00am">12:00am</option>
-            <option value="12:30am">12:30am</option>
-            <option value="12:30am">1:00am</option>
-            <option value="1:30am">1:30am</option>
-            <option value="2:00am">2:00am</option>
-            <option value="2:30am">2:30am</option>
-            <option value="3:00am">3:00am</option>
-            <option value="3:30am">3:30am</option>
-            <option value="4:00am">4:00am</option>
-            <option value="4:30am">4:30am</option>
-            <option value="5:00am">5:00am</option>
-            <option value="5:30am">5:30am</option>
-            <option value="6:00am">6:00am</option>
-            <option value="6:30am">6:30am</option>
-            <option value="7:00am">7:00am</option>
-            <option value="7:30am">7:30am</option>
-            <option value="8:00am">8:00am</option>
-            <option value="8:30am">8:30am</option>
-            <option value="9:00am">9:00am</option>
-            <option value="9:30am">9:30am</option>
-            <option value="10:00am">10:00am</option>
-            <option value="10:30am">10:30am</option>
-            <option value="11:00am">11:00am</option>
-            <option value="11:30am">11:30am</option>
-            <option value="12:00pm">12:00pm</option>
-            <option value="12:30pm">12:30pm</option>
-            <option value="1:00pm">1:00pm</option>
-            <option value="1:30pm">1:30pm</option>
-            <option value="2:00pm">2:00pm</option>
-            <option value="2:30pm">2:30pm</option>
-            <option value="3:00pm">3:00pm</option>
-            <option value="3:30pm">3:30pm</option>
-            <option value="4:00pm">4:00pm</option>
-            <option value="4:30pm">4:30pm</option>
-            <option value="5:00pm">5:00pm</option>
-            <option value="5:30pm">5:30pm</option>
-            <option value="6:00pm">6:00pm</option>
-            <option value="6:30pm">6:30pm</option>
-            <option value="7:00pm">7:00pm</option>
-            <option value="7:30pm">7:30pm</option>
-            <option value="8:00pm">8:00pm</option>
-            <option value="8:30pm">8:30pm</option>
-            <option value="9:00pm">9:00pm</option>
-            <option value="9:30pm">9:30pm</option>
-            <option value="10:00pm">10:00pm</option>
-            <option value="10:30pm">10:30pm</option>
-            <option value="11:00pm">11:00pm</option>
-            <option value="11:30pm">11:30pm</option>
+        <input type="text" readonly style="width: 120px"
+               class="form-control light-color d-inline-flex text-center start-date" id="event-start-date">
+        <select readonly class="form-control light-color d-inline-flex justify-content-center w-auto"
+                id="event-start-time">
+            <option value="12:00SA">12:00SA</option>
+            <option value="12:30SA">12:30SA</option>
+            <option value="12:30SA">1:00SA</option>
+            <option value="1:30SA">1:30SA</option>
+            <option value="2:00SA">2:00SA</option>
+            <option value="2:30SA">2:30SA</option>
+            <option value="3:00SA">3:00SA</option>
+            <option value="3:30SA">3:30SA</option>
+            <option value="4:00SA">4:00SA</option>
+            <option value="4:30SA">4:30SA</option>
+            <option value="5:00SA">5:00SA</option>
+            <option value="5:30SA">5:30SA</option>
+            <option value="6:00SA">6:00SA</option>
+            <option value="6:30SA">6:30SA</option>
+            <option value="7:00SA">7:00SA</option>
+            <option value="7:30SA">7:30SA</option>
+            <option value="8:00SA">8:00SA</option>
+            <option value="8:30SA">8:30SA</option>
+            <option value="9:00SA">9:00SA</option>
+            <option value="9:30SA">9:30SA</option>
+            <option value="10:00SA">10:00SA</option>
+            <option value="10:30SA">10:30SA</option>
+            <option value="11:00SA">11:00SA</option>
+            <option value="11:30SA">11:30SA</option>
+            <option value="12:00CH">12:00CH</option>
+            <option value="12:30CH">12:30CH</option>
+            <option value="1:00CH">1:00CH</option>
+            <option value="1:30CH">1:30CH</option>
+            <option value="2:00CH">2:00CH</option>
+            <option value="2:30CH">2:30CH</option>
+            <option value="3:00CH">3:00CH</option>
+            <option value="3:30CH">3:30CH</option>
+            <option value="4:00CH">4:00CH</option>
+            <option value="4:30CH">4:30CH</option>
+            <option value="5:00CH">5:00CH</option>
+            <option value="5:30CH">5:30CH</option>
+            <option value="6:00CH">6:00CH</option>
+            <option value="6:30CH">6:30CH</option>
+            <option value="7:00CH">7:00CH</option>
+            <option value="7:30CH">7:30CH</option>
+            <option value="8:00CH">8:00CH</option>
+            <option value="8:30CH">8:30CH</option>
+            <option value="9:00CH">9:00CH</option>
+            <option value="9:30CH">9:30CH</option>
+            <option value="10:00CH">10:00CH</option>
+            <option value="10:30CH">10:30CH</option>
+            <option value="11:00CH">11:00CH</option>
+            <option value="11:30CH">11:30CH</option>
         </select>
         <span class="d-inline-flex">&nbsp;đến&nbsp;</span>
-        <select readonly class="form-control light-color d-inline-flex justify-content-center w-auto" id="event-end-time">
-            <option value="12:00am">12:00am</option>
-            <option value="12:30am">12:30am</option>
-            <option value="12:30am">1:00am</option>
-            <option value="1:30am">1:30am</option>
-            <option value="2:00am">2:00am</option>
-            <option value="2:30am">2:30am</option>
-            <option value="3:00am">3:00am</option>
-            <option value="3:30am">3:30am</option>
-            <option value="4:00am">4:00am</option>
-            <option value="4:30am">4:30am</option>
-            <option value="5:00am">5:00am</option>
-            <option value="5:30am">5:30am</option>
-            <option value="6:00am">6:00am</option>
-            <option value="6:30am">6:30am</option>
-            <option value="7:00am">7:00am</option>
-            <option value="7:30am">7:30am</option>
-            <option value="8:00am">8:00am</option>
-            <option value="8:30am">8:30am</option>
-            <option value="9:00am">9:00am</option>
-            <option value="9:30am">9:30am</option>
-            <option value="10:00am">10:00am</option>
-            <option value="10:30am">10:30am</option>
-            <option value="11:00am">11:00am</option>
-            <option value="11:30am">11:30am</option>
-            <option value="12:00pm">12:00pm</option>
-            <option value="12:30pm">12:30pm</option>
-            <option value="1:00pm">1:00pm</option>
-            <option value="1:30pm">1:30pm</option>
-            <option value="2:00pm">2:00pm</option>
-            <option value="2:30pm">2:30pm</option>
-            <option value="3:00pm">3:00pm</option>
-            <option value="3:30pm">3:30pm</option>
-            <option value="4:00pm">4:00pm</option>
-            <option value="4:30pm">4:30pm</option>
-            <option value="5:00pm">5:00pm</option>
-            <option value="5:30pm">5:30pm</option>
-            <option value="6:00pm">6:00pm</option>
-            <option value="6:30pm">6:30pm</option>
-            <option value="7:00pm">7:00pm</option>
-            <option value="7:30pm">7:30pm</option>
-            <option value="8:00pm">8:00pm</option>
-            <option value="8:30pm">8:30pm</option>
-            <option value="9:00pm">9:00pm</option>
-            <option value="9:30pm">9:30pm</option>
-            <option value="10:00pm">10:00pm</option>
-            <option value="10:30pm">10:30pm</option>
-            <option value="11:00pm">11:00pm</option>
-            <option value="11:30pm">11:30pm</option>
+        <select readonly class="form-control light-color d-inline-flex justify-content-center w-auto"
+                id="event-end-time">
+            <option value="12:00SA">12:00SA</option>
+            <option value="12:30SA">12:30SA</option>
+            <option value="12:30SA">1:00SA</option>
+            <option value="1:30SA">1:30SA</option>
+            <option value="2:00SA">2:00SA</option>
+            <option value="2:30SA">2:30SA</option>
+            <option value="3:00SA">3:00SA</option>
+            <option value="3:30SA">3:30SA</option>
+            <option value="4:00SA">4:00SA</option>
+            <option value="4:30SA">4:30SA</option>
+            <option value="5:00SA">5:00SA</option>
+            <option value="5:30SA">5:30SA</option>
+            <option value="6:00SA">6:00SA</option>
+            <option value="6:30SA">6:30SA</option>
+            <option value="7:00SA">7:00SA</option>
+            <option value="7:30SA">7:30SA</option>
+            <option value="8:00SA">8:00SA</option>
+            <option value="8:30SA">8:30SA</option>
+            <option value="9:00SA">9:00SA</option>
+            <option value="9:30SA">9:30SA</option>
+            <option value="10:00SA">10:00SA</option>
+            <option value="10:30SA">10:30SA</option>
+            <option value="11:00SA">11:00SA</option>
+            <option value="11:30SA">11:30SA</option>
+            <option value="12:00CH">12:00CH</option>
+            <option value="12:30CH">12:30CH</option>
+            <option value="1:00CH">1:00CH</option>
+            <option value="1:30CH">1:30CH</option>
+            <option value="2:00CH">2:00CH</option>
+            <option value="2:30CH">2:30CH</option>
+            <option value="3:00CH">3:00CH</option>
+            <option value="3:30CH">3:30CH</option>
+            <option value="4:00CH">4:00CH</option>
+            <option value="4:30CH">4:30CH</option>
+            <option value="5:00CH">5:00CH</option>
+            <option value="5:30CH">5:30CH</option>
+            <option value="6:00CH">6:00CH</option>
+            <option value="6:30CH">6:30CH</option>
+            <option value="7:00CH">7:00CH</option>
+            <option value="7:30CH">7:30CH</option>
+            <option value="8:00CH">8:00CH</option>
+            <option value="8:30CH">8:30CH</option>
+            <option value="9:00CH">9:00CH</option>
+            <option value="9:30CH">9:30CH</option>
+            <option value="10:00CH">10:00CH</option>
+            <option value="10:30CH">10:30CH</option>
+            <option value="11:00CH">11:00CH</option>
+            <option value="11:30CH">11:30CH</option>
         </select>
         <input type="text" readonly style="width: 120px" class="form-control light-color d-inline-flex text-center end-date" id="event-end-date">
     </div>
@@ -122,7 +127,8 @@
             <tbody>
             <tr style="line-height: 1px">
                 <td>
-                    <input type="checkbox" id="event-all-day" style="width: 15px; height: 15px">
+                    <input type="checkbox" onchange="event_all_day_change(this)" id="event-all-day"
+                           style="width: 15px; height: 15px">
                 </td>
                 <td>
                     <span class="d-inline-flex">Cả ngày</span>
@@ -169,12 +175,14 @@
                         <button class="btn btn-sm light-color" type="button">
                             <i tag_id="" id="event_tag" class="fas fa-circle" title=""></i>
                         </button>
-                        <button type="button" class="btn btn-sm light-color dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button type="button" class="btn btn-sm light-color dropdown-toggle dropdown-toggle-split"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="sr-only">Toggle Dropdown</span>
                         </button>
                         <div class="dropdown-menu z-pdt z-pdb">
                             @foreach($tags as $key => $tag)
-                                <a tag_id="{{ $tag->id }}" tag_title="{{ $tag->title }}" tag_color="{{ $tag->color }}" class="dropdown-item media pdl-5" onclick="epic_select_tag(this)" href="#">
+                                <a tag_id="{{ $tag->id }}" tag_title="{{ $tag->title }}" tag_color="{{ $tag->color }}"
+                                   class="dropdown-item media pdl-5" onclick="epic_select_tag(this)" href="#">
                                     <div style="width: 20px; height: 20px; line-height: 20px" class="mr-3">
                                         <i class="fas fa-circle {{ $tag->color }}"></i>
                                     </div>
@@ -214,7 +222,8 @@
             <tbody>
             <tr style="line-height: 1px">
                 <td style="height: 30px">
-                    <input id="event_pic_edit" type="checkbox" class="mgr-10 light-color" style="width: 15px; height: 15px">
+                    <input id="event_pic_edit" type="checkbox" class="mgr-10 light-color"
+                           style="width: 15px; height: 15px">
                 </td>
                 <td>
                     <span>Sửa</span>
@@ -243,7 +252,8 @@
 <hr>
 <div class="row">
     <div class="col-12 text-right">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" id="btn-delete" onclick="event_delete()" class="btn btn-danger mgr-20">{{ __('Delete') }}</button>
+        <button type="button" id="btn-close" onclick="event_cancel()" class="btn btn-outline-secondary" data-dismiss="modal">{{ __('Close') }}</button>
+        <button type="button" id="btn-save" onclick="event_save()" class="btn btn-primary">{{ __('Save') }}</button>
     </div>
 </div>

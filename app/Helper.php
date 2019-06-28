@@ -2,8 +2,10 @@
 
 use App as App;
 use App\User as User;
+use Illuminate\Validation\Rule as Rule;
 use Illuminate\Support\Facades\DB as DB;
 use Intervention\Image\ImageManagerStatic as Image;
+use Illuminate\Support\Facades\Validator as Validator;
 
 function resizeImage($img, $target_img, $new_img_width, $new_img_height, $img_type = '')
 {
@@ -186,7 +188,8 @@ function checkUserRight($scr_id, $fnc_id)
 
         if ($usr_allow == '0') {
             abort(403);
-        }abort(403);
+        }
+        abort(403);
     } catch (\Throwable $e) {
         throw $e;
     }
@@ -205,4 +208,214 @@ function convertDataToDropdownOptions($data, $value, $option)
     } catch (\Throwable $e) {
         throw $e;
     }
+}
+
+function getAllUsers()
+{
+    try {
+        $user = new User();
+        return $user->getAllUsers();
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function dateValidator($date, $format = null)
+{
+    $credential_name = "name";
+    $credential_data = $date;
+
+    $credential_rule = 'date';
+    if ($format != null) {
+        $credential_rule >= "|date_format:$format";
+    }
+
+    $rules = [
+        $credential_name => $credential_rule
+    ];
+    $credentials = [
+        $credential_name => $credential_data
+    ];
+
+    $validator = Validator::make($credentials, $rules);
+    if ($validator->fails()) {
+        return false;
+    }
+    return true;
+}
+
+function formatDateValidator($date, $format)
+{
+    $credential_name = "name";
+    $credential_data = $date;
+    $credential_rule = "date_format:$format";
+
+    $rules = [
+        $credential_name => $credential_rule
+    ];
+    $credentials = [
+        $credential_name => $credential_data
+    ];
+    $validator = Validator::make($credentials, $rules);
+    if ($validator->fails()) {
+        return false;
+    }
+    return true;
+}
+
+function requiredValidator($data)
+{
+    $credential_name = "name";
+    $credential_data = $data;
+    $rules = [
+        $credential_name => 'required'
+    ];
+    $credentials = [
+        $credential_name => $credential_data
+    ];
+    $validator = Validator::make($credentials, $rules);
+    if ($validator->fails()) {
+        return false;
+    }
+    return true;
+}
+
+function maxlengthValidator($data, $max_length)
+{
+    $credential_name = "name";
+    $credential_data = $data;
+    $rules = [
+        $credential_name => "max:$max_length"
+    ];
+    $credentials = [
+        $credential_name => $credential_data
+    ];
+    $validator = Validator::make($credentials, $rules);
+    if ($validator->fails()) {
+        return false;
+    }
+    return true;
+}
+
+function numericValidator($data)
+{
+    $credential_name = "name";
+    $credential_data = $data;
+    $rules = [
+        $credential_name => "numeric"
+    ];
+    $credentials = [
+        $credential_name => $credential_data
+    ];
+    $validator = Validator::make($credentials, $rules);
+    if ($validator->fails()) {
+        return false;
+    }
+    return true;
+}
+
+function existsInDBValidator($data, $table, $column)
+{
+
+    $credential_name = "name";
+    $credential_data = $data;
+    $credential_rule = Rule::exists($table, $column)->where(function ($query) {
+        $query->where([
+            ['delete_flg', '=', '0'],
+        ]);
+    });
+
+    $rules = [
+        $credential_name => [
+            $credential_rule
+        ]
+    ];
+    $credentials = [
+        $credential_name => $credential_data
+    ];
+
+    $validator = Validator::make($credentials, $rules);
+    if ($validator->fails()) {
+        return false;
+    }
+    return true;
+}
+
+function inArrayValidator($data, $in_array = [])
+{
+
+    if (sizeof($in_array) == 0 || isArrayValidator($in_array) == false) {
+        return false;
+    }
+
+    $credential_name = "name";
+    $credential_data = $data;
+    $credential_rule = Rule::in($in_array);
+    $rules = [
+        $credential_name => $credential_rule
+    ];
+    $credentials = [
+        $credential_name => $credential_data
+    ];
+    $validator = Validator::make($credentials, $rules);
+    if ($validator->fails()) {
+        return false;
+    }
+    return true;
+}
+
+function isArrayValidator($data)
+{
+    $credential_name = "name";
+    $credential_data = $data;
+    $credential_rule = 'array';
+    $rules = [
+        $credential_name => $credential_rule
+    ];
+    $credentials = [
+        $credential_name => $credential_data
+    ];
+    $validator = Validator::make($credentials, $rules);
+    if ($validator->fails()) {
+        return false;
+    }
+    return true;
+}
+
+function presentValidator($data)
+{
+    $credential_name = "name";
+    $credential_data = $data;
+    $credential_rule = 'present';
+    $rules = [
+        $credential_name => $credential_rule
+    ];
+    $credentials = [
+        $credential_name => $credential_data
+    ];
+    $validator = Validator::make($credentials, $rules);
+    if ($validator->fails()) {
+        return false;
+    }
+    return true;
+}
+
+function beforeOrEqualValidator($start_date, $end_date)
+{
+    $credential_start = "start_date";
+    $credential_end = "end_date";
+
+    $credential_rule = "before_or_equal:$credential_end";
+    $rules = [
+        $credential_start => $credential_rule
+    ];
+    $credentials = [
+        $credential_start => $start_date,
+        $credential_end => $end_date
+    ];
+    $validator = Validator::make($credentials, $rules);
+    if ($validator->fails()) {
+        return false;
+    }
+    return true;
 }

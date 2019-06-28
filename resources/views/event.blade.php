@@ -72,6 +72,9 @@
     </div>
 @endsection
 @section('end-javascript')
+    <script>
+        var pic_list = {!! json_encode(getAllUsers()) !!};
+    </script>
     <script type="text/javascript" src="{{ asset('dist/rrule/rrule.js') }}"></script>
     <script type="text/javascript" src="{{ asset('dist/moment-timezone/moment-timezone.js') }}"></script>
     <script type="text/javascript" src="{{ asset('dist/air-datepicker/js/datepicker.min.js') }}"></script>
@@ -86,4 +89,5 @@
     <script type="text/javascript" src="{{ asset('dist/fullcalendar-4.0.2/packages/moment-timezone/main.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('dist/fullcalendar-4.0.2/packages/rrule/main.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/event.js') }}"></script>
+
 @endsection

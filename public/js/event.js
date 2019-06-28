@@ -1,18 +1,15 @@
-var pic_list = new Array();
+var calendar = null;
 var time_zone = 'local';
+
 function event_edit(info) {
     console.log(info);
-    moment.locale('vi');
+    $("#event-id").val(info.event.id);
     $("#event-title").val(info.event.title);
     $("#event-start-date").val(moment(info.event.start).format('MMM DD, YYYY'));
     $("#event-end-date").val(moment(info.event.end).format('MMM DD, YYYY'));
     $("#event-start-time").val(moment(info.event.start).format('h:mma'));
     $("#event-end-time").val(moment(info.event.end).format('h:mma'));
-    if (info.event.allDay == '0') {
-        $("#event-all-day").prop("checked", false);
-    } else {
-        $("#event-all-day").prop("checked", true);
-    }
+    $("#event-all-day").prop("checked", info.event.allDay);
     $("#event-email").text(info.event.extendedProps.owner_email);
     $("#event_tag").attr('tag_id', info.event.extendedProps.tag_id);
     $("#event_tag").attr('title', info.event.extendedProps.tag_title);
@@ -20,26 +17,36 @@ function event_edit(info) {
     $("#event-tag-dropdown").find("div.dropdown-menu").find("a.dropdown-item").removeClass('active');
     $("#event-tag-dropdown").find("div.dropdown-menu").find("a[tag_id=" + info.event.extendedProps.tag_id + "].dropdown-item").addClass('active');
 
-    if (info.event.extendedProps.pic_edit == '0') {
-        $("#event_pic_edit").prop("checked", false);
-    } else {
+    if (info.event.extendedProps.pic_edit == '1') {
         $("#event_pic_edit").prop("checked", true);
+    } else {
+        $("#event_pic_edit").prop("checked", false);
     }
 
-    if (info.event.extendedProps.pic_assign == '0') {
-        $("#event_pic_assign").prop("checked", false);
-    } else {
+    if (info.event.extendedProps.pic_assign == '1') {
         $("#event_pic_assign").prop("checked", true);
+    } else {
+        $("#event_pic_assign").prop("checked", false);
     }
 
-    if (info.event.extendedProps.pic_see_list == '0') {
-        $("#event_pic_see_list").prop("checked", false);
-    } else {
+    if (info.event.extendedProps.pic_see_list == '1') {
         $("#event_pic_see_list").prop("checked", true);
+    } else {
+        $("#event_pic_see_list").prop("checked", false);
     }
 
     tinyMCE.get('event_desc').setContent(info.event.extendedProps.desc);
 
+    var assigned_list = new Array();
+    $.map(info.event.extendedProps.pic, function (user, idx) {
+
+        if (typeof pic_list[user.id] !== "undefined") {
+            assigned_list.push(pic_list[user.id]);
+        }
+    });
+    event_render_assigned_dropdown_list(assigned_list);
+
+    $("#btn-delete").show();
     $('#event-modal').modal();
 }
 
@@ -74,10 +81,31 @@ function event_pic_select(self, event) {
     }
 }
 
-function event_add() {
+function event_add(arg) {
+    $("#event-id").val('0');
     $("#event-title").val('');
-    $("#event-start-date").val(moment().format('MMM DD, YYYY'));
-    $("#event-end-date").val(moment().format('MMM DD, YYYY'));
+    $("#event-start-date").val(moment(arg.startStr).format('MMM DD, YYYY'));
+    $("#event-end-date").val(moment(arg.startStr).format('MMM DD, YYYY'));
+    $("#event-start-time").val('8:00am');
+    $("#event-end-time").val('5:00pm');
+    $("#event-all-day").prop("checked", false);
+    $("#event-email").text('');
+    $("#event-start-time").show();
+    $("#event-start-end").show();
+
+    var event_tag = event_get_first_tag_info();
+    $("#event_tag").attr('tag_id', event_tag.tag_id);
+    $("#event_tag").attr('title', event_tag.tag_title);
+    $("#event_tag").addClass(event_tag.tag_color);
+    $("#event-tag-dropdown").find("div.dropdown-menu").find("a.dropdown-item").removeClass('active');
+    $("#event-tag-dropdown").find("div.dropdown-menu").find("a[tag_id=" + event_tag.tag_id + "].dropdown-item").addClass('active');
+
+    $("#event_pic_edit").prop("checked", false);
+    $("#event_pic_assign").prop("checked", false);
+    $("#event_pic_see_list").prop("checked", false);
+    tinyMCE.get('event_desc').setContent('');
+
+    $("#btn-delete").hide();
     $('#event-modal').modal();
 }
 
@@ -97,6 +125,26 @@ function event_load_pic() {
     } else {
         event_load_pic_callback(pic_list);
     }
+}
+
+function event_get_first_tag_info() {
+
+    var tag = {
+        'tag_id': '0',
+        'tag_title': '',
+        'tag_color': '',
+    };
+
+    var tag_obj = $("#event-tag-dropdown").find('div.dropdown-menu').find('a:first');
+    if (tag_obj.length == 0) {
+        return tag;
+    }
+
+    var tag = {};
+    tag.tag_id = tag_obj.attr('tag_id');
+    tag.tag_title = tag_obj.attr('tag_title');
+    tag.tag_color = tag_obj.attr('tag_color');
+    return tag;
 }
 
 function event_load_pic_callback(users) {
@@ -196,19 +244,139 @@ function event_delete_selected_pic(self) {
     $(self).closest('li.list-group-item').remove();
 }
 
-moment.locale('vi', {
-    months: 'Tháng 1_Tháng 2_Tháng 3_Tháng 4_Tháng 5_Tháng 6_Tháng 7_Tháng 8_Tháng 9_Tháng 10_Tháng 11_Tháng 12'.split('_'),
-    monthsShort: 'Th1_Th2_Th3_Th4_Th5_Th6_Th7_Th8_Th9_Th1_Th11_Th12'.split('_'),
-    monthsParseExact: true,
-    weekdays: 'Chủ nhật_Thứ hai_Thứ ba_Thứ tư_Thứ năm_Thứ sáu_Thứ bảy'.split('_'),
-    weekdaysShort: 'CN_T2_T3_T4_T5_T6_T7'.split('_'),
-    weekdaysMin: 'CN_T2_T3_T4_T5_T6_T7'.split('_'),
-});
+function event_all_day_change(self) {
+    if ($(self).is(":checked") == true) {
+        $("#event-start-time").addClass('txt-hidden');
+        $("#event-end-time").addClass('txt-hidden');
+    } else {
+        $("#event-start-time").removeClass('txt-hidden');
+        $("#event-end-time").removeClass('txt-hidden');
+    }
+}
+
+function event_colect_data() {
+    var data = {};
+
+    data.event_id = $("#event-id").val();
+    data.event_title = $("#event-title").val();
+
+    var event_start_time = '00:00:00';
+    var event_end_time = '00:00:00';
+
+    data.event_all_day = '1';
+    if ($("#event-all-day").is(":checked") == false) {
+        data.event_all_day = '0';
+        event_start_time = moment($("#event-start-time").val(), ["h:mma"]).format("HH:mm:ss");
+        event_end_time = moment($("#event-end-time").val(), ["h:mma"]).format("HH:mm:ss");
+    }
+
+    data.event_start = moment($("#event-start-date").val(), ["MMM DD, YYYY"]).format("YYYY-MM-DD") + " " + event_start_time;
+    data.event_end = moment($("#event-end-date").val(), ["MMM DD, YYYY"]).format("YYYY-MM-DD") + " " + event_end_time;
+    data.event_tag = $("#event_tag").attr('tag_id');
+    data.event_desc = tinyMCE.get('event_desc').getContent();
+
+    data.event_pic_edit = '0';
+    if ($("#event_pic_edit").is(":checked") == true) {
+        data.event_pic_edit = '1';
+    }
+
+    data.event_pic_assign = '0';
+    if ($("#event_pic_assign").is(":checked") == true) {
+        data.event_pic_assign = '1';
+    }
+
+    data.event_pic_see_list = '0';
+    if ($("#event_pic_see_list").is(":checked") == true) {
+        data.event_pic_see_list = '1';
+    }
+
+    data.event_pic_list = new Array();
+    $(".assigned-list").find('li.list-group-item').each(function (idx, ele) {
+        var pic = $(ele).attr('pic');
+        data.event_pic_list.push(pic);
+    });
+    return data;
+}
+
+function event_save() {
+    swal({
+        title: i18next.t('Do you want to save the data.?'),
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: i18next.t('No'),
+        confirmButtonText: i18next.t('Yes'),
+        reverseButtons: true
+    }).then((result) => {
+        if (result.value) {
+            var data = event_colect_data();
+            if (data.event_id != 0) {
+                ubizapis('v1', '/events/' + data.event_id + "/update", 'post', data, null, event_save_callback);
+            } else {
+                ubizapis('v1', '/events', 'post', data, null, event_save_callback);
+            }
+        }
+    });
+}
+
+function event_delete() {
+    swal({
+        title: i18next.t('Do you want to delete the data.?'),
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: i18next.t('No'),
+        confirmButtonText: i18next.t('Yes'),
+        reverseButtons: true
+    }).then((result) => {
+        if (result.value) {
+            var event_id = $("event-id").val();
+            ubizapis('v1', '/events/' + event_id + "/delete", 'post', null, null, event_delete_callback);
+        }
+    });
+}
+
+function event_save_callback(res) {
+    if (res.data.success == true) {
+        swal.fire({
+            type: 'success',
+            title: res.data.message,
+            onClose: () => {
+                calendar.addEvent(res.data.event);
+            }
+        });
+    } else {
+        swal.fire({
+            type: 'error',
+            title: res.data.message
+        });
+    }
+}
+
+function event_delete_callback(res) {
+    if (res.data.success == true) {
+        swal.fire({
+            type: 'success',
+            title: res.data.message
+        });
+    } else {
+        swal.fire({
+            type: 'error',
+            title: res.data.message
+        });
+    }
+}
+
+function event_cancel() {
+    $('#event-modal').modal('hide');
+}
 
 document.addEventListener('DOMContentLoaded', function () {
     var initialLocaleCode = 'vi';
     var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
+    calendar = new FullCalendar.Calendar(calendarEl, {
         timeZone: time_zone,
         plugins: ['interaction', 'bootstrap', 'dayGrid', 'timeGrid', 'list', 'momentTimezone', 'rrule'],
         height: 'parent',
@@ -228,16 +396,8 @@ document.addEventListener('DOMContentLoaded', function () {
         selectable: true,
         selectMirror: true,
         select: function (arg) {
-            event_add();
-            // if (title) {
-            //     calendar.addEvent({
-            //         title: title,
-            //         start: arg.start,
-            //         end: arg.end,
-            //         allDay: arg.allDay
-            //     })
-            // }
-            calendar.unselect()
+            event_add(arg);
+            calendar.unselect();
         },
         editable: true,
         eventSources: [
@@ -257,6 +417,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 className: 'my-event',
             }
         ],
+        eventTimeFormat: {
+            hour: 'numeric',
+            minute: '2-digit',
+            meridiem: false,
+            hour12: true
+        },
         eventRender: function (info) {
             var tag_color = info.event.extendedProps.tag_color;
             jQuery(info.el).find('div.fc-content').prepend('<i class="fas fa-circle ' + tag_color + '"></i>');
