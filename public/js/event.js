@@ -1,6 +1,18 @@
 var calendar = null;
 var time_zone = 'local';
 
+function event_get_filter_tag() {
+    var filter_tag = new Array();
+    $("input[name=event-tag]:checked").each(function (idx, tag) {
+        filter_tag.push($(tag).val());
+    });
+    return filter_tag;
+}
+
+function event_tag_change(self) {
+    calendar.refetchEvents();
+}
+
 function event_edit(info) {
     console.log(info);
     $("#event-id").val(info.event.id);
@@ -82,12 +94,18 @@ function event_pic_select(self, event) {
 }
 
 function event_add(arg) {
+
+    if (arg == null && calendar != null) {
+        arg = {};
+        arg.startStr = calendar.getDate();
+    }
+
     $("#event-id").val('0');
     $("#event-title").val('');
     $("#event-start-date").val(moment(arg.startStr).format('MMM DD, YYYY'));
     $("#event-end-date").val(moment(arg.startStr).format('MMM DD, YYYY'));
-    $("#event-start-time").val('8:00am');
-    $("#event-end-time").val('5:00pm');
+    $("#event-start-time").val('8:00SA');
+    $("#event-end-time").val('5:00CH');
     $("#event-all-day").prop("checked", false);
     $("#event-email").text('');
     $("#event-start-time").show();
@@ -332,8 +350,8 @@ function event_delete() {
         reverseButtons: true
     }).then((result) => {
         if (result.value) {
-            var event_id = $("event-id").val();
-            ubizapis('v1', '/events/' + event_id + "/delete", 'post', null, null, event_delete_callback);
+            var event_id = $("#event-id").val();
+            ubizapis('v1', '/events/' + event_id + "/delete", 'delete', null, null, event_delete_callback);
         }
     });
 }
@@ -344,7 +362,7 @@ function event_save_callback(res) {
             type: 'success',
             title: res.data.message,
             onClose: () => {
-                calendar.addEvent(res.data.event);
+                calendar.refetchEvents();
             }
         });
     } else {
@@ -359,7 +377,10 @@ function event_delete_callback(res) {
     if (res.data.success == true) {
         swal.fire({
             type: 'success',
-            title: res.data.message
+            title: res.data.message,
+            onClose: () => {
+                calendar.refetchEvents();
+            }
         });
     } else {
         swal.fire({
@@ -395,6 +416,7 @@ document.addEventListener('DOMContentLoaded', function () {
         weekNumbers: true,
         selectable: true,
         selectMirror: true,
+        fixedWeekCount: false,
         select: function (arg) {
             event_add(arg);
             calendar.unselect();
@@ -403,6 +425,8 @@ document.addEventListener('DOMContentLoaded', function () {
         eventSources: [
             {
                 events: function (fetchInfo, successCallback, failureCallback) {
+
+                    fetchInfo.tag = event_get_filter_tag();
                     ubizapis('v1', '/events', 'get', null, fetchInfo, function (response) {
                         if (response.data.success == true) {
                             successCallback(response.data.events);
@@ -441,10 +465,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     $.fn.datepicker.language['vi'] = {
         days: ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'],
-        daysShort: ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'],
-        daysMin: ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'],
+        daysShort: ['CN', 'Th 2', 'Th 3', 'Th 4', 'Th 5', 'Th 6', 'Th 7'],
+        daysMin: ['CN', 'Th 2', 'Th 3', 'Th 4', 'Th 5', 'Th 6', 'Th 7'],
         months: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
-        monthsShort: ['Th1', 'Th2', 'Th3', 'Th4', 'Th5', 'Th6', 'Th7', 'Th8', 'Th9', 'Th10', 'Th11', 'Th12'],
+        monthsShort: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
         today: 'Hôm nay',
         clear: 'Xóa'
     };
@@ -453,9 +477,9 @@ document.addEventListener('DOMContentLoaded', function () {
         language: 'vi',
         dateFormat: 'yyyy-mm-dd',
         timeFormat: 'hh:ii:ss',
-        firstDay: 0,
+        firstDay: 1,
         onSelect: function (fd, d, picker) {
-
+            calendar.gotoDate(fd);
         }
     });
 
@@ -463,6 +487,7 @@ document.addEventListener('DOMContentLoaded', function () {
         language: 'vi',
         autoClose: true,
         dateFormat: 'M dd ,yyyy',
+        firstDay: 1,
         onSelect: function (fd, d, picker) {
 
         }
@@ -472,6 +497,7 @@ document.addEventListener('DOMContentLoaded', function () {
         language: 'vi',
         autoClose: true,
         dateFormat: 'M dd ,yyyy',
+        firstDay: 1,
         onSelect: function (fd, d, picker) {
 
         }
@@ -503,6 +529,33 @@ document.addEventListener('DOMContentLoaded', function () {
     $('.event-pic').on('hide.bs.dropdown', function () {
         event_set_assigned_list();
     })
+
+    // $('.fc-next-button').on('click', function () {
+    //     setTimeout(function () {
+    //         if (calendar != null) {
+    //             var myDatepicker = $('.my-datepicker').datepicker().data('datepicker');
+    //             myDatepicker.selectDate(new Date(calendar.getDate()));
+    //         }
+    //     }, 500);
+    // });
+    //
+    // $('.fc-prev-button').on('click', function () {
+    //     setTimeout(function () {
+    //         if (calendar != null) {
+    //             var myDatepicker = $('.my-datepicker').datepicker().data('datepicker');
+    //             myDatepicker.selectDate(new Date(calendar.getDate()));
+    //         }
+    //     }, 500);
+    // });
+    //
+    // $('.fc-today-button').on('click', function () {
+    //     setTimeout(function () {
+    //         if (calendar != null) {
+    //             var myDatepicker = $('.my-datepicker').datepicker().data('datepicker');
+    //             myDatepicker.selectDate(new Date(calendar.getDate()));
+    //         }
+    //     }, 500);
+    // });
 
     tinymce.init({
         width: '100%',

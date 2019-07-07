@@ -17,11 +17,15 @@ class EventController extends Controller
 
             $start = $request->get('start', null);
             $end = $request->get('end', null);
+            $tag = $request->get('tag', []);
 
-            if (empty($start) || $start == '' || $start == null
-                || empty($end) || $end == '' || $end == null
+            if (isArrayValidator($tag) == false
+                || requiredValidator($start) == false
+                || dateValidator($start) == false
+                || requiredValidator($end) == false
+                || dateValidator($end) == false
             ) {
-                return response()->json(['success' => false, 'message' => 'Ko dung ngay'], 200);
+                return response()->json(['success' => false, 'message' => __('Filter data is wrong.')], 200);
             }
 
             $start_dt = new \DateTime($start);
@@ -32,7 +36,7 @@ class EventController extends Controller
 
 
             $event = new Event();
-            $events = $event->getEvents($start_fm, $end_fm);
+            $events = $event->getEvents($start_fm, $end_fm, $tag);
             return response()->json(['events' => $events, 'success' => true, 'message' => __("Successfully processed.")], 200);
         } catch (\Throwable $e) {
             throw $e;
@@ -89,11 +93,9 @@ class EventController extends Controller
             }
 
             $map_data = $this->mapData($data);
-            $event_id = $evModel->insertEvent($map_data);
-            $event = $evModel->getEvent($event_id);
+            $evModel->insertEvent($map_data);
 
             return response()->json([
-                'event' => $event,
                 'success' => true,
                 'message' => __("Successfully processed.")
             ], 200);
@@ -105,6 +107,19 @@ class EventController extends Controller
     public function deleteEvent($id, Request $request)
     {
         try {
+
+            if (requiredValidator($id) == false || numericValidator($id) == false) {
+                return response()->json(['success' => false, 'message' => __('Delete data is wrong.')], 200);
+            }
+
+            $evModel = new Event();
+            $res = $evModel->deleteValidation($id);
+            if ($res['success'] == false) {
+                return response()->json(['success' => false, 'message' => $res['message']], 200);
+            }
+
+            $evModel->deleteEvent($id);
+
             return response()->json(['success' => true, 'message' => __("Successfully processed.")], 200);
         } catch (\Throwable $e) {
             throw $e;

@@ -1,8 +1,7 @@
 <div class="row">
     <input type="hidden" id="event-id" value="0">
     <div class="col-md-6 col-lg-6">
-        <input type="text" style="width: 500px" class="form-control light-color" id="event-title"
-               placeholder="Thêm tiêu đề">
+        <input type="text" style="width: 500px" class="form-control light-color" id="event-title" placeholder="Thêm tiêu đề">
     </div>
     <div class="col-md-6 col-lg-6 text-right">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -13,8 +12,7 @@
 <hr>
 <div class="row margin-bottom-15">
     <div class="col-12">
-        <input type="text" readonly style="width: 120px"
-               class="form-control light-color d-inline-flex text-center start-date" id="event-start-date">
+        <input type="text" readonly style="width: 140px" class="form-control light-color d-inline-flex text-center start-date" id="event-start-date">
         <select readonly class="form-control light-color d-inline-flex justify-content-center w-auto"
                 id="event-start-time">
             <option value="12:00SA">12:00SA</option>
@@ -67,8 +65,7 @@
             <option value="11:30CH">11:30CH</option>
         </select>
         <span class="d-inline-flex">&nbsp;đến&nbsp;</span>
-        <select readonly class="form-control light-color d-inline-flex justify-content-center w-auto"
-                id="event-end-time">
+        <select readonly class="form-control light-color d-inline-flex justify-content-center w-auto" id="event-end-time">
             <option value="12:00SA">12:00SA</option>
             <option value="12:30SA">12:30SA</option>
             <option value="12:30SA">1:00SA</option>
@@ -118,7 +115,7 @@
             <option value="11:00CH">11:00CH</option>
             <option value="11:30CH">11:30CH</option>
         </select>
-        <input type="text" readonly style="width: 120px" class="form-control light-color d-inline-flex text-center end-date" id="event-end-date">
+        <input type="text" readonly style="width: 140px" class="form-control light-color d-inline-flex text-center end-date" id="event-end-date">
     </div>
 </div>
 <div class="row margin-bottom-15">
@@ -181,8 +178,10 @@
                         </button>
                         <div class="dropdown-menu z-pdt z-pdb">
                             @foreach($tags as $key => $tag)
-                                <a tag_id="{{ $tag->id }}" tag_title="{{ $tag->title }}" tag_color="{{ $tag->color }}"
-                                   class="dropdown-item media pdl-5" onclick="epic_select_tag(this)" href="#">
+                                <a tag_id="{{ $tag->id }}" tag_title="{{ $tag->title }}"
+                                   tag_color="{{ $tag->color }}"
+                                   class="dropdown-item media pdl-5"
+                                   onclick="epic_select_tag(this)" href="#">
                                     <div style="width: 20px; height: 20px; line-height: 20px" class="mr-3">
                                         <i class="fas fa-circle {{ $tag->color }}"></i>
                                     </div>

@@ -233,5 +233,6 @@
   "Department is required.": "Phòng ban không được trống.",
   "Join date is wrong format YYYY/MM/DD.": "Ngày vào làm bị sai định dạng YYYY/MM/DD.",
   "E-mail is wrong format.": "Email không đúng.",
-  "You don't have permission to use this function.\nPlease contact with administrator.": "Bạn không có quyền truy cập chức năng này.\nHãy liên hệ với quản trị viên."
+  "You don't have permission to use this function.\nPlease contact with administrator.": "Bạn không có quyền truy cập chức năng này.\nHãy liên hệ với quản trị viên.",
+  "Filter data is wrong.": "Thông tin tìm kiếm không đúng."
 }

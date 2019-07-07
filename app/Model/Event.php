@@ -8,15 +8,31 @@ use Illuminate\Support\Facades\Auth;
 class Event
 {
 
-    public function getEvents($start, $end)
+    public function getEvents($start, $end, $tag)
     {
         try {
-            $data_tmp = DB::table('m_event')
-                ->leftJoin('m_event_pic', 'm_event.id', '=', 'm_event_pic.event_id')
-                ->leftJoin('users as usr_1', 'm_event_pic.user_id', '=', 'usr_1.id')
-                ->leftJoin('users as usr_2', 'm_event.owner_id', '=', 'usr_2.id')
-                ->leftJoin('m_event_att', 'm_event.id', '=', 'm_event_att.event_id')
-                ->leftJoin('m_tag', 'm_event.tag_id', '=', 'm_tag.id')
+
+            $query_builder = DB::table('m_event')
+                ->leftJoin('m_event_pic', function ($join) {
+                    $join->on('m_event.id', '=', 'm_event_pic.event_id')
+                        ->where('m_event_pic.delete_flg', '=', '0');
+                })
+                ->leftJoin('users as usr_1', function ($join) {
+                    $join->on('m_event_pic.user_id', '=', 'usr_1.id')
+                        ->where('usr_1.delete_flg', '=', '0');
+                })
+                ->leftJoin('users as usr_2', function ($join) {
+                    $join->on('m_event.owner_id', '=', 'usr_2.id')
+                        ->where('usr_2.delete_flg', '=', '0');
+                })
+                ->leftJoin('m_event_att', function ($join) {
+                    $join->on('m_event.id', '=', 'm_event_att.event_id')
+                        ->where('m_event_att.delete_flg', '=', '0');
+                })
+                ->leftJoin('m_tag', function ($join) {
+                    $join->on('m_event.tag_id', '=', 'm_tag.id')
+                        ->where('m_tag.delete_flg', '=', '0');
+                })
                 ->select(
                     'm_event.*',
                     'm_event_pic.user_id',
@@ -29,17 +45,19 @@ class Event
                     'm_tag.title as tag_title',
                     'm_tag.color as tag_color'
                 )
-                ->where(
-                    [
-                        ['m_event.delete_flg', '=', '0'],
-                        ['m_event.start', '>=', $start],
-                        ['m_event.end', '<=', $end]
-                    ]
-                )
-                ->orderBy('m_event.id', 'asc')
-                ->get();
+                ->where([
+                    ['m_event.delete_flg', '=', '0'],
+                    ['m_event.start', '>=', $start],
+                    ['m_event.end', '<=', $end]
+                ]);
+
+            if (sizeof($tag) > 0) {
+                $query_builder->whereIn('m_event.tag_id', $tag);
+            }
+            $data_tmp = $query_builder->orderBy('m_event.id', 'asc')->get();
 
             $data = [];
+            $pic_list = [];
             foreach ($data_tmp as $event) {
 
                 if (!isset($data[$event->id])) {
@@ -62,6 +80,8 @@ class Event
                         'pic' => [],
                         'att' => []
                     ];
+
+                    $pic_list[$event->id] = [];
                 }
 
                 if (!empty($event->user_id)) {
@@ -70,6 +90,8 @@ class Event
                         'name' => $event->user_name,
                         'avatar' => $event->user_avatar,
                     ];
+
+                    $pic_list[$event->id][] = $event->user_id;
                 }
 
                 if (!empty($event->att_id)) {
@@ -83,12 +105,17 @@ class Event
 
             $events = [];
             foreach ($data as $event) {
+
+                if ($event['owner_id'] != Auth::user()->id
+                    && inArrayValidator(Auth::user()->id, $pic_list[$event['id']]) == false) {
+                    continue;
+                }
+
                 $events[] = $event;
             }
 
             return $events;
         } catch (\Throwable $e) {
-            DB::rollback();
             throw $e;
         }
     }
@@ -97,8 +124,14 @@ class Event
     {
         try {
             $event_data_tmp = DB::table('m_event')
-                ->leftJoin('users', 'm_event.owner_id', '=', 'users.id')
-                ->leftJoin('m_tag', 'm_event.tag_id', '=', 'm_tag.id')
+                ->leftJoin('users', function ($join) {
+                    $join->on('m_event.owner_id', '=', 'users.id')
+                        ->where('users.delete_flg', '=', '0');
+                })
+                ->leftJoin('m_tag', function ($join) {
+                    $join->on('m_event.tag_id', '=', 'm_tag.id')
+                        ->where('m_tag.delete_flg', '=', '0');
+                })
                 ->select(
                     'm_event.*',
                     'users.email as owner_email',
@@ -151,13 +184,20 @@ class Event
                 ->orderBy('users.id', 'asc')
                 ->get();
 
+            $pic_list = [];
             foreach ($event_pic_tmp as $pic) {
 
                 $event['pic'][] = [
                     'id' => $pic->id,
-                    'name' => $pic->name,
-                    'avatar' => $pic->avatar,
+                    'name' => $pic->name
                 ];
+
+                $pic_list[] = $pic->id;
+            }
+
+            if ($event['owner_id'] != Auth::user()->id
+                && inArrayValidator(Auth::user()->id, $pic_list) == false) {
+                return null;
             }
 
             $event_att_tmp = DB::table('m_event_att')
@@ -211,9 +251,18 @@ class Event
         DB::beginTransaction();
         try {
 
-            DB::table('m_department')
-                ->whereIn('id', explode(',', $ids))
+            DB::table('m_event')
+                ->where('id', $id)
                 ->update(['delete_flg' => '1']);
+
+            DB::table('m_event_pic')
+                ->where('event_id', $id)
+                ->update(['delete_flg' => '1']);
+
+            DB::table('m_event_att')
+                ->where('event_id', $id)
+                ->update(['delete_flg' => '1']);
+
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollback();
@@ -345,5 +394,30 @@ class Event
             throw $e;
         }
 
+    }
+
+    public function deleteValidation($id)
+    {
+        try {
+
+            $res = ['success' => true, 'message' => ''];
+
+            $event = $this->getEvent($id);
+            if ($event == null) {
+                $res['success'] = false;
+                $res['message'] = __('Event is not exists.');
+                return $res;
+            }
+
+            if ($event['pic_edit'] == '0' && $event['owner_id'] != Auth::user()->id) {
+                $res['success'] = false;
+                $res['message'] = __('You do not have permission to delete this event.');
+                return $res;
+            }
+
+            return $res;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
     }
 }
