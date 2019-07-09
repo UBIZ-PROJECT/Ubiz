@@ -170,8 +170,8 @@
                                             <span class="wno">{{ __("Change") }}</span>
                                         </a>
                                         <div class="rho">
-                                            <div class="iho">{{ $cps_user->name }}</div>
-                                            <div class="mno">{{ $cps_user->email }}</div>
+                                            <div class="iho" id="user_name">{{ $cps_user->name }}</div>
+                                            <div class="mno" id="user_email">{{ $cps_user->email }}</div>
                                             <div class="jno">
                                                 <a href="#">{{ __("Privacy") }}</a>
                                             </div>

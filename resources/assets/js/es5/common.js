@@ -453,11 +453,6 @@ moment.locale('vi', {
     weekdaysMin: 'CN_T2_T3_T4_T5_T6_T7'.split('_'),
 });
 moment.locale('vi');
-moment.updateLocale('vi', {
-    meridiem: function (hours, minutes, isLower) {
-        return hours < 12 ? 'SA' : 'CH';
-    }
-});
 
 jQuery.fn.forceNumeric = function () {
     return this.each(function () {

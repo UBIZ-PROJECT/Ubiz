@@ -17,15 +17,18 @@ function event_edit(info) {
     console.log(info);
     $("#event-id").val(info.event.id);
     $("#event-title").val(info.event.title);
+    $("#event-location").val(info.event.extendedProps.location);
     $("#event-start-date").val(moment(info.event.start).format('MMM DD, YYYY'));
     $("#event-end-date").val(moment(info.event.end).format('MMM DD, YYYY'));
     $("#event-start-time").val(moment(info.event.start).format('h:mma'));
     $("#event-end-time").val(moment(info.event.end).format('h:mma'));
     $("#event-all-day").prop("checked", info.event.allDay);
     $("#event-email").text(info.event.extendedProps.owner_email);
-    $("#event_tag").attr('tag_id', info.event.extendedProps.tag_id);
-    $("#event_tag").attr('title', info.event.extendedProps.tag_title);
-    $("#event_tag").addClass(info.event.extendedProps.tag_color);
+
+    epic_clean_tag_class();
+    $("#event-tag").attr('tag_id', info.event.extendedProps.tag_id);
+    $("#event-tag").attr('title', info.event.extendedProps.tag_title);
+    $("#event-tag").addClass(info.event.extendedProps.tag_color);
     $("#event-tag-dropdown").find("div.dropdown-menu").find("a.dropdown-item").removeClass('active');
     $("#event-tag-dropdown").find("div.dropdown-menu").find("a[tag_id=" + info.event.extendedProps.tag_id + "].dropdown-item").addClass('active');
 
@@ -63,8 +66,8 @@ function event_edit(info) {
 }
 
 function epic_clean_tag_class() {
-    $("#event_tag").attr('class', '');
-    $("#event_tag").addClass('fas fa-circle');
+    $("#event-tag").attr('class', '');
+    $("#event-tag").addClass('fas fa-circle');
 }
 
 function epic_select_tag(self) {
@@ -78,9 +81,9 @@ function epic_select_tag(self) {
 
     epic_clean_tag_class();
 
-    $("#event_tag").attr('tag_id', tag_id);
-    $("#event_tag").attr('title', tag_title);
-    $("#event_tag").addClass(tag_color);
+    $("#event-tag").attr('tag_id', tag_id);
+    $("#event-tag").attr('title', tag_title);
+    $("#event-tag").addClass(tag_color);
 }
 
 function event_pic_select(self, event) {
@@ -102,19 +105,21 @@ function event_add(arg) {
 
     $("#event-id").val('0');
     $("#event-title").val('');
+    $("#event-location").val('');
     $("#event-start-date").val(moment(arg.startStr).format('MMM DD, YYYY'));
     $("#event-end-date").val(moment(arg.startStr).format('MMM DD, YYYY'));
-    $("#event-start-time").val('8:00SA');
-    $("#event-end-time").val('5:00CH');
+    $("#event-start-time").val('8:00am');
+    $("#event-end-time").val('5:00pm');
     $("#event-all-day").prop("checked", false);
-    $("#event-email").text('');
+    $("#event-email").text($("#user_email").text());
     $("#event-start-time").show();
     $("#event-start-end").show();
 
+    epic_clean_tag_class();
     var event_tag = event_get_first_tag_info();
-    $("#event_tag").attr('tag_id', event_tag.tag_id);
-    $("#event_tag").attr('title', event_tag.tag_title);
-    $("#event_tag").addClass(event_tag.tag_color);
+    $("#event-tag").attr('tag_id', event_tag.tag_id);
+    $("#event-tag").attr('title', event_tag.tag_title);
+    $("#event-tag").addClass(event_tag.tag_color);
     $("#event-tag-dropdown").find("div.dropdown-menu").find("a.dropdown-item").removeClass('active');
     $("#event-tag-dropdown").find("div.dropdown-menu").find("a[tag_id=" + event_tag.tag_id + "].dropdown-item").addClass('active');
 
@@ -122,6 +127,8 @@ function event_add(arg) {
     $("#event_pic_assign").prop("checked", false);
     $("#event_pic_see_list").prop("checked", false);
     tinyMCE.get('event_desc').setContent('');
+
+    $(".assigned-list").empty();
 
     $("#btn-delete").hide();
     $('#event-modal').modal();
@@ -290,7 +297,8 @@ function event_colect_data() {
 
     data.event_start = moment($("#event-start-date").val(), ["MMM DD, YYYY"]).format("YYYY-MM-DD") + " " + event_start_time;
     data.event_end = moment($("#event-end-date").val(), ["MMM DD, YYYY"]).format("YYYY-MM-DD") + " " + event_end_time;
-    data.event_tag = $("#event_tag").attr('tag_id');
+    data.event_tag = $("#event-tag").attr('tag_id');
+    data.event_location = $("#event-location").val();
     data.event_desc = tinyMCE.get('event_desc').getContent();
 
     data.event_pic_edit = '0';
@@ -398,6 +406,30 @@ document.addEventListener('DOMContentLoaded', function () {
     var initialLocaleCode = 'vi';
     var calendarEl = document.getElementById('calendar');
     calendar = new FullCalendar.Calendar(calendarEl, {
+        customButtons: {
+            next: {
+                click: function () {
+                    calendar.next();
+                    var myDatepicker = $('.my-datepicker').datepicker().data('datepicker');
+                    myDatepicker.selectDate(new Date(calendar.getDate()));
+                }
+            },
+            prev: {
+                click: function () {
+                    calendar.prev();
+                    var myDatepicker = $('.my-datepicker').datepicker().data('datepicker');
+                    myDatepicker.selectDate(new Date(calendar.getDate()));
+                }
+            },
+            today: {
+                text: 'Today',
+                click: function () {
+                    calendar.today();
+                    var myDatepicker = $('.my-datepicker').datepicker().data('datepicker');
+                    myDatepicker.selectDate(new Date(calendar.getDate()));
+                }
+            }
+        },
         timeZone: time_zone,
         plugins: ['interaction', 'bootstrap', 'dayGrid', 'timeGrid', 'list', 'momentTimezone', 'rrule'],
         height: 'parent',
@@ -479,7 +511,9 @@ document.addEventListener('DOMContentLoaded', function () {
         timeFormat: 'hh:ii:ss',
         firstDay: 1,
         onSelect: function (fd, d, picker) {
-            calendar.gotoDate(fd);
+            if (calendar.state.loadingLevel == 0) {
+                calendar.gotoDate(fd);
+            }
         }
     });
 
@@ -529,33 +563,6 @@ document.addEventListener('DOMContentLoaded', function () {
     $('.event-pic').on('hide.bs.dropdown', function () {
         event_set_assigned_list();
     })
-
-    // $('.fc-next-button').on('click', function () {
-    //     setTimeout(function () {
-    //         if (calendar != null) {
-    //             var myDatepicker = $('.my-datepicker').datepicker().data('datepicker');
-    //             myDatepicker.selectDate(new Date(calendar.getDate()));
-    //         }
-    //     }, 500);
-    // });
-    //
-    // $('.fc-prev-button').on('click', function () {
-    //     setTimeout(function () {
-    //         if (calendar != null) {
-    //             var myDatepicker = $('.my-datepicker').datepicker().data('datepicker');
-    //             myDatepicker.selectDate(new Date(calendar.getDate()));
-    //         }
-    //     }, 500);
-    // });
-    //
-    // $('.fc-today-button').on('click', function () {
-    //     setTimeout(function () {
-    //         if (calendar != null) {
-    //             var myDatepicker = $('.my-datepicker').datepicker().data('datepicker');
-    //             myDatepicker.selectDate(new Date(calendar.getDate()));
-    //         }
-    //     }, 500);
-    // });
 
     tinymce.init({
         width: '100%',

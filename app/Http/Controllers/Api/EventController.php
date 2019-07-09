@@ -136,6 +136,7 @@ class EventController extends Controller
                 'start' => $data['event_start'],
                 'end' => $data['event_end'],
                 'title' => $data['event_title'],
+                'location' => $data['event_location'],
                 'desc' => $data['event_desc'],
                 'all_day' => $data['event_all_day'],
                 'tag_id' => $data['event_tag'],

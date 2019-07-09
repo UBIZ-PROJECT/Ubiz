@@ -66,6 +66,7 @@ class Event
                         'start' => $event->start,
                         'end' => $event->end,
                         'title' => $event->title,
+                        'location' => $event->location,
                         'desc' => $event->desc,
                         'allDay' => ($event->all_day == '1' ? true : false),
                         'tag_id' => $event->tag_id,
@@ -154,6 +155,7 @@ class Event
                 'start' => $event_data_tmp->start,
                 'end' => $event_data_tmp->end,
                 'title' => $event_data_tmp->title,
+                'location' => $event->location,
                 'desc' => $event_data_tmp->desc,
                 'allDay' => ($event_data_tmp->all_day == '1' ? true : false),
                 'tag_id' => $event_data_tmp->tag_id,
@@ -359,6 +361,11 @@ class Event
                     $res['success'] = false;
                     $message[] = __('Start time must be before or equal end time.');
                 }
+            }
+
+            if (maxlengthValidator($data['event_location'], 500) == false) {
+                $res['success'] = false;
+                $message[] = __('Event location is too long.');
             }
 
             if (existsInDBValidator($data['event_tag'], 'm_tag', 'id') == false) {
