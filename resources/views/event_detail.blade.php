@@ -129,8 +129,12 @@
                 <td>
                     <span class="d-inline-flex">{{ __('All day') }}</span>
                     <select readonly class="form-control light-color d-inline-flex justify-content-center w-auto">
-                        <option>A</option>
-                        <option>B</option>
+                        <option>Does not repeat</option>
+                        <option>Daily</option>
+                        <option>Weekly on Monday</option>
+                        <option>Monthly on the third Monday</option>
+                        <option>Annually on July 20</option>
+                        <option>Every weekday (Monday to Friday)</option>
                     </select>
                 </td>
             </tr>
@@ -217,7 +221,7 @@
     <div class="col-md-4 col-lg-4">
         <div class="dropdown event-pic">
             <span class="text-primary">{{ __('Person in charge') }}</span>
-            <i class="fas fa-cog float-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+            <i id="btn-assign" class="fas fa-cog float-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
             <div class="dropdown-menu dropdown-menu-right z-pdt z-pdb margin-bottom-15 mgt-10"></div>
         </div>
         <hr class="z-mgt">

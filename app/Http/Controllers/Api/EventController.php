@@ -46,17 +46,29 @@ class EventController extends Controller
     public function getEvent($id, Request $request)
     {
         try {
-            $department = new Department();
-            if ($request->has('pos')) {
-                list ($page, $sort, $search) = $this->getRequestData($request);
-                $data = $department->getDepartmentByPos($request->pos, $sort, $search);
-            } else {
-                $data = $department->getDepartmentById($id);
+
+            if (requiredValidator($id) == false || numericValidator($id) == false) {
+                $res['success'] = false;
+                $message[] = __('Data is wrong');
+                return $res;
             }
+
+            $evModel = new Event();
+            $event = $evModel->getEvent($id);
+            if ($event == null) {
+                $res['success'] = false;
+                $res['message'] = __('Event is not exists.');
+                return $res;
+            }
+
+            return response()->json([
+                'event' => $event,
+                'success' => true,
+                'message' => __("Successfully processed.")
+            ], 200);
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['department' => $data, 'message' => __("Successfully processed.")], 200);
     }
 
     public function getPic(Request $request)
@@ -73,8 +85,22 @@ class EventController extends Controller
     public function updateEvent($id, Request $request)
     {
         try {
-            return response()->json(['departments' => $departments, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed.")], 200);
 
+            $data = $request->all();
+
+            $evModel = new Event();
+            $res = $evModel->updateValidation($id ,$data);
+            if ($res['success'] == false) {
+                return response()->json(['success' => false, 'message' => $res['message']], 200);
+            }
+
+            $map_data = $this->mapData($data);
+            $evModel->updateEvent($id ,$map_data);
+
+            return response()->json([
+                'success' => true,
+                'message' => __("Successfully processed.")
+            ], 200);
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -87,7 +113,7 @@ class EventController extends Controller
             $data = $request->all();
 
             $evModel = new Event();
-            $res = $evModel->validateData($data);
+            $res = $evModel->insertValidation($data);
             if ($res['success'] == false) {
                 return response()->json(['success' => false, 'message' => $res['message']], 200);
             }
@@ -107,10 +133,6 @@ class EventController extends Controller
     public function deleteEvent($id, Request $request)
     {
         try {
-
-            if (requiredValidator($id) == false || numericValidator($id) == false) {
-                return response()->json(['success' => false, 'message' => __('Delete data is wrong.')], 200);
-            }
 
             $evModel = new Event();
             $res = $evModel->deleteValidation($id);
@@ -132,7 +154,6 @@ class EventController extends Controller
 
             $map_data = [];
             $map_data['event'] = [
-                'id' => $data['event_id'],
                 'start' => $data['event_start'],
                 'end' => $data['event_end'],
                 'title' => $data['event_title'],
