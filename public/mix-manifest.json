@@ -1,5 +1,9 @@
 {
     "/js/login.js": "/js/login.js",
     "/js/app.js": "/js/app.js",
-    "/css/app.css": "/css/app.css"
+    "/css/app.css": "/css/app.css",
+    "/css/order_input.css": "/css/order_input.css",
+    "/dist/tageditor/jquery.tag-editor.css": "/dist/tageditor/jquery.tag-editor.css",
+    "/dist/tageditor/jquery.caret.min.js": "/dist/tageditor/jquery.caret.min.js",
+    "/dist/tageditor/jquery.tag-editor.min.js": "/dist/tageditor/jquery.tag-editor.min.js"
 }

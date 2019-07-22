@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Web;
 
 use App\Model\Order;
+use App\Model\OrderDetail;
+use App\Model\ProductStatus;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
 
 class OrderController extends Controller
 {
@@ -14,22 +15,32 @@ class OrderController extends Controller
     {
         try {
             $order = new Order();
-            $orders = $order->getOrders();
-            $paging = $order->getPagingInfo();
-            $paging['page'] = 0;
-            return view('order_output', ['orders' => $orders, 'paging' => $paging]);
+            $orderData = $order->getOrders();
+            $pagingData = $order->getPagingInfo();
+            $pagingData['page'] = 0;
+            return view('order', ['orders' => $orderData, 'paging' => $pagingData]);
         } catch (\Throwable $e) {
             throw $e;
         }
     }
 
-    public function addNew(Request $request, $prc_no)
+    public function detail(Request $request, $ord_id)
     {
+        $order = new Order();
+        $orderData = $order->getOrder($ord_id);
 
-    }
+        if($orderData == null){
+            return response()->view('errors.404', [], 404);
+        }
+        $orderDetail = new OrderDetail();
+        $orderDetailData = $orderDetail->getOrderDetailsByOrdId($ord_id);
 
-    public function detail(Request $request, $prc_no, $ord_no)
-    {
-
+        $productStatus = new ProductStatus();
+        $statusList = $productStatus->getAllStatus();
+        return view('order_input', [
+            'order' => $orderData,
+            'orderDetail' => $orderDetailData,
+            'statusList' => convertDataToDropdownOptions($statusList, 'id', 'title')
+        ]);
     }
 }

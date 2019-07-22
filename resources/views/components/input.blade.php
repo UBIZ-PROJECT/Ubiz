@@ -2,6 +2,10 @@
 
 $html_type = '';
 $html_control_type = '';
+$html_placeholder = '';
+if (isset($placeholder)) {
+    $html_placeholder = $placeholder;
+}
 if (!isset($type)) {
     $type = '';
 }
@@ -20,6 +24,22 @@ if(isset($length)){
 $html_class = "";
 if(isset($class)){
     $html_class = $class;
+}
+$html_value = "";
+if(isset($value)){
+    $html_value = $value;
+}
+$html_i_focus = "i_focus(this)";
+if(isset($i_focus)){
+    $html_i_focus = $i_focus;
+}
+$html_i_blur = "i_blur(this)";
+if(isset($i_blur)){
+    $html_i_blur = $i_blur;
+}
+$html_onchange = "";
+if(isset($onchange)){
+    $html_onchange = $onchange;
 }
 
 switch ($type) {
@@ -40,7 +60,8 @@ switch ($type) {
     <div class="wrapper">
         <label for="{{$control_id}}" class="ms-Label root-56 lbl-primary" style="{{$lbl_style}}">{{$label}}:</label>
         <div class="fieldGroup">
-            <input is-change="false" onfocus="i_focus(this)" onblur="i_blur(this)" spellcheck="false" type="text" {{ $html_max_length }} {{$html_control_type}} id="{{$control_id}}" name="{{$control_id}}" value="" class="input_field {{ $html_class }}">
+            <input is-change="false" onchange="{{ $html_onchange }}" onfocus="{{ $html_i_focus }}" placeholder="{{$html_placeholder}}" onblur="{{ $html_i_blur }}" spellcheck="false" type="text" {{ $html_max_length }} {{$html_control_type}} id="{{$control_id}}" name="{{$control_id}}" value="{{ $html_value }}" class="input_field {{ $html_class }}">
+            <input type="hidden" name="{{$control_id}}_old" value="{{ $html_value }}">
         </div>
     </div>
     <span class="error_message hidden-content">

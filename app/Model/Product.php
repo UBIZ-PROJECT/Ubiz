@@ -7,10 +7,10 @@
  */
 
 namespace App\Model;
-use App\Helper;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Support\Facades\Auth;
 
 class Product implements JWTSubject
 {
@@ -61,7 +61,8 @@ class Product implements JWTSubject
                 SELECT *
                 FROM product 
                 $where_raw
-                LIMIT $rows_per_page OFFSET " . ($page * $rows_per_page)." ) product
+                ORDER BY $field_name $order_by 
+                LIMIT $rows_per_page OFFSET " . ($page * $rows_per_page)."  ) product
             LEFT JOIN product_type product_type ON 
             product.type_id = product_type.prd_type_id
             LEFT JOIN brand brand ON
@@ -69,10 +70,10 @@ class Product implements JWTSubject
             LEFT JOIN product_image product_image ON
             product_image.prd_img_id = (select prd_img_id from product_image as pis where product.prd_id = pis.prd_id and pis.delete_flg = '0' limit 1) 
            
-            ORDER BY $field_name $order_by  ", $params);
+             ", $params);
         foreach ($product as &$item) {
             if (!empty($item->prd_img_id)) {
-                $item->image = Helper::readImage($item->id . '-' . $item->prd_img_id . '.' . $item->extension, "prd");
+                $item->image = readImage($item->id . '-' . $item->prd_img_id . '.' . $item->extension, "prd");
             }
         }
         return $product;
@@ -112,14 +113,14 @@ class Product implements JWTSubject
             $data[0]->prd_unit = $item->prd_unit;
             if (!empty($item->prd_img_id)) {
                 $imageName = $item->prd_id . '-' . $item->prd_img_id . '.' . $item->extension;
-                $images[$index]['src'] = Helper::readImage($imageName, "prd");
+                $images[$index]['src'] = readImage($imageName, "prd");
                 $images[$index]['name'] = $imageName;
                 $data[0]->images = $images;
             }
         }
         if (!empty($data[0]->brd_img)) {
             $brdImageName = $data[0]->brd_id . "." . $data[0]->brd_img;
-            $brdImage['src'] = Helper::readImage($brdImageName, "brd");;
+            $brdImage['src'] = readImage($brdImageName, "brd");;
             $brdImage['name'] = $brdImageName;
             $data[0]->brdImage = $brdImage;
         }
@@ -157,6 +158,7 @@ class Product implements JWTSubject
                     'prd_name'=> $param['name'],
                     'brd_id'=>$param['brd_id'],
                     'prd_model'=>!empty($param['prd_model'])? $param['prd_model'] : null,
+                    'prd_unit'=>!empty($param['prd_unit']) ? $param['prd_unit'] : null,
                     'prd_note'=>!empty($param['prd_note'])? $param['prd_note'] : null,
                     'type_id'=>!empty($param['type_id'])? $param['type_id'] : null,
                     'delete_flg'=>'0',
@@ -169,6 +171,13 @@ class Product implements JWTSubject
             foreach ($param['images'] as $element=>$image) {
                 if ($element === "delete") continue;
                 $this->insertProductImage($id,$image['extension'], $image['temp_name']);
+            }
+            if ($param['series']) {
+                $series = new Series();
+                foreach($param['series'] as $item ) {
+                    $item['prd_id'] = $id;
+                    $series->insertSeries($item);
+                }
             }
 
             DB::commit();
@@ -193,7 +202,7 @@ class Product implements JWTSubject
                 ]
             );
             $rederImageName = $proId . '-' . $id . '.' . $extension;
-            Helper::saveOriginalImage($temp_name, $rederImageName, 'prd');
+            saveOriginalImage($temp_name, $rederImageName, 'prd');
             DB::commit();
         } catch(\Throwable $e) {
             DB::rollback();
@@ -238,6 +247,7 @@ class Product implements JWTSubject
                     'prd_name'=>$param['name'],
                     'brd_id'=>!empty($param['brd_id']) ? $param['brd_id'] : null,
                     'prd_model'=>!empty($param['prd_model']) ? $param['prd_model'] : null,
+                    'prd_unit'=>!empty($param['prd_unit']) ? $param['prd_unit'] : null,
                     'prd_note'=>!empty($param['prd_note']) ? $param['prd_note'] : null,
                     'type_id'=>!empty($param['type_id']) ? $param['type_id'] : null,
                     'upd_date'=>date('Y-m-d H:i:s')
@@ -392,6 +402,44 @@ class Product implements JWTSubject
             'rows_num' => $rows_num,
             'rows_per_page' => $rows_per_page
         ];
+    }
+
+    public function checkProductIsExistsByModel($prd_model)
+    {
+        try {
+            $cnt = DB::table('product')
+                ->where([
+                    ['prd_model', '=', $prd_model],
+                    ['delete_flg', '=', '0'],
+                ])
+                ->count();
+            if($cnt > 0)
+                return true;
+            return false;
+        } catch(\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function getProductSeriesByModel($prd_model)
+    {
+        try {
+            $data = DB::table('product_series')
+                ->join('product', 'product_series.prd_id', '=', 'product.prd_id')
+                ->where([
+                    ['product.prd_model', '=', $prd_model],
+                    ['product_series.serial_keeper', '=', Auth::user()->id],
+                    ['product.delete_flg', '=', '0'],
+                    ['product_series.delete_flg', '=', '0']
+                ])
+                ->select(
+                    'product_series.serial_no'
+                )
+                ->get();
+            return $data;
+        } catch(\Throwable $e) {
+            throw $e;
+        }
     }
 
     public function getPagingInfoDetailProductWithConditionSearch($sort = '', $search = []) {

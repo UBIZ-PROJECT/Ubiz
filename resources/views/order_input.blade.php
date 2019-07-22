@@ -1,30 +1,19 @@
 @extends('layouts.main')
-@section('title',__("Department"))
-@section('headbar-title', __("Department"))
+@section('title',__("Order"))
+@section('headbar-title', __("Order"))
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/headbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/common.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/department.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/order_input.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('dist/tageditor/jquery.tag-editor.css') }}">
 @endsection
 @section('headbar')
-@section('search')
-    @include('departments_search')
-    @section('headbar-icon')
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-            <path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"/>
-            <path fill="none" d="M0 0h24v24H0z"/>
-        </svg>
-    @endsection
-@endsection
-@include('layouts/headbar')
+    @include('layouts/headbar')
 @endsection
 @section('content')
-    <div class="main-content">
+    <div class="main-content order-input">
         <div class="l-content">
-            <div class="zY">
-                <div class="yP" onclick="jQuery.UbizOIWidget.w_go_to_input_page(0, 0)">{{ __("Add new") }}</div>
-            </div>
             <div id="nicescroll-sidebar" class="zX nicescroll">
                 <nav role="navigation">
                     <div class="kL"></div>
@@ -47,7 +36,8 @@
                                         <div class="vD">
                                             <div class="xT">
                                                 <div class="oQ">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                         viewBox="0 0 24 24">
                                                         <path d="M4 14h4v-4H4v4zm0 5h4v-4H4v4zM4 9h4V5H4v4zm5 5h12v-4H9v4zm0 5h12v-4H9v4zM9 5v4h12V5H9z"/>
                                                         <path d="M0 0h24v24H0z" fill="none"/>
                                                     </svg>
@@ -73,233 +63,440 @@
         </div>
         <div class="m-content"></div>
         <div class="r-content">
-            <div class="jAQ" id="o-put" >
+            <div class="jAQ" id="i-put">
+                <input type="hidden" name="ord_id" value="{{ $order->ord_id }}">
+                <input type="hidden" name="qp_id" value="{{ $order->qp_id }}">
                 <div class="bkK">
-                    <div class="aeH">
-                        <div class="aqK">
-                            <div class="aqL">
-                                <div class="GtF">
-                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_f_checkbox_click(this)">
-                                        <div class="ax7 poK utooltip" title="{{ __("Select") }}">
-                                            <div class="asA">
-                                                <div class="asU ckb-f"></div>
-                                            </div>
+                    <div class="rwq">
+                        <div class="row z-mgr z-mgl">
+                            <div class="col-3 text-left pdt-7">
+                                <div class="GNi" onclick="ord_back_to_output()">
+                                    <div class="ax7 poK utooltip" title="{{ __("Back to the list page") }}">
+                                        <div class="asA">
+                                            <div class="arB"></div>
                                         </div>
                                     </div>
-                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_refresh_output_page(this)">
-                                        <div class="ax7 poK utooltip" title="{{ __("Refresh") }}">
-                                            <div class="asA">
-                                                <div class="asF"></div>
-                                            </div>
+                                </div>
+                                <div class="GNi" onclick="ord_save()">
+                                    <div class="ax7 poK utooltip" title="{{ __("Save") }}">
+                                        <div class="asA">
+                                            <div class="arS"></div>
                                         </div>
                                     </div>
-                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_o_delete()">
-                                        <div class="ax7 poK utooltip" title="{{ __("Delete") }}">
-                                            <div class="asA">
-                                                <div class="asX"></div>
-                                            </div>
+                                </div>
+                                <div class="GNi" onclick="ord_refresh()">
+                                    <div class="ax7 poK utooltip" title="{{ __("Refresh") }}">
+                                        <div class="asA">
+                                            <div class="arR"></div>
                                         </div>
                                     </div>
-                                    <div class="GNi">
-                                        <div class="ax7 poK">
-                                            <div class="asA">
-                                                <div class="asY"></div>
-                                            </div>
+                                </div>
+                                <div id="btn-delete" class="GNi" onclick="ord_delete()">
+                                    <div class="ax7 poK utooltip" title="{{ __("Delete") }}">
+                                        <div class="asA">
+                                            <div class="asX"></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="aqJ">
-                                <div class="ar5">
-                                <span class="Di">
-                                    @include('layouts/paging',['paging'=>$paging])
-                                    <div class="amD utooltip" title="{{ __("Setting") }}">
-                                        <span class="amF">&nbsp;</span>
-                                        <img class="amG" src="{{ asset("images/cleardot.gif") }}" alt="">
-                                    </div>
-                                </span>
-                                </div>
+                            <div class="col-6 text-left pdt-5">
+                                @include('components.sale_step', ['sale_step'=>$order->sale_step])
+                            </div>
+                            <div class="col-3 text-right pdt-5">
+                                <input type="hidden" name="sale_step" value="{{ $order->imp_step }}">
+                                @switch($order->imp_step)
+                                    @case('1')
+                                    <button type="button" onclick="ord_order_supplier()" class="btn btn-info btn-sm" title="{{ __("Order supplier.") }}">
+                                        {{ __("Order supplier.") }}
+                                    </button>
+                                    @break
+
+                                    @case('2')
+                                    <button type="button" onclick="ord_reorder_supplier()" class="btn btn-info btn-sm" title="{{ __("Order supplier.") }}">
+                                        {{ __("Ordered supplier.") }}
+                                    </button>
+                                    @break
+                                @endswitch
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="jAQ">
-                    <div class="aqH" role="presentation">
-                        <div class="yTP" role="presentation">
-                            <div class="clG">
-                                <div class="col-1" role="presentation"></div>
-                                <div class="col-2" role="presentation"></div>
+                    <div class="aqI" id="nicescroll-iput">
+                        <div class="row z-pdl z-pdr z-mgr z-mgl">
+                            <div class="col-md-auto">
+                                <div class="row">
+                                    <div class="col-md-auto">
+                                        @include('components.input',['control_id'=>'ord_no', 'value'=> $order->ord_no, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Order No'), 'i_focus'=>'', 'i_blur'=>'', 'onchange'=>"ord_no_change(this)"])
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-auto">
+                                        @include('components.input',['control_id'=>'ord_date', 'value'=> date('Y/m/d', strtotime($order->ord_date)), 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Order Date'), 'class'=>'datepicker', 'i_focus'=>'', 'i_blur'=>'', 'onchange'=>"ord_date_change(this)"])
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-auto">
+                                        @include('components.input',['control_id'=>'sale_name', 'value'=> $order->sale_name, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Sale person'), 'i_focus'=>'', 'i_blur'=>''])
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-auto">
+                                        @include('components.input',['control_id'=>'sale_rank', 'value'=> $order->sale_rank, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Duty'), 'i_focus'=>'', 'i_blur'=>''])
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-auto">
+                                        @include('components.input',['control_id'=>'sale_phone', 'value'=> $order->sale_phone, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Mobile'), 'i_focus'=>'', 'i_blur'=>''])
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-auto">
+                                        @include('components.input',['control_id'=>'sale_email', 'value'=> $order->sale_email, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Email'), 'i_focus'=>'', 'i_blur'=>''])
+                                    </div>
+                                </div>
                             </div>
-                            <div class="hdG">
-                                <div class="dcB col-1" role="presentation">
-                                    <div class="dWB dWT" role="button" sort-name="dep_code" order-by="asc" onclick="jQuery.UbizOIWidget.w_sort(this)">
-                                        <div class="dvJ">
-                                            <div class="tDv">{{ __('Code') }}</div>
-                                            <div class="mhH">
-                                                <div class="acD">
-                                                    <div class="huK">
-                                                        <svg class="faH asc sVGT" x="0px" y="0px" width="18px" height="18px"
-                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
-                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
-                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
-                                                        </svg>
-                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
-                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
-                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
-                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
-                                                        </svg>
-                                                    </div>
-                                                </div>
+                            <div class="col-md-auto">
+                                <div class="row">
+                                    <div class="col-md-auto">
+                                        <div class="row">
+                                            <div class="col-md-auto">
+                                                @include('components.input',['control_id'=>'cus_name', 'value'=> $order->cus_name, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Customer'), 'i_focus'=>'', 'i_blur'=>''])
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-auto">
+                                                @include('components.input',['control_id'=>'cus_type', 'value'=> $order->cus_type, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Type'), 'i_focus'=>'', 'i_blur'=>''])
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-md-auto">
+                                        @include('components.textarea',['value'=>$order->ord_note, 'control_id'=>'ord_note', 'width'=>'300', 'height'=>'70', 'resize'=>'none', 'label'=>__('Note'), 'lable_class'=>'hidden-content'])
+                                    </div>
                                 </div>
-                                <div class="dcB col-2" role="presentation">
-                                    <div class="dWB" role="button" sort-name="dep_name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
-                                        <div class="dvJ">
-                                            <div class="tDv">{{ __('Department Name') }}</div>
-                                            <div class="mhH">
-                                                <div class="acD">
-                                                    <div class="huK">
-                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
-                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
-                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
-                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
-                                                        </svg>
-                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
-                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
-                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
-                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
-                                                        </svg>
-                                                    </div>
-                                                </div>
+                                <div class="row">
+                                    <div class="col-md-auto">
+                                        @include('components.input',['control_id'=>'cus_addr', 'value'=> $order->cus_addr, 'type'=>'disabled', 'width'=> '630', 'lbl_width'=>'90', 'label'=>__('Address'), 'i_focus'=>'', 'i_blur'=>''])
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-auto">
+                                        <div class="row">
+                                            <div class="col-md-auto">
+                                                @include('components.input',['control_id'=>'ord_contact_name', 'value'=> $order->contact_name, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Contact person'), 'i_focus'=>'', 'i_blur'=>''])
+                                            </div>
+                                            <div class="col-md-auto">
+                                                @include('components.input',['control_id'=>'ord_contact_rank', 'value'=> $order->contact_rank, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Duty'), 'i_focus'=>'', 'i_blur'=>''])
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-auto">
+                                                @include('components.input',['control_id'=>'ord_contact_phone', 'value'=> $order->contact_phone, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Mobile'), 'i_focus'=>'', 'i_blur'=>''])
+                                            </div>
+                                            <div class="col-md-auto">
+                                                @include('components.input',['control_id'=>'ord_contact_email', 'value'=> $order->contact_email, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Email'), 'i_focus'=>'', 'i_blur'=>''])
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-auto">
+                                                @include('components.input',['control_id'=>'cus_fax', 'value'=> $order->cus_fax, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Fax'), 'i_focus'=>'', 'i_blur'=>''])
+                                            </div>
+                                            <div class="col-md-auto">
+                                                @include('components.number',['value'=>$order->ord_tax, 'onchange'=>'ord_tax_change(this)', 'control_id'=>'ord_tax', 'min'=>'0', 'max'=>'100', 'suffix'=>'%', 'length'=>'3', 'width'=> '130', 'lbl_width'=>'70', 'label'=>__('Tax'), 'class'=> 'text-right pdr-5'])
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="aqB nicescroll" id="nicescroll-oput">
-                        <div class="yTP">
-                            <div id="table-content" class="jFr">
-                                @foreach($departments as $key => $department)
-                                    <div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{ $key + 1 }}, {{$department->id}})">
-                                        <div class="tcB col-1">
-                                            <div class="cbo">
-                                                <div class="jgQ" onclick="jQuery.UbizOIWidget.w_c_checkbox_click(this)">
-                                                    <input type="checkbox" class="ckb-i" value="{{$department->id}}" style="display: none"/>
-                                                    <div class="asU ckb-c"></div>
+                        <ul class="nav nav-tabs" id="ord-inp-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="dt-prod-tab" data-toggle="tab" href="#dt-prod" role="tab"
+                                   aria-controls="dt-prod" aria-selected="true">{{ __('Pump') }}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="dt-acce-tab" data-toggle="tab" href="#dt-acce" role="tab"
+                                   aria-controls="dt-acce" aria-selected="false">{{ __('Accessories') }}</a>
+                            </li>
+                            <button type="button" onclick="dt_row_add()" class="btn btn-info add-btn"
+                                    title="{{ __("Add new") }}">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </ul>
+                        <div class="tab-content" id="tab-ord-inp-content">
+                            <div class="tab-pane fade show active" id="dt-prod" role="tabpanel" aria-labelledby="dt-prod-tab">
+                                @php $idx = 0; @endphp
+                                @foreach($orderDetail as $item)
+                                    @if($item->type == '1')
+                                        <div class="dt-row" dt_id="{{ $item->ordt_id }}">
+                                            <div class="row dt-row-head zero-mgl zero-mgr" onclick="my_collapse(this)">
+                                                <div class="col text-left">
+                                                    <label class="lbl-primary z-mgb">No.{{ ++$idx }}</label>
                                                 </div>
-                                                <div class="nCT" title="{{$department->dep_code}}">
-                                                    <span>{{$department->dep_code}}</span>
+                                                <div class="col text-right">
+                                                    <i class="fas fa-caret-down"></i>
+                                                </div>
+                                            </div>
+                                            <div class="row dt-row-body zero-mgl zero-mgr collapse hide">
+                                                <div class="col-md-auto">
+                                                    <label class="lbl-primary">{{ __('Specification') }}:</label>
+                                                    <textarea name="dt_prod_specs_mce" id="dt_prod_specs_mce_{{ $idx }}">{{ $item->prod_specs_mce }}</textarea>
+                                                </div>
+                                                <div class="col-md-auto">
+                                                    @include('components.input',['value'=>$item->prod_model, 'control_id'=>'dt_prod_model','width'=> '250', 'lbl_width'=>'70', 'label'=>__('Model'), 'i_focus'=>'', 'i_blur'=>''])
+                                                    <div class="textarea  root_textarea rootIsUnderlined dt_prod_series_container"
+                                                         style="width: 250px">
+                                                        <label for="dt_prod_series" class="ms-Label root-56 lbl-primary ">
+                                                            {{ __('Series') }}
+                                                        </label>
+                                                        <div class="wrapper">
+                                                            <div class="fieldGroup_area">
+                                                            <textarea style="height: 100px;width: 250px; resize: none"
+                                                                      is-change="false" placeholder=""
+                                                                      id="dt_prod_series_{{ $idx }}" name="dt_prod_series"
+                                                                      class="input-textarea ">{{ $item->prod_series }}</textarea>
+                                                                <textarea style="display: none"
+                                                                          name="dt_prod_series_old"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    @include('components.textarea',['value'=>$item->note, 'width'=>'250', 'height'=>'100', 'control_id'=>'dt_note', 'resize'=>'none', 'label'=>__('Note')])
+                                                </div>
+                                                <div class="col-md-auto">
+                                                    @include('components.input',['value'=>$item->unit, 'control_id'=>'dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit'), 'class'=> 'text-right', 'i_focus'=>'', 'i_blur'=>''])
+                                                    @include('components.number',['value'=>number_format($item->quantity), 'onchange'=>'dt_quantity_change(this)', 'control_id'=>'dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity'), 'class'=> 'text-right'])
+                                                    @include('components.textarea',['value'=>$item->delivery_time, 'control_id'=>'dt_delivery_time', 'width'=>'250', 'height'=>'50', 'resize'=>'none', 'class'=> 'margin-bottom-15', 'label'=>__('Delivery time')])
+                                                    @include('components.dropdown',['value'=>$item->status, 'control_id'=>'dt_status', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Status') ,'data'=> $statusList])
+                                                    @include('components.money',['value'=> number_format($item->price), 'onchange'=>'dt_price_change(this)', 'control_id'=>'dt_price', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price'), 'class'=> 'text-right'])
+                                                    @include('components.money',['value'=>number_format($item->amount), 'onchange'=>'dt_amount_change(this)', 'control_id'=>'dt_amount', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Amount'), 'class'=> 'text-right'])
+                                                </div>
+                                                <div class="col-md-auto z-pdr text-center">
+                                                    <i onclick="prod_row_copy(this)"
+                                                       class="material-icons text-primary i-btn"
+                                                       title="{{ __("Copy") }}">
+                                                        copyright
+                                                    </i>
+                                                    <br>
+                                                    <i onclick="prod_row_del(this)"
+                                                       class="material-icons text-danger i-btn"
+                                                       title="{{ __("Delete") }}">
+                                                        delete
+                                                    </i>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tcB col-2">
-                                            <div class="cbo">
-                                                <div class="nCj" title="{{$department->dep_name}}">
-                                                    <span>{{$department->dep_name}}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    @endif
                                 @endforeach
+                                @if($idx == 0)
+                                    <div class="dt-row" dt_id="0">
+                                        <div class="row dt-row-head zero-mgl zero-mgr" onclick="my_collapse(this)">
+                                            <div class="col text-left">
+                                                <label class="lbl-primary z-mgb">No.1</label>
+                                            </div>
+                                            <div class="col text-right">
+                                                <i class="fas fa-caret-down"></i>
+                                            </div>
+                                        </div>
+                                        <div class="row dt-row-body zero-mgl zero-mgr collapse hide">
+                                            <div class="col-md-auto">
+                                                <label class="lbl-primary">{{ __('Specification') }}:</label>
+                                                <textarea name="dt_prod_specs_mce" id="dt_prod_specs_mce_1"></textarea>
+                                            </div>
+                                            <div class="col-md-auto">
+                                                @include('components.input',['value'=>'', 'control_id'=>'dt_prod_model','width'=> '250', 'lbl_width'=>'70', 'label'=>__('Model'), 'i_focus'=>'', 'i_blur'=>''])
+                                                @include('components.textarea',['value'=>'', 'width'=>'250', 'height'=>'100', 'control_id'=>'dt_prod_series', 'resize'=>'none', 'label'=>__('Series')])
+                                                <div class="textarea  root_textarea rootIsUnderlined dt_prod_series_container"
+                                                     style="width: 250px">
+                                                    <label for="dt_prod_series" class="ms-Label root-56 lbl-primary ">
+                                                        {{ __('Series') }}
+                                                    </label>
+                                                    <div class="wrapper">
+                                                        <div class="fieldGroup_area">
+                                                            <textarea style="height: 100px;width: 250px; resize: none"
+                                                                      is-change="false" placeholder=""
+                                                                      id="dt_prod_series" name="dt_prod_series"
+                                                                      class="input-textarea "></textarea>
+                                                            <textarea style="display: none"
+                                                                      name="dt_prod_series_old"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @include('components.textarea',['value'=>'', 'width'=>'250', 'height'=>'100', 'control_id'=>'dt_note', 'resize'=>'none', 'label'=>__('Note')])
+                                            </div>
+                                            <div class="col-md-auto">
+                                                @include('components.input',['value'=>'', 'control_id'=>'dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit'), 'class'=> 'text-right', 'i_focus'=>'', 'i_blur'=>''])
+                                                @include('components.number',['value'=>'', 'onchange'=>'dt_quantity_change(this)', 'control_id'=>'dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity'), 'class'=> 'text-right'])
+                                                @include('components.textarea',['value'=>'', 'control_id'=>'dt_delivery_time', 'width'=>'250', 'height'=>'50', 'resize'=>'none', 'class'=> 'margin-bottom-15', 'label'=>__('Delivery time')])
+                                                @include('components.dropdown',['value'=>'', 'control_id'=>'dt_status', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Status') ,'data'=> $statusList])
+                                                @include('components.money',['value'=> '', 'onchange'=>'dt_price_change(this)', 'control_id'=>'dt_price', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price'), 'class'=> 'text-right'])
+                                                @include('components.money',['value'=>'', 'onchange'=>'dt_amount_change(this)', 'control_id'=>'dt_amount', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Amount'), 'class'=> 'text-right'])
+                                            </div>
+                                            <div class="col-md-auto z-pdr text-center">
+                                                <i onclick="prod_row_copy(this)"
+                                                   class="material-icons text-primary i-btn"
+                                                   title="{{ __("Copy") }}">
+                                                    copyright
+                                                </i>
+                                                <br>
+                                                <i onclick="prod_row_del(this)"
+                                                   class="material-icons text-danger i-btn"
+                                                   title="{{ __("Delete") }}">
+                                                    delete
+                                                </i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="tab-pane fade" id="dt-acce" role="tabpanel" aria-labelledby="dt-acce-tab">
+                                @php $idx = 0; @endphp
+                                @foreach($orderDetail as $item)
+                                    @if($item->type == '2')
+                                        <div class="dt-row" dt_id="{{ $item->ordt_id }}">
+                                            <div class="row dt-row-head zero-mgl zero-mgr" onclick="my_collapse(this)">
+                                                <div class="col text-left">
+                                                    <label class="lbl-primary z-mgb">No.{{ ++$idx }}</label>
+                                                </div>
+                                                <div class="col text-right">
+                                                    <i class="fas fa-caret-down"></i>
+                                                </div>
+                                            </div>
+                                            <div class="row dt-row-body zero-mgl zero-mgr collapse hide">
+                                                <div class="col-md-auto">
+                                                    @include('components.input',['value'=>$item->acce_code, 'control_id'=>'dt_acce_code','width'=> '250', 'lbl_width'=>'70', 'label'=>__('Code'), 'i_focus'=>'', 'i_blur'=>''])
+                                                    @include('components.input',['value'=>$item->acce_name, 'control_id'=>'dt_acce_name','width'=> '250', 'lbl_width'=>'70', 'label'=>__('Name'), 'i_focus'=>'', 'i_blur'=>''])
+                                                    @include('components.textarea',['value'=>$item->note, 'control_id'=>'dt_note', 'width'=>'300', 'height'=>'73', 'resize'=>'none', 'label'=>__('Note'), 'lable_class'=>'hidden-content'])
+                                                </div>
+                                                <div class="col-md-auto">
+                                                    @include('components.input',['value'=>$item->unit, 'control_id'=>'dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit'), 'class'=> 'text-right', 'i_focus'=>'', 'i_blur'=>''])
+                                                    @include('components.number',['value'=>number_format($item->quantity), 'onchange'=>'dt_quantity_change(this)', 'control_id'=>'dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity'), 'class'=> 'text-right'])
+                                                    @include('components.textarea',['value'=>$item->delivery_time, 'control_id'=>'dt_delivery_time', 'width'=>'250', 'height'=>'50', 'resize'=>'none', 'class'=> 'margin-bottom-15', 'label'=>__('Delivery time')])
+                                                </div>
+                                                <div class="col-md-auto">
+                                                    @include('components.dropdown',['value'=>$item->status, 'control_id'=>'dt_status', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Status') ,'data'=> $statusList])
+                                                    @include('components.money',['value'=> number_format($item->price), 'onchange'=>'dt_price_change(this)', 'control_id'=>'dt_price', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price'), 'class'=> 'text-right'])
+                                                    @include('components.money',['value'=>number_format($item->amount), 'onchange'=>'dt_amount_change(this)', 'control_id'=>'dt_amount', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Amount'), 'class'=> 'text-right'])
+                                                </div>
+                                                <div class="col-md-auto z-pdr text-center">
+                                                    <i onclick="acce_row_copy(this)"
+                                                       class="material-icons text-primary i-btn"
+                                                       title="{{ __("Copy") }}">
+                                                        copyright
+                                                    </i>
+                                                    <br>
+                                                    <i onclick="acce_row_del(this)"
+                                                       class="material-icons text-danger i-btn"
+                                                       title="{{ __("Delete") }}">
+                                                        delete
+                                                    </i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endforeach
+                                @if($idx == 0)
+                                    <div class="dt-row" dt_id="0">
+                                        <div class="row dt-row-head zero-mgl zero-mgr" onclick="my_collapse(this)">
+                                            <div class="col text-left">
+                                                <label class="lbl-primary z-mgb">No.1</label>
+                                            </div>
+                                            <div class="col text-right">
+                                                <i class="fas fa-caret-down"></i>
+                                            </div>
+                                        </div>
+                                        <div class="row dt-row-body zero-mgl zero-mgr collapse hide">
+                                            <div class="col-md-auto">
+                                                @include('components.input',['value'=>'', 'control_id'=>'dt_acce_code','width'=> '250', 'lbl_width'=>'70', 'label'=>__('Code'), 'i_focus'=>'', 'i_blur'=>''])
+                                                @include('components.input',['value'=>'', 'control_id'=>'dt_acce_name','width'=> '250', 'lbl_width'=>'70', 'label'=>__('Name'), 'i_focus'=>'', 'i_blur'=>''])
+                                                @include('components.textarea',['value'=>'', 'control_id'=>'dt_note', 'width'=>'300', 'height'=>'73', 'resize'=>'none', 'label'=>__('Note'), 'lable_class'=>'hidden-content'])
+                                            </div>
+                                            <div class="col-md-auto">
+                                                @include('components.input',['value'=>'', 'control_id'=>'dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit'), 'class'=> 'text-right', 'i_focus'=>'', 'i_blur'=>''])
+                                                @include('components.number',['value'=>'', 'onchange'=>'dt_quantity_change(this)', 'control_id'=>'dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity'), 'class'=> 'text-right'])
+                                                @include('components.textarea',['value'=>'', 'control_id'=>'dt_delivery_time', 'width'=>'250', 'height'=>'50', 'resize'=>'none', 'class'=> 'margin-bottom-15', 'label'=>__('Delivery time')])
+                                            </div>
+                                            <div class="col-md-auto">
+                                                @include('components.dropdown',['value'=>'', 'control_id'=>'dt_status', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Status') ,'data'=> $statusList])
+                                                @include('components.money',['value'=> '', 'onchange'=>'dt_price_change(this)', 'control_id'=>'dt_price', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price'), 'class'=> 'text-right'])
+                                                @include('components.money',['value'=>'', 'onchange'=>'dt_amount_change(this)', 'control_id'=>'dt_amount', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Amount'), 'class'=> 'text-right'])
+                                            </div>
+                                            <div class="col-md-auto z-pdr text-center">
+                                                <i onclick="acce_row_copy(this)"
+                                                   class="material-icons text-primary i-btn"
+                                                   title="{{ __("Copy") }}">
+                                                    copyright
+                                                </i>
+                                                <br>
+                                                <i onclick="acce_row_del(this)"
+                                                   class="material-icons text-danger i-btn"
+                                                   title="{{ __("Delete") }}">
+                                                    delete
+                                                </i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="jAQ" id="i-put" style="display: none">
-                <div class="bkK">
-                    <div class="aeH">
-                        <div class="aqK">
-                            <div class="aqL">
-                                <div class="GtF">
-                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_go_back_to_output_page()">
-                                        <div class="ax7 poK utooltip" title="{{ __("Back to the list page") }}">
-                                            <div class="asA">
-                                                <div class="arB"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_save()">
-                                        <div class="ax7 poK utooltip" title="{{ __("Save") }}">
-                                            <div class="asA">
-                                                <div class="arS"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_refresh()">
-                                        <div class="ax7 poK utooltip" title="{{ __("Refresh") }}">
-                                            <div class="asA">
-                                                <div class="arR"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="btn-delete" class="GNi" onclick="jQuery.UbizOIWidget.w_i_delete()">
-                                        <div class="ax7 poK utooltip" title="{{ __("Delete") }}">
-                                            <div class="asA">
-                                                <div class="asX"></div>
-                                            </div>
-                                        </div>
-                                    </div>
+                        <hr>
+                        <div class="total-info margin-bottom-30">
+                            <div class="row z-pdl z-pdr z-mgr z-mgl">
+                                <div class="col-4 text-left z-pdl z-pdr">
+                                    <label style="width: 70px">{{ __('Input Date') }}</label><label>: {{ date("Y/m/d H:i:s", strtotime($order->inp_date)) }}</label>
+                                    <br>
+                                    <label style="width: 70px">{{ __('Update Date') }}</label><label>: {{ date("Y/m/d H:i:s", strtotime($order->upd_date)) }}</label>
                                 </div>
-                            </div>
-                            <div class="aqJ">
-                                <div class="ar5">
-                                <span class="Di">
-                                    <div id="i-paging-label"></div>
-                                    <div id="i-paging-older"></div>
-                                    <div id="i-paging-newer"></div>
-                                    <div class="amD utooltip" title="{{ __("Setting") }}">
-                                        <span class="amF">&nbsp;</span>
-                                        <img class="amG" src="{{ asset("images/cleardot.gif") }}" alt="">
+                                <div class="col-8 text-right">
+                                    <div class="row justify-content-end z-pdl z-pdr z-mgr z-mgl">
+                                        <div class="col-md-auto text-right z-mgr z-mgl pdt-5">
+                                            <span>{{ __('Total value of orders (before VAT)') }}</span>
+                                        </div>
+                                        <div class="col-md-auto z-pdr z-pdl" style="width: 150px">
+                                            <input type="text" name="ord_amount" readonly class="w-100 text-right"
+                                                   value="{{ number_format($order->ord_amount) }}">
+                                            <input type="hidden" value="{{ number_format($order->ord_amount) }}"
+                                                   name="ord_amount_old">
+                                        </div>
+                                        <div class="col-md-auto z-mgr z-mgl">
+                                            <span>VND</span>
+                                        </div>
                                     </div>
-                                </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="jAQ">
-                    <div class="aqI nicescroll" id="nicescroll-iput">
-                        <input type="hidden" id="txt_id" value="0">
-                        <div class="row z-mgl z-mgr">
-                            <div class="col-sm-12 col-md-12 col-xl-12 z-pdl z-pdr">
-                                @include('components.input',['control_id'=>'txt_dep_code', 'width'=>'150', 'label'=>__('Code')])
-                                @include('components.input',['control_id'=>'txt_dep_name', 'label'=>__('Department Name')])
-                            </div>
-                        </div>
-                        <div class="row z-mgl z-mgr">
-                            <div class="col-sm-12 col-md-12 col-xl-12 z-pdl z-pdr">
-                                <div class="utb">
-                                    <div class="tuv">
-                                        <ul>
-                                                <li><div class="active" onclick="jQuery.UbizOIWidget.w_tab_click(1, this)">{{ __('Employee') }}</div>
-                                                </li>
-                                                <li>
-                                                    <div onclick="jQuery.UbizOIWidget.w_tab_click(2, this)">
-                                                        {{ __('Customer') }}
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div onclick="jQuery.UbizOIWidget.w_tab_click(3, this)">
-                                                        {{ __('Supplier') }}
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div onclick="jQuery.UbizOIWidget.w_tab_click(4, this)">
-                                                        {{ __('Currency') }}
-                                                    </div>
-                                                </li>
-                                        </ul>
+                                    <div class="row justify-content-end z-pdl z-pdr z-mgr z-mgl">
+                                        <div class="col-md-auto text-right z-mgr z-mgl pdt-5">
+                                            <span>{{ __('Total value of orders (VAT included)') }}</span>
+                                        </div>
+                                        <div class="col-md-auto z-pdr z-pdl" style="width: 150px">
+                                            <input type="text" name="ord_amount_tax" readonly class="w-100 text-right"
+                                                   value="{{ number_format($order->ord_amount_tax) }}">
+                                            <input type="hidden" value="{{ number_format($order->ord_amount_tax) }}" name="ord_amount_tax_old">
+                                        </div>
+                                        <div class="col-md-auto z-mgr z-mgl">
+                                            <span>VND</span>
+                                        </div>
                                     </div>
-                                    <div class="rhb">
-                                        <div id="tab-1" class="active">tab-1</div>
-                                        <div id="tab-2">tab-2</div>
-                                        <div id="tab-3">tab-3</div>
-                                        <div id="tab-4">tab-4</div>
+                                    <div class="row justify-content-end z-pdl z-pdr z-mgr z-mgl">
+                                        <div class="col-md-auto text-right z-mgr z-mgl pdt-5">
+                                            <span>{{ __('Paid') }}</span>
+                                        </div>
+                                        <div class="col-md-auto z-pdr z-pdl" style="width: 150px">
+                                            <input onchange="ord_paid_change(this)" onfocus="num_focus(this)" onblur="num_blur(this)" onkeydown="num_keydown(event)" spellcheck="false" type="text" maxlength="19" name="ord_paid" value="{{ number_format($order->ord_paid) }}" class="w-100 text-right">
+                                            <input type="hidden" value="{{ number_format($order->ord_paid) }}" name="ord_paid_old">
+                                        </div>
+                                        <div class="col-md-auto z-mgr z-mgl">
+                                            <span>VND</span>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-end z-pdl z-pdr z-mgr z-mgl">
+                                        <div class="col-md-auto text-right z-mgr z-mgl pdt-5">
+                                            <span>{{ __('Debt') }}</span>
+                                        </div>
+                                        <div class="col-md-auto z-pdr z-pdl" style="width: 150px">
+                                            <input type="text" name="ord_debt" readonly class="w-100 text-right" value="{{ number_format($order->ord_debt) }}">
+                                            <input type="hidden" value="{{ number_format($order->ord_debt) }}" name="ord_debt_old">
+                                        </div>
+                                        <div class="col-md-auto z-mgr z-mgl">
+                                            <span>VND</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -311,8 +508,7 @@
     </div>
 @endsection
 @section('end-javascript')
-    <script type="text/javascript" src="{{ asset('js/department.js') }}"></script>
-    <script type="text/javascript">
-        jQuery.UbizOIWidget.rows_num = {{ intval($paging['rows_num']) }};
-    </script>
+    <script type="text/javascript" src="{{ asset('dist/tageditor/jquery.tag-editor.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('dist/tageditor/jquery.caret.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/order_input.js') }}"></script>
 @endsection

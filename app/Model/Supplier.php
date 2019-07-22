@@ -11,7 +11,6 @@ namespace App\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-use App\Helper;
 
 class Supplier implements JWTSubject
 {
@@ -140,12 +139,13 @@ class Supplier implements JWTSubject
             if (!empty($param['addresses'])) {
                 $addresses = $param['addresses'];
                 foreach ($addresses as $address) {
-                    if (empty($addressd)) continue;
-                    $this->insertSupplierAddress($id, $address);
+                    if (empty($address)) continue;
+                    $this->insertSupplierAddress($address,$id);
                 }
             }
-
-            Helper::resizeImage($param['tmp_name'], $sup_ava, 200,200, 'sup');
+            if (!empty($param['tmp_name'])) {
+                resizeImage($param['tmp_name'], $sup_ava, 200,200, 'sup');
+            }
             DB::commit();
         } catch(\Throwable $e) {
             DB::rollback();
@@ -213,7 +213,7 @@ class Supplier implements JWTSubject
             if (!empty($supplier['extension'])) {
                 $sup_ava = explode(".",$supplier['sup_avatar']);
                 $sup_ava = $sup_ava[0] . ".".$supplier['extension'];
-                Helper::resizeImage($supplier['tmp_name'], $sup_ava, 200,200, 'sup');
+                resizeImage($supplier['tmp_name'], $sup_ava, 200,200, 'sup');
             }
             DB::table('suppliers')->where('sup_id','=',$supplier['sup_id'])
                 ->update([

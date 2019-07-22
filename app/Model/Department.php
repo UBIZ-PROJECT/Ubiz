@@ -17,12 +17,11 @@ class Department
                 ->where('delete_flg', '=', '0')
                 ->orderBy('id', 'asc')
                 ->get();
+            return $department;
         } catch (\Throwable $e) {
             DB::rollback();
             throw $e;
         }
-
-        return $department;
     }
 
     public function deleteDepartments($ids = '')
@@ -66,7 +65,7 @@ class Department
         }
     }
 
-    public function getDepartments($page = 0, $sort = '', $search = [])
+    public function getDepartments($page = 0, $sort = '', $search = '')
     {
         try {
 
@@ -81,10 +80,10 @@ class Department
                 ->offset($page * $rows_per_page)
                 ->limit($rows_per_page)
                 ->get();
+            return $departments;
         } catch (\Throwable $e) {
             throw $e;
         }
-        return $departments;
     }
 
     public function getDepartmentById($id = '')
@@ -95,16 +94,13 @@ class Department
                 ->select('*')
                 ->where([['delete_flg', '=', '0'], ['id', '=', $id]])
                 ->first();
-            if ($department != null) {
-                $department->permission = $this->getPermissions($id);
-            }
+            return $department;
         } catch (\Throwable $e) {
             throw $e;
         }
-        return $department;
     }
 
-    public function getDepartmentByPos($pos = 0, $sort = '', $search = [])
+    public function getDepartmentByPos($pos = 0, $sort = '', $search = '')
     {
         try {
 
@@ -118,13 +114,10 @@ class Department
                 ->offset($pos - 1)
                 ->limit(1)
                 ->first();
-            if ($department != null) {
-                $department->permission = $this->getPermissions($department->id);
-            }
+            return $department;
         } catch (\Throwable $e) {
             throw $e;
         }
-        return $department;
     }
 
     public function countAllDepartments()
@@ -133,26 +126,26 @@ class Department
             $count = DB::table('m_department')
                 ->where('delete_flg', '=', '0')
                 ->count();
+            return $count;
         } catch (\Throwable $e) {
             throw $e;
         }
-        return $count;
     }
 
-    public function countDepartments($search = [])
+    public function countDepartments($search = '')
     {
         try {
             list($where_raw, $params) = $this->makeWhereRaw($search);
             $count = DB::table('m_department')
                 ->whereRaw($where_raw, $params)
                 ->count();
+            return $count;
         } catch (\Throwable $e) {
             throw $e;
         }
-        return $count;
     }
 
-    public function getPagingInfo($search = [])
+    public function getPagingInfo($search = '')
     {
         try {
             $rows_per_page = env('ROWS_PER_PAGE', 10);
@@ -167,43 +160,19 @@ class Department
         ];
     }
 
-    public function makeWhereRaw($search = [])
+    public function makeWhereRaw($search = '')
     {
         $params = ['0'];
         $where_raw = 'm_department.delete_flg = ?';
-        if (sizeof($search) > 0) {
-            if (isset($search['contain']) || isset($search['notcontain'])) {
-                if (isset($search['contain'])) {
-                    $search_val = "%" . $search['contain'] . "%";
-                    $where_raw .= " AND (";
-                    $where_raw .= "dep_code like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR dep_name like ?";
-                    $where_raw .= " ) ";
-                }
-                if (isset($search['notcontain'])) {
-                    $search_val = "%" . $search['notcontain'] . "%";
-                    $where_raw .= " AND dep_code like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " AND dep_name not like ?";
-                    $params[] = $search_val;
-                }
+        if ($search != '') {
+            $search_val = "%" . $search . "%";
+            $where_raw .= " AND ( ";
+            $where_raw .= " m_department.dep_code like ? ";
+            $params[] = $search_val;
+            $where_raw .= " OR m_department.dep_name like ? ";
+            $params[] = $search_val;
+            $where_raw .= " ) ";
 
-            } else {
-
-                $where_raw_tmp = [];
-                if (isset($search['dep_code'])) {
-                    $where_raw_tmp[] = "dep_code = ?";
-                    $params[] = $search['dep_code'];
-                }
-                if (isset($search['dep_name'])) {
-                    $where_raw_tmp[] = "dep_name = ?";
-                    $params[] = $search['dep_name'];
-                }
-                if (sizeof($where_raw_tmp) > 0) {
-                    $where_raw .= " AND ( " . implode(" OR ", $where_raw_tmp) . " )";
-                }
-            }
         }
         return [$where_raw, $params];
     }

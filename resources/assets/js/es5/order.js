@@ -2,51 +2,27 @@
     UbizOIWidget = function () {
         this.page = 0;
         this.sort = {};
-        this.pos = 0;
-        this.rows_num = 0;
+        this.sort_default = {};
         this.o_page = null;
+        this.sidebar_scrollbars = null;
+        this.output_scrollbars = null;
     };
-
     jQuery.UbizOIWidget = new UbizOIWidget();
     jQuery.extend(UbizOIWidget.prototype, {
         w_init: function () {
             jQuery.UbizOIWidget.o_page = jQuery("#o-put");
-            jQuery.UbizOIWidget.i_page = jQuery("#i-put");
-            jQuery('#nicescroll-sidebar').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-sidebar',
-                autohidemode: false,
-                horizrailenabled: false
-            });
-            jQuery('#nicescroll-oput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-oput',
-                autohidemode: false,
-                horizrailenabled: false
-            });
+            jQuery.UbizOIWidget.sidebar_scrollbars = fnc_set_scrollbars("nicescroll-sidebar");
+            jQuery.UbizOIWidget.output_scrollbars = fnc_set_scrollbars("nicescroll-oput");
             jQuery('.utooltip').tooltipster({
                 side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
             });
+            jQuery.UbizOIWidget.sort_default = jQuery.UbizOIWidget.w_get_sort_info();
         },
         w_sort: function (self) {
-
-            var params = {};
-            params.page = jQuery.UbizOIWidget.page;
-
-            var fuzzy = jQuery('#fuzzy').val();
-            Object.assign(params, {'search': fuzzy});
-
             var sort_name = jQuery(self).attr('sort-name');
             var order_by = jQuery(self).attr('order-by') == '' ? 'asc' : (jQuery(self).attr('order-by') == 'asc' ? 'desc' : 'asc');
-            params.sort = sort_name + "_" + order_by;
+            var sort = sort_name + "_" + order_by;
+            var search = jQuery('#fuzzy').val();
 
             jQuery.UbizOIWidget.o_page.find('div.dWT').removeClass('dWT');
             jQuery(self).attr('order-by', order_by);
@@ -54,17 +30,34 @@
             jQuery(self).find('svg').removeClass('sVGT');
             jQuery(self).find('svg.' + order_by).addClass('sVGT');
 
-            ubizapis('v1', '/orders', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/orders', 'get', null, {
+                'search': search,
+                'page': jQuery.UbizOIWidget.page,
+                'sort': sort
+            }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
-        w_o_delete: function () {
-            var ids = jQuery.UbizOIWidget.w_get_checked_rows();
+        w_sort_reset: function () {
+
+            var sort_name = jQuery.UbizOIWidget.sort_default.sort_name;
+            var order_by = jQuery.UbizOIWidget.sort_default.order_by;
+            var sort_default_obj = jQuery.UbizOIWidget.o_page.find('div.dcB').find('div[sort-name=' + sort_name + ']');
+
+            jQuery.UbizOIWidget.o_page.find('div.dcB').find('div.dWT').removeClass('dWT');
+            jQuery.UbizOIWidget.o_page.find('div.dcB').find('svg.sVGT').removeClass('sVGT');
+            sort_default_obj.attr('order-by', order_by);
+            sort_default_obj.addClass('dWT');
+            sort_default_obj.find('svg.' + order_by).addClass('sVGT');
+        },
+        w_delete: function (ids) {
+            if (ids == 0) {
+                var ids = jQuery.UbizOIWidget.w_get_checked_rows();
+            }
             if (ids.length == 0)
                 return false;
 
             swal({
                 title: i18next.t('Do you want to delete the data?'),
-                text: i18next.t('Once deleted, you will not be able to recover this data!'),
-                type: 'warning',
+                type: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
@@ -73,24 +66,38 @@
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
-                    ubizapis('v1', '/orders/' + ids.join(',') + '/delete', 'delete', null, null, jQuery.UbizOIWidget.w_o_delete_callback);
+                    var uri = '/orders/' + ids.join(',') + '/delete';
+                    ubizapis('v1', uri, 'delete', null, null, jQuery.UbizOIWidget.w_delete_callback);
                 }
-            })
+            });
         },
-        w_clear_search_form: function () {
-            jQuery('#fuzzy').val("");
-            jQuery.UbizOIWidget.w_refresh_output_page();
+        w_delete_callback: function (response) {
+            if (response.data.success == true) {
+                swal.fire({
+                    type: 'success',
+                    title: response.data.message,
+                    onClose: () => {
+                        jQuery.UbizOIWidget.w_fuzzy_search();
+                    }
+                })
+            } else {
+                swal.fire({
+                    type: 'error',
+                    title: response.data.message
+                })
+            }
         },
         w_fuzzy_search: function () {
-            var params = {};
-            params.page = '0';
+
             jQuery.UbizOIWidget.page = '0';
 
-            var fuzzy = jQuery('#fuzzy').val();
-            Object.assign(params, {'search': fuzzy});
-
+            var search = jQuery('#fuzzy').val();
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
+
+            var params = {};
+            params.page = '0';
+            params.search = search;
             params.sort = sort;
 
             ubizapis('v1', '/orders', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
@@ -101,16 +108,10 @@
                 jQuery.UbizOIWidget.w_fuzzy_search();
             }
         },
-        w_go_to_input_page: function (pos, id) {
-
-        },
         w_refresh_output_page: function () {
-            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-            var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/orders', 'get', null, {
-                'page': jQuery.UbizOIWidget.page,
-                'sort': sort
-            }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            jQuery('#fuzzy').val('');
+            jQuery.UbizOIWidget.w_sort_reset();
+            jQuery.UbizOIWidget.w_fuzzy_search();
         },
         w_get_sort_info: function () {
             var sort_obj = jQuery.UbizOIWidget.o_page.find('div.dWT');
@@ -123,9 +124,11 @@
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             jQuery.UbizOIWidget.sort = sort_info;
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
+            var search = jQuery('#fuzzy').val();
             ubizapis('v1', '/orders', 'get', null, {
                 'page': page,
-                'sort': sort
+                'sort': sort,
+                'search': search
             }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_newer_data: function (page) {
@@ -133,39 +136,29 @@
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             jQuery.UbizOIWidget.sort = sort_info;
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
+            var search = jQuery('#fuzzy').val();
             ubizapis('v1', '/orders', 'get', null, {
                 'page': page,
-                'sort': sort
+                'sort': sort,
+                'search': search
             }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
-        },
-        w_o_delete_callback: function (response) {
-            if (response.data.success == true) {
-                jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
-                swal({
-                    type: 'success',
-                    text: response.data.message
-                });
-            } else {
-                swal({
-                    type: 'error',
-                    text: response.data.message
-                });
-            }
         },
         w_render_data_to_ouput_page: function (response) {
             var table_html = "";
             var orders = response.data.orders;
-            var paging = response.data.paging;
             if (orders.length > 0) {
                 var rows = [];
                 for (let i = 0; i < orders.length; i++) {
                     var cols = [];
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].id, orders[i].ord_no, 1));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].id, orders[i].ord_date, 2));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].id, orders[i].ord_total_money, 3));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].id, orders[i].ord_paid_money, 4));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].id, orders[i].ord_owed_money, 5));
-                    rows.push(jQuery.UbizOIWidget.w_make_row_html(orders[i].id, cols, i, paging.page, paging.rows_per_page));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, orders[i].ord_no, 1));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, moment(orders[i].ord_date).format('YYYY/MM/DD'), 2));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, orders[i].sale_name, 3));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, orders[i].cus_name, 4));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, numeral(orders[i].ord_amount_tax).format('0,0'), 5));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, numeral(orders[i].ord_paid).format('0,0'), 6));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, numeral(orders[i].ord_debt).format('0,0'), 7));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, jQuery.UbizOIWidget.w_render_sale_step(orders[i].sale_step), 8));
+                    rows.push(jQuery.UbizOIWidget.w_make_row_html(orders[i].ord_id, cols));
                 }
                 table_html += rows.join("");
             }
@@ -173,15 +166,33 @@
             jQuery.UbizOIWidget.o_page.find("#table-content").append(table_html);
             jQuery.UbizOIWidget.w_reset_f_checkbox_status();
             jQuery.UbizOIWidget.page = response.data.paging.page;
-            jQuery.UbizOIWidget.w_o_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
-            jQuery.UbizOIWidget.rows_num = response.data.paging.rows_num;
-
+            jQuery.UbizOIWidget.w_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
         },
-        w_make_row_html: function (id, cols, row_no, page_no, rows_per_page) {
+        w_render_sale_step: function (sale_step) {
+            var sale_step_name = "";
+            switch (sale_step) {
+                case '1':
+                    sale_step_name = i18next.t('QP');
+                    break;
+                case '1':
+                    sale_step_name = i18next.t('Order');
+                    break;
+                case '1':
+                    sale_step_name = i18next.t('Contract');
+                    break;
+                case '1':
+                    sale_step_name = i18next.t('Delivery');
+                    break;
+            }
+            return '<span className="badge badge-success">' + sale_step_name + '</span>';
+        },
+        w_go_to_input_page: function (id) {
+            window.location.href = '/orders/' + id;
+        },
+        w_make_row_html: function (id, cols) {
             var row_html = '';
             if (cols.length > 0) {
-                var pos = rows_per_page * page_no + row_no + 1;
-                row_html = '<div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page(' + pos + ',' + id + ')">';
+                row_html = '<div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page(' + id + ')">';
                 row_html += cols.join("");
                 row_html += '</div>';
             }
@@ -265,12 +276,11 @@
             });
             return ids;
         },
-        w_o_paging: function (page, rows_num, rows_per_page) {
+        w_paging: function (page, rows_num, rows_per_page) {
             var page = parseInt(page);
             var f_num = (page * rows_per_page) + 1;
             var m_num = (page + 1) * rows_per_page;
             if (m_num > rows_num) m_num = rows_num;
-            if (f_num > rows_num) f_num = rows_num;
 
             var older_page = page - 1;
             var newer_page = page + 1;
@@ -293,12 +303,24 @@
             }
 
             var paging_label = '<div id="paging-label" class="amH" style="user-select: none"><span class="Dj"><span><span class="ts">' + f_num + '</span>–<span class="ts">' + m_num + '</span></span> / <span class="ts">' + rows_num + '</span></span></div>';
-            var paging_older = '<div id="paging-older" ' + get_older_data_func + ' class="amD utooltip" title="' + i18next.t('Older') + '"><span class="amF">&nbsp;</span><img class="amI ' + older_css + '" src="http://ubiz.local/images/cleardot.gif" alt=""></div>';
-            var paging_newer = '<div id="paging-newer" ' + get_newer_data_func + ' class="amD utooltip" title="' + i18next.t('Newer') + '"><span class="amF">&nbsp;</span><img class="amJ ' + newer_css + '" src="http://ubiz.local/images/cleardot.gif" alt=""></div>';
+            var paging_older = '<div id="paging-older" ' + get_older_data_func + ' class="amD utooltip" title="Cũ hơn"><span class="amF">&nbsp;</span><img class="amI ' + older_css + '" src="./images/cleardot.gif" alt=""></div>';
+            var paging_newer = '<div id="paging-newer" ' + get_newer_data_func + ' class="amD utooltip" title="Mới hơn"><span class="amF">&nbsp;</span><img class="amJ ' + newer_css + '" src="./images/cleardot.gif" alt=""></div>';
 
             jQuery("#paging-label").replaceWith(paging_label);
             jQuery("#paging-older").replaceWith(paging_older);
             jQuery("#paging-newer").replaceWith(paging_newer);
+            jQuery('input[name="pageno"]').val(page);
+        },
+        w_sleep_scrollbars: function (instance) {
+            if (typeof instance == "undefined")
+                return false;
+            instance.sleep();
+        },
+        w_update_scrollbars: function (instance) {
+
+            if (typeof instance == "undefined")
+                return false;
+            instance.update();
         }
     });
 })(jQuery);

@@ -1,0 +1,87 @@
+/* Material Design Icon*/
+/* Rules for sizing the icon. */
+.material-icons.md-18 {
+  font-size: 18px;
+}
+
+.material-icons.md-24 {
+  font-size: 24px;
+}
+
+.material-icons.md-36 {
+  font-size: 36px;
+}
+
+.material-icons.md-48 {
+  font-size: 48px;
+}
+
+/* Rules for using icons as black on a light background. */
+.material-icons.md-dark {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.material-icons.md-dark.md-inactive {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+/* Rules for using icons as white on a dark background. */
+.material-icons.md-light {
+  color: white;
+}
+
+.material-icons.md-light.md-inactive {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.quoteprice-input .dt-row {
+  padding: 0px 15px;
+  padding-left: 0px;
+  margin-top: 5px;
+}
+
+.quoteprice-input .dt-row .row {
+  background-color: #e8f0fe;
+}
+
+.quoteprice-input .dt-row .dt-row-head {
+  padding: 3px 0px;
+}
+
+.quoteprice-input .dt-row .dt-row-body {
+  padding: 5px 0px;
+  border-top: 1px solid #a6a6a6;
+}
+
+.quoteprice-input .dt-row .root-56 {
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  height: 22px;
+}
+
+.quoteprice-input .dt-row .fieldGroup {
+  height: 22px !important;
+}
+
+.quoteprice-input .dt-row .tox-tbtn {
+  height: 25px;
+}
+
+.quoteprice-input .dt-row i {
+  cursor: pointer;
+}
+
+.quoteprice-input .total-info input {
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-bottom: 1px solid #a6a6a6;
+  background: none;
+  color: black !important;
+}
+
+.quoteprice-input .add-btn {
+  position: fixed;
+  right: 15px;
+  z-index: 999;
+}

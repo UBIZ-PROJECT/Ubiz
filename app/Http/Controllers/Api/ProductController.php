@@ -59,6 +59,9 @@ class ProductController extends Controller
             if ($request->has("product")) {
                 list($page, $sort, $search) = $this->getPageSortSearch($request);
                 $params = json_decode($request->input('product'), true);
+                if ($request->has("series")) {
+                    $params['series'] = json_decode($request->input("series"), true);
+                }
                 if (!empty($request->file('image-upload'))) {
                     foreach ($request->file('image-upload') as $index=>$imageUpload) {
                         $params['images'][$index]['extension'] = $imageUpload->getClientOriginalExtension();

@@ -16,12 +16,19 @@ class PermissionController extends Controller
 
             $data = $request->json()->all();
 
-            $permission = new Permission();
-            $permission->setPermissions($data);
+            $pmModel = new Permission();
+            $res = $pmModel->setPermissions($data);
+            if ($res['usr_id'] == '0') {
+                $opt = 'dep';
+                $pmData = $pmModel->getDepPermissions($res['dep_id'], $res['scr_id']);
+            } else {
+                $opt = 'usr';
+                $pmData = $pmModel->getUsrPermissions($res['dep_id'], $res['scr_id'], $res['usr_id']);
+            }
+            return response()->json(['permissions' => $pmData, 'opt' => $opt, 'success' => true, 'message' => __('Successfully processed.')], 200);
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['permissions' => $permissions, 'success' => true, 'message' => ''], 200);
     }
 
     public function getDepPermissions($dep_id, $scr_id, Request $request)
@@ -32,12 +39,12 @@ class PermissionController extends Controller
                 return response()->json(['success' => false, 'message' => __('Please choose department and screen.')], 200);
             }
 
-            $permission = new Permission();
-            $permissions = $permission->getDepPermissions($dep_id, $scr_id);
+            $pmModel = new Permission();
+            $pmData = $pmModel->getDepPermissions($dep_id, $scr_id);
+            return response()->json(['permissions' => $pmData, 'success' => true, 'message' => __('Successfully processed.')], 200);
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['permissions' => $permissions, 'success' => true, 'message' => ''], 200);
     }
 
     public function getUsrPermissions($dep_id, $scr_id, $usr_id, Request $request)
@@ -48,11 +55,11 @@ class PermissionController extends Controller
                 return response()->json(['success' => false, 'message' => __('Please choose user and screen.')], 200);
             }
 
-            $permission = new Permission();
-            $permissions = $permission->getUsrPermissions($dep_id, $scr_id, $usr_id);
+            $pmModel = new Permission();
+            $pmData = $pmModel->getUsrPermissions($dep_id, $scr_id, $usr_id);
+            return response()->json(['permissions' => $pmData, 'success' => true, 'message' => __('Successfully processed.')], 200);
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['permissions' => $permissions, 'success' => true, 'message' => ''], 200);
     }
 }

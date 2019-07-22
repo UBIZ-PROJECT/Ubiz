@@ -18,7 +18,7 @@ class CompanyController extends Controller
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['company' => $data, 'success' => true, 'message' => ''], 200);
+        return response()->json(['company' => $data, 'success' => true, 'message' => __('Successfully processed.')], 200);
     }
 
     public function getCompany(Request $request)
@@ -33,7 +33,7 @@ class CompanyController extends Controller
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['company' => $currencies, 'paging' => $paging, 'success' => true, 'message' => ''], 200);
+        return response()->json(['company' => $currencies, 'paging' => $paging, 'success' => true, 'message' => __('Successfully processed.')], 200);
     }
 
     public function getCompanyById($id, Request $request)
@@ -49,7 +49,7 @@ class CompanyController extends Controller
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['company' => $data, 'success' => true, 'message' => ''], 200);
+        return response()->json(['company' => $data, 'success' => true, 'message' => __('Successfully processed.')], 200);
     }
 
     public function insertCompany(Request $request)
@@ -61,7 +61,7 @@ class CompanyController extends Controller
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['success' => true, 'message' => 'Insert success'], 200);
+        return response()->json(['success' => true, 'message' => __('Successfully processed.')], 200);
     }
 
     public function updatedCompany($id, Request $request)
@@ -73,7 +73,7 @@ class CompanyController extends Controller
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['success' => true, 'message' => ''], 200);
+        return response()->json(['success' => true, 'message' => __('Successfully processed.')], 200);
     }
 
     public function deleteCompany($ids, Request $request)
@@ -136,6 +136,9 @@ class CompanyController extends Controller
         }
         if ($request->has('txt_com_nm')) {
             $company['com_nm'] = $request->txt_com_nm;
+        }
+        if ($request->has('txt_com_nm_shot')) {
+            $company['com_nm_shot'] = $request->txt_com_nm_shot;
         }
         if ($request->has('txt_com_address')) {
             $company['com_address'] = $request->txt_com_address;

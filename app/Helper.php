@@ -1,30 +1,76 @@
 <?php
 
-namespace App;
+use App as App;
+use App\User as User;
+use Illuminate\Validation\Rule as Rule;
+use Illuminate\Support\Facades\DB as DB;
+use Intervention\Image\ImageManagerStatic as Image;
+use Illuminate\Support\Facades\Validator as Validator;
 
-use App;
-use App\User;
-use App\Libs\SimpleImage;
-use Illuminate\Support\Facades\DB;
-
-class Helper
+function resizeImage($img, $target_img, $new_img_width, $new_img_height, $img_type = '')
 {
-    public static function resizeImage($img, $target_img, $new_img_width, $new_img_height, $img_type = '')
-    {
-        $image = new SimpleImage();
+    try {
         $target_dir = base_path() . '/resources/images/' . $img_type;
         if ($img_type != '') {
             $target_file = $target_dir . '/' . $target_img;
         } else {
             $target_file = $target_dir . $target_img;
         }
-        $image->load($img);
+
+        $image = Image::make($img);
         $image->resize($new_img_width, $new_img_height);
         $image->save($target_file);
+    } catch (\Throwable $e) {
+        throw $e;
     }
+}
 
-    public static function saveOriginalImage($img, $target_img, $img_type = '')
-    {
+function resizeImageToHeight($img, $target_img, $new_img_height, $img_type = '')
+{
+    try {
+
+        $target_dir = base_path() . '/resources/images/' . $img_type;
+        if ($img_type != '') {
+            $target_file = $target_dir . '/' . $target_img;
+        } else {
+            $target_file = $target_dir . $target_img;
+        }
+
+        $image = Image::make($img);
+        $image->resize(null, $new_img_height, function ($constraint) {
+            $constraint->aspectRatio();
+        });
+        $image->save($target_file);
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function resizeImageToWidth($img, $target_img, $new_img_height, $img_type = '')
+{
+    try {
+
+        $target_dir = base_path() . '/resources/images/' . $img_type;
+        if ($img_type != '') {
+            $target_file = $target_dir . '/' . $target_img;
+        } else {
+            $target_file = $target_dir . $target_img;
+        }
+
+        $image = Image::make($img);
+        // resize the image to a width and constrain aspect ratio (auto height)
+        $image->resize($new_img_width, null, function ($constraint) {
+            $constraint->aspectRatio();
+        });
+        $image->save($target_file);
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function scaleImage($img, $scale, $img_type = '')
+{
+    try {
         $image = new SimpleImage();
         $target_dir = base_path() . '/resources/images/' . $img_type;
         if ($img_type != '') {
@@ -32,54 +78,43 @@ class Helper
         } else {
             $target_file = $target_dir . $target_img;
         }
-        $image->load($img);
-        $image->save($target_file);
-    }
 
-    public static function resizeImageToHeight($img, $target_img, $new_img_height, $img_type = '')
-    {
-        $image = new SimpleImage();
+        $image = Image::make($img);
+
+        $new_img_width = $image->width() * $scale / 100;
+        $new_img_height = $image->height() * $scale / 100;
+
+        $image->resize($new_img_width, $new_img_height);
+        $image->save($target_file);
+
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function saveOriginalImage($img, $target_img, $img_type = '')
+{
+    try {
         $target_dir = base_path() . '/resources/images/' . $img_type;
         if ($img_type != '') {
             $target_file = $target_dir . '/' . $target_img;
         } else {
             $target_file = $target_dir . $target_img;
         }
-        $image->load($img);
-        $image->resizeToHeight($new_img_height);
-        $image->save($target_file);
-    }
-
-    public static function resizeImageToWidth($img, $target_img, $new_img_width, $img_type = '')
-    {
-        $image = new SimpleImage();
-        $target_dir = base_path() . '/resources/images/' . $img_type;
-        if ($img_type != '') {
-            $target_file = $target_dir . '/' . $target_img;
-        } else {
-            $target_file = $target_dir . $target_img;
+        if ($target_dir !== "/" && $target_dir !== "" && !is_dir($target_dir)) {
+            mkdir($target_dir, 0777, true);
         }
-        $image->load($img);
-        $image->resizeToWidth($new_img_width);
-        $image->save($target_file);
-    }
 
-    public static function scaleImage($img, $scale, $img_type = '')
-    {
-        $image = new SimpleImage();
-        $target_dir = base_path() . '/resources/images/' . $img_type;
-        if ($img_type != '') {
-            $target_file = $target_dir . '/' . $target_img;
-        } else {
-            $target_file = $target_dir . $target_img;
-        }
-        $image->load($img);
-        $image->scale($scale);
+        $image = Image::make($img);
         $image->save($target_file);
+    } catch (\Throwable $e) {
+        throw $e;
     }
+}
 
-    public static function readImage($img, $img_type = '')
-    {
+function readImage($img, $img_type = '')
+{
+    try {
         if ($img_type != '') {
             $path = base_path() . '/resources/images/' . $img_type . '/' . $img;
         } else {
@@ -92,10 +127,14 @@ class Helper
         $data = file_get_contents($path);
         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
         return $base64;
+    } catch (\Throwable $e) {
+        throw $e;
     }
+}
 
-    public static function readJsonBasedLanguage()
-    {
+function readJsonBasedLanguage()
+{
+    try {
         $json_based_language = "{}";
         $locale = App::getLocale();
         $path = base_path() . "/resources/lang/$locale.json";
@@ -103,42 +142,62 @@ class Helper
             $json_based_language = file_get_contents($path);
         }
         return $json_based_language;
+    } catch (\Throwable $e) {
+        throw $e;
     }
+}
 
-    public static function checkScreenUserRight($screen_id)
-    {
-        try {
+function checkUserRight($scr_id, $fnc_id)
+{
+    try {
 
-            $user = new User();
-            $data = $user->getAuthUser();
+        $user = new User();
+        $data = $user->getAuthUser();
 
-            if($data == null)
-                return false;
+        if ($data == null)
+            return false;
 
-            $user_right = DB::table('permission')
-                ->select('screen_id', 'screen_name', 'screen_status')
-                ->where([
-                    ['dep_id', '=', $data->dep_id],
-                    ['screen_id', '=', $screen_id],
-                    ['delete_flg', '=', '0']
-                ])
-                ->first();
+        $user_permission = DB::table('m_permission_user')
+            ->select('usr_allow')
+            ->where([
+                ['dep_id', '=', $data->dep_id],
+                ['scr_id', '=', $scr_id],
+                ['fnc_id', '=', $fnc_id],
+                ['usr_id', '=', $data->id],
+                ['delete_flg', '=', '0']
+            ])
+            ->first();
 
-            if($user_right == null)
-                return false;
+        $usr_allow = $user_permission == null ? null : $user_permission->usr_allow;
 
-            if($user_right->screen_status == '0')
-                return false;
+        $dep_permission = DB::table('m_permission_department')
+            ->select('dep_allow')
+            ->where([
+                ['dep_id', '=', $data->dep_id],
+                ['scr_id', '=', $scr_id],
+                ['fnc_id', '=', $fnc_id],
+                ['delete_flg', '=', '0']
+            ])
+            ->first();
 
-        } catch (\Throwable $e) {
-            throw $e;
+        $dep_allow = $dep_permission == null ? null : $dep_permission->dep_allow;
+
+        if ($usr_allow == null && ($dep_allow == null || $dep_allow == '0')) {
+            abort(403);
         }
-        return true;
 
+        if ($usr_allow == '0') {
+            abort(403);
+        }
+        abort(403);
+    } catch (\Throwable $e) {
+        throw $e;
     }
+}
 
-    public static function convertDataToDropdownOptions($data, $value, $option)
-    {
+function convertDataToDropdownOptions($data, $value, $option)
+{
+    try {
         $options = [];
         foreach ($data as $item) {
             if (property_exists($item, $value) && property_exists($item, $option)) {
@@ -146,5 +205,217 @@ class Helper
             }
         }
         return $options;
+    } catch (\Throwable $e) {
+        throw $e;
     }
+}
+
+function getAllUsers()
+{
+    try {
+        $user = new User();
+        return $user->getAllUsers();
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function dateValidator($date, $format = null)
+{
+    $credential_name = "name";
+    $credential_data = $date;
+
+    $credential_rule = 'date';
+    if ($format != null) {
+        $credential_rule >= "|date_format:$format";
+    }
+
+    $rules = [
+        $credential_name => $credential_rule
+    ];
+    $credentials = [
+        $credential_name => $credential_data
+    ];
+
+    $validator = Validator::make($credentials, $rules);
+    if ($validator->fails()) {
+        return false;
+    }
+    return true;
+}
+
+function formatDateValidator($date, $format)
+{
+    $credential_name = "name";
+    $credential_data = $date;
+    $credential_rule = "date_format:$format";
+
+    $rules = [
+        $credential_name => $credential_rule
+    ];
+    $credentials = [
+        $credential_name => $credential_data
+    ];
+    $validator = Validator::make($credentials, $rules);
+    if ($validator->fails()) {
+        return false;
+    }
+    return true;
+}
+
+function requiredValidator($data)
+{
+    $credential_name = "name";
+    $credential_data = $data;
+    $rules = [
+        $credential_name => 'required'
+    ];
+    $credentials = [
+        $credential_name => $credential_data
+    ];
+    $validator = Validator::make($credentials, $rules);
+    if ($validator->fails()) {
+        return false;
+    }
+    return true;
+}
+
+function maxlengthValidator($data, $max_length)
+{
+    $credential_name = "name";
+    $credential_data = $data;
+    $rules = [
+        $credential_name => "max:$max_length"
+    ];
+    $credentials = [
+        $credential_name => $credential_data
+    ];
+    $validator = Validator::make($credentials, $rules);
+    if ($validator->fails()) {
+        return false;
+    }
+    return true;
+}
+
+function numericValidator($data)
+{
+    $credential_name = "name";
+    $credential_data = $data;
+    $rules = [
+        $credential_name => "numeric"
+    ];
+    $credentials = [
+        $credential_name => $credential_data
+    ];
+    $validator = Validator::make($credentials, $rules);
+    if ($validator->fails()) {
+        return false;
+    }
+    return true;
+}
+
+function existsInDBValidator($data, $table, $column)
+{
+
+    $credential_name = "name";
+    $credential_data = $data;
+    $credential_rule = Rule::exists($table, $column)->where(function ($query) {
+        $query->where([
+            ['delete_flg', '=', '0'],
+        ]);
+    });
+
+    $rules = [
+        $credential_name => [
+            $credential_rule
+        ]
+    ];
+    $credentials = [
+        $credential_name => $credential_data
+    ];
+
+    $validator = Validator::make($credentials, $rules);
+    if ($validator->fails()) {
+        return false;
+    }
+    return true;
+}
+
+function inArrayValidator($data, $in_array = [])
+{
+
+    if (sizeof($in_array) == 0 || isArrayValidator($in_array) == false) {
+        return false;
+    }
+
+    $credential_name = "name";
+    $credential_data = $data;
+    $credential_rule = Rule::in($in_array);
+    $rules = [
+        $credential_name => $credential_rule
+    ];
+    $credentials = [
+        $credential_name => $credential_data
+    ];
+    $validator = Validator::make($credentials, $rules);
+    if ($validator->fails()) {
+        return false;
+    }
+    return true;
+}
+
+function isArrayValidator($data)
+{
+    $credential_name = "name";
+    $credential_data = $data;
+    $credential_rule = 'array';
+    $rules = [
+        $credential_name => $credential_rule
+    ];
+    $credentials = [
+        $credential_name => $credential_data
+    ];
+    $validator = Validator::make($credentials, $rules);
+    if ($validator->fails()) {
+        return false;
+    }
+    return true;
+}
+
+function presentValidator($data)
+{
+    $credential_name = "name";
+    $credential_data = $data;
+    $credential_rule = 'present';
+    $rules = [
+        $credential_name => $credential_rule
+    ];
+    $credentials = [
+        $credential_name => $credential_data
+    ];
+    $validator = Validator::make($credentials, $rules);
+    if ($validator->fails()) {
+        return false;
+    }
+    return true;
+}
+
+function beforeOrEqualValidator($start_date, $end_date)
+{
+    $credential_start = "start_date";
+    $credential_end = "end_date";
+
+    $credential_rule = "before_or_equal:$credential_end";
+    $rules = [
+        $credential_start => $credential_rule
+    ];
+    $credentials = [
+        $credential_start => $start_date,
+        $credential_end => $end_date
+    ];
+    $validator = Validator::make($credentials, $rules);
+    if ($validator->fails()) {
+        return false;
+    }
+    return true;
 }

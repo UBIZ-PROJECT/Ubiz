@@ -23,7 +23,7 @@ class DepartmentsController extends Controller
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['departments' => $departments, 'paging' => $paging, 'success' => true, 'message' => ''], 200);
+        return response()->json(['departments' => $departments, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed.")], 200);
     }
 
     public function getDepartment($id, Request $request)
@@ -36,10 +36,10 @@ class DepartmentsController extends Controller
             }else{
                 $data = $department->getDepartmentById($id);
             }
+            return response()->json(['department' => $data, 'message' => __("Successfully processed.")], 200);
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['department' => $data, 'message' => __("Successfully processed.")], 200);
     }
 
     public function updateDepartment($id, Request $request)
@@ -92,19 +92,7 @@ class DepartmentsController extends Controller
             $sort = $request->sort;
         }
 
-        $search = [];
-        if ($request->has('txt_dep_code')) {
-            $search['dep_code'] = $request->txt_dep_code;
-        }
-        if ($request->has('txt_dep_name')) {
-            $search['dep_name'] = $request->txt_dep_name;
-        }
-        if ($request->has('contain')) {
-            $search['contain'] = $request->contain;
-        }
-        if ($request->has('notcontain')) {
-            $search['notcontain'] = $request->notcontain;
-        }
+        $search = $request->get('search', '');
 
         $department = [];
         if ($request->has('txt_dep_code')) {

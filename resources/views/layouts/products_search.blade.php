@@ -54,7 +54,7 @@
                         <label for="type_id">{{__("Type")}}</label>
                     </span>
                     <span class="avo">
-                         @include('components.dropdown',['width'=>'480','control_id'=>'type_id', 'data'=> Helper::convertDataToDropdownOptions($product_type, 'id', 'name_type')])
+                         @include('components.dropdown',['width'=>'480','control_id'=>'type_id', 'data'=> convertDataToDropdownOptions($product_type, 'id', 'name_type')])
                         <input type="text" spellcheck="false" id="type_id" value="" autocomplete="off">
                     </span>
                 </div>

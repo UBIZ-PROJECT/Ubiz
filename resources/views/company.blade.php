@@ -366,6 +366,7 @@
                             <div class="col-sm-10 col-md-10 col-xl-10 z-pdl">
                                 <div class="row z-mgl z-mgr">
                                     @include('components.input',['control_id'=>'txt_com_nm', 'width'=> '500', 'lbl_width'=> '70', 'label'=>__('Company')])
+                                    @include('components.input',['control_id'=>'txt_com_nm_shot', 'width'=> '500', 'lbl_width'=> '100', 'label'=>__('Company Shot')])
                                 </div>
                                 <div class="row z-mgl z-mgr">
                                     @include('components.input',['control_id'=>'txt_com_address', 'width'=> '700', 'lbl_width'=> '70', 'label'=>__('Address')])

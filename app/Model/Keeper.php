@@ -7,7 +7,6 @@
  */
 
 namespace App\Model;
-use App\Helper;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -55,7 +54,8 @@ class Keeper implements JWTSubject
         $rows_per_page = env('ROWS_PER_PAGE', 10);
         $keeper = DB::table('accessory_keeper')
             ->leftJoin('users', 'users.id', '=', 'accessory_keeper.keeper')
-            ->select('accessory_keeper.acs_keeper_id','accessory_keeper.acs_id','accessory_keeper.note','accessory_keeper.keeper', 'accessory_keeper.quantity', 'users.name')
+            ->select('accessory_keeper.acs_keeper_id','accessory_keeper.acs_id','accessory_keeper.note','accessory_keeper.keeper', 'accessory_keeper.quantity',
+                DB::raw('IFNULL(accessory_keeper.expired_date, "") as expired_date'),'users.name', 'accessory_keeper.inp_date')
             ->where([['accessory_keeper.acs_id', '=', $acs_id],
                     ['accessory_keeper.delete_flg', '=' ,'0']])
             ->offset($page * $rows_per_page)
@@ -87,6 +87,7 @@ class Keeper implements JWTSubject
                     'note'=>$param['note'],
                     'keeper'=>$param['keeper'],
                     'quantity'=>$param['quantity'],
+                    'expired_date'=>!empty($param['expired_date']) ? $this->convertDBDateByString($param['expired_date']) : null,
                     'delete_flg'=>'0',
                     'inp_date'=>date('Y-m-d H:i:s'),
                     'upd_date'=>date('Y-m-d H:i:s'),
@@ -111,6 +112,7 @@ class Keeper implements JWTSubject
                     'keeper'=>$param['keeper'],
                     'quantity'=>$param['quantity'],
                     'note'=>$param['note'],
+                    'expired_date'=>!empty($param['expired_date']) ? $this->convertDBDateByString($param['expired_date']) : null,
                     'upd_date'=>date('Y-m-d H:i:s')
                 ]);
             DB::commit();
@@ -161,6 +163,17 @@ class Keeper implements JWTSubject
             throw $e;
         }
         return $count;
+    }
+
+    private function convertDBDateByString($date) {
+        if (!empty($date)) {
+            $timestamp = strtotime($date);
+            if ($timestamp === FALSE) {
+                $timestamp = strtotime(str_replace('/', '-', $date));
+            }
+            $date = date('Y-m-d H:i:s', $timestamp);
+        }
+        return $date;
     }
 
 }

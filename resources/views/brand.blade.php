@@ -537,10 +537,11 @@
                                 @include('components.input',['width'=>'250','type'=>'required', 'control_id'=>'txt_name', 'label'=>__("Name"), 'length'=>100])
                                 @include('components.input',['width'=>'250','control_id'=>'txt_unit', 'label'=>__('Unit'), 'length'=>20])
                                 @include('components.input',['width'=>'250','control_id'=>'txt_model', 'label'=>__('Model'), 'length'=>100])
-                                @include('components.dropdown',['width'=>'250','control_id'=>'txt_name_type', 'label'=>__('Type'), 'data'=> Helper::convertDataToDropdownOptions($product_type, 'id', 'name_type')])
+                                @include('components.dropdown',['width'=>'250','control_id'=>'txt_name_type', 'label'=>__('Type'), 'data'=> convertDataToDropdownOptions($product_type, 'id', 'name_type')])
+                                @include('components.input',['width'=>'250','control_id'=>'txt_quantity', 'label'=>__('Quantity'), 'length'=>100])
                             </div>
                             <div class="col-sm-3 col-md-3 col-xl-3 z-pdr">
-                                @include('components.textarea',['width'=>'250', 'control_id'=>'txt_prd_note', 'label'=>__('Note')])
+                                @include('components.textarea',['width'=>'250', 'height'=>'190', 'control_id'=>'txt_prd_note', 'label'=>__('Specification')])
                             </div>
                         </div>
                         <div>
@@ -560,10 +561,12 @@
                                 <thead>
                                     <tr class="table-primary">
                                         <th scope="col" class="col1">STT</th>
-                                        <th scope="col" class="col2">Số Series</th>
-                                        <th scope="col" class="col3">Ngày Nhập</th>
-                                        <th scope="col" class="col4">Giữ Hàng</th>
-                                        <th scope="col" class="col5">Ghi Chú</th>
+                                        <th scope="col" class="col2">Số series</th>
+                                        <th scope="col" class="col3">Ngày nhập hàng</th>
+                                        <th scope="col" class="col3">{{__("Keep Date")}}</th>
+                                        <th scope="col" class="col3">{{__("Expired Date")}}</th>
+                                        <th scope="col" class="col4">Người giữ hàng</th>
+                                        <th scope="col" class="col5">Ghi chú</th>
                                         <th scope="col" class="col6"></th>
                                     </tr>
                                 </thead>
@@ -588,7 +591,8 @@
                 </div>
                 <div class="modal-body">
                     @include('components.input',['width'=>'250','type'=>'required', 'control_id'=>'txt_series_no', 'label'=>__("Series No"), 'length'=>15])
-                    @include('components.dropdown',['width'=>'250','control_id'=>'txt_keep_person', 'label'=>__("Nhân Viên"), 'data'=> Helper::convertDataToDropdownOptions($users, 'id', 'name')])
+                    @include('components.dropdown',['width'=>'250','control_id'=>'txt_keep_person', 'label'=>__("Nhân Viên"), 'data'=> convertDataToDropdownOptions($users, 'id', 'name')])
+                    @include('components.input',['width'=>'250','type'=>'required', 'placeholder'=>__("Day/Month/Year"), 'control_id'=>'txt_expired_date', 'label'=>__("Expired Date"), 'length'=>15])
                     @include('components.textarea',['width'=>'250', 'control_id'=>'txt_series_note', 'label'=>__('Note')])
                 </div>
                 <div class="modal-footer">

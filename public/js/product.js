@@ -1,5 +1,6 @@
 const _YES = i18next.t("Yes");
 const _NO = i18next.t("No");
+var ACS_QUANTITY_DEFAULT = 0;
 var lst_image_delete = [];
 (function ($) {
     UbizOIWidget = function () {
@@ -8,6 +9,9 @@ var lst_image_delete = [];
         this.o_page = null;
         this.i_page = null;
         this.defaultImage = "../images/avatar.png";
+        this.sidebar_scrollbars = null;
+        this.output_scrollbars = null;
+        this.input_scrollbars = null;
     };
 
     jQuery.UbizOIWidget = new UbizOIWidget();
@@ -15,26 +19,9 @@ var lst_image_delete = [];
         w_init: function () {
             jQuery.UbizOIWidget.o_page = jQuery("#o-put");
             jQuery.UbizOIWidget.i_page = jQuery("#i-put");
-            jQuery('#nicescroll-sidebar').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-sidebar',
-                autohidemode: false,
-                horizrailenabled: false
-            });
-            jQuery('#nicescroll-oput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-oput',
-                autohidemode: false,
-                horizrailenabled: false
-            });
+            jQuery.UbizOIWidget.sidebar_scrollbars = fnc_set_scrollbars("nicescroll-sidebar");
+            jQuery.UbizOIWidget.output_scrollbars = fnc_set_scrollbars("nicescroll-oput");
+            jQuery.UbizOIWidget.input_scrollbars = fnc_set_scrollbars("nicescroll-iput");
             jQuery('.utooltip').tooltipster({
                 side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
             });
@@ -50,7 +37,7 @@ var lst_image_delete = [];
             jQuery(self).find('svg').removeClass('sVGT');
             jQuery(self).find('svg.' + order_by).addClass('sVGT');
 
-            ubizapis('v1', '/products', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/accessories', 'get', null, {'page': jQuery.UbizOIWidget.page, 'sort': sort}, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_delete: function (id) {
             var listId = jQuery.UbizOIWidget.w_get_checked_rows();
@@ -62,7 +49,6 @@ var lst_image_delete = [];
 
             swal({
                 title: i18next.t('Do you want to delete the data?'),
-                text: i18next.t('Once deleted, you will not be able to recover this data!'),
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -74,11 +60,13 @@ var lst_image_delete = [];
                 if (result.value) {
                     listId = JSON.stringify(listId);
                     var params = jQuery.UbizOIWidget.w_get_param_search_sort();
-                    ubizapis('v1','/products/'+listId+'/delete', 'delete',null, params,jQuery.UbizOIWidget.w_process_callback);
+                    ubizapis('v1','/accessories/'+listId+'/delete', 'delete',null, params,jQuery.UbizOIWidget.w_process_callback);
                 }
             });
         },
         w_create:function(){
+            jQuery.UbizOIWidget.i_page.find(".tb-keeper").css("display",'');
+            jQuery.UbizOIWidget.i_page.find(".tb-keeper").find("tbody").empty();
             jQuery.UbizOIWidget.w_clear_input_page();
             jQuery.UbizOIWidget.w_go_to_input_page(0);
         },
@@ -92,7 +80,8 @@ var lst_image_delete = [];
             }
 
             var formData = jQuery.UbizOIWidget.w_get_images_upload();
-            formData.append("product", JSON.stringify(jQuery.UbizOIWidget.w_get_data_input_form()));
+            formData.append("accessory", JSON.stringify(jQuery.UbizOIWidget.w_get_data_input_form()));
+            formData.append("keeper", JSON.stringify(getKeeperDataForCreateAcs()));
 
             var params = jQuery.UbizOIWidget.w_get_param_search_sort();
             if (id == 0) {
@@ -107,7 +96,7 @@ var lst_image_delete = [];
                     reverseButtons: true
                 }).then((result) => {
                     if (result.value) {
-                        ubizapis('v1','/products/insert', 'post', formData, params, jQuery.UbizOIWidget.w_process_callback);
+                        ubizapis('v1','/accessories/insert', 'post', formData, params, jQuery.UbizOIWidget.w_process_callback);
                     }
                 });
             } else {
@@ -130,7 +119,7 @@ var lst_image_delete = [];
                 }).then((result) => {
                     if (result.value) {
                         formData.append("_method","put");
-                        ubizapis('v1','/products/'+id+'/update', 'post', formData,params, jQuery.UbizOIWidget.w_process_callback);
+                        ubizapis('v1','/accessories/'+id+'/update', 'post', formData,params, jQuery.UbizOIWidget.w_process_callback);
                     }
                 });
             }
@@ -142,7 +131,7 @@ var lst_image_delete = [];
 
             var event = new CustomEvent("click");
             document.body.dispatchEvent(event);
-            ubizapis('v1', '/products', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/accessories', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_search_info: function () {
 
@@ -150,26 +139,6 @@ var lst_image_delete = [];
 
             if (jQuery('#search-form #name').val().replace(/\s/g, '') != '') {
                 search_info.name = jQuery('#search-form #name').val();
-            }
-
-            if (jQuery('#search-form #model').val().replace(/\s/g, '') != '') {
-                search_info.model = jQuery('#search-form #model').val();
-            }
-
-            if (jQuery('#search-form #detail').val().replace(/\s/g, '') != '') {
-                search_info.detail = jQuery('#search-form #detail').val();
-            }
-
-            if (jQuery('#search-form #type_id').val().replace(/\s/g, '') != '') {
-                search_info.type_id = jQuery('#search-form #type_id').val();
-            }
-
-            if (jQuery('#search-form #contain').val().replace(/\s/g, '') != '') {
-                search_info.contain = jQuery('#search-form #contain').val();
-            }
-
-            if (jQuery('#search-form #notcontain').val().replace(/\s/g, '') != '') {
-                search_info.notcontain = jQuery('#search-form #notcontain').val();
             }
 
             return search_info;
@@ -215,7 +184,7 @@ var lst_image_delete = [];
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
             params.sort = sort;
 
-            ubizapis('v1', '/products', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/accessories', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_fuzzy_search_handle_enter(e) {
             var keycode = (e.keyCode ? e.keyCode : e.which);
@@ -253,11 +222,12 @@ var lst_image_delete = [];
         },
         w_get_data_input_form: function() {
             var data = {
-                id: $("#i-put #txt_prd_id").val(),
-                name: $("#i-put #txt_name").val(),
-                prd_model: $("#i-put #txt_model").val(),
-                type_id: $("#i-put #txt_name_type").val(),
-                prd_note: $("#i-put #txt_prd_note").val(),
+                id: $("#i-put #txt_acs_id").val(),
+                acs_name: $("#i-put #txt_name").val(),
+                acs_unit: $("#i-put #txt_unit").val(),
+                acs_type_id: $("#i-put #txt_name_type").val(),
+                acs_note: $("#i-put #txt_acs_note").val(),
+                acs_quantity: $("#i-put #txt_quantity").val(),
                 images: {
                     "delete": lst_image_delete
                 }
@@ -291,11 +261,11 @@ var lst_image_delete = [];
                                 }
                                 var formInput = jQuery.UbizOIWidget.w_get_data_input_form();
                                 var formData = jQuery.UbizOIWidget.w_get_images_upload();
-                                formData.append("product", JSON.stringify(formInput));
+                                formData.append("accessory", JSON.stringify(formInput));
                                 var params = jQuery.UbizOIWidget.w_get_param_search_sort();
 
                                 formData.append("_method","put");
-                                ubizapis('v1','/products/'+formInput.id+'/updatePaging', 'post', formData,params,function() {
+                                ubizapis('v1','/accessories/'+formInput.id+'/updatePaging', 'post', formData,params,function() {
                                     jQuery.UbizOIWidget.w_reset_input_change();
                                     jQuery.UbizOIWidget.w_get_specific_product_by_id(id, index);
                                     $("#i-put .GtF .delete").css("display","block").attr("onclick","jQuery.UbizOIWidget.w_delete("+id+")");
@@ -322,27 +292,16 @@ var lst_image_delete = [];
             if (isEmpty(index)) {
                 $("#i-put .GtF .save").attr("onclick", "jQuery.UbizOIWidget.w_save(0)");
             }
-
+            jQuery.UbizOIWidget.w_sleep_scrollbars(jQuery.UbizOIWidget.output_scrollbars);
+            jQuery.UbizOIWidget.w_update_scrollbars(jQuery.UbizOIWidget.input_scrollbars);
             jQuery.UbizOIWidget.o_page.hide();
             jQuery.UbizOIWidget.i_page.fadeIn("slow");
-            jQuery('#nicescroll-oput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-input',
-                autohidemode: false,
-                horizrailenabled: false
-            });
         },w_reset_input_change: function() {
             $("#i-put #nicescroll-iput #txt_name").val("").isChange("false");
-            $("#i-put #nicescroll-iput #txt_branch").val("").isChange("false");
-            $("#i-put #nicescroll-iput #txt_model").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_unit").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_acs_note").val("").isChange("false");
             $("#i-put #nicescroll-iput #txt_name_type").val("").isChange("false");
-            $("#i-put #nicescroll-iput #txt_detail").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_quantity").val("").isChange("false");
             $("#i-put #nicescroll-iput .file-upload").isChange("false");
         },
         w_set_paging_for_detail_page: function(page, totalPage, isReset = false) {
@@ -382,24 +341,14 @@ var lst_image_delete = [];
         w_go_back_to_output_page: function (self) {
             jQuery.UbizOIWidget.o_page.fadeIn("slow");
             jQuery.UbizOIWidget.i_page.hide();
-            jQuery('#nicescroll-oput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').getNiceScroll().remove();
-            jQuery('#nicescroll-oput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-oput',
-                autohidemode: false,
-                horizrailenabled: false
-            });
+            jQuery.UbizOIWidget.w_sleep_scrollbars(jQuery.UbizOIWidget.input_scrollbars);
+            jQuery.UbizOIWidget.w_update_scrollbars(jQuery.UbizOIWidget.output_scrollbars);
             jQuery.UbizOIWidget.w_clear_input_page();
         },
         w_refresh_output_page: function () {
             var params = jQuery.UbizOIWidget.w_get_param_search_sort();
             params.page = jQuery.UbizOIWidget.page;
-            ubizapis('v1', '/products', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/accessories', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_sort_info: function () {
             var sort_obj = jQuery.UbizOIWidget.o_page.find('div.dWT');
@@ -411,21 +360,21 @@ var lst_image_delete = [];
             var params = jQuery.UbizOIWidget.w_get_param_search_sort();
             params.page = page;
             jQuery.UbizOIWidget.page = page;
-            ubizapis('v1', '/products', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/accessories', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_newer_data: function (page) {
             jQuery.UbizOIWidget.page = page;
             var params = jQuery.UbizOIWidget.w_get_param_search_sort();
             params.page = page;
             jQuery.UbizOIWidget.page = page;
-            ubizapis('v1', '/products', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/accessories', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_process_callback: function (response) {
             if (response.data.success == true) {
                 if (response.data.method == "insert") {
                     swal({
                         title:response.data.message,
-                        text: i18next.t("Do you want to continue insert Product?"),
+                        text: i18next.t("Do you want to continue insert Accessory?"),
                         type: "success",
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
@@ -467,9 +416,9 @@ var lst_image_delete = [];
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].id, 1));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].image, 2, products[i].prd_img_id));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].name, 3));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].branch, 4));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].model, 5));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].name_type, 6));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].name_type, 4));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].acs_unit, 5));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(products[i].id, products[i].acs_quantity, 6));
                     rows.push(jQuery.UbizOIWidget.w_make_row_html(products[i].id, cols, index));
                     index++;
                 }
@@ -482,27 +431,31 @@ var lst_image_delete = [];
             jQuery.UbizOIWidget.w_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
         },
         w_render_data_to_input_page: function(response) {
+            jQuery.UbizOIWidget.w_clear_input_page();
             if (response == undefined || response.data == undefined || response.data.product.length <= 0) {
                 return;
             }
             var data = response.data.product[0];
             $("#i-put .GtF .delete").attr("onclick","jQuery.UbizOIWidget.w_delete("+data.id+")");
             $("#i-put .GtF .save").attr("onclick", "jQuery.UbizOIWidget.w_save("+data.id+")");
-            $("#i-put #nicescroll-iput #txt_prd_id").val(data.id);
+            $("#i-put .GtF .refresh").attr("onclick", "getKeeper()");
+            $("#i-put #nicescroll-iput #txt_acs_id").val(data.id);
+            $("#i-put #nicescroll-iput #txt_code").val(data.id);
             $("#i-put #nicescroll-iput #txt_name").val(data.name).change(function() {inputChange(this, data.name)});
-            $("#i-put #nicescroll-iput #txt_unit").val(data.prd_unit).change(function() {inputChange(this, data.prd_unit)});
-            $("#i-put #nicescroll-iput #txt_model").val(data.model).change(function() {inputChange(this, data.model)});
-            $("#i-put #nicescroll-iput #txt_name_type").val(data.prd_type_id).change(function() {inputChange(this, data.prd_type_id)}); // THY  fix thành combobox
-            $("#i-put #nicescroll-iput #txt_prd_note").val(data.prd_note).change(function() {inputChange(this, data.prd_note)}); // THY fix thành Textarea
+            $("#i-put #nicescroll-iput #txt_unit").val(data.acs_unit).change(function() {inputChange(this, data.acs_unit)});
+            $("#i-put #nicescroll-iput #txt_acs_note").val(data.acs_note).change(function() {inputChange(this, data.acs_note)});
+            $("#i-put #nicescroll-iput #txt_name_type").val(data.acs_type_id).change(function() {inputChange(this, data.acs_type_id)});
+            $("#i-put #nicescroll-iput #txt_quantity").val(data.acs_quantity).change(function() {inputChange(this, data.acs_quantity)});
+            ACS_QUANTITY_DEFAULT = data.acs_quantity;
             if (data.images != undefined && data.images.length > 0) {
                 var controlImages = $("#i-put .img-show");
                 for(var i = 0; i < data.images.length; i++) {
                     $(controlImages[i]).attr("src",data.images[i].src).setName(data.images[i].name);
                 }
             }
-            // if (isEmpty(data.images)) {
-            //     data.src = jQuery.UbizOIWidget.defaultImage;  // THY Fix image
-            // }
+            if (isEmpty(data.images)) {
+                data.src = jQuery.UbizOIWidget.defaultImage;  // THY Fix image
+            }
             // var addrLength = addresses.length >= 3 ? addresses.length : 3;
             // for(let i = 0; i < addrLength; i++) {
             //     if (i <= 2) {
@@ -517,10 +470,11 @@ var lst_image_delete = [];
             //         $(address).insertAfter("#i-put #nicescroll-iput .txt_adr"+i+"_container");
             //     }
             // }
-            // $("#i-put #nicescroll-iput .image-upload .img-show").attr("src", data.src);
+            $("#i-put #nicescroll-iput .image-upload .img-show").attr("src", data.src);
             // $("#i-put #nicescroll-iput .image-upload .img-show").attr("img-name", data.sup_avatar);
 
             jQuery.UbizOIWidget.w_set_paging_for_detail_page(response.data.paging.page, response.data.paging.rows_num);
+            getKeeper();
         },
         w_is_input_changed: function() {
             var txt_input = $("#i-put .jAQ input, #i-put .jAQ textarea,  #i-put .jAQ select");
@@ -564,16 +518,18 @@ var lst_image_delete = [];
         },
         w_clear_input_page: function() {
             $("#i-put #nicescroll-iput #txt_name").val("").isChange("false");
-            $("#i-put #nicescroll-iput #txt_branch").val("").isChange("false");
-            $("#i-put #nicescroll-iput #txt_model").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_quantity").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_code").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_unit").val("").isChange("false");
             $("#i-put #nicescroll-iput #txt_name_type").val("").isChange("false");
-            $("#i-put #nicescroll-iput #txt_detail").val("").isChange("false");
+            $("#i-put #nicescroll-iput #txt_acs_note").val("").isChange("false");
             jQuery.UbizOIWidget.sort = {'sort_name': 'prd_name', 'order_by': 'asc'};
             jQuery.UbizOIWidget.w_set_paging_for_detail_page(0,0,true);
             removeErrorInput();
             lst_image_delete = [];
             $(".img-show").attr("src","../images/avatar.png").setName("");
             $(".file-upload").val("").isChange("false");
+            jQuery.UbizOIWidget.i_page.find(".tb-keeper").find("tbody").empty();
         },
         w_clear_search_form:function(){
             jQuery('#search-form  #name').val("");
@@ -586,9 +542,11 @@ var lst_image_delete = [];
             jQuery('#search-form  #sup_fuzzy').val("");
         },
         w_get_specific_product_by_id(id, index) {
+            jQuery.UbizOIWidget.i_page.find(".tb-keeper").css("display",'');
+            jQuery.UbizOIWidget.i_page.find(".tb-keeper").find("tbody").empty();
             var params = jQuery.UbizOIWidget.w_get_param_search_sort();
             params.page = index;
-            ubizapis('v1','/products/detail', 'get', null, params,jQuery.UbizOIWidget.w_render_data_to_input_page);
+            ubizapis('v1','/accessories/detail', 'get', null, params,jQuery.UbizOIWidget.w_render_data_to_input_page);
         },
         w_make_row_html: function (id, cols, index) {
             var row_html = '';
@@ -600,6 +558,7 @@ var lst_image_delete = [];
             return row_html;
         },
         w_make_col_html: function (col_id, col_val, col_idx, isImage = null) {
+            if (isEmpty(col_val)) col_val = "";
             var col_html = "";
             col_html += '<div class="tcB col-' + col_idx + '">';
             col_html += '<div class="cbo">';
@@ -724,11 +683,25 @@ var lst_image_delete = [];
             jQuery("#paging-label").replaceWith(paging_label);
             jQuery("#paging-older").replaceWith(paging_older);
             jQuery("#paging-newer").replaceWith(paging_newer);
+        },
+        w_sleep_scrollbars: function (instance) {
+            if (typeof instance == "undefined")
+                return false;
+            instance.sleep();
+        },
+        w_update_scrollbars: function (instance) {
+
+            if (typeof instance == "undefined")
+                return false;
+            instance.update();
         }
     });
 })(jQuery);
 jQuery(document).ready(function () {
     jQuery.UbizOIWidget.w_init();
+    $('#addAcsKeeperModal').on('hide.bs.modal', function (e) {
+        clearKeeperModal();
+    })
 });
 
 function isEmpty(str) {
@@ -738,79 +711,345 @@ function isEmpty(str) {
     return false;
 }
 
-$("document").ready(function(){
-    $(".tab-slider--body").hide();
-    $(".tab-slider--body:first").show();
-    $('.btn-keep-series').mouseleave(function() {
-        $('.qs .popover').css({'height': '110px','overflow-y':'visible'});
-        $('.qs .popover').removeClass('popover-more-detail');
-        $('.series-more-detail').html("Xem thêm");
-    })
-    $(".btn-keep-series").mouseenter(function() {
-        checkLength($(this).closest("td").find('.qs .popover'));
-    })
-});
+function getKeeper() {
+    jQuery.UbizOIWidget.i_page.find(".tb-keeper").find("tbody").empty();
+    var acs_id = $("#txt_code").val();
+    var params = {};
+    params.page = 0;
+    params.search = {};
+    params.sort = "";
+    params.acs_id = acs_id;
+    ubizapis('v1','/keeper', 'get',null, params,function(response) {
+        var acs_keeper = response.data.acs_keeper;
+        writeKeeperToTable(acs_keeper);
+    });
+}
 
-$(".tab-slider--nav li").click(function() {
-    $(".tab-slider--body").hide();
-    var activeTab = $(this).attr("rel");
-    $("#"+activeTab).fadeIn();
-    if($(this).attr("rel") == "tab2"){
-        $('.tab-slider--tabs').addClass('slide');
-    }else{
-        $('.tab-slider--tabs').removeClass('slide');
+function copyKeeper(row) {
+    var cloneNewRow = $(row).closest("tr").clone();
+    var today = getCurrentDate();
+    $(cloneNewRow).find(".inp_date").html(today);
+    $(".tb-keeper").find("tbody").append(cloneNewRow);
+    reOrderStt();
+    var quantity =$(cloneNewRow).find(".quantity").html();
+    var keeper =$(cloneNewRow).find(".keeper").val();
+    var note=$(cloneNewRow).find(".note").html();
+    var expired_date = $(cloneNewRow).find(".expired_date").html();
+    var params = {
+        quantity : quantity,
+        keeper: keeper,
+        note: note,
+        expired_date: expired_date
+    };
+    params.acs_keeper_id= getAcsKeeperID();
+    params.acs_id= getAccessoryId();
+    // thêm mới thì không có save liền
+    if (!isEmpty($("#nicescroll-iput #txt_code").val()) ) {
+        insertKeeper(params);
     }
-    $(".tab-slider--nav li").removeClass("active");
-    $(this).addClass("active");
-});
-
-function activeSeries(btn) {
-    if ($(btn).hasClass("disabled")) return;
-    if ($(btn).hasClass("active"))
-        $(btn).removeClass("active");
-    else
-        $(btn).addClass("active");
 }
 
-function keepSeries() {
-    $(".btn-keep-series.active").addClass("disabled");
-    $(".btn-keep-series").removeClass("active");
+function deleteKeeper(row) {
+    if (!isEmpty($("#nicescroll-iput #txt_code").val()) ) {
+        ubizapis('v1', '/keeper/' + $(row).closest("tr").find(".acs_keeper_id").val() + '/delete', 'delete', null, null);
+    }
+    $(row).closest("tr").remove();
+    reOrderStt();
 }
 
-function addNote(series) {
-    $(".tb-add-note").css("display", "block");
-    $(".tb-series").css("display", "none")
-    $(".tb-add-note #txt-series-id").val(series);
+function writeKeeperToTable(accessoryKeeper) {
+    var copyButton = '<i class="fa fa-files-o" onclick="copyKeeper(this)"></i>';
+    var deleteButton = '<i class="fa fa-trash-o" onclick="deleteKeeper(this)"></i>';
+    var html = '';
+    for(var i = 0; i < accessoryKeeper.length; i++) {
+        var acsKeeper = accessoryKeeper[i];
+        html += "<tr ondblclick='openKeeperModal(this)'>";
+        html += "<td class='txt-stt text-center'>" + (i + 1) +"</td>";
+        html += "<td ><input type='hidden' class='keeper' value='"+acsKeeper.keeper+"' ><span>" + acsKeeper.name +"</span></td>";
+        html += "<td class='inp_date'>" + acsKeeper.inp_date +"</td>";
+        html += "<td class='expired_date'>" + acsKeeper.expired_date +"</td>";
+        html += "<td class='quantity'>" + acsKeeper.quantity +"</td>";
+        html += "<td class='note'>" + acsKeeper.note +"</td>";
+        html += "<td class='text-center'><input type='hidden' value='"+acsKeeper.acs_keeper_id+"' class='acs_keeper_id'>"+copyButton+ " " +deleteButton+"</td>";
+        html+= "</tr>";
+    }
+
+    $(".tb-keeper").find("tbody").append(html);
 }
 
-function saveSeriesNote() {
-    $(".tb-add-note").css("display", "none");
-    $(".tb-series").css("display", "block")
-    $(".tb-add-note #txt-series-id").val('');
+function getKeeperFromModal() {
+    return {
+        keeper : $("#addAcsKeeperModal #txt_keeper").val(),
+        keeper_txt: $("#addAcsKeeperModal #txt_keeper option:selected").text(),
+        quantity : $("#addAcsKeeperModal #txt_quantity").val(),
+        note : $("#addAcsKeeperModal #txt_note").val(),
+        expired_date : $("#addAcsKeeperModal #expired_date").val()
+    }
 }
 
-function noteDetail(link) {
-    if ($(link).html() == "Xem thêm") {
-        var popover = $(link).closest("td").find('.qs .popover');
-        var note = $(link).closest("td").find(".keep-full-note").val();
-        if (note.length > 2000) {
-            $(popover).css('overflow-y', 'scroll');
+function insertKeeper(keeper) {
+    var params = {
+        keeper:JSON.stringify(keeper)
+    };
+    ubizapis('v1', '/keeper/insert', 'post', null, params, function(response) {
+        setTimeout(function() {
+            var acs_keeper_id = response.data.acs_keeper_id;
+            var listTr = $(".tb-keeper tbody tr");
+            var lastTr = listTr[listTr.length - 1];
+            $(lastTr).find(".acs_keeper_id").val(acs_keeper_id);
+        }, 1000);
+    });
+}
+
+function updateKeeper(keeper) {
+    var params = {
+        keeper:JSON.stringify(keeper),
+        _method: "put"
+    };
+    ubizapis('v1', '/keeper/'+ keeper.acs_keeper_id +'/update', 'post', null, params, function() {});
+}
+
+function updateTableKeeper(row) {
+    var today = getCurrentDate();
+    var quantity = $("#addAcsKeeperModal #txt_quantity").val();
+    var keeper  = $("#addAcsKeeperModal #txt_keeper").val();
+    var keeper_txt = $("#addAcsKeeperModal #txt_keeper option:selected").text();
+    var expired_date = $("#addAcsKeeperModal #expired_date").val();
+    var note = $("#addAcsKeeperModal #txt_note").val();
+    var acs_keeper_id = getAcsKeeperID();
+    var keeperObj = {
+        acs_keeper_id: acs_keeper_id,
+        acs_id:getAccessoryId(),
+        quantity: quantity,
+        keeper: keeper,
+        name: keeper_txt,
+        note: note,
+        inp_date: today,
+        expired_date: expired_date
+    };
+    if (!isEmpty(row)) {
+        $(row).find(".quantity").html(quantity);
+        $(row).find(".keeper").val(keeper);
+        $(row).find(".keeper").parent().find("span").html(keeper_txt);
+        $(row).find(".note").html(note);
+        $(row).find(".expired_date").html(expired_date);
+        $(row).find(".acs_keeper_id").val(acs_keeper_id);
+    } else {
+        var keepers = [];
+        keepers.push(keeperObj);
+        writeKeeperToTable(keepers);
+    }
+}
+
+function getCurrentDate() {
+    var date = new Date();
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var year = date.getFullYear();
+    if (month < 10) month = "0" + month;
+    var today = day + "/" + month + "/" + year;
+    return today;
+}
+
+function getAccessoryId() {
+    return $("#nicescroll-iput #txt_code").val();
+}
+
+function getAcsKeeperID() {
+    return  $(keeper_row_selected).find(".acs_keeper_id").val();
+}
+
+var keeper_row_selected;
+
+function openKeeperModal(row) {
+    keeper_row_selected = undefined;
+    $("#addAcsKeeperModal .btn-save").attr("onclick","keeperSave(0)");
+    if (!isEmpty(row)) {
+        keeper_row_selected = row;
+        var quantity =$(row).find(".quantity").html();
+        var keeper =$(row).find(".keeper").val();
+        var expired_date =$(row).find(".expired_date").html();
+        var note=$(row).find(".note").html();
+        $("#addAcsKeeperModal #txt_quantity").val(quantity);
+        $("#addAcsKeeperModal #txt_keeper").val(keeper);
+        $("#addAcsKeeperModal #expired_date").val(expired_date);
+        $("#addAcsKeeperModal #txt_note").val(note);
+        $("#addAcsKeeperModal .btn-save").attr("onclick","keeperSave(1)");
+    }
+    $("#addAcsKeeperModal").modal();
+}
+
+function clearKeeperModal() {
+    $("#addAcsKeeperModal #txt_quantity").val("");
+    $("#addAcsKeeperModal #txt_keeper").val("");
+    $("#addAcsKeeperModal #txt_note").val("");
+    $("#addAcsKeeperModal #expired_date").val("");
+    removeErrorInput();
+    keeper_row_selected = null;
+}
+
+function keeperSave(flg) {
+    var params = getKeeperFromModal();
+    params.acs_keeper_id= getAcsKeeperID();
+    params.acs_id= getAccessoryId();
+    if (validateKeeper(keeper_row_selected) == false) return;
+    if (!isEmpty($("#nicescroll-iput #txt_code").val())) {
+        if (flg == 0) {
+            insertKeeper(params);
         } else {
-            $(popover).css('overflow-y', 'visible');
+            updateKeeper(params);
         }
-        $(popover).addClass('popover-more-detail');
-        $(popover).css('height', '500px');
-        $(popover).html(note);
-        $(popover).closest("td").find('.series-more-detail').remove();
+    }
+
+    updateTableKeeper(keeper_row_selected);
+    $("#addAcsKeeperModal").modal('hide');
+    reOrderStt();
+}
+
+function getKeeperDataForCreateAcs() {
+    var rows = $(".list-keep-accessory .tb-keeper tbody tr");
+    var lstKeeper = [];
+    for(var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+        lstKeeper.push({
+            quantity: $(row).find(".quantity").html(),
+            keeper: $(row).find(".keeper").val(),
+            note: $(row).find(".note").html(),
+            expired_date: $(row).find(".expired_date").html()
+        });
+    }
+    return lstKeeper;
+}
+
+function reOrderStt() {
+    var stt = $(".txt-stt");
+    var sttLength = $(".txt-stt").length + 1;
+    for(i = 0; i < sttLength; i++) {
+        $(stt[i]).html(i + 1);
     }
 }
 
-function checkLength(pop) {
-    var note = $(pop).closest("td").find(".keep-full-note").val();
-    var html = '<a href="#" class="series-more-detail" onclick="noteDetail(this)">Xem thêm</a>';
+function validateKeeper(row) {
+    removeErrorInput();
+    var isPass = true;
+    var txt_input = $("#addAcsKeeperModal .modal-body input, #addAcsKeeperModal .modal-body select");
+    for(var i = 0; i < txt_input.length; i++) {
+        if ($(txt_input[i]).prop("required") == true) {
+            if ($(txt_input[i]).val() == "") {
+                isValid = false;
+                showErrorInput(txt_input[i], i18next.t("This input is required"));
+            }
+        }
+        var control_id = $(txt_input[i]).attr("id");
+        var control_value = $(txt_input[i]).val().trim();
+        var message = "";
+        var param = {};
+        var isValid = true;
+        switch(control_id) {
+            case "txt_quantity":
+                var quantity_remain = ACS_QUANTITY_DEFAULT - countQuantityAcs(row); //số lượng phụ tùng còn lại
+                if (control_value == "") continue;
+                if (control_value.search(/\w/)) {
+                    isValid = false;
+                    message = "Just accpept only number!";
+                } else if (parseInt(control_value) > quantity_remain) {
+                    isValid = false;
+                    message = "Not enough quantity!";
+                    param = {"quantity": quantity_remain};
+                }
+                if (isValid == false){
+                    showErrorInput(txt_input[i], i18next.t(message, param));
+                    isPass = false;
+                }
 
-    if (note.length > 420) {
-        var newNote = note.substr(0, 420) + " ... ";
-        $(pop).html(newNote).append(html);
+                break;
+            case "expired_date":
+                // First check for the pattern
+                if(!/^\d{1,2}[\-\/]\d{1,2}[\-\/]\d{4}$/.test(control_value)){
+                    message = "Not correct format date";
+                    isValid = false;
+                }
+
+                // Parse the date parts to integers
+                var parts = control_value.split(/[\-\/]/);
+                var day = parseInt(parts[0], 10);
+                var month = parseInt(parts[1], 10);
+                var year = parseInt(parts[2], 10);
+
+                // Check the ranges of month and year
+                if(year < 1000 || year > 3000 || month == 0 || month > 12) {
+                    message = "Not correct format date";
+                    isValid = false;
+                }
+
+                var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+
+                // Adjust for leap years
+                if(year % 400 == 0 || (year % 100 != 0 && year % 4 == 0))
+                    monthLength[1] = 29;
+
+                // Check the range of the day
+
+                if ((day > 0 && day <= monthLength[month - 1]) == false) {
+                    message = "Not correct format date";
+                    isValid = false;
+                } else {
+                    isGreaterDate = compareDate($(row).find(".keep_date").html(), control_value);
+                    if(isGreaterDate == -1){
+                        isValid = false;
+                        message = "Expired date have to greater than or equals to keep date";
+                    }
+
+                }
+                if (!isValid) {
+                    showErrorInput(txt_input[i], i18next.t(message));
+                    isPass = false;
+                }
+
+                break;
+        }
+    }
+    return isPass;
+}
+
+//đếm số lượng phụ tùng đã được giữ
+function countQuantityAcs(row) {
+    var txt_input = $("#nicescroll-iput  .tb-keeper .quantity");
+    var result = 0;
+    for(var i = 0; i < txt_input.length; i++) {
+        var quantity = parseInt($(txt_input[i]).html());
+        result+= quantity;
+    }
+    if (row != null && row != undefined) {
+        result -= parseInt($(row).find(".quantity").html());
+    }
+
+    return result;
+}
+
+function compareDate(date1, date2) {
+    if (date1 == null || date1 == undefined || date1 == "") {
+        date1 = getCurrentDate();
+    }
+    var datePart1 = date1.split(/[\/-]/);
+    var datePart2 = date2.split(/[\/-]/);
+    if (parseInt(datePart2[2]) > parseInt(datePart1[2])) {
+        return 1;
+    } else if (parseInt(datePart2[2]) == parseInt(datePart1[2])) {
+        if (parseInt(datePart2[1]) > parseInt(datePart1[1]) ) {
+            return 1;
+        } else if (parseInt(datePart2[1]) == parseInt(datePart1[1]) ) {
+            if (parseInt(datePart2[0]) > parseInt(datePart1[0]) ) {
+                return 1;
+            } else if (parseInt(datePart2[0]) == parseInt(datePart1[0]) ) {
+                return 0;
+            } else {
+                return -1;
+            }
+        } else {
+            return -1;
+        }
+    } else {
+        return -1;
     }
 }

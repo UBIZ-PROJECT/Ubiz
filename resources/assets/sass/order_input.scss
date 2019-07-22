@@ -1,0 +1,80 @@
+// Variables
+@import "variables";
+
+.order-input {
+  .dt-row {
+    padding: 0px 15px;
+    padding-left: 0px;
+    margin-top: 5px;
+    .row {
+      background-color: #e8f0fe;
+    }
+    .dt-row-head {
+      padding: 3px 0px;
+    }
+    .dt-row-body {
+      padding: 5px 0px;
+      border-top: 1px solid #a6a6a6;
+    }
+    .root-56 {
+      padding-top: 2px !important;
+      padding-bottom: 2px !important;
+      height: 22px;
+    }
+    .fieldGroup {
+      height: 22px !important;
+    }
+    .tox-tbtn {
+      height: 25px;
+    }
+    i.i-btn {
+      cursor: pointer;
+    }
+  }
+
+  .total-info input {
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-bottom: 1px solid #a6a6a6;
+    background: none;
+    color: black !important;
+  }
+
+  .add-btn {
+    position: fixed;
+    right: 15px;
+    z-index: 999;
+  }
+
+  .tag-editor {
+    list-style-type: none;
+    padding: 0 5px 0 0;
+    margin: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border: 1px solid #eee;
+    cursor: text;
+    font: inherit;
+    border: 1px solid #a6a6a6;
+    color: #555;
+    background: #fff;
+    line-height: 20px;
+    width: 100%;
+    height: 100px;
+
+    .tag-editor-tag {
+      color: #263238;
+      background: #f57c00;
+    }
+
+    .tag-editor-delete {
+      border-left: 1px solid #ffffff;
+      background: #f57c00;
+
+      i:before {
+        color: red;
+      }
+    }
+  }
+}

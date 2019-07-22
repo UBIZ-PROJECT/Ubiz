@@ -13,7 +13,7 @@ class UsersController extends Controller
     public function getUsers(Request $request)
     {
         try {
-
+            checkUserRight('3', '1');
             list($page, $sort, $search) = $this->getRequestData($request);
 
             $user = new User();
@@ -33,7 +33,7 @@ class UsersController extends Controller
             if ($request->has('pos')) {
                 list ($page, $sort, $search) = $this->getRequestData($request);
                 $data = $user->getUserByPos($request->pos, $sort, $search);
-            }else{
+            } else {
                 $data = $user->getUserById($id);
             }
         } catch (\Throwable $e) {
@@ -47,11 +47,17 @@ class UsersController extends Controller
         try {
             $user = new User();
             list($page, $sort, $search, $user_data) = $this->getRequestData($request);
+
+            $validator = $user->validateData($user_data);
+            if ($validator['success'] == false) {
+                return response()->json(['success' => false, 'message' => $validator['message']], 200);
+            }
+
             $user->updateUser($id, $user_data);
+            return response()->json(['success' => true, 'message' => __("Successfully processed.")], 200);
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['success' => true, 'message' => __("Successfully processed.")], 200);
     }
 
     public function insertUser(Request $request)
@@ -59,6 +65,12 @@ class UsersController extends Controller
         try {
             $user = new User();
             list($page, $sort, $search, $user_data) = $this->getRequestData($request);
+
+            $validator = $user->validateData($user_data);
+            if ($validator['success'] == false) {
+                return response()->json(['success' => false, 'message' => $validator['message']], 200);
+            }
+
             $user->insertUser($user_data);
         } catch (\Throwable $e) {
             throw $e;
@@ -119,11 +131,17 @@ class UsersController extends Controller
         }
 
         $user = [];
+        if ($request->has("txt_com_id")) {
+            $user['com_id'] = $request->txt_com_id;
+        }
         if ($request->has('txt_code')) {
             $user['code'] = $request->txt_code;
         }
         if ($request->has('txt_name')) {
             $user['name'] = $request->txt_name;
+        }
+        if ($request->has('txt_rank')) {
+            $user['rank'] = $request->txt_rank;
         }
         if ($request->has('txt_phone')) {
             $user['phone'] = $request->txt_phone;

@@ -7,7 +7,6 @@
  */
 
 namespace App\Model;
-use App\Helper;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -58,7 +57,8 @@ class Series implements JWTSubject
         $series = DB::table('product_series')
             ->leftJoin("users", "users.id","=","product_series.serial_keeper")
             ->select('product_series.prd_series_id','product_series.prd_id','product_series.serial_no','product_series.serial_sts',
-                'product_series.serial_keeper','product_series.serial_note', 'product_series.inp_date',"users.name")
+                DB::raw('IFNULL(product_series.serial_keeper,"") as serial_keeper'),DB::raw('IFNULL(product_series.serial_note,"") as serial_note'),
+                DB::raw('IFNULL(product_series.serial_expired_date,"") as serial_expired_date'),DB::raw('IFNULL(product_series.serial_keep_date,"") as serial_keep_date'),'product_series.inp_date',DB::raw("IFNULL(users.name,'') as name"))
             ->whereRaw($where_raw, $params)
             ->orderBy($field_name, $order_by)
             ->offset($page * $rows_per_page)
@@ -77,9 +77,11 @@ class Series implements JWTSubject
                     'prd_id'=> $param['prd_id'],
                     'serial_no'=>$param['serial_no'],
                     'serial_sts'=>$param['serial_sts'],
-                    'serial_keeper'=>$param['serial_keeper'],
-                    'serial_note'=>$param['serial_note'],
+                    'serial_keeper'=>!empty($param['serial_keeper']) ? $param['serial_keeper'] : null,
+                    'serial_note'=>!empty($param['serial_note']) ? $param['serial_note'] : null,
                     'delete_flg'=>'0',
+                    'serial_expired_date'=>!empty($param['serial_expired_date']) ? $this->convertDBDateByString($param['serial_expired_date']) : null,
+                    'serial_keep_date'=>!empty($param['serial_keep_date']) ? date('Y-m-d H:i:s') : null,
                     'inp_date'=>date('Y-m-d H:i:s'),
                     'upd_date'=>date('Y-m-d H:i:s'),
                     'inp_user'=>$this->CONST_USER,
@@ -102,8 +104,10 @@ class Series implements JWTSubject
                 ->update([
                     'serial_no'=>$param['serial_no'],
                     'serial_sts'=>$param['serial_sts'],
-                    'serial_keeper'=>$param['serial_keeper'],
-                    'serial_note'=>$param['serial_note'],
+                    'serial_keeper'=>!empty($param['serial_keeper']) ? $param['serial_keeper'] : null,
+                    'serial_note'=>!empty($param['serial_note']) ? $param['serial_note'] : null,
+                    'serial_expired_date'=>!empty($param['serial_expired_date']) ? $this->convertDBDateByString($param['serial_expired_date']) : null,
+                    'serial_keep_date'=>!empty($param['serial_keep_date']) ? date('Y-m-d H:i:s') : null,
                     'upd_date'=>date('Y-m-d H:i:s')
                 ]);
             DB::commit();
@@ -165,13 +169,9 @@ class Series implements JWTSubject
     {
         try {
             list($where_raw,$params) = $this->makeWhereRaw($prd_id, $search);
-            list($field_name, $order_by) = $this->makeOrderBy($sort);
-            $count = DB::select("
-                SELECT count(*) as count
-                    FROM product_series where $where_raw 
-                ORDER BY $field_name $order_by
-                ", $params);
-            $count = $count[0]->count;
+            $count = DB::table("product_series")
+                ->whereRaw($where_raw, $params)
+                ->count();
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -189,5 +189,16 @@ class Series implements JWTSubject
             $field_name = implode('_', $sort_info);
         }
         return [$field_name, $order_by];
+    }
+
+    private function convertDBDateByString($date) {
+        if (!empty($date)) {
+            $timestamp = strtotime($date);
+            if ($timestamp === FALSE) {
+                $timestamp = strtotime(str_replace('/', '-', $date));
+            }
+            $date = date('Y-m-d H:i:s', $timestamp);
+        }
+        return $date;
     }
 }

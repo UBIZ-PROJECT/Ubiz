@@ -13,13 +13,15 @@
 
 
 -- Dumping database structure for ubiz
-CREATE DATABASE IF NOT EXISTS `ubiz` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
-USE `ubiz`;
+CREATE DATABASE IF NOT EXISTS `tkp` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
+USE `tkp`;
 
 -- Dumping structure for table ubiz.customer
 DROP TABLE IF EXISTS `customer`;
 CREATE TABLE IF NOT EXISTS `customer` (
   `cus_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `cus_code` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` int(11) NOT NULL,
   `cus_name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `cus_type` char(2) COLLATE utf8mb4_unicode_ci NOT NULL,
   `cus_phone` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -673,3 +675,47 @@ INSERT INTO `users` (`id`, `code`, `name`, `avatar`, `password`, `phone`, `email
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+
+CREATE TABLE `order` (
+	`ord_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`ord_code` VARCHAR(10) NOT NULL COLLATE 'utf8_unicode_ci',
+	`ord_date` TIMESTAMP NULL DEFAULT NULL,
+	`pri_id` INT(11) NOT NULL,
+	`cus_id` INT(11) NOT NULL,
+	`user_id` INT(11) NOT NULL,
+	`exp_date` TIMESTAMP NULL DEFAULT NULL,
+	`delete_flg` CHAR(1) NOT NULL DEFAULT '0' COLLATE 'utf8_unicode_ci',
+	`inp_date` TIMESTAMP NULL DEFAULT NULL,
+	`inp_user` INT(11) NOT NULL,
+	`upd_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`upd_user` INT(11) NOT NULL,
+	PRIMARY KEY (`ord_id`)
+)
+COLLATE='utf8_unicode_ci'
+ENGINE=InnoDB
+;
+
+CREATE TABLE `ord_detail` (
+	`pro_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`pri_id` INT(11) NOT NULL,
+	`model` VARCHAR(100) NULL DEFAULT NULL COLLATE ''utf8_unicode_ci'',
+	`series` VARCHAR(250) NULL DEFAULT NULL COLLATE 'utf8_unicode_ci',
+	`type` CHAR(1) NOT NULL COLLATE 'utf8_unicode_ci',
+	`code` VARCHAR(5) NOT NULL COLLATE 'utf8_unicode_ci',
+	`name` VARCHAR(100) NOT NULL COLLATE 'utf8_unicode_ci',
+	`price` INT(11) NOT NULL,
+	`unit` VARCHAR(20) NOT NULL COLLATE 'utf8_unicode_ci',
+	`amount` INT(11) NOT NULL,
+	`specs` VARCHAR(255) NOT NULL COLLATE 'utf8_unicode_ci',
+	`delivery_date` TIMESTAMP NULL DEFAULT NULL,
+	`status` CHAR(1) NOT NULL COLLATE 'utf8_unicode_ci',
+	`delete_flg` CHAR(1) NOT NULL DEFAULT '0' COLLATE 'utf8_unicode_ci',
+	`inp_date` TIMESTAMP NULL DEFAULT NULL,
+	`inp_user` INT(11) NOT NULL,
+	`upd_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`upd_user` INT(11) NOT NULL,
+	PRIMARY KEY (`pro_id`)
+)
+COLLATE='utf8_unicode_ci'
+ENGINE=InnoDB
+;

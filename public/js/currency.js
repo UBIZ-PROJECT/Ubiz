@@ -6,6 +6,9 @@
         this.rows_num = 0;
         this.o_page = null;
         this.i_page = null;
+        this.sidebar_scrollbars = null;
+        this.output_scrollbars = null;
+        this.input_scrollbars = null;
     };
 
     jQuery.UbizOIWidget = new UbizOIWidget();
@@ -13,26 +16,9 @@
         w_init: function () {
             jQuery.UbizOIWidget.o_page = jQuery("#o-put");
             jQuery.UbizOIWidget.i_page = jQuery("#i-put");
-            jQuery('#nicescroll-sidebar').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-sidebar',
-                autohidemode: false,
-                horizrailenabled: false
-            });
-            jQuery('#nicescroll-oput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-oput',
-                autohidemode: false,
-                horizrailenabled: false
-            });
+            jQuery.UbizOIWidget.sidebar_scrollbars = fnc_set_scrollbars("nicescroll-sidebar");
+            jQuery.UbizOIWidget.output_scrollbars = fnc_set_scrollbars("nicescroll-oput");
+            jQuery.UbizOIWidget.input_scrollbars = fnc_set_scrollbars("nicescroll-iput");
             jQuery('.utooltip').tooltipster({
                 side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
             });
@@ -43,8 +29,8 @@
             var params = {};
             params.page = jQuery.UbizOIWidget.page;
 
-            var search_info = jQuery.UbizOIWidget.w_get_search_info();
-            Object.assign(params, search_info);
+            var search = jQuery('#fuzzy').val();
+            params.search = search;
 
             var sort_name = jQuery(self).attr('sort-name');
             var order_by = jQuery(self).attr('order-by') == '' ? 'asc' : (jQuery(self).attr('order-by') == 'asc' ? 'desc' : 'asc');
@@ -59,41 +45,54 @@
             ubizapis('v1', '/currency', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_save: function () {
-            var form_data = jQuery.UbizOIWidget.w_get_form_data();
-            var id = jQuery("#txt_id").val();
-            form_data.append("id", id);
-            if (id == "0") {
-                form_data.append('_method', 'put');
-                ubizapis('v1', '/currency', 'post', form_data, null, function(response){
-                    if (response.data.success == true) {
-                        swal({
-                            title: i18next.t('Successfully processed.'),
-                            text: i18next.t('Do you want to continue or go back to the list page?'),
-                            type: 'question',
-                            showCancelButton: true,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#3085d6',
-                            cancelButtonText: i18next.t('Back to the list page'),
-                            confirmButtonText: i18next.t('Continue'),
-                            reverseButtons: true
-                        }).then((result) => {
-                            if (result.value) {
-                                jQuery.UbizOIWidget.w_clean_input_page();
-                            } else if (result.dismiss === swal.DismissReason.cancel) {
-                                jQuery.UbizOIWidget.w_go_back_to_output_page();
-                                jQuery.UbizOIWidget.w_refresh_output_page();
+            swal({
+                title: i18next.t('Do you want to save the data.?'),
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: i18next.t('No'),
+                confirmButtonText: i18next.t('Yes'),
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    var form_data = jQuery.UbizOIWidget.w_get_form_data();
+                    var id = jQuery("#txt_id").val();
+                    form_data.append("id", id);
+                    if (id == "0") {
+                        form_data.append('_method', 'put');
+                        ubizapis('v1', '/currency', 'post', form_data, null, function (response) {
+                            if (response.data.success == true) {
+                                swal({
+                                    title: i18next.t('Successfully processed.'),
+                                    text: i18next.t('Do you want to continue or go back to the list page?'),
+                                    type: 'question',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#3085d6',
+                                    cancelButtonText: i18next.t('Back to the list page'),
+                                    confirmButtonText: i18next.t('Continue'),
+                                    reverseButtons: true
+                                }).then((result) => {
+                                    if (result.value) {
+                                        jQuery.UbizOIWidget.w_clean_input_page();
+                                    } else if (result.dismiss === swal.DismissReason.cancel) {
+                                        jQuery.UbizOIWidget.w_go_back_to_output_page();
+                                        jQuery.UbizOIWidget.w_fuzzy_search();
+                                    }
+                                })
+                            } else {
+                                swal.fire({
+                                    type: 'error',
+                                    title: response.data.message
+                                })
                             }
-                        })
-                    } else {
-                        swal({
-                            type: 'error',
-                            text: response.data.message
                         });
+                    } else {
+                        ubizapis('v1', '/currency/' + id + '/update', 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
                     }
-                });
-            } else {
-                ubizapis('v1', '/currency/' + id + '/update', 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
-            }
+                }
+            })
         },
         w_o_delete: function () {
             var ids = jQuery.UbizOIWidget.w_get_checked_rows();
@@ -102,8 +101,7 @@
 
             swal({
                 title: i18next.t('Do you want to delete the data?'),
-                text: i18next.t('Once deleted, you will not be able to recover this data!'),
-                type: 'warning',
+                type: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
@@ -120,8 +118,7 @@
             var id = jQuery("#txt_id").val();
             swal({
                 title: i18next.t('Do you want to delete the data?'),
-                text: i18next.t('Once deleted, you will not be able to recover this data!'),
-                type: 'warning',
+                type: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
@@ -144,71 +141,32 @@
         },
         w_save_callback: function (response) {
             if (response.data.success == true) {
-                jQuery.UbizOIWidget.w_go_back_to_output_page();
-                jQuery.UbizOIWidget.w_refresh_output_page();
+                swal.fire({
+                    type: 'success',
+                    title: response.data.message,
+                    onClose: () => {
+                        jQuery.UbizOIWidget.w_go_back_to_output_page();
+                        jQuery.UbizOIWidget.w_fuzzy_search();
+                    }
+                })
             } else {
-                swal({
+                swal.fire({
                     type: 'error',
-                    text: response.data.message
-                });
+                    title: response.data.message
+                })
             }
-        },
-        w_search: function () {
-
-            var params = {};
-            params.page = '0';
-
-            var search_info = jQuery.UbizOIWidget.w_get_search_info();
-            Object.assign(params, search_info);
-
-            if (jQuery.isEmptyObject(search_info) === false) {
-                var fuzzy = jQuery.UbizOIWidget.w_convert_search_info_to_fuzzy(search_info);
-                jQuery('#fuzzy').val(fuzzy);
-            }
-
-            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-            params.sort = sort_info.sort_name + "_" + sort_info.order_by;
-
-            var event = new CustomEvent("click");
-            document.body.dispatchEvent(event);
-            ubizapis('v1', '/currency', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
-        },
-        w_clear_search_form: function () {
-            jQuery('#fuzzy').val("");
-            jQuery.UbizOIWidget.w_clear_advance_search_form();
-            jQuery.UbizOIWidget.w_refresh_output_page();
-
-        },
-        w_clear_advance_search_form: function () {
-            jQuery('#code').val("");
-            jQuery('#name').val("");
-            jQuery('#symbol').val("");
-            jQuery('#state').val("");
-            jQuery('#contain').val("");
-            jQuery('#notcontain').val("");
-        },
-        w_update_search_form: function (search_info) {
-            jQuery.UbizOIWidget.w_clear_advance_search_form();
-            jQuery.each(search_info, function (key, val) {
-                var search_item = jQuery('#' + key);
-                if (search_item.length == 1) {
-                    search_item.val(val);
-                }
-            });
         },
         w_fuzzy_search: function () {
-            var params = {};
-            params.page = '0';
             jQuery.UbizOIWidget.page = '0';
 
-            var fuzzy = jQuery('#fuzzy').val();
-            var search_info = jQuery.UbizOIWidget.w_convert_fuzzy_to_search_info(fuzzy);
-            jQuery.UbizOIWidget.w_update_search_form(search_info);
-            Object.assign(params, search_info);
-
+            var search = jQuery('#fuzzy').val();
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
+
+            var params = {};
+            params.page = '0';
             params.sort = sort;
+            params.search = search;
 
             ubizapis('v1', '/currency', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
@@ -218,7 +176,7 @@
                 jQuery.UbizOIWidget.w_fuzzy_search();
             }
         },
-        w_go_to_input_page: function (pos ,id) {
+        w_go_to_input_page: function (pos, id) {
             jQuery.UbizOIWidget.pos = pos;
             if (id == 0 || pos == 0) {
                 jQuery("#btn-delete").hide();
@@ -226,20 +184,12 @@
                 jQuery("#i-paging-older").hide();
                 jQuery("#i-paging-newer").hide();
                 jQuery.UbizOIWidget.w_clean_input_page();
+
+                jQuery.UbizOIWidget.w_sleep_scrollbars(jQuery.UbizOIWidget.output_scrollbars);
+                jQuery.UbizOIWidget.w_update_scrollbars(jQuery.UbizOIWidget.input_scrollbars);
+
                 jQuery.UbizOIWidget.o_page.hide();
                 jQuery.UbizOIWidget.i_page.fadeIn("slow");
-                jQuery('#nicescroll-oput').getNiceScroll().remove();
-                jQuery('#nicescroll-iput').getNiceScroll().remove();
-                jQuery('#nicescroll-iput').niceScroll({
-                    cursorcolor: "#9fa8b0",
-                    cursorwidth: "5px",
-                    cursorborder: "none",
-                    cursorborderradius: 5,
-                    cursoropacitymin: 0.4,
-                    scrollbarid: 'nc-input',
-                    autohidemode: false,
-                    horizrailenabled: false
-                });
             } else {
                 jQuery("#btn-delete").show();
                 ubizapis('v1', '/currency/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
@@ -248,20 +198,11 @@
         w_go_back_to_output_page: function () {
             jQuery.UbizOIWidget.o_page.fadeIn("slow");
             jQuery.UbizOIWidget.i_page.hide();
-            jQuery('#nicescroll-oput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').getNiceScroll().remove();
-            jQuery('#nicescroll-oput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-oput',
-                autohidemode: false,
-                horizrailenabled: false
-            });
+            jQuery.UbizOIWidget.w_sleep_scrollbars(jQuery.UbizOIWidget.input_scrollbars);
+            jQuery.UbizOIWidget.w_update_scrollbars(jQuery.UbizOIWidget.output_scrollbars);
         },
         w_refresh_output_page: function () {
+            jQuery('#fuzzy').val('');
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
             ubizapis('v1', '/currency', 'get', null, {
@@ -274,56 +215,6 @@
             var sort_name = sort_obj.attr('sort-name');
             var order_by = sort_obj.attr('order-by');
             return {'sort_name': sort_name, 'order_by': order_by};
-        },
-        w_get_search_info: function () {
-
-            var search_info = {};
-
-            if (jQuery('#code').val().replace(/\s/g, '') != '') {
-                search_info.code = jQuery('#code').val();
-            }
-
-            if (jQuery('#name').val().replace(/\s/g, '') != '') {
-                search_info.name = jQuery('#name').val();
-            }
-
-            if (jQuery('#symbol').val().replace(/\s/g, '') != '') {
-                search_info.symbol = jQuery('#symbol').val();
-            }
-
-            if (jQuery('#state').val().replace(/\s/g, '') != '') {
-                search_info.state = jQuery('#state').val();
-            }
-
-
-            if (jQuery('#contain').val().replace(/\s/g, '') != '') {
-                search_info.contain = jQuery('#contain').val();
-            }
-
-            if (jQuery('#notcontain').val().replace(/\s/g, '') != '') {
-                search_info.notcontain = jQuery('#notcontain').val();
-            }
-
-            return search_info;
-        },
-        w_convert_search_info_to_fuzzy: function (search_info) {
-            var fuzzy = JSON.stringify(search_info);
-            return fuzzy;
-        },
-        w_convert_fuzzy_to_search_info: function (fuzzy) {
-            var search_info = {};
-            try {
-                search_info = JSON.parse(fuzzy);
-            } catch (e) {
-                var fuzzy_info = fuzzy.split('-');
-                if (fuzzy_info.length == 1) {
-                    search_info.contain = fuzzy;
-                } else {
-                    fuzzy_info.shift();
-                    search_info.notcontain = fuzzy_info.join('-');
-                }
-            }
-            return search_info;
         },
         w_get_older_data: function (page) {
             jQuery.UbizOIWidget.page = page;
@@ -347,32 +238,34 @@
         },
         w_o_delete_callback: function (response) {
             if (response.data.success == true) {
-                jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
-                swal({
+                swal.fire({
                     type: 'success',
-                    text: response.data.message
+                    title: response.data.message,
+                    onClose: () => {
+                        jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
+                    }
                 });
             } else {
-                swal({
+                swal.fire({
                     type: 'error',
-                    text: response.data.message
+                    title: response.data.message
                 });
             }
         },
         w_i_delete_callback: function (response) {
             if (response.data.success == true) {
-                swal({
+                swal.fire({
                     type: 'success',
-                    text: response.data.message,
-                    onClose: function(){
+                    title: response.data.message,
+                    onClose: () => {
                         jQuery.UbizOIWidget.w_go_back_to_output_page();
-                        jQuery.UbizOIWidget.w_refresh_output_page();
+                        jQuery.UbizOIWidget.w_fuzzy_search();
                     }
                 });
             } else {
-                swal({
+                swal.fire({
                     type: 'error',
-                    text: response.data.message
+                    title: response.data.message
                 });
             }
         },
@@ -410,35 +303,37 @@
 
             jQuery.UbizOIWidget.o_page.hide();
             jQuery.UbizOIWidget.i_page.fadeIn("slow");
-            jQuery('#nicescroll-oput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-input',
-                autohidemode: false,
-                horizrailenabled: false
-            });
         },
         w_clean_input_page: function () {
             jQuery.UbizOIWidget.i_page.find("#txt_id").val("0");
-            jQuery.UbizOIWidget.i_page.find("#txt_code").val("");
-            jQuery.UbizOIWidget.i_page.find("#txt_name").val("");
-            jQuery.UbizOIWidget.i_page.find("#txt_symbol").val("");
-            jQuery.UbizOIWidget.i_page.find("#txt_state").val("");
-            jQuery.UbizOIWidget.i_page.find("img.img-thumbnail").attr('src', "../images/avatar.png");
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_nm").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_cd_alpha_2").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_cd_alpha_3").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_cd_numeric").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_nm").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_cd_numeric_default").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_cd_alpha").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_cd_numeric").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_minor_units").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_symbol").val("");
+            jQuery.UbizOIWidget.i_page.find("#txt_active_flg").prop("checked", false);
         },
         w_set_input_page: function (data) {
             jQuery.UbizOIWidget.i_page.find("#txt_id").val(data.cur_id);
-            jQuery.UbizOIWidget.i_page.find("#txt_code").val(data.cur_code);
-            jQuery.UbizOIWidget.i_page.find("#txt_name").val(data.cur_name);
-            jQuery.UbizOIWidget.i_page.find("#txt_symbol").val(data.cur_symbol);
-            jQuery.UbizOIWidget.i_page.find("#txt_state").val(data.cur_state);
-            if(data.cur_avatar != ''){
-                jQuery.UbizOIWidget.i_page.find("img.img-thumbnail").attr('src', data.cur_avatar);
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_nm").val(data.cur_ctr_nm);
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_cd_alpha_2").val(data.cur_ctr_cd_alpha_2);
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_cd_alpha_3").val(data.cur_ctr_cd_alpha_3);
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_cd_numeric").val(data.cur_ctr_cd_numeric);
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_nm").val(data.cur_nm);
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_cd_numeric_default").val(data.cur_cd_numeric_default);
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_cd_alpha").val(data.cur_cd_alpha);
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_cd_numeric").val(data.cur_cd_numeric);
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_minor_units").val(data.cur_minor_units);
+            jQuery.UbizOIWidget.i_page.find("#txt_cur_symbol").val(data.cur_symbol);
+            if (data.active_flg == '1') {
+                jQuery.UbizOIWidget.i_page.find("#txt_active_flg").prop("checked", true);
+            } else {
+                jQuery.UbizOIWidget.i_page.find("#txt_active_flg").prop("checked", false);
             }
         },
         w_make_row_html: function (id, cols, row_no, page_no, rows_per_page) {
@@ -556,16 +451,18 @@
         },
         w_get_form_data: function () {
             var form_data = new FormData();
-            form_data.append('txt_name', jQuery("#txt_name").val());
-            form_data.append('txt_code', jQuery("#txt_code").val());
-
-            if (jQuery('input[name=inp-upload-image]')[0].files.length > 0) {
-                form_data.append('avatar', jQuery('input[name=inp-upload-image]')[0].files[0]);
-            }
-
-            form_data.append('txt_symbol', jQuery("#txt_symbol").val());
-            form_data.append('txt_state', jQuery("#txt_state").val());
-
+            form_data.append('txt_cur_id', jQuery.UbizOIWidget.i_page.find("#txt_id").val());
+            form_data.append('txt_cur_ctr_nm', jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_nm").val());
+            form_data.append('txt_cur_ctr_cd_alpha_2', jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_cd_alpha_2").val());
+            form_data.append('txt_cur_ctr_cd_alpha_3', jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_cd_alpha_3").val());
+            form_data.append('txt_cur_ctr_cd_numeric', jQuery.UbizOIWidget.i_page.find("#txt_cur_ctr_cd_numeric").val());
+            form_data.append('txt_cur_nm', jQuery.UbizOIWidget.i_page.find("#txt_cur_nm").val());
+            form_data.append('txt_cur_cd_numeric_default', jQuery.UbizOIWidget.i_page.find("#txt_cur_cd_numeric_default").val());
+            form_data.append('txt_cur_cd_alpha', jQuery.UbizOIWidget.i_page.find("#txt_cur_cd_alpha").val());
+            form_data.append('txt_cur_cd_numeric', jQuery.UbizOIWidget.i_page.find("#txt_cur_cd_numeric").val());
+            form_data.append('txt_cur_minor_units', jQuery.UbizOIWidget.i_page.find("#txt_cur_minor_units").val());
+            form_data.append('txt_cur_symbol', jQuery.UbizOIWidget.i_page.find("#txt_cur_symbol").val());
+            form_data.append('txt_active_flg', jQuery.UbizOIWidget.i_page.find("#txt_active_flg").is(':checked') ? '1' : '0');
             return form_data;
         },
         w_get_detail_data: function (pos) {
@@ -577,13 +474,8 @@
             params.pos = pos;
             jQuery.UbizOIWidget.pos = pos;
 
-            var search_info = jQuery.UbizOIWidget.w_get_search_info();
-            Object.assign(params, search_info);
-
-            if (jQuery.isEmptyObject(search_info) === false) {
-                var fuzzy = jQuery.UbizOIWidget.w_convert_search_info_to_fuzzy(search_info);
-                jQuery('#fuzzy').val(fuzzy);
-            }
+            var search = jQuery('#fuzzy').val();
+            params.search = search;
 
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             params.sort = sort_info.sort_name + "_" + sort_info.order_by;
@@ -656,6 +548,17 @@
             jQuery('.itooltip').tooltipster({
                 side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
             });
+        },
+        w_sleep_scrollbars: function (instance) {
+            if (typeof instance == "undefined")
+                return false;
+            instance.sleep();
+        },
+        w_update_scrollbars: function (instance) {
+
+            if (typeof instance == "undefined")
+                return false;
+            instance.update();
         }
     });
 })(jQuery);

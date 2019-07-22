@@ -6,6 +6,9 @@
         this.rows_num = 0;
         this.o_page = null;
         this.i_page = null;
+        this.sidebar_scrollbars = null;
+        this.output_scrollbars = null;
+        this.input_scrollbars = null;
     };
 
     jQuery.UbizOIWidget = new UbizOIWidget();
@@ -13,26 +16,9 @@
         w_init: function () {
             jQuery.UbizOIWidget.o_page = jQuery("#o-put");
             jQuery.UbizOIWidget.i_page = jQuery("#i-put");
-            jQuery('#nicescroll-sidebar').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-sidebar',
-                autohidemode: false,
-                horizrailenabled: false
-            });
-            jQuery('#nicescroll-oput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-oput',
-                autohidemode: false,
-                horizrailenabled: false
-            });
+            jQuery.UbizOIWidget.sidebar_scrollbars = fnc_set_scrollbars("nicescroll-sidebar");
+            jQuery.UbizOIWidget.output_scrollbars = fnc_set_scrollbars("nicescroll-oput");
+            jQuery.UbizOIWidget.input_scrollbars = fnc_set_scrollbars("nicescroll-iput");
             jQuery('.utooltip').tooltipster({
                 side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
             });
@@ -42,8 +28,8 @@
             var params = {};
             params.page = jQuery.UbizOIWidget.page;
 
-            var search_info = jQuery.UbizOIWidget.w_get_search_info();
-            Object.assign(params, search_info);
+            var search = jQuery('#fuzzy').val();
+            params.search = search;
 
             var sort_name = jQuery(self).attr('sort-name');
             var order_by = jQuery(self).attr('order-by') == '' ? 'asc' : (jQuery(self).attr('order-by') == 'asc' ? 'desc' : 'asc');
@@ -58,41 +44,54 @@
             ubizapis('v1', '/departments', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_save: function () {
-            var form_data = jQuery.UbizOIWidget.w_get_form_data();
-            var id = jQuery("#txt_id").val();
-            form_data.append("id", id);
-            if (id == "0") {
-                form_data.append('_method', 'put');
-                ubizapis('v1', '/departments', 'post', form_data, null, function(response){
-                    if (response.data.success == true) {
-                        swal({
-                            title: i18next.t('Successfully processed.'),
-                            text: i18next.t('Do you want to continue or go back to the list page?'),
-                            type: 'question',
-                            showCancelButton: true,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#3085d6',
-                            cancelButtonText: i18next.t('Back to the list page'),
-                            confirmButtonText: i18next.t('Continue'),
-                            reverseButtons: true
-                        }).then((result) => {
-                            if (result.value) {
-                                jQuery.UbizOIWidget.w_clean_input_page();
-                            } else if (result.dismiss === swal.DismissReason.cancel) {
-                                jQuery.UbizOIWidget.w_go_back_to_output_page();
-                                jQuery.UbizOIWidget.w_refresh_output_page();
+            swal({
+                title: i18next.t('Do you want to save the data.?'),
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: i18next.t('No'),
+                confirmButtonText: i18next.t('Yes'),
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    var form_data = jQuery.UbizOIWidget.w_get_form_data();
+                    var id = jQuery("#txt_id").val();
+                    form_data.append("id", id);
+                    if (id == "0") {
+                        form_data.append('_method', 'put');
+                        ubizapis('v1', '/departments', 'post', form_data, null, function(response){
+                            if (response.data.success == true) {
+                                swal({
+                                    title: i18next.t('Successfully processed.'),
+                                    text: i18next.t('Do you want to continue or go back to the list page?'),
+                                    type: 'question',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#3085d6',
+                                    cancelButtonText: i18next.t('Back to the list page'),
+                                    confirmButtonText: i18next.t('Continue'),
+                                    reverseButtons: true
+                                }).then((result) => {
+                                    if (result.value) {
+                                        jQuery.UbizOIWidget.w_clean_input_page();
+                                    } else if (result.dismiss === swal.DismissReason.cancel) {
+                                        jQuery.UbizOIWidget.w_go_back_to_output_page();
+                                        jQuery.UbizOIWidget.w_fuzzy_search();
+                                    }
+                                })
+                            } else {
+                                swal.fire({
+                                    type: 'error',
+                                    title: response.data.message
+                                })
                             }
-                        })
-                    } else {
-                        swal({
-                            type: 'error',
-                            text: response.data.message
                         });
+                    } else {
+                        ubizapis('v1', '/departments/' + id + "/update", 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
                     }
-                });
-            } else {
-                ubizapis('v1', '/departments/' + id + "/update", 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
-            }
+                }
+            });
         },
         w_o_delete: function () {
             var ids = jQuery.UbizOIWidget.w_get_checked_rows();
@@ -101,8 +100,7 @@
 
             swal({
                 title: i18next.t('Do you want to delete the data?'),
-                text: i18next.t('Once deleted, you will not be able to recover this data!'),
-                type: 'warning',
+                type: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
@@ -119,8 +117,7 @@
             var id = jQuery("#txt_id").val();
             swal({
                 title: i18next.t('Do you want to delete the data?'),
-                text: i18next.t('Once deleted, you will not be able to recover this data!'),
-                type: 'warning',
+                type: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
@@ -134,76 +131,54 @@
             })
         },
         w_refresh: function () {
-            var id = jQuery("#txt_id").val();
-            if (id == '0') {
-                jQuery.UbizOIWidget.w_clean_input_page();
-            } else {
-                ubizapis('v1', '/departments/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
-            }
-        },
-        w_save_callback: function (response) {
-            if (response.data.success == true) {
-                jQuery.UbizOIWidget.w_go_back_to_output_page();
-                jQuery.UbizOIWidget.w_refresh_output_page();
-            } else {
-                swal({
-                    type: 'error',
-                    text: response.data.message
-                });
-            }
-        },
-        w_search: function () {
-
-            var params = {};
-            params.page = '0';
-
-            var search_info = jQuery.UbizOIWidget.w_get_search_info();
-            Object.assign(params, search_info);
-
-            if (jQuery.isEmptyObject(search_info) === false) {
-                var fuzzy = jQuery.UbizOIWidget.w_convert_search_info_to_fuzzy(search_info);
-                jQuery('#fuzzy').val(fuzzy);
-            }
-
-            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-            params.sort = sort_info.sort_name + "_" + sort_info.order_by;
-
-            var event = new CustomEvent("click");
-            document.body.dispatchEvent(event);
-            ubizapis('v1', '/departments', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
-        },
-        w_clear_search_form: function () {
-            jQuery('#fuzzy').val("");
-            jQuery.UbizOIWidget.w_clear_advance_search_form();
-            jQuery.UbizOIWidget.w_refresh_output_page();
-
-        },
-        w_clear_advance_search_form: function () {
-            jQuery('#dep_code').val("");
-            jQuery('#dep_name').val("");
-        },
-        w_update_search_form: function (search_info) {
-            jQuery.UbizOIWidget.w_clear_advance_search_form();
-            jQuery.each(search_info, function (key, val) {
-                var search_item = jQuery('#' + key);
-                if (search_item.length == 1) {
-                    search_item.val(val);
+            swal({
+                title: i18next.t('Do you want to refresh the data.?'),
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: i18next.t('No'),
+                confirmButtonText: i18next.t('Yes'),
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    var id = jQuery("#txt_id").val();
+                    if (id == '0') {
+                        jQuery.UbizOIWidget.w_clean_input_page();
+                    } else {
+                        ubizapis('v1', '/departments/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
+                    }
                 }
             });
         },
+        w_save_callback: function (response) {
+            if (response.data.success == true) {
+                swal.fire({
+                    type: 'success',
+                    title: response.data.message,
+                    onClose: () => {
+                        jQuery.UbizOIWidget.w_go_back_to_output_page();
+                        jQuery.UbizOIWidget.w_fuzzy_search();
+                    }
+                })
+            } else {
+                swal.fire({
+                    type: 'error',
+                    title: response.data.message
+                });
+            }
+        },
         w_fuzzy_search: function () {
-            var params = {};
-            params.page = '0';
             jQuery.UbizOIWidget.page = '0';
 
-            var fuzzy = jQuery('#fuzzy').val();
-            var search_info = jQuery.UbizOIWidget.w_convert_fuzzy_to_search_info(fuzzy);
-            jQuery.UbizOIWidget.w_update_search_form(search_info);
-            Object.assign(params, search_info);
-
+            var search = jQuery('#fuzzy').val();
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
+
+            var params = {};
+            params.page = '0';
             params.sort = sort;
+            params.search = search;
 
             ubizapis('v1', '/departments', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
@@ -221,42 +196,27 @@
                 jQuery("#i-paging-older").hide();
                 jQuery("#i-paging-newer").hide();
                 jQuery.UbizOIWidget.w_clean_input_page();
+                jQuery.UbizOIWidget.w_sleep_scrollbars(jQuery.UbizOIWidget.output_scrollbars);
+                jQuery.UbizOIWidget.w_update_scrollbars(jQuery.UbizOIWidget.input_scrollbars);
                 jQuery.UbizOIWidget.o_page.hide();
                 jQuery.UbizOIWidget.i_page.fadeIn("slow");
-                jQuery('#nicescroll-oput').getNiceScroll().remove();
-                jQuery('#nicescroll-iput').getNiceScroll().remove();
-                jQuery('#nicescroll-iput').niceScroll({
-                    cursorcolor: "#9fa8b0",
-                    cursorwidth: "5px",
-                    cursorborder: "none",
-                    cursorborderradius: 5,
-                    cursoropacitymin: 0.4,
-                    scrollbarid: 'nc-input',
-                    autohidemode: false,
-                    horizrailenabled: false
-                });
+                $("input[name=txt_dep_code]").attr('disabled', false);
+                $("input[name=txt_dep_code]").closest('div.root_textfield').removeClass('rootIsDisabled');
             } else {
                 jQuery("#btn-delete").show();
                 ubizapis('v1', '/departments/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
+                $("input[name=txt_dep_code]").attr('disabled', true);
+                $("input[name=txt_dep_code]").closest('div.root_textfield').addClass('rootIsDisabled');
             }
         },
         w_go_back_to_output_page: function () {
             jQuery.UbizOIWidget.o_page.fadeIn("slow");
             jQuery.UbizOIWidget.i_page.hide();
-            jQuery('#nicescroll-oput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').getNiceScroll().remove();
-            jQuery('#nicescroll-oput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-oput',
-                autohidemode: false,
-                horizrailenabled: false
-            });
+            jQuery.UbizOIWidget.w_sleep_scrollbars(jQuery.UbizOIWidget.input_scrollbars);
+            jQuery.UbizOIWidget.w_update_scrollbars(jQuery.UbizOIWidget.output_scrollbars);
         },
         w_refresh_output_page: function () {
+            jQuery('#fuzzy').val('');
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
             ubizapis('v1', '/departments', 'get', null, {
@@ -269,47 +229,6 @@
             var sort_name = sort_obj.attr('sort-name');
             var order_by = sort_obj.attr('order-by');
             return {'sort_name': sort_name, 'order_by': order_by};
-        },
-        w_get_search_info: function () {
-
-            var search_info = {};
-
-            if (jQuery('#dep_code').val().replace(/\s/g, '') != '') {
-                search_info.dep_code = jQuery('#dep_code').val();
-            }
-
-            if (jQuery('#dep_name').val().replace(/\s/g, '') != '') {
-                search_info.dep_code = jQuery('#dep_code').val();
-            }
-
-            if (jQuery('#contain').val().replace(/\s/g, '') != '') {
-                search_info.contain = jQuery('#contain').val();
-            }
-
-            if (jQuery('#notcontain').val().replace(/\s/g, '') != '') {
-                search_info.notcontain = jQuery('#notcontain').val();
-            }
-
-            return search_info;
-        },
-        w_convert_search_info_to_fuzzy: function (search_info) {
-            var fuzzy = JSON.stringify(search_info);
-            return fuzzy;
-        },
-        w_convert_fuzzy_to_search_info: function (fuzzy) {
-            var search_info = {};
-            try {
-                search_info = JSON.parse(fuzzy);
-            } catch (e) {
-                var fuzzy_info = fuzzy.split('-');
-                if (fuzzy_info.length == 1) {
-                    search_info.contain = fuzzy;
-                } else {
-                    fuzzy_info.shift();
-                    search_info.notcontain = fuzzy_info.join('-');
-                }
-            }
-            return search_info;
         },
         w_get_older_data: function (page) {
             jQuery.UbizOIWidget.page = page;
@@ -333,32 +252,34 @@
         },
         w_o_delete_callback: function (response) {
             if (response.data.success == true) {
-                jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
-                swal({
+                swal.fire({
                     type: 'success',
-                    text: response.data.message
+                    title: response.data.message,
+                    onClose: () => {
+                        jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
+                    }
                 });
             } else {
-                swal({
+                swal.fire({
                     type: 'error',
-                    text: response.data.message
+                    title: response.data.message
                 });
             }
         },
         w_i_delete_callback: function (response) {
             if (response.data.success == true) {
-                swal({
+                swal.fire({
                     type: 'success',
-                    text: response.data.message,
-                    onClose: function(){
+                    title: response.data.message,
+                    onClose: () => {
                         jQuery.UbizOIWidget.w_go_back_to_output_page();
-                        jQuery.UbizOIWidget.w_refresh_output_page();
+                        jQuery.UbizOIWidget.w_fuzzy_search();
                     }
                 });
             } else {
-                swal({
+                swal.fire({
                     type: 'error',
-                    text: response.data.message
+                    title: response.data.message
                 });
             }
         },
@@ -382,28 +303,14 @@
             jQuery.UbizOIWidget.page = response.data.paging.page;
             jQuery.UbizOIWidget.w_o_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
             jQuery.UbizOIWidget.rows_num = response.data.paging.rows_num;
-
         },
         w_render_data_to_input_page: function (response) {
             var department = response.data.department;
             jQuery.UbizOIWidget.w_clean_input_page();
             jQuery.UbizOIWidget.w_set_input_page(department);
             jQuery.UbizOIWidget.w_i_paging();
-
             jQuery.UbizOIWidget.o_page.hide();
             jQuery.UbizOIWidget.i_page.fadeIn("slow");
-            jQuery('#nicescroll-oput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').getNiceScroll().remove();
-            jQuery('#nicescroll-iput').niceScroll({
-                cursorcolor: "#9fa8b0",
-                cursorwidth: "5px",
-                cursorborder: "none",
-                cursorborderradius: 5,
-                cursoropacitymin: 0.4,
-                scrollbarid: 'nc-input',
-                autohidemode: false,
-                horizrailenabled: false
-            });
         },
         w_clean_input_page: function () {
             jQuery.UbizOIWidget.i_page.find("#txt_id").val("0");
@@ -445,17 +352,6 @@
             col_html += '</div>';
             col_html += '</div>';
             return col_html;
-        },
-        w_make_tab_html: function (data) {
-            var tab_html = "";
-            var screens = data.screens;
-            if (typeof screens === 'object') {
-                jQuery.each(screens, function (screen_id, item) {
-                    tab_html += '<li><div className="active" onClick="jQuery.UbizOIWidget.w_tab_click(' + item. + ', this)">' + i18next.t(item.screen_name) + '</div>';
-                });
-            }
-            var functions = data.functions;
-            return tab_html;
         },
         w_f_checkbox_click: function (self) {
             if (jQuery(self).find('div.ckb-f').hasClass('asU')) {
@@ -529,13 +425,8 @@
             params.pos = pos;
             jQuery.UbizOIWidget.pos = pos;
 
-            var search_info = jQuery.UbizOIWidget.w_get_search_info();
-            Object.assign(params, search_info);
-
-            if (jQuery.isEmptyObject(search_info) === false) {
-                var fuzzy = jQuery.UbizOIWidget.w_convert_search_info_to_fuzzy(search_info);
-                jQuery('#fuzzy').val(fuzzy);
-            }
+            var search = jQuery('#fuzzy').val();
+            params.search = search;
 
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             params.sort = sort_info.sort_name + "_" + sort_info.order_by;
@@ -609,13 +500,16 @@
                 side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
             });
         },
-        w_tab_click: function(tab_id, self){
-            var utb = jQuery(self).closest('div.utb');
-            utb.find('div.tuv').find('ul').find('div').removeClass('active');
-            utb.find('div.rhb').find('div.active').removeClass('active');
+        w_sleep_scrollbars: function (instance) {
+            if (typeof instance == "undefined")
+                return false;
+            instance.sleep();
+        },
+        w_update_scrollbars: function (instance) {
 
-            jQuery(self).addClass('active');
-            utb.find('div.rhb').find('div[id=tab-' + tab_id + ']').addClass('active');
+            if (typeof instance == "undefined")
+                return false;
+            instance.update();
         }
     });
 })(jQuery);

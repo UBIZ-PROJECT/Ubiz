@@ -33,12 +33,48 @@
                                 <div class="bvo">
                                     <ul class="cto">
                                         <li class="who">
-                                            <a class="ruo" role="button" href="/users">
+                                            <a class="ruo" role="button" href="/setting/company">
+                                                <div class="pto">
+                                                    <img src="{{asset('images/app_bg.png')}}">
+                                                    <div class="zro">
+                                                        <div class="rco">
+                                                            <div class="kko">{{ __("Company") }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="who">
+                                            <a class="ruo" role="button" href="/setting/departments">
+                                                <div class="pto">
+                                                    <img src="{{asset('images/app_bg.png')}}">
+                                                    <div class="zro">
+                                                        <div class="rco">
+                                                            <div class="kko">{{ __("Department") }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="who">
+                                            <a class="ruo" role="button" href="/setting/users">
                                                 <div class="pto">
                                                     <img src="{{asset('images/app_bg.png')}}">
                                                     <div class="zro">
                                                         <div class="rco">
                                                             <div class="kko">{{ __("Employee") }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="who">
+                                            <a class="ruo" role="button" href="/setting/currency">
+                                                <div class="pto">
+                                                    <img src="{{asset('images/app_bg.png')}}">
+                                                    <div class="zro">
+                                                        <div class="rco">
+                                                            <div class="kko">{{ __("Currency") }}</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -69,36 +105,48 @@
                                             </a>
                                         </li>
                                         <li class="who">
-                                            <a class="ruo" role="button" href="/currency">
-                                                <div class="pto">
-                                                    <img src="{{asset('images/app_bg.png')}}">
-                                                    <div class="zro">
-                                                        <div class="rco">
-                                                            <div class="kko">{{ __("Currency") }}</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li class="who">
-                                            <a class="ruo" role="button" href="/departments">
-                                                <div class="pto">
-                                                    <img src="{{asset('images/app_bg.png')}}">
-                                                    <div class="zro">
-                                                        <div class="rco">
-                                                            <div class="kko">{{ __("Department") }}</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li class="who">
                                             <a class="ruo" role="button" href="/products">
                                                 <div class="pto">
                                                     <img src="{{asset('images/app_bg.png')}}">
                                                     <div class="zro">
                                                         <div class="rco">
                                                             <div class="kko">{{ __("Product") }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="who">
+                                            <a class="ruo" role="button" href="/events">
+                                                <div class="pto">
+                                                    <img src="{{asset('images/app_bg.png')}}">
+                                                    <div class="zro">
+                                                        <div class="rco">
+                                                            <div class="kko">{{ __("Events Calendar") }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="who">
+                                            <a class="ruo" role="button" href="/quoteprices">
+                                                <div class="pto">
+                                                    <img src="{{asset('images/app_bg.png')}}">
+                                                    <div class="zro">
+                                                        <div class="rco">
+                                                            <div class="kko">{{ __("QP") }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="who">
+                                            <a class="ruo" role="button" href="/orders">
+                                                <div class="pto">
+                                                    <img src="{{asset('images/app_bg.png')}}">
+                                                    <div class="zro">
+                                                        <div class="rco">
+                                                            <div class="kko">{{ __("Order") }}</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -118,12 +166,12 @@
                                 <div class="zho">
                                     <div class="ano">
                                         <a class="yno">
-                                            <img class="pno" src="{!!  \Helper::readImage($cps_user->avatar, 'usr') !!}">
+                                            <img class="pno" src="{!! $cps_user->avatar !!}">
                                             <span class="wno">{{ __("Change") }}</span>
                                         </a>
                                         <div class="rho">
-                                            <div class="iho">{{ $cps_user->name }}</div>
-                                            <div class="mno">{{ $cps_user->email }}</div>
+                                            <div class="iho" id="user_name">{{ $cps_user->name }}</div>
+                                            <div class="mno" id="user_email">{{ $cps_user->email }}</div>
                                             <div class="jno">
                                                 <a href="#">{{ __("Privacy") }}</a>
                                             </div>
@@ -142,7 +190,11 @@
                             <img src="{{$cps_company->com_logo}}">
                         </div>
                         <div class="vyo">
-                            <a><span><img src="{!!  \Helper::readImage($cps_user->avatar, 'usr') !!}"></span></a>
+                            <a>
+                                <span>
+                                    <img src="{!! $cps_user->avatar !!}">
+                                </span>
+                            </a>
                         </div>
                     </div>
                 </div>
