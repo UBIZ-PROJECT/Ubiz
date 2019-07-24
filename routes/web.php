@@ -33,5 +33,8 @@ Route::middleware(['api', 'cors'])->group(function () {
         Route::get('quoteprices/{qp_id}/pdf/{uniqid}', ['as'=>'quoteprices-pdf', 'uses'=>'Web\QuotepriceController@pdf'])->where('qp_id', '[0-9]+');
         Route::get('quoteprices/{cus_id}/create', ['as'=>'quoteprices-create', 'uses'=>'Web\QuotepriceController@create'])->where('cus_id', '[0-9]+');
         Route::get('events', ['as'=>'events', 'uses'=>'Web\EventController@index']);
+        Route::get('report', ['as'=>'report', 'uses'=>'Web\ReportController@index']);
+        Route::get('report/{type}', ['as'=>'report', 'uses'=>'Web\ReportController@index']);
+        Route::get('report/{type}/export', ['as'=>'report', 'uses'=>'Web\ReportController@exportExcel']);
     });
 });
