@@ -15,18 +15,21 @@ class ReportController extends Controller
 			$reportModel = new Report();
             $report = $reportModel->getReportData($page, $sort, $request);
             if ($request->type == "revenue") {
-                $orderFromDate = $request->order_from_date ? $request->order_from_date : "";
-                $orderToDate = $request->order_to_date ? $request->order_to_date : date('Y/m/d');
+                $orderFromDate = $request->report_from_date ? $request->report_from_date : "";
+                $orderToDate = $request->report_to_date ? $request->report_to_date : date('Y/m/d');
                 $paging = $reportModel->getPagingInfoRev($orderFromDate, $orderToDate);
                 $sum = $reportModel->sumOrders($orderFromDate, $orderToDate);
-            } elseif ($request->type == "pricing") {
-                //todo
+            } elseif ($request->type == "quoteprice") {
+                $qpFromDate = $request->report_from_date ? $request->report_from_date : "";
+                $qpToDate = $request->report_to_date ? $request->report_to_date : date('Y/m/d');
+                $paging = $reportModel->getPagingInfoQP($qpFromDate, $qpToDate);
+                $sum = $reportModel->sumQPs($qpFromDate, $qpToDate);
             } else {
                 $paging = $reportModel->getPagingInfoRep();
             }
 			$paging['page'] = $page;
 
-			return response()->json(['report' => $report, 'order_sum' => $sum, 'paging' => $paging, 'type' => $request->type, 'success' => true, 'message' => ''], 200);
+			return response()->json(['report' => $report, 'report_sum' => $sum, 'paging' => $paging, 'type' => $request->type, 'success' => true, 'message' => ''], 200);
 		} catch (\Throwable $e) {
             throw $e;
         }

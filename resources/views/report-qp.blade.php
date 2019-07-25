@@ -58,10 +58,10 @@
                             </tr>
                         </table>
                     </form>
-                    <p style="margin-top:10px; font-size:15px"><strong>Số lượng đơn hàng:</strong> <span id="report_count">{{ $paging['rows_num'] }}</span></p>
-                    <p style="margin-top:10px; font-size:15px"><strong>Tổng doanh thu:</strong> <span id="report_sum">{{ $report->sum }}</span> VNĐ</p>
+                    <p style="margin-top:10px; font-size:15px"><strong>Số lượng báo giá:</strong> <span id="report_count">{{ $paging['rows_num'] }}</span></p>
+                    <p style="margin-top:10px; font-size:15px"><strong>Tổng doanh thu dự kiến:</strong> <span id="report_sum">{{ $report->sum }}</span> VNĐ</p>
                     <div class="export">
-                        <span class="btn btn-info export" id="rev-export-button" onclick="jQuery.UbizOIWidget.w_export('revenue')"> Xuất excel </span>
+                        <span class="btn btn-info export" id="rev-export-button" onclick="jQuery.UbizOIWidget.w_export('quoteprice')"> Xuất excel </span>
                     </div>
                     <div class="aqH" role="presentation">
                         <div class="yTP" role="presentation">
@@ -76,10 +76,10 @@
                             </div>
                             <div class="hdG">
                                 <div class="dcB col-1" role="presentation">
-                                    <div class="dWB dWT" role="button" sort-name="ord_no" order-by="asc"
+                                    <div class="dWB dWT" role="button" sort-name="qp_no" order-by="asc"
                                          onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">Mã Đơn Hàng</div>
+                                            <div class="tDv">Mã Báo Giá</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -102,10 +102,10 @@
                                     </div>
                                 </div>
                                 <div class="dcB col-2" role="presentation">
-                                    <div class="dWB" role="button" sort-name="ord_date" order-by=""
+                                    <div class="dWB" role="button" sort-name="qp_date" order-by=""
                                          onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">Ngày Đặt Hàng</div>
+                                            <div class="tDv">Ngày Báo Giá</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -127,7 +127,32 @@
                                     </div>
                                 </div>
                                 <div class="dcB col-3" role="presentation">
-                                    <div class="dWB" role="button" sort-name="ord_amount_tax" order-by=""
+                                    <div class="dWB" role="button" sort-name="qp_exp_date" order-by=""
+                                         onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                        <div class="dvJ">
+                                            <div class="tDv">Ngày Hết Hạn</div>
+                                            <div class="mhH">
+                                                <div class="acD">
+                                                    <div class="huK">
+                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
+                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                        </svg>
+                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
+                                                             height="18px" viewBox="0 0 48 48" focusable="false"
+                                                             fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dcB col-4" role="presentation">
+                                    <div class="dWB" role="button" sort-name="qp_amount_tax" order-by=""
                                          onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
                                             <div class="tDv">Tổng tiền (Bao gồm thuế)</div>
@@ -151,7 +176,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="dcB col-4" role="presentation">
+                                <div class="dcB col-5" role="presentation">
                                     <div class="dWB" role="button" sort-name="contact_name" order-by=""
                                          onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
@@ -176,7 +201,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="dcB col-5" role="presentation">
+                                <div class="dcB col-6" role="presentation">
                                     <div class="dWB" role="button" sort-name="contact_phone" order-by=""
                                          onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
@@ -201,7 +226,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="dcB col-6" role="presentation">
+                                <div class="dcB col-7" role="presentation">
                                     <div class="dWB" role="button">
                                         <div class="dvJ" sort-name="contact_email" order-by=""
                                              onclick="jQuery.UbizOIWidget.w_sort(this)">
@@ -226,7 +251,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="dcB col-7" role="presentation">
+                                <div class="dcB col-8" role="presentation">
                                     <div class="dWB" role="button" sort-name="sale_name" order-by=""
                                          onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
@@ -260,50 +285,57 @@
                             <div id="table-content" class="jFr">
                                 @foreach($report as $row)
                                     <div class="jvD"
-                                         ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{$row->ord_id}}, this)">
+                                         ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{$row->qp_id}}, this)">
                                         <div class="tcB col-1">
                                             <div class="cbo">
-                                                <div class="nCT" title="{{$row->ord_no}}">
-                                                    <span>{{$row->ord_no}}</span>
+                                                <div class="nCT" title="{{$row->qp_no}}">
+                                                    <span>{{$row->qp_no}}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="tcB col-2">
                                             <div class="cbo">
-                                                <div class="nCj" title="{{$row->ord_date}}">
-                                                    <span>{{substr($row->ord_date, 0, 10)}}</span>
+                                                <div class="nCj" title="{{$row->qp_date}}">
+                                                    <span>{{substr($row->qp_date, 0, 10)}}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="tcB col-3">
                                             <div class="cbo">
-                                                <div class="nCj" title="{{$row->ord_amount_tax}}">
-                                                    <span>{{$row->ord_amount_tax}}</span>
+                                                <div class="nCj" title="{{$row->qp_exp_date}}">
+                                                    <span>{{substr($row->qp_date, 0, 10)}}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="tcB col-4">
+                                            <div class="cbo">
+                                                <div class="nCj" title="{{$row->qp_amount_tax}}">
+                                                    <span>{{$row->qp_amount_tax}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tcB col-5">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$row->contact_name}}">
                                                     <span>{{$row->contact_name}}</span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tcB col-5">
+                                        <div class="tcB col-6">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$row->contact_phone}}">
                                                     <span>{{$row->contact_phone}}</span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tcB col-6">
+                                        <div class="tcB col-7">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$row->contact_email}}">
                                                     <span>{{$row->contact_email}}</span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tcB col-7">
+                                        <div class="tcB col-8">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$row->sale_name}}">
                                                     <span>{{$row->sale_name}}</span>

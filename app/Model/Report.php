@@ -52,8 +52,10 @@ class Report implements JWTSubject
                 $orderToDate = $request->order_to_date ? $request->order_to_date : date('Y/m/d');
                 $report = $this->getRevReport($page, $sort, $orderFromDate, $orderToDate);
                 break;
-            case "pri":
-                $report = $this->getPriReport();
+            case "quoteprice":
+                $qpFromDate = $request->qp_from_date ? $request->qp_from_date : "";
+                $qpToDate = $request->qp_to_date ? $request->qp_to_date : date('Y/m/d');
+                $report = $this->getQPReport($page, $sort, $qpFromDate, $qpToDate);
                 break;
             default:
                 $report = $this->getRepReport($page, $sort);
@@ -107,8 +109,24 @@ class Report implements JWTSubject
         return $data;
     }
 
-    public function getPriReport() {
-        
+    public function getQPReport($page, $sort, $qpFromDate, $qpToDate) {
+        try{
+            $rows_per_page = env('ROWS_PER_PAGE', 10);
+            list($field_name, $order_by) = $this->makeOrderBy($sort, 'qp_id');
+            $data = DB::table('quoteprice')
+                        ->leftjoin('users', 'quoteprice.sale_id', '=', 'users.id')
+                        ->select('quoteprice.*', 'users.name as sale_name')
+                        ->where('quoteprice.delete_flg', '0')
+                        ->whereRaw('quoteprice.qp_date between ? AND ?', [$qpFromDate, $qpToDate])
+                        ->orderBy($field_name, $order_by)
+                        ->offset($page * $rows_per_page)
+                        ->limit($rows_per_page)
+                        ->get();
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+
+        return $data;
     }
 
     public function countPrdSerials()
@@ -155,6 +173,34 @@ class Report implements JWTSubject
         return $sum;
     }
 
+    public function sumQPs($qpFromDate, $qpToDate)
+    {
+        try {
+            $sum = DB::table('quoteprice')
+                ->where('delete_flg', '0')
+                ->whereRaw('quoteprice.qp_date between ? AND ?', [$qpFromDate, $qpToDate])
+                ->sum('qp_amount_tax');
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+
+        return $sum;
+    }
+
+    public function countQP($orderFromDate, $orderToDate)
+    {
+        try {
+            $count = DB::table('qouteprice')
+                ->where('delete_flg', '0')
+                ->whereRaw('order.ord_date between ? AND ?', [$orderFromDate, $orderToDate])
+                ->count();
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+
+        return $count;
+    }
+
     public function getPagingInfoRep()
     {
         try {
@@ -175,6 +221,21 @@ class Report implements JWTSubject
         try {
             $rows_per_page = env('ROWS_PER_PAGE', 10);
             $rows_num = $this->countOrders($orderFromDate, $orderToDate);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+
+        return [
+            'rows_num' => $rows_num,
+            'rows_per_page' => $rows_per_page
+        ];
+    }
+
+    public function getPagingInfoQP($qpFromDate, $qpToDate)
+    {
+        try {
+            $rows_per_page = env('ROWS_PER_PAGE', 10);
+            $rows_num = $this->countOrders($qpFromDate, $qpToDate);
         } catch (\Throwable $e) {
             throw $e;
         }

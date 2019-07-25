@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Model\Report;
 use App\Exports\ReportRepositoryExport;
 use App\Exports\ReportRevenueExport;
+use App\Exports\ReportQuotePriceExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
@@ -29,9 +30,12 @@ class ReportController extends Controller
                     $sum = $reportModel->sumOrders($request->order_from_date, $request->order_to_date);
                     $paging = $reportModel->getPagingInfoRev($request->order_from_date, $request->order_to_date);
                     break;
-                case "pricing":
-                    $viewName = "report-pri";
-                    $paging = $reportModel->getPagingInfoPri();
+                case "quoteprice":
+                    $viewName = "report-qp";
+                    $request->qp_from_date = date('Y/m') . "/01";
+                    $request->qp_to_date = date('Y/m/d');
+                    $sum = $reportModel->sumQPs($request->qp_from_date, $request->qp_to_date);
+                    $paging = $reportModel->getPagingInfoQP($request->qp_from_date, $request->qp_to_date);
                     break;
                 default:
                     $viewName = "report-rep";
@@ -56,10 +60,9 @@ class ReportController extends Controller
     {
         switch ($request->type) {
             case "revenue":
-                return Excel::download(new ReportRevenueExport($request)
-                                        , 'reportRevenue.xlsx');
-            case "pricing":
-
+                return Excel::download(new ReportRevenueExport($request), 'reportRevenue.xlsx');
+            case "quoteprice":
+                return Excel::download(new ReportQuotePriceExport($request), 'reportQuotePrice.xlsx');
             default:
                 return Excel::download(new ReportRepositoryExport, 'reportRepository.xlsx');
         }
