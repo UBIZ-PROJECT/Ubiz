@@ -207,7 +207,7 @@
             } else {
                 col_html += '<div class="nCj" title="' + col_val + '">';
             }
-            col_html += '<span>' + col_val + '</span>';
+            col_html += '<span>' + (col_val || "") + '</span>';
             col_html += '</div>';
             col_html += '</div>';
             col_html += '</div>';

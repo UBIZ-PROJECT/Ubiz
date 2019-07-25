@@ -26,9 +26,10 @@ class ReportController extends Controller
                 $sum = $reportModel->sumQPs($qpFromDate, $qpToDate);
             } else {
                 $paging = $reportModel->getPagingInfoRep();
+                $sum = 0;
             }
 			$paging['page'] = $page;
-
+            
 			return response()->json(['report' => $report, 'report_sum' => $sum, 'paging' => $paging, 'type' => $request->type, 'success' => true, 'message' => ''], 200);
 		} catch (\Throwable $e) {
             throw $e;
