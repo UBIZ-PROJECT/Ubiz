@@ -2695,3 +2695,7 @@ input[type=number]::-webkit-outer-spin-button {
     background-color: #e9ecef;
     border-color: #e9ecef;
 }
+
+.datepicker--day-name {
+    text-transform: capitalize !important;
+}

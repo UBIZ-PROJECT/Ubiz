@@ -24,7 +24,7 @@
 
         <div class="l-content">
             <div class="zY">
-                <div class="yP" onclick="">{{ __("Add new") }}</div>
+                <div class="yP" onclick="event_add(null)">{{ __("Add new") }}</div>
             </div>
             <div id="nicescroll-sidebar" class="zX nicescroll">
                 <div class="my-datepicker"></div>
@@ -46,7 +46,7 @@
                             @foreach($tags as $tag)
                                 <tr>
                                     <td>
-                                        <input type="checkbox" value="{{ $tag->id }}" style="width: 15px; height: 15px"/>
+                                        <input name="event-tag" onchange="event_tag_change(this)" type="checkbox" value="{{ $tag->id }}" style="width: 15px; height: 15px"/>
                                     </td>
                                     <td>
                                         <i class="fas fa-circle {{ $tag->color }}"></i>
