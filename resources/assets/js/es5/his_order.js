@@ -30,7 +30,8 @@
             jQuery(self).find('svg').removeClass('sVGT');
             jQuery(self).find('svg.' + order_by).addClass('sVGT');
 
-            ubizapis('v1', '/quoteprices', 'get', null, {
+            var ord_id = $("#ord_id").val();
+            ubizapis('v1', '/orders/' + ord_id + '/history', 'get', null, {
                 'search': search,
                 'page': jQuery.UbizOIWidget.page,
                 'sort': sort
@@ -47,29 +48,6 @@
             sort_default_obj.attr('order-by', order_by);
             sort_default_obj.addClass('dWT');
             sort_default_obj.find('svg.' + order_by).addClass('sVGT');
-        },
-        w_delete: function (ids) {
-            if (ids == 0) {
-                var ids = jQuery.UbizOIWidget.w_get_checked_rows();
-            }
-            if (ids.length == 0)
-                return false;
-
-            swal({
-                title: i18next.t('Do you want to delete the data?'),
-                type: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                cancelButtonText: i18next.t('No'),
-                confirmButtonText: i18next.t('Yes'),
-                reverseButtons: true
-            }).then((result) => {
-                if (result.value) {
-                    var uri = '/quoteprices/' + ids.join(',') + '/delete';
-                    ubizapis('v1', uri, 'delete', null, null, jQuery.UbizOIWidget.w_delete_callback);
-                }
-            });
         },
         w_delete_callback: function (response) {
             if (response.data.success == true) {
@@ -91,6 +69,7 @@
 
             jQuery.UbizOIWidget.page = '0';
 
+            var ord_id = $("#ord_id").val();
             var search = jQuery('#fuzzy').val();
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
@@ -100,7 +79,7 @@
             params.search = search;
             params.sort = sort;
 
-            ubizapis('v1', '/quoteprices', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            ubizapis('v1', '/orders/' + ord_id + '/history', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_fuzzy_search_handle_enter(e) {
             var keycode = (e.keyCode ? e.keyCode : e.which);
@@ -125,7 +104,9 @@
             jQuery.UbizOIWidget.sort = sort_info;
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
             var search = jQuery('#fuzzy').val();
-            ubizapis('v1', '/quoteprices', 'get', null, {
+
+            var ord_id = $("#ord_id").val();
+            ubizapis('v1', '/orders/' + ord_id + '/history', 'get', null, {
                 'page': page,
                 'sort': sort,
                 'search': search
@@ -137,7 +118,9 @@
             jQuery.UbizOIWidget.sort = sort_info;
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
             var search = jQuery('#fuzzy').val();
-            ubizapis('v1', '/quoteprices', 'get', null, {
+
+            var ord_id = $("#ord_id").val();
+            ubizapis('v1', '/orders/' + ord_id + '/history', 'get', null, {
                 'page': page,
                 'sort': sort,
                 'search': search
@@ -145,19 +128,20 @@
         },
         w_render_data_to_ouput_page: function (response) {
             var table_html = "";
-            var quoteprices = response.data.quoteprices;
-            if (quoteprices.length > 0) {
+            var orders = response.data.orders;
+            if (orders.length > 0) {
                 var rows = [];
-                for (let i = 0; i < quoteprices.length; i++) {
+                for (let i = 0; i < orders.length; i++) {
                     var cols = [];
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(quoteprices[i].qp_id, quoteprices[i].qp_no, 1));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(quoteprices[i].qp_id, moment(quoteprices[i].qp_date).format('YYYY/MM/DD'), 2));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(quoteprices[i].qp_id, moment(quoteprices[i].qp_exp_date).format('YYYY/MM/DD'), 3));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(quoteprices[i].qp_id, quoteprices[i].sale_name, 4));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(quoteprices[i].qp_id, quoteprices[i].cus_name, 5));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(quoteprices[i].qp_id, numeral(quoteprices[i].qp_amount_tax).format('0,0'), 6));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_status_html(jQuery.UbizOIWidget.w_render_sale_step(quoteprices[i].sale_step), 7));
-                    rows.push(jQuery.UbizOIWidget.w_make_row_html(quoteprices[i].qp_id, cols));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, orders[i].ord_no, 1));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, moment(orders[i].ord_date).format('YYYY/MM/DD'), 2));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, orders[i].sale_name, 3));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, orders[i].cus_name, 4));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, numeral(orders[i].ord_amount_tax).format('0,0'), 5));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, numeral(orders[i].ord_paid).format('0,0'), 6));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, numeral(orders[i].ord_debt).format('0,0'), 7));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_status_html(jQuery.UbizOIWidget.w_render_sale_step(orders[i].sale_step), 8));
+                    rows.push(jQuery.UbizOIWidget.w_make_row_html(orders[i].ord_id, cols));
                 }
                 table_html += rows.join("");
             }
@@ -173,20 +157,22 @@
                 case '1':
                     sale_step_name = i18next.t('QP');
                     break;
-                case '1':
+                case '2':
                     sale_step_name = i18next.t('Order');
                     break;
-                case '1':
+                case '3':
                     sale_step_name = i18next.t('Contract');
                     break;
-                case '1':
+                case '':
                     sale_step_name = i18next.t('Delivery');
-                    break;
+                    break;4
             }
-            return '<span className="badge badge-success">' + sale_step_name + '</span>';
+            return '<span class="badge badge-success">' + sale_step_name + '</span>';
         },
-        w_go_to_input_page: function (id) {
-            window.location.href = '/quoteprices/' + id;
+        w_go_to_input_page: function (his_ord_id) {
+
+            var ord_id = $("#ord_id").val();
+            window.location.href = '/orders/' + ord_id + '/history/' + his_ord_id;
         },
         w_make_row_html: function (id, cols) {
             var row_html = '';
@@ -331,6 +317,10 @@
             if (typeof instance == "undefined")
                 return false;
             instance.update();
+        },
+        w_back_to_order: function () {
+            var ord_id = $("#ord_id").val();
+            window.location.href = "/orders/" + ord_id;
         }
     });
 })(jQuery);

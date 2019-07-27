@@ -117,6 +117,7 @@
                                     </button>
                                     @break
                                 @endswitch
+                                <a href="/orders/{{ $order->ord_id }}/history" class="btn btn-primary btn-sm" role="button" aria-pressed="true">{{ __("History") }}</a>
                             </div>
                         </div>
                     </div>

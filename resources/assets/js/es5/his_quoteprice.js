@@ -30,7 +30,8 @@
             jQuery(self).find('svg').removeClass('sVGT');
             jQuery(self).find('svg.' + order_by).addClass('sVGT');
 
-            ubizapis('v1', '/quoteprices', 'get', null, {
+            var qp_id = $("#qp_id").val();
+            ubizapis('v1', '/quoteprices/' + qp_id + '/history', 'get', null, {
                 'search': search,
                 'page': jQuery.UbizOIWidget.page,
                 'sort': sort
@@ -48,45 +49,6 @@
             sort_default_obj.addClass('dWT');
             sort_default_obj.find('svg.' + order_by).addClass('sVGT');
         },
-        w_delete: function (ids) {
-            if (ids == 0) {
-                var ids = jQuery.UbizOIWidget.w_get_checked_rows();
-            }
-            if (ids.length == 0)
-                return false;
-
-            swal({
-                title: i18next.t('Do you want to delete the data?'),
-                type: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                cancelButtonText: i18next.t('No'),
-                confirmButtonText: i18next.t('Yes'),
-                reverseButtons: true
-            }).then((result) => {
-                if (result.value) {
-                    var uri = '/quoteprices/' + ids.join(',') + '/delete';
-                    ubizapis('v1', uri, 'delete', null, null, jQuery.UbizOIWidget.w_delete_callback);
-                }
-            });
-        },
-        w_delete_callback: function (response) {
-            if (response.data.success == true) {
-                swal.fire({
-                    type: 'success',
-                    title: response.data.message,
-                    onClose: () => {
-                        jQuery.UbizOIWidget.w_fuzzy_search();
-                    }
-                })
-            } else {
-                swal.fire({
-                    type: 'error',
-                    title: response.data.message
-                })
-            }
-        },
         w_fuzzy_search: function () {
 
             jQuery.UbizOIWidget.page = '0';
@@ -100,7 +62,8 @@
             params.search = search;
             params.sort = sort;
 
-            ubizapis('v1', '/quoteprices', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            var qp_id = $("#qp_id").val();
+            ubizapis('v1', '/quoteprices/' + qp_id + '/history', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_fuzzy_search_handle_enter(e) {
             var keycode = (e.keyCode ? e.keyCode : e.which);
@@ -125,7 +88,9 @@
             jQuery.UbizOIWidget.sort = sort_info;
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
             var search = jQuery('#fuzzy').val();
-            ubizapis('v1', '/quoteprices', 'get', null, {
+
+            var qp_id = $("#qp_id").val();
+            ubizapis('v1', '/quoteprices/' + qp_id + '/history', 'get', null, {
                 'page': page,
                 'sort': sort,
                 'search': search
@@ -137,7 +102,9 @@
             jQuery.UbizOIWidget.sort = sort_info;
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
             var search = jQuery('#fuzzy').val();
-            ubizapis('v1', '/quoteprices', 'get', null, {
+
+            var qp_id = $("#qp_id").val();
+            ubizapis('v1', '/quoteprices/' + qp_id + '/history', 'get', null, {
                 'page': page,
                 'sort': sort,
                 'search': search
@@ -173,20 +140,22 @@
                 case '1':
                     sale_step_name = i18next.t('QP');
                     break;
-                case '1':
+                case '2':
                     sale_step_name = i18next.t('Order');
                     break;
-                case '1':
+                case '3':
                     sale_step_name = i18next.t('Contract');
                     break;
-                case '1':
+                case '4':
                     sale_step_name = i18next.t('Delivery');
                     break;
             }
-            return '<span className="badge badge-success">' + sale_step_name + '</span>';
+            return '<span class="badge badge-success">' + sale_step_name + '</span>';
         },
-        w_go_to_input_page: function (id) {
-            window.location.href = '/quoteprices/' + id;
+        w_go_to_input_page: function (his_qp_id) {
+
+            var qp_id = $("#qp_id").val();
+            window.location.href = '/quoteprices/' + qp_id + '/history/' + his_qp_id;
         },
         w_make_row_html: function (id, cols) {
             var row_html = '';
@@ -331,6 +300,10 @@
             if (typeof instance == "undefined")
                 return false;
             instance.update();
+        },
+        w_back_to_quoteprices: function () {
+            var qp_id = $("#qp_id").val();
+            window.location.href = "/quoteprices/" + qp_id;
         }
     });
 })(jQuery);

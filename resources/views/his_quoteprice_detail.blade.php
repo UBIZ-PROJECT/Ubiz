@@ -1,11 +1,11 @@
 @extends('layouts.main')
-@section('title',__("QP"))
-@section('headbar-title', __("QP"))
+@section('title',__("LSQP"))
+@section('headbar-title', __("LSQP"))
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/headbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/common.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/quoteprice_input.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/his_quoteprice_input.css') }}">
 @endsection
 @section('headbar')
     @include('layouts/headbar')
@@ -76,40 +76,12 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="GNi" onclick="qp_save()">
-                                    <div class="ax7 poK utooltip" title="{{ __("Save") }}">
-                                        <div class="asA">
-                                            <div class="arS"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="GNi" onclick="qp_refresh()">
-                                    <div class="ax7 poK utooltip" title="{{ __("Refresh") }}">
-                                        <div class="asA">
-                                            <div class="arR"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="GNi" onclick="qp_send()">
-                                    <div class="ax7 poK utooltip" title="{{ __("Send QP to customer") }}">
-                                        <div class="asA">
-                                            <div class="arF"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="btn-delete" class="GNi" onclick="qp_delete()">
-                                    <div class="ax7 poK utooltip" title="{{ __("Delete") }}">
-                                        <div class="asA">
-                                            <div class="asX"></div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                             <div class="col-7 text-left pdt-5">
                                 @include('components.sale_step', ['sale_step'=>$quoteprice->sale_step])
                             </div>
-                            <div class="col-2 text-right pdt-5">
-                                <a href="/quoteprices/{{ $quoteprice->qp_id }}/history" class="btn btn-primary btn-sm" role="button" aria-pressed="true">{{ __("History") }}</a>
+                            <div class="col-2 text-right">
+
                             </div>
                         </div>
                     </div>
@@ -120,15 +92,15 @@
                             <div class="col-md-auto">
                                 <div class="row">
                                     <div class="col-md-auto">
-                                        @include('components.input',['control_id'=>'qp_no', 'value'=> $quoteprice->qp_no, 'width'=> '300', 'type'=>'disabled', 'lbl_width'=>'90', 'label'=>__('QP No'), 'i_focus'=>'', 'i_blur'=>'', 'onchange'=>"qp_no_change(this)"])
+                                        @include('components.input',['control_id'=>'qp_no', 'value'=> $quoteprice->qp_no, 'width'=> '300', 'type'=>'disabled', 'lbl_width'=>'90', 'label'=>__('QP No'), 'i_focus'=>'', 'i_blur'=>''])
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-auto z-pdr">
-                                        @include('components.input',['control_id'=>'qp_date', 'value'=> date('Y/m/d', strtotime($quoteprice->qp_date)), 'width'=> '150', 'lbl_width'=>'70', 'label'=>__('QP Date'), 'class'=>'datepicker z-pdl z-pdr', 'i_focus'=>'', 'i_blur'=>'', 'onchange'=>"qp_date_change(this)"])
+                                        @include('components.input',['control_id'=>'qp_date', 'value'=> date('Y/m/d', strtotime($quoteprice->qp_date)), 'width'=> '150', 'lbl_width'=>'70', 'label'=>__('QP Date'), 'class'=>'datepicker z-pdl z-pdr', 'i_focus'=>'', 'i_blur'=>''])
                                     </div>
                                     <div class="col-md-auto z-pdl z-pdr">
-                                        @include('components.input',['control_id'=>'qp_exp_date', 'value'=> date('Y/m/d', strtotime($quoteprice->qp_exp_date)), 'width'=> '150', 'lbl_width'=>'70', 'label'=>__('QP Exp Date'), 'class'=>'datepicker z-pdl z-pdr', 'i_focus'=>'', 'i_blur'=>'', 'onchange'=>"qp_exp_date_change(this)"])
+                                        @include('components.input',['control_id'=>'qp_exp_date', 'value'=> date('Y/m/d', strtotime($quoteprice->qp_exp_date)), 'width'=> '150', 'lbl_width'=>'70', 'label'=>__('QP Exp Date'), 'class'=>'datepicker z-pdl z-pdr', 'i_focus'=>'', 'i_blur'=>''])
                                     </div>
                                 </div>
                                 <div class="row">
@@ -198,7 +170,7 @@
                                                 @include('components.input',['control_id'=>'cus_fax', 'value'=> $quoteprice->cus_fax, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Fax'), 'i_focus'=>'', 'i_blur'=>''])
                                             </div>
                                             <div class="col-md-auto">
-                                                @include('components.number',['value'=>$quoteprice->qp_tax, 'onchange'=>'qp_tax_change(this)', 'control_id'=>'qp_tax', 'min'=>'0', 'max'=>'100', 'suffix'=>'%', 'length'=>'3', 'width'=> '130', 'lbl_width'=>'70', 'label'=>__('Tax'), 'class'=> 'text-right pdr-5'])
+                                                @include('components.number',['value'=>$quoteprice->qp_tax, 'control_id'=>'qp_tax', 'min'=>'0', 'max'=>'100', 'suffix'=>'%', 'length'=>'3', 'width'=> '130', 'lbl_width'=>'70', 'label'=>__('Tax'), 'class'=> 'text-right pdr-5'])
                                             </div>
                                         </div>
                                     </div>
@@ -214,10 +186,6 @@
                                 <a class="nav-link" id="dt-acce-tab" data-toggle="tab" href="#dt-acce" role="tab"
                                    aria-controls="dt-acce" aria-selected="false">{{ __('Accessories') }}</a>
                             </li>
-                            <button type="button" onclick="dt_row_add()" class="btn btn-info add-btn"
-                                    title="{{ __("Add new") }}">
-                                <i class="fas fa-plus"></i>
-                            </button>
                         </ul>
                         <div class="tab-content" id="tab-ord-inp-content">
                             <div class="tab-pane fade show active" id="dt-prod" role="tabpanel" aria-labelledby="dt-prod-tab">
@@ -240,27 +208,14 @@
                                                 </div>
                                                 <div class="col-md-auto">
                                                     @include('components.input',['value'=>$item->unit, 'control_id'=>'dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit'), 'class'=> 'text-right', 'i_focus'=>'', 'i_blur'=>''])
-                                                    @include('components.number',['value'=>number_format($item->quantity), 'onchange'=>'dt_quantity_change(this)', 'control_id'=>'dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity'), 'class'=> 'text-right'])
+                                                    @include('components.number',['value'=>number_format($item->quantity), 'control_id'=>'dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity'), 'class'=> 'text-right'])
                                                     @include('components.textarea',['value'=>$item->delivery_time, 'control_id'=>'dt_delivery_time', 'width'=>'250', 'height'=>'50', 'resize'=>'none', 'class'=> 'margin-bottom-15', 'label'=>__('Delivery time')])
                                                     @include('components.dropdown',['value'=>$item->status, 'control_id'=>'dt_status', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Status') ,'data'=> $prdStatus])
-                                                    @include('components.money',['value'=> number_format($item->price), 'onchange'=>'dt_price_change(this)', 'control_id'=>'dt_price', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price'), 'class'=> 'text-right'])
-                                                    @include('components.money',['value'=>number_format($item->amount), 'onchange'=>'dt_amount_change(this)', 'control_id'=>'dt_amount', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Amount'), 'class'=> 'text-right'])
+                                                    @include('components.money',['value'=> number_format($item->price), 'control_id'=>'dt_price', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price'), 'class'=> 'text-right'])
+                                                    @include('components.money',['value'=>number_format($item->amount), 'control_id'=>'dt_amount', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Amount'), 'class'=> 'text-right'])
                                                 </div>
                                                 <div class="col-md-auto">
                                                     @include('components.textarea',['value'=>$item->note, 'width'=>'250', 'height'=>'100', 'control_id'=>'dt_note', 'resize'=>'none', 'label'=>__('Note')])
-                                                </div>
-                                                <div class="col-md-auto z-pdr text-center">
-                                                    <i onclick="prod_row_copy(this)"
-                                                       class="material-icons text-primary i-btn"
-                                                       title="{{ __("Copy") }}">
-                                                        copyright
-                                                    </i>
-                                                    <br>
-                                                    <i onclick="prod_row_del(this)"
-                                                       class="material-icons text-danger i-btn"
-                                                       title="{{ __("Delete") }}">
-                                                        delete
-                                                    </i>
                                                 </div>
                                             </div>
                                         </div>
@@ -286,24 +241,11 @@
                                             </div>
                                             <div class="col-md-auto">
                                                 @include('components.input',['value'=>'', 'control_id'=>'dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit'), 'class'=> 'text-right', 'i_focus'=>'', 'i_blur'=>''])
-                                                @include('components.number',['value'=>'', 'onchange'=>'dt_quantity_change(this)', 'control_id'=>'dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity'), 'class'=> 'text-right'])
+                                                @include('components.number',['value'=>'', 'control_id'=>'dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity'), 'class'=> 'text-right'])
                                                 @include('components.textarea',['value'=>'', 'control_id'=>'dt_delivery_time', 'width'=>'250', 'height'=>'50', 'resize'=>'none', 'class'=> 'margin-bottom-15', 'label'=>__('Delivery time')])
                                                 @include('components.dropdown',['value'=>'', 'control_id'=>'dt_status', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Status') ,'data'=> $prdStatus])
-                                                @include('components.money',['value'=> '', 'onchange'=>'dt_price_change(this)', 'control_id'=>'dt_price', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price'), 'class'=> 'text-right'])
-                                                @include('components.money',['value'=>'', 'onchange'=>'dt_amount_change(this)', 'control_id'=>'dt_amount', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Amount'), 'class'=> 'text-right'])
-                                            </div>
-                                            <div class="col-md-auto z-pdr text-center">
-                                                <i onclick="prod_row_copy(this)"
-                                                   class="material-icons text-primary i-btn"
-                                                   title="{{ __("Copy") }}">
-                                                    copyright
-                                                </i>
-                                                <br>
-                                                <i onclick="prod_row_del(this)"
-                                                   class="material-icons text-danger i-btn"
-                                                   title="{{ __("Delete") }}">
-                                                    delete
-                                                </i>
+                                                @include('components.money',['value'=> '', 'control_id'=>'dt_price', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price'), 'class'=> 'text-right'])
+                                                @include('components.money',['value'=>'', 'control_id'=>'dt_amount', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Amount'), 'class'=> 'text-right'])
                                             </div>
                                         </div>
                                     </div>
@@ -330,26 +272,13 @@
                                                 </div>
                                                 <div class="col-md-auto">
                                                     @include('components.input',['value'=>$item->unit, 'control_id'=>'dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit'), 'class'=> 'text-right', 'i_focus'=>'', 'i_blur'=>''])
-                                                    @include('components.number',['value'=>number_format($item->quantity), 'onchange'=>'dt_quantity_change(this)', 'control_id'=>'dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity'), 'class'=> 'text-right'])
+                                                    @include('components.number',['value'=>number_format($item->quantity), 'control_id'=>'dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity'), 'class'=> 'text-right'])
                                                     @include('components.textarea',['value'=>$item->delivery_time, 'control_id'=>'dt_delivery_time', 'width'=>'250', 'height'=>'50', 'resize'=>'none', 'class'=> 'margin-bottom-15', 'label'=>__('Delivery time')])
                                                 </div>
                                                 <div class="col-md-auto">
                                                     @include('components.dropdown',['value'=>$item->status, 'control_id'=>'dt_status', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Status') ,'data'=> $prdStatus])
-                                                    @include('components.money',['value'=> number_format($item->price), 'onchange'=>'dt_price_change(this)', 'control_id'=>'dt_price', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price'), 'class'=> 'text-right'])
-                                                    @include('components.money',['value'=>number_format($item->amount), 'onchange'=>'dt_amount_change(this)', 'control_id'=>'dt_amount', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Amount'), 'class'=> 'text-right'])
-                                                </div>
-                                                <div class="col-md-auto z-pdr text-center">
-                                                    <i onclick="acce_row_copy(this)"
-                                                       class="material-icons text-primary i-btn"
-                                                       title="{{ __("Copy") }}">
-                                                        copyright
-                                                    </i>
-                                                    <br>
-                                                    <i onclick="acce_row_del(this)"
-                                                       class="material-icons text-danger i-btn"
-                                                       title="{{ __("Delete") }}">
-                                                        delete
-                                                    </i>
+                                                    @include('components.money',['value'=> number_format($item->price), 'control_id'=>'dt_price', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price'), 'class'=> 'text-right'])
+                                                    @include('components.money',['value'=>number_format($item->amount), 'control_id'=>'dt_amount', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Amount'), 'class'=> 'text-right'])
                                                 </div>
                                             </div>
                                         </div>
@@ -373,26 +302,13 @@
                                             </div>
                                             <div class="col-md-auto">
                                                 @include('components.input',['value'=>'', 'control_id'=>'dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit'), 'class'=> 'text-right', 'i_focus'=>'', 'i_blur'=>''])
-                                                @include('components.number',['value'=>'', 'onchange'=>'dt_quantity_change(this)', 'control_id'=>'dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity'), 'class'=> 'text-right'])
+                                                @include('components.number',['value'=>'', 'control_id'=>'dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity'), 'class'=> 'text-right'])
                                                 @include('components.textarea',['value'=>'', 'control_id'=>'dt_delivery_time', 'width'=>'250', 'height'=>'50', 'resize'=>'none', 'class'=> 'margin-bottom-15', 'label'=>__('Delivery time')])
                                             </div>
                                             <div class="col-md-auto">
                                                 @include('components.dropdown',['value'=>'', 'control_id'=>'dt_status', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Status') ,'data'=> $prdStatus])
-                                                @include('components.money',['value'=> '', 'onchange'=>'dt_price_change(this)', 'control_id'=>'dt_price', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price'), 'class'=> 'text-right'])
-                                                @include('components.money',['value'=>'', 'onchange'=>'dt_amount_change(this)', 'control_id'=>'dt_amount', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Amount'), 'class'=> 'text-right'])
-                                            </div>
-                                            <div class="col-md-auto z-pdr text-center">
-                                                <i onclick="acce_row_copy(this)"
-                                                   class="material-icons text-primary i-btn"
-                                                   title="{{ __("Copy") }}">
-                                                    copyright
-                                                </i>
-                                                <br>
-                                                <i onclick="acce_row_del(this)"
-                                                   class="material-icons text-danger i-btn"
-                                                   title="{{ __("Delete") }}">
-                                                    delete
-                                                </i>
+                                                @include('components.money',['value'=> '', 'control_id'=>'dt_price', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price'), 'class'=> 'text-right'])
+                                                @include('components.money',['value'=>'', 'control_id'=>'dt_amount', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Amount'), 'class'=> 'text-right'])
                                             </div>
                                         </div>
                                     </div>
@@ -445,5 +361,5 @@
     </div>
 @endsection
 @section('end-javascript')
-    <script type="text/javascript" src="{{ asset('js/quoteprice_detail.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/his_quoteprice_detail.js') }}"></script>
 @endsection
