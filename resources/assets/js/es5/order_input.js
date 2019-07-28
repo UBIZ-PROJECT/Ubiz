@@ -822,6 +822,72 @@ function ord_date_change(self) {
     $('input[name=ord_date_old]').val(ord_date);
 }
 
+function ord_exp_date_change(self) {
+
+    var ord_exp_date = $(self).val();
+    if (ord_exp_date == '') {
+
+        var ord_exp_date_old = $('input[name=ord_exp_date_old]').val();
+        $(self).val(ord_exp_date_old);
+
+        var message = i18next.t("QP Exp Date is required.");
+        swal({
+            type: 'error',
+            text: message
+        });
+        return false;
+    }
+
+    if (moment(ord_exp_date).isValid() == false) {
+        var ord_exp_date_old = $('input[name=ord_exp_date_old]').val();
+        $(self).val(ord_exp_date_old);
+
+        var message = i18next.t("QP Date is wrong format YYYY/MM/DD");
+        swal({
+            type: 'error',
+            text: message
+        });
+        return false;
+    }
+
+    ord_exp_date = moment(ord_exp_date).format('YYYY/MM/DD');
+    $(self).val(ord_exp_date);
+    $('input[name=ord_exp_date_old]').val(ord_exp_date);
+}
+
+function ord_dlv_date_change(self) {
+
+    var ord_dlv_date = $(self).val();
+    if (ord_dlv_date == '') {
+
+        var ord_dlv_date_old = $('input[name=ord_dlv_date_old]').val();
+        $(self).val(ord_dlv_date_old);
+
+        var message = i18next.t("QP Exp Date is required.");
+        swal({
+            type: 'error',
+            text: message
+        });
+        return false;
+    }
+
+    if (moment(ord_dlv_date).isValid() == false) {
+        var ord_dlv_date_old = $('input[name=ord_dlv_date_old]').val();
+        $(self).val(ord_dlv_date_old);
+
+        var message = i18next.t("QP Date is wrong format YYYY/MM/DD");
+        swal({
+            type: 'error',
+            text: message
+        });
+        return false;
+    }
+
+    ord_dlv_date = moment(ord_dlv_date).format('YYYY/MM/DD');
+    $(self).val(ord_dlv_date);
+    $('input[name=ord_dlv_date_old]').val(ord_dlv_date);
+}
+
 function ord_tax_change(self) {
 
     var ord_tax = numeral($(self).val()).value();
@@ -886,6 +952,8 @@ function ord_colect_data() {
     data.ord_id = $("input[name=ord_id]").val();
     data.ord_no = $("input[name=ord_no]").val();
     data.ord_date = $("input[name=ord_date]").val();
+    data.ord_exp_date = $("input[name=ord_exp_date]").val();
+    data.ord_dlv_date = $("input[name=ord_dlv_date]").val();
     data.ord_note = $("textarea[name=ord_note]").val();
     data.ord_tax = numeral($("input[name=ord_tax]").val()).value();
     data.ord_amount = numeral($("input[name=ord_amount]").val()).value();
@@ -1016,6 +1084,78 @@ function w_update_scrollbars(instance) {
     instance.update();
 }
 
+function ord_contract_step(){
+    swal({
+        title: i18next.t('Do you want to confirm contract status.?'),
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: i18next.t('No'),
+        confirmButtonText: i18next.t('Yes'),
+        reverseButtons: true
+    }).then((result) => {
+        if (result.value) {
+            var ord_id = $("input[name=ord_id]").val();
+            ubizapis('v1', '/orders/' + ord_id + '/salestep', 'post', {'sale_step': '3'}, null, ord_contract_step_callback);
+        }
+    })
+}
+
+function ord_contract_step_callback(response) {
+    if (response.data.success == true) {
+        swal.fire({
+            type: 'success',
+            title: response.data.message,
+            onClose: () => {
+                window.location.reload();
+            }
+        })
+
+    } else {
+        swal.fire({
+            type: 'error',
+            title: response.data.message
+        })
+    }
+}
+
+function ord_delivery_step(){
+    swal({
+        title: i18next.t('Do you want to confirm delivery status.?'),
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: i18next.t('No'),
+        confirmButtonText: i18next.t('Yes'),
+        reverseButtons: true
+    }).then((result) => {
+        if (result.value) {
+            var ord_id = $("input[name=ord_id]").val();
+            ubizapis('v1', '/orders/' + ord_id + '/salestep', 'post', {'sale_step': '4'}, null, ord_delivery_step_callback);
+        }
+    })
+}
+
+function ord_delivery_step_callback(response) {
+    if (response.data.success == true) {
+        swal.fire({
+            type: 'success',
+            title: response.data.message,
+            onClose: () => {
+                window.location.reload();
+            }
+        })
+
+    } else {
+        swal.fire({
+            type: 'error',
+            title: response.data.message
+        })
+    }
+}
+
 $(document).ready(function () {
 
     prod_row_no = $("#dt-prod").find('div.dt-row').length;
@@ -1041,7 +1181,9 @@ $(document).ready(function () {
     });
     sidebar_scrollbars = fnc_set_scrollbars("nicescroll-sidebar");
     input_scrollbars = fnc_set_scrollbars("nicescroll-iput");
-    fnc_datepicker('.datepicker');
+    fnc_datepicker('#ord_date');
+    fnc_datepicker('#ord_exp_date');
+    fnc_datepicker('#ord_dlv_date');
     $("textarea[name=dt_prod_series]").tagEditor();
     jQuery('.utooltip').tooltipster({
         side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
@@ -1049,5 +1191,11 @@ $(document).ready(function () {
     $("a[name=quoteprice_step]").on("click", function () {
         var qp_id = $('input[name=qp_id]').val();
         window.location.href = "/quoteprices/" + qp_id;
+    });
+    $("a[name=contract_step]").on("click", function () {
+        ord_contract_step();
+    });
+    $("a[name=delivery_step]").on("click", function () {
+        ord_delivery_step();
     });
 });

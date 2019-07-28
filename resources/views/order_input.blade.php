@@ -132,8 +132,11 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-auto">
-                                        @include('components.input',['control_id'=>'ord_date', 'value'=> date('Y/m/d', strtotime($order->ord_date)), 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Order Date'), 'class'=>'datepicker', 'i_focus'=>'', 'i_blur'=>'', 'onchange'=>"ord_date_change(this)"])
+                                    <div class="col-md-auto z-pdr">
+                                        @include('components.input',['control_id'=>'ord_date', 'value'=> ($order->ord_date != '' ? date('Y/m/d', strtotime($order->ord_date)) : ''), 'width'=> '150', 'lbl_width'=>'70', 'label'=>__('Order Date'), 'class'=>'datepicker z-pdl z-pdr', 'i_focus'=>'', 'i_blur'=>'', 'onchange'=>"ord_date_change(this)"])
+                                    </div>
+                                    <div class="col-md-auto z-pdl z-pdr">
+                                        @include('components.input',['control_id'=>'ord_exp_date', 'value'=> ($order->ord_exp_date != '' ? date('Y/m/d', strtotime($order->ord_exp_date)) : ''), 'width'=> '150', 'lbl_width'=>'70', 'label'=>__('QP Exp Date'), 'class'=>'datepicker z-pdl z-pdr', 'i_focus'=>'', 'i_blur'=>'', 'onchange'=>"ord_exp_date_change(this)"])
                                     </div>
                                 </div>
                                 <div class="row">
@@ -177,7 +180,10 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-auto">
-                                        @include('components.input',['control_id'=>'cus_addr', 'value'=> $order->cus_addr, 'type'=>'disabled', 'width'=> '630', 'lbl_width'=>'90', 'label'=>__('Address'), 'i_focus'=>'', 'i_blur'=>''])
+                                        @include('components.input',['control_id'=>'cus_addr', 'value'=> $order->cus_addr, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Address'), 'i_focus'=>'', 'i_blur'=>''])
+                                    </div>
+                                    <div class="col-md-auto">
+                                        @include('components.input',['control_id'=>'ord_dlv_date', 'value'=> ($order->ord_dlv_date != '' ? date('Y/m/d', strtotime($order->ord_dlv_date)) : ''), 'width'=> '300', 'lbl_width'=>'115', 'label'=>__('Order Delivery Date'), 'class'=>'datepicker z-pdl z-pdr', 'i_focus'=>'', 'i_blur'=>'', 'onchange'=>"ord_dlv_date_change(this)"])
                                     </div>
                                 </div>
                                 <div class="row">

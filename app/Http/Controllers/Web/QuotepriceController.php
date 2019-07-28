@@ -10,10 +10,10 @@ use App\Model\ProductStatus;
 use App\Model\CustomerAddress;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class QuotepriceController extends Controller
 {
-
     public function index(Request $request)
     {
         try {
@@ -29,69 +29,108 @@ class QuotepriceController extends Controller
 
     public function detail(Request $request, $qp_id)
     {
-        $qpModel = new Quoteprice();
-        $qpData = $qpModel->getQuoteprice($qp_id);
+        try {
+            $qpModel = new Quoteprice();
+            $qpData = $qpModel->getQuoteprice($qp_id);
 
-        if ($qpData == null) {
-            return response()->view('errors.404', [], 404);
+            if ($qpData == null) {
+                return response()->view('errors.404', [], 404);
+            }
+            $qpDetail = new QuotepriceDetail();
+            $qpDetailData = $qpDetail->getQuotepriceDetailsByQpId($qp_id);
+
+            $prdStatus = new ProductStatus();
+            $prdStatusData = $prdStatus->getAllStatus();
+
+            $cusAddress = new CustomerAddress();
+            $cusAddressData = $cusAddress->getAddressByCusId($qpData->cus_id);
+            return view('quoteprice_detail', [
+                'quoteprice' => $qpData,
+                'quotepriceDetail' => $qpDetailData,
+                'prdStatus' => convertDataToDropdownOptions($prdStatusData, 'id', 'title'),
+                'cusAddress' => convertDataToDropdownOptions($cusAddressData, 'cad_id', 'cad_address'),
+            ]);
+        } catch (\Throwable $e) {
+            throw $e;
         }
-        $qpDetail = new QuotepriceDetail();
-        $qpDetailData = $qpDetail->getQuotepriceDetailsByQpId($qp_id);
-
-        $prdStatus = new ProductStatus();
-        $prdStatusData = $prdStatus->getAllStatus();
-
-        $cusAddress = new CustomerAddress();
-        $cusAddressData = $cusAddress->getAddressByCusId($qpData->cus_id);
-        return view('quoteprice_detail', [
-            'quoteprice' => $qpData,
-            'quotepriceDetail' => $qpDetailData,
-            'prdStatus' => convertDataToDropdownOptions($prdStatusData, 'id', 'title'),
-            'cusAddress' => convertDataToDropdownOptions($cusAddressData, 'cad_id', 'cad_address'),
-        ]);
     }
 
     public function create(Request $request, $cus_id)
     {
-        $cus = new Customer();
-        $cusData = $cus->getCustomerById($cus_id);
-        if ($cusData == null) {
-            return response()->view('errors.404', [], 404);
+        try {
+            $cus = new Customer();
+            $cusData = $cus->getCustomerById($cus_id);
+            if ($cusData == null) {
+                return response()->view('errors.404', [], 404);
+            }
+
+            $user = new User();
+            $userData = $user->getCurrentUser();
+
+            $qpModel = new Quoteprice();
+            $qp_no = $qpModel->generateQpNo();
+
+            $prdStatus = new ProductStatus();
+            $prdStatusData = $prdStatus->getAllStatus();
+
+            $cusAddress = new CustomerAddress();
+            $cusAddressData = $cusAddress->getAddressByCusId($cus_id);
+            return view('quoteprice_create', [
+                'qp_no' => $qp_no,
+                'user' => $userData,
+                'customer' => $cusData,
+                'prdStatus' => convertDataToDropdownOptions($prdStatusData, 'id', 'title'),
+                'cusAddress' => convertDataToDropdownOptions($cusAddressData, 'cad_id', 'cad_address'),
+            ]);
+        } catch (\Throwable $e) {
+            throw $e;
         }
-
-        $user = new User();
-        $userData = $user->getCurrentUser();
-
-        $qpModel = new Quoteprice();
-        $qp_no = $qpModel->generateQpNo();
-
-        $prdStatus = new ProductStatus();
-        $prdStatusData = $prdStatus->getAllStatus();
-
-        $cusAddress = new CustomerAddress();
-        $cusAddressData = $cusAddress->getAddressByCusId($cus_id);
-        return view('quoteprice_create', [
-            'qp_no' => $qp_no,
-            'user' => $userData,
-            'customer' => $cusData,
-            'prdStatus' => convertDataToDropdownOptions($prdStatusData, 'id', 'title'),
-            'cusAddress' => convertDataToDropdownOptions($cusAddressData, 'cad_id', 'cad_address'),
-        ]);
     }
 
     public function pdf(Request $request, $qp_id, $uniqid)
     {
-        $qpModel = new Quoteprice();
-        $qpData = $qpModel->getQuoteprice($qp_id);
-        if ($qpData == null) {
-            return response()->view('errors.404', [], 404);
-        }
+        try {
+            $qpModel = new Quoteprice();
+            $qpData = $qpModel->getQuoteprice($qp_id);
+            if ($qpData == null) {
+                return response()->view('errors.404', [], 404);
+            }
 
-        $file = $qpModel->getPdfFile($qp_id, $uniqid);
-        if ($file == null) {
-            return response()->view('errors.404', [], 404);
-        }
+            $file = $qpModel->getPdfFile($qp_id, $uniqid);
+            if ($file == null) {
+                return response()->view('errors.404', [], 404);
+            }
 
-        return response()->file($file['path'], ['Content-Disposition' => 'filename="' . $file['name'] . '.pdf"']);
+            return response()->file($file['path'], ['Content-Disposition' => 'filename="' . $file['name'] . '.pdf"']);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function download(Request $request, $qp_id, $uniqid)
+    {
+        try {
+            $qpModel = new Quoteprice();
+            $qpData = $qpModel->getQuoteprice($qp_id);
+            if ($qpData == null) {
+                return response()->view('errors.404', [], 404);
+            }
+
+            $is_exists = Storage::disk('quoteprices')->exists("$uniqid.pdf");
+            if ($is_exists == false) {
+                return response()->view('errors.404', [], 404);
+            }
+
+            $file_name = '[TKP] ' . date('d.m.Y') . '_' . $qpData->qp_no . '_' . $qpData->cus_code . ".pdf";
+            $file_path = Storage::disk('quoteprices')->path("$uniqid.pdf");
+
+            $headers = [
+                'Content-Type' => 'application/pdf',
+            ];
+
+            return response()->download($file_path, $file_name, $headers);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
     }
 }

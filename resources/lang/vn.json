@@ -263,5 +263,11 @@
   "Tag": "Thẻ",
   "History": "Lịch sử",
   "Back to the order page": "Quay lại đơn hàng",
-  "Back to the quoteprice page": "Quay lại báo giá"
+  "Back to the quoteprice page": "Quay lại báo giá",
+  "Order doesn't existed.!": "Đơn hàng không tồn tại.!",
+  "Order Delivery Date": "Ngày giao hàng",
+  "Order Exp Date is wrong format YYYY/MM/DD.": "Ngày hết hạn bị sai định dạng YYYY/MM/DD.",
+  "Order Delivery Date is wrong format YYYY/MM/DD.": "Ngày giao hàng bị sai định dạng YYYY/MM/DD.",
+  "Do you want to confirm contract status.?": "Bạn có muốn chuyển đơn hàng sang trạng thái có hợp đồng không?",
+  "Do you want to confirm delivery status.?": "Bạn có muốn chuyển đơn hàng sang trạng thái giao hàng không?"
 }

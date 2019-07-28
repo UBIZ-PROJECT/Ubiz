@@ -97,6 +97,13 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="GNi" onclick="qp_download()">
+                                    <div class="ax7 poK utooltip" title="{{ __("Download") }}">
+                                        <div class="asA">
+                                            <div class="dlF"></div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div id="btn-delete" class="GNi" onclick="qp_delete()">
                                     <div class="ax7 poK utooltip" title="{{ __("Delete") }}">
                                         <div class="asA">

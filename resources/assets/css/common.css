@@ -859,6 +859,23 @@
     background-size: 20px;
 }
 
+
+.main-content .r-content .dlF{
+    display: inline-block;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+    -webkit-transition: opacity .15s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transition: opacity .15s cubic-bezier(0.4, 0.0, 0.2, 1);
+    width: 20px;
+    opacity: .54;
+    vertical-align: middle;
+    background-image: url(../images/download_file.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 20px;
+}
+
 .main-content .r-content .asY {
     display: inline-block;
     height: 20px;
