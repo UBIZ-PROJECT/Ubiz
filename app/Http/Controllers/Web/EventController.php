@@ -20,4 +20,20 @@ class EventController extends Controller
             throw $e;
         }
     }
+
+    public function detail(Request $request, $id)
+    {
+        try {
+            $event = new Event();
+            $eventData = $event->getEvent($id);
+
+            if($eventData == null){
+                return response()->view('errors.404', [], 404);
+            }
+
+            return view('event_edit', ['event' => $eventData]);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
 }

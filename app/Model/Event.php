@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -381,6 +382,47 @@ class Event
 
             DB::commit();
             return $event_id;
+        } catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    public function sendEmail($id)
+    {
+        try {
+
+            $event_pic = DB::table('m_event_pic')
+                ->join('users', 'm_event_pic.user_id', '=', 'users.id')
+                ->select(
+                    'users.*'
+                )
+                ->where(
+                    [
+                        ['m_event_pic.event_id', '=', $id],
+                        ['m_event_pic.delete_flg', '=', '0']
+                    ]
+                )
+                ->orderBy('users.id', 'asc')
+                ->get();
+
+            foreach ($event_pic as $pic) {
+
+                $data = [
+                    'name' => $pic->name,
+                    'event' => "http://tkp.local/events/$id"
+                ];
+                Mail::send('event_mail', $data, function ($message) use ($pic) {
+                    $message->subject('[TKP] Lịch làm việc');
+                    $message->from('tkpteams@gmail.com', 'TKP');
+                    $message->to('itnomichi@gmail.com');
+                });
+
+                if (Mail::failures())
+                    return false;
+            }
+
+            return true;
         } catch (\Throwable $e) {
             DB::rollback();
             throw $e;
