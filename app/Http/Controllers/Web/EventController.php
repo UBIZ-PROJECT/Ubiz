@@ -27,11 +27,16 @@ class EventController extends Controller
             $event = new Event();
             $eventData = $event->getEvent($id);
 
-            if($eventData == null){
+            if ($eventData == null) {
                 return response()->view('errors.404', [], 404);
             }
 
-            return view('event_edit', ['event' => $eventData]);
+            $tags = $event->getTags();
+
+            return view('event_edit', [
+                'event' => $eventData,
+                'tags' => $tags
+            ]);
         } catch (\Throwable $e) {
             throw $e;
         }
