@@ -166,9 +166,9 @@ class Customer implements JWTSubject
             $data = DB::table('customer')
                 ->leftJoin('m_customer_type', 'customer.cus_type', '=', 'm_customer_type.id')
                 ->where([
-                    ['delete_flg', '=', '0'],
-                    ['cus_id', '=', $cus_id],
-                    ['user_id', '=', $user_id]
+                    ['customer.delete_flg', '=', '0'],
+                    ['customer.cus_id', '=', $cus_id],
+                    ['customer.user_id', '=', $user_id]
                 ])
                 ->select('customer.*', 'm_customer_type.title as cus_type')
                 ->first();
