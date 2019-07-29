@@ -195,7 +195,9 @@
                 $(".price-report").show();
                 $("input[name=cus_code]").attr('disabled', true);
                 $("input[name=cus_code]").closest('div.root_textfield').addClass('rootIsDisabled');
+                $(".Di").show();
             } else {
+                $(".Di").hide();
                 ubizapis('v1', '/customers/cuscode', 'get', null, null, jQuery.UbizOIWidget.w_go_to_input_page_callback);
             }
             jQuery.UbizOIWidget.w_sleep_scrollbars(jQuery.UbizOIWidget.output_scrollbars);

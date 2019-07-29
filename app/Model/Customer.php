@@ -54,7 +54,13 @@ class Customer implements JWTSubject
     public function getAllCustomers()
     {
         try {
-            $customers = DB::table('customer')->where('delete_flg', '0')->get();
+            $user_id = Auth::user()->id;
+            $customers = DB::table('customer')
+                ->where([
+                    ['delete_flg', '=', '0'],
+                    ['user_id', '=', $user_id],
+                ])
+                ->get();
             return $customers;
         } catch (\Throwable $e) {
             throw $e;
@@ -75,8 +81,12 @@ class Customer implements JWTSubject
     {
         DB::beginTransaction();
         try {
-
+            $user_id = Auth::user()->id;
             DB::table('customer')
+                ->where([
+                    ['delete_flg', '=', '0'],
+                    ['user_id', '=', $user_id],
+                ])
                 ->whereIn('cus_id', explode(',', $ids))
                 ->update(['delete_flg' => '1']);
             DB::commit();
@@ -118,18 +128,29 @@ class Customer implements JWTSubject
     public function countCustomers()
     {
         try {
-            $totalCustomers = DB::table('customer')->where('delete_flg', '0')->count();
+            $user_id = Auth::user()->id;
+            $totalCustomers = DB::table('customer')
+                ->where([
+                    ['delete_flg', '=', '0'],
+                    ['user_id', '=', $user_id],
+                ])
+                ->count();
             return $totalCustomers;
         } catch (\Throwable $e) {
             throw $e;
         }
     }
 
-    public function getCustomer($id)
+    public function getCustomer($cus_id)
     {
         try {
+            $user_id = Auth::user()->id;
             $customers = DB::table('customer')
-                ->where('cus_id', $id)
+                ->where([
+                    ['delete_flg', '=', '0'],
+                    ['cus_id', '=', $cus_id],
+                    ['user_id', '=', $user_id]
+                ])
                 ->get();
             $customers[0]->avt_src = readImage($customers[0]->cus_avatar, 'cus');
         } catch (\Throwable $e) {
@@ -138,12 +159,17 @@ class Customer implements JWTSubject
         return $customers;
     }
 
-    public function getCustomerById($id)
+    public function getCustomerById($cus_id)
     {
         try {
+            $user_id = Auth::user()->id;
             $data = DB::table('customer')
                 ->leftJoin('m_customer_type', 'customer.cus_type', '=', 'm_customer_type.id')
-                ->where('cus_id', $id)
+                ->where([
+                    ['delete_flg', '=', '0'],
+                    ['cus_id', '=', $cus_id],
+                    ['user_id', '=', $user_id]
+                ])
                 ->select('customer.*', 'm_customer_type.title as cus_type')
                 ->first();
             if ($data != null) {
@@ -158,8 +184,12 @@ class Customer implements JWTSubject
     public function getCustomerPaging($index, $sort, $order)
     {
         try {
+            $user_id = Auth::user()->id;
             $customers = DB::table('customer')
-                ->where('delete_flg', '0')
+                ->where([
+                    ['delete_flg', '=', '0'],
+                    ['user_id', '=', $user_id]
+                ])
                 ->orderBy($sort, $order)
                 ->offset($index)
                 ->limit(1)
@@ -174,8 +204,12 @@ class Customer implements JWTSubject
     public function countAllCustomers()
     {
         try {
+            $user_id = Auth::user()->id;
             $count = DB::table('customer')
-                ->where('delete_flg', '0')
+                ->where([
+                    ['delete_flg', '=', '0'],
+                    ['user_id', '=', $user_id]
+                ])
                 ->count();
         } catch (\Throwable $e) {
             throw $e;
