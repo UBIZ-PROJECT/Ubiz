@@ -1,7 +1,7 @@
 <div class="row">
     <input type="hidden" id="event-id" value="0">
     <div class="col-md-6 col-lg-6">
-        <input type="text" style="width: 500px" class="form-control light-color" id="event-title" placeholder="{{ __('Add title') }}">
+        <input type="text" style="width: 528px" class="form-control light-color" id="event-title" placeholder="{{ __('Add title') }}">
     </div>
     <div class="col-md-6 col-lg-6 text-right">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">

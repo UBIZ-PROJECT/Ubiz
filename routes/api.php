@@ -39,6 +39,7 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
 
         Route::get('customer', ['as' => 'api-customer', 'uses' => 'Api\CustomerController@getCustomers']);
         Route::get('customer/{id}', ['as' => 'delete-customer', 'uses' => 'Api\CustomerController@deleteCustomer']);
+        Route::get('customers/cuscode', ['as' => 'generate-cus-code', 'uses' => 'Api\CustomerController@generateCusCode']);
         Route::get('customers', ['as' => 'api-customer', 'uses' => 'Api\CustomerController@getCustomers']);
         Route::get('customer-edit', ['as' => 'get-customer', 'uses' => 'Api\CustomerController@getCustomer']);
         Route::post('customer-create', ['as' => 'insert-customer', 'uses' => 'Api\CustomerController@insertCustomer']);

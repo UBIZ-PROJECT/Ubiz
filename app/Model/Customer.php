@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\User;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Support\Facades\DB;
@@ -52,14 +53,22 @@ class Customer implements JWTSubject
 
     public function getAllCustomers()
     {
-        $customers = DB::table('customer')->where('delete_flg', '0')->get();
-        return $customers;
+        try {
+            $customers = DB::table('customer')->where('delete_flg', '0')->get();
+            return $customers;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
     }
 
     public function getCustomerAddress($cus_id)
     {
-        $customerAddress = DB::table('customer_address')->where('cus_id', $cus_id)->where('delete_flg', '0')->get();
-        return $customerAddress;
+        try {
+            $customerAddress = DB::table('customer_address')->where('cus_id', $cus_id)->where('delete_flg', '0')->get();
+            return $customerAddress;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
     }
 
     public function deleteCustomer($ids = '')
@@ -100,17 +109,20 @@ class Customer implements JWTSubject
                 ->offset($page * $rows_per_page)
                 ->limit($rows_per_page)
                 ->get();
+            return $customers;
         } catch (\Throwable $e) {
             throw $e;
         }
-        return $customers;
     }
 
     public function countCustomers()
     {
-        $totalCustomers = DB::table('customer')->where('delete_flg', '0')->count();
-
-        return $totalCustomers;
+        try {
+            $totalCustomers = DB::table('customer')->where('delete_flg', '0')->count();
+            return $totalCustomers;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
     }
 
     public function getCustomer($id)
@@ -179,7 +191,6 @@ class Customer implements JWTSubject
         } catch (\Throwable $e) {
             throw $e;
         }
-
         return [
             'rows_num' => $rows_num,
             'rows_per_page' => $rows_per_page
@@ -301,7 +312,7 @@ class Customer implements JWTSubject
                 $res['success'] = false;
                 $message[] = __('Customer code is required.');
             }
-            if (array_key_exists('cus_code', $data) && mb_strlen($data['cus_code'], "utf-8") > 5) {
+            if (array_key_exists('cus_code', $data) && mb_strlen($data['cus_code'], "utf-8") > 50) {
                 $res['success'] = false;
                 $message[] = __('Customer code is too long.');
             }
@@ -360,6 +371,9 @@ class Customer implements JWTSubject
     {
         $params = [0];
         $where_raw = 'customer.delete_flg = ?';
+        $params[] = Auth::user()->id;
+        $where_raw .= ' AND customer.user_id = ?';
+
         if (sizeof($search) > 0) {
             if (isset($search['contain']) || isset($search['notcontain'])) {
 
@@ -450,5 +464,26 @@ class Customer implements JWTSubject
             $field_name = implode('_', $sort_info);
         }
         return [$field_name, $order_by];
+    }
+
+    public function generateCusCode()
+    {
+        try {
+            $user = new User();
+            $user_id = Auth::user()->id;
+            $curUser = $user->getCurrentUser();
+            $pre_reg = strtoupper(explode('@', $curUser->email)[0]) . '_CUS';
+            $reg = '^' . $pre_reg . '[0-9]{5,}$';
+            $customer = DB::select("SELECT MAX(cus_code) AS cus_code FROM `customer` WHERE user_id = $user_id AND cus_code REGEXP :reg;", ['reg' => $reg]);
+            if ($customer[0]->cus_code == null) {
+                $cus_code_num = 1;
+            } else {
+                $cus_code_num = intval(str_replace($pre_reg, '', $customer[0]->cus_code)) + 1;
+            }
+            $cus_code = $pre_reg . str_pad($cus_code_num, 5, '0', STR_PAD_LEFT);
+            return $cus_code;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
     }
 }
