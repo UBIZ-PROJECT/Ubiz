@@ -144,6 +144,7 @@ class Event
                 ->where(
                     [
                         ['m_event.id', '=', $id],
+                        ['m_event.delete_flg', '=', '0'],
                         ['users.delete_flg', '=', '0']
                     ]
                 )
