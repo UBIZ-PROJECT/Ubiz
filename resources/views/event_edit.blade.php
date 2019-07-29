@@ -103,14 +103,14 @@
                 </div>
                 <div class="jAQ">
                     <div class="aqI" id="nicescroll-iput">
-                        <div class="row">
+                        <div class="row z-pdr">
                             <input type="hidden" id="event-id" value="0">
                             <div class="col-md-6 col-lg-6">
                                 <input type="text" style="width: 487px" class="form-control event-form-control light-color" id="event-title" placeholder="{{ __('Add title') }}">
                             </div>
                         </div>
                         <hr style="margin-top: 7px; margin-bottom: 7px">
-                        <div class="row margin-bottom-15">
+                        <div class="row margin-bottom-15 z-pdr">
                             <div class="col-12">
                                 <input type="text" readonly style="width: 140px" class="form-control event-form-control light-color d-inline-flex text-center start-date" id="event-start-date">
                                 <select readonly class="form-control event-form-control light-color d-inline-flex justify-content-center w-auto"
@@ -218,7 +218,7 @@
                                 <input type="text" readonly style="width: 140px" class="form-control event-form-control light-color d-inline-flex text-center end-date" id="event-end-date">
                             </div>
                         </div>
-                        <div class="row margin-bottom-15">
+                        <div class="row margin-bottom-15 z-pdr">
                             <div class="col-12">
                                 <table>
                                     <tbody>
@@ -242,7 +242,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="row margin-bottom-15">
+                        <div class="row margin-bottom-15 z-pdr">
                             <div class="col-md-8 col-lg-8">
                                 <span class="text-primary">{{ __('Detail') }}</span>
                                 <hr class="z-mgt">

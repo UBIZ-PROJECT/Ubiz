@@ -407,11 +407,12 @@ class Event
                 ->orderBy('users.id', 'asc')
                 ->get();
 
+            $app_url = env('APP_URL', 'http://103.1.238.140');
             foreach ($event_pic as $pic) {
 
                 $data = [
                     'name' => $pic->name,
-                    'event' => "http://tkp.local/events/$id"
+                    'event' => "$app_url/events/$id"
                 ];
                 Mail::send('event_mail', $data, function ($message) use ($pic) {
                     $message->subject('[TKP] Lịch làm việc');
