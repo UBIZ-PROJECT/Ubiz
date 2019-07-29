@@ -48,13 +48,13 @@ class Report implements JWTSubject
                 $report = $this->getRepReport($page, $sort);
                 break;
             case "revenue":
-                $orderFromDate = $request->order_from_date ? $request->order_from_date : "";
-                $orderToDate = $request->order_to_date ? $request->order_to_date : date('Y/m/d');
+                $orderFromDate = $request->report_from_date ? $request->report_from_date : date('Y/m') . "/01";
+                $orderToDate = $request->report_to_date ? $request->report_to_date : date('Y/m/d');
                 $report = $this->getRevReport($page, $sort, $orderFromDate, $orderToDate);
                 break;
             case "quoteprice":
-                $qpFromDate = $request->qp_from_date ? $request->qp_from_date : "";
-                $qpToDate = $request->qp_to_date ? $request->qp_to_date : date('Y/m/d');
+                $qpFromDate = $request->report_from_date ? $request->report_from_date : "";
+                $qpToDate = $request->report_to_date ? $request->report_to_date : date('Y/m') . "/01";
                 $report = $this->getQPReport($page, $sort, $qpFromDate, $qpToDate);
                 break;
             default:
