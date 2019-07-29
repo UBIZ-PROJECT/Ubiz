@@ -18,7 +18,7 @@
                 <nav role="navigation">
                     <div class="kL"></div>
                     <div class="sP">
-                        <div class="aW aT" id="li">
+                        <div class="aW aT" id="li" onclick="go_back_to_output()">
                             <div class="mR">
                                 <div class="eT">
                                     <div class="Vf"></div>
@@ -75,21 +75,21 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="save">
+                                    <div class="save" onclick="event_save()">
                                         <div class="ax7 poK utooltip" title="{{ __("Save") }}">
                                             <div class="asA">
                                                 <div class="arS"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="refresh">
+                                    <div class="refresh" onclick="event_refresh()">
                                         <div class="ax7 poK utooltip" title="{{ __("Refresh") }}">
                                             <div class="asA">
                                                 <div class="arR"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="delete">
+                                    <div class="delete" onclick="event_delete()">
                                         <div class="ax7 poK utooltip" title="{{ __("Delete") }}">
                                             <div class="asA">
                                                 <div class="asX"></div>
@@ -106,14 +106,14 @@
                         <div class="row">
                             <input type="hidden" id="event-id" value="0">
                             <div class="col-md-6 col-lg-6">
-                                <input type="text" style="width: 500px" class="form-control light-color" value="{{ $event['title'] }}" id="event-title" placeholder="{{ __('Add title') }}">
+                                <input type="text" style="width: 487px" class="form-control event-form-control light-color" id="event-title" placeholder="{{ __('Add title') }}">
                             </div>
                         </div>
-                        <hr>
+                        <hr style="margin-top: 7px; margin-bottom: 7px">
                         <div class="row margin-bottom-15">
                             <div class="col-12">
-                                <input type="text" readonly style="width: 140px" class="form-control light-color d-inline-flex text-center start-date" id="event-start-date">
-                                <select readonly class="form-control light-color d-inline-flex justify-content-center w-auto"
+                                <input type="text" readonly style="width: 140px" class="form-control event-form-control light-color d-inline-flex text-center start-date" id="event-start-date">
+                                <select readonly class="form-control event-form-control light-color d-inline-flex justify-content-center w-auto"
                                         id="event-start-time">
                                     <option value="12:00am">12:00SA</option>
                                     <option value="12:30am">12:30SA</option>
@@ -165,7 +165,7 @@
                                     <option value="11:30pm">11:30CH</option>
                                 </select>
                                 <span class="d-inline-flex">&nbsp;{{ __('to') }}&nbsp;</span>
-                                <select readonly class="form-control light-color d-inline-flex justify-content-center w-auto" id="event-end-time">
+                                <select readonly class="form-control event-form-control light-color d-inline-flex justify-content-center w-auto" id="event-end-time">
                                     <option value="12:00am">12:00SA</option>
                                     <option value="12:30am">12:30SA</option>
                                     <option value="12:30am">1:00SA</option>
@@ -215,7 +215,7 @@
                                     <option value="11:00pm">11:00CH</option>
                                     <option value="11:30pm">11:30CH</option>
                                 </select>
-                                <input type="text" readonly style="width: 140px" class="form-control light-color d-inline-flex text-center end-date" id="event-end-date">
+                                <input type="text" readonly style="width: 140px" class="form-control event-form-control light-color d-inline-flex text-center end-date" id="event-end-date">
                             </div>
                         </div>
                         <div class="row margin-bottom-15">
@@ -228,7 +228,7 @@
                                         </td>
                                         <td>
                                             <span class="d-inline-flex">{{ __('All day') }}</span>
-                                            {{--<select readonly class="form-control light-color d-inline-flex justify-content-center w-auto">--}}
+                                            {{--<select readonly class="form-control event-form-control light-color d-inline-flex justify-content-center w-auto">--}}
                                             {{--<option>Does not repeat</option>--}}
                                             {{--<option>Daily</option>--}}
                                             {{--<option>Weekly on Monday</option>--}}
@@ -249,23 +249,23 @@
                                 <table>
                                     <tbody>
                                     <tr>
-                                        <td style="height: 45px">
+                                        <td style="height: 30px">
                                             <i class="fas fa-map-marker-alt text-primary mgr-10"></i>
                                         </td>
                                         <td>
-                                            <input type="text" style="width: 500px" class="form-control light-color" id="event-location">
+                                            <input type="text" style="width: 458px" class="form-control event-form-control light-color" id="event-location">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="height: 45px">
+                                        <td style="height: 30px">
                                             <i class="far fa-bell text-primary mgr-10"></i>
                                         </td>
                                         <td>
-                                            <select readonly class="form-control light-color d-inline-flex justify-content-center w-auto">
+                                            <select readonly class="form-control event-form-control light-color d-inline-flex justify-content-center w-auto">
                                                 <option>Email</option>
                                             </select>
-                                            {{--<input type="number" style="width: 70px" class="form-control light-color d-inline-flex" value="30">--}}
-                                            {{--<select readonly class="form-control light-color d-inline-flex justify-content-center w-auto">--}}
+                                            {{--<input type="number" style="width: 70px" class="form-control event-form-control light-color d-inline-flex" value="30">--}}
+                                            {{--<select readonly class="form-control event-form-control light-color d-inline-flex justify-content-center w-auto">--}}
                                             {{--<option>{{ __('Minutes') }}</option>--}}
                                             {{--<option>{{ __('Hours') }}</option>--}}
                                             {{--<option>{{ __('Days') }}</option>--}}
@@ -274,7 +274,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="height: 45px">
+                                        <td style="height: 30px">
                                             <i class="fas fa-tags text-primary mgr-10"></i>
                                         </td>
                                         <td>
@@ -312,7 +312,7 @@
                                             <i class="fas fa-align-left text-primary mgr-10"></i>
                                         </td>
                                         <td>
-                                            <textarea id="event_desc" class="form-control" name="txt_desc"></textarea>
+                                            <textarea id="event_desc" class="form-control event-form-control" name="txt_desc"></textarea>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -366,6 +366,7 @@
 @section('end-javascript')
     <script>
         var pic_list = {!! json_encode(getAllUsers()) !!};
+        var event = {!! json_encode($event) !!};
     </script>
     <script type="text/javascript" src="{{ asset('dist/air-datepicker/js/datepicker.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/event_edit.js') }}"></script>

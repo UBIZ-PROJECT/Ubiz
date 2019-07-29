@@ -1,6 +1,102 @@
 var calendar = null;
 var time_zone = 'local';
 
+function event_get_filter_tag() {
+    var filter_tag = new Array();
+    $("input[name=event-tag]:checked").each(function (idx, tag) {
+        filter_tag.push($(tag).val());
+    });
+    return filter_tag;
+}
+
+function event_edit(event) {
+    console.log(event);
+    $("#event-id").val(event.id);
+    $("#event-title").val(event.title);
+    $("#event-location").val(event.location);
+
+    var startDatepicker = $('.start-date').datepicker().data('datepicker');
+    var endDatepicker = $('.end-date').datepicker().data('datepicker');
+
+    $("#event-all-day").prop("checked", event.allDay);
+    if (event.allDay == true) {
+        $("#event-start-time").hide();
+        $("#event-end-time").hide();
+        $("#event-start-date").val(moment(event.start).format('MMM DD ,YYYY'));
+        $("#event-end-date").val(moment(event.end).subtract(1, 'days').format('MMM DD ,YYYY'));
+        $("#event-start-time").val('8:00am');
+        $("#event-end-time").val('5:00pm');
+    } else {
+        $("#event-start-time").show();
+        $("#event-end-time").show();
+        $("#event-start-date").val(moment(event.start).format('MMM DD ,YYYY'));
+        $("#event-end-date").val(moment(event.end).format('MMM DD ,YYYY'));
+        $("#event-start-time").val(moment(event.start).format('h:mma'));
+        $("#event-end-time").val(moment(event.end).format('h:mma'));
+    }
+
+    startDatepicker.selectDate(new Date($("#event-start-date").val()));
+    endDatepicker.selectDate(new Date($("#event-end-date").val()));
+
+    $("#event-email").text(event.owner_email);
+
+    epic_clean_tag_class();
+    $("#event-tag").attr('tag_id', event.tag_id);
+    $("#event-tag").attr('title', event.tag_title);
+    $("#event-tag").addClass(event.tag_color);
+    $("#event-tag-dropdown").find("div.dropdown-menu").find("a.dropdown-item").removeClass('active');
+    $("#event-tag-dropdown").find("div.dropdown-menu").find("a[tag_id=" + event.tag_id + "].dropdown-item").addClass('active');
+
+    if (event.pic_edit == '1') {
+        $("#event_pic_edit").prop("checked", true);
+    } else {
+        $("#event_pic_edit").prop("checked", false);
+    }
+
+    if (event.pic_assign == '1') {
+        $("#btn-assign").show();
+        $("#event_pic_assign").prop("checked", true);
+    } else {
+        $("#btn-assign").hide();
+        $("#event_pic_assign").prop("checked", false);
+    }
+
+    if (event.pic_see_list == '1') {
+        $(".assigned-list").show();
+        $("#event_pic_see_list").prop("checked", true);
+    } else {
+        $(".assigned-list").show();
+        $("#event_pic_see_list").prop("checked", false);
+    }
+
+    if (event.pic_assign == '1' || event.is_owner == true) {
+        $("#btn-assign").show();
+    } else {
+        $("#btn-assign").hide();
+    }
+
+    if (event.pic_see_list == '1' || event.is_owner == true) {
+        $(".assigned-list").show();
+    } else {
+        $(".assigned-list").hide();
+    }
+
+    tinyMCE.get('event_desc').setContent(event.desc);
+
+    var assigned_list = new Array();
+    $.map(event.pic, function (user, idx) {
+
+        var pic = _.find(pic_list, {id: user.id});
+        if (typeof pic !== "undefined") {
+            assigned_list.push(pic);
+        }
+    });
+    event_render_assigned_dropdown_list(assigned_list);
+
+    $("#btn-delete").show();
+    $('#event-modal').modal();
+}
+
 function epic_clean_tag_class() {
     $("#event-tag").attr('class', '');
     $("#event-tag").addClass('fas fa-circle');
@@ -271,7 +367,7 @@ function event_save_callback(res) {
             type: 'success',
             title: res.data.message,
             onClose: () => {
-                calendar.refetchEvents();
+                go_back_to_output();
             }
         });
     } else {
@@ -289,7 +385,7 @@ function event_delete_callback(res) {
             type: 'success',
             title: res.data.message,
             onClose: () => {
-                calendar.refetchEvents();
+                go_back_to_output();
             }
         });
     } else {
@@ -300,11 +396,35 @@ function event_delete_callback(res) {
     }
 }
 
-function go_back_to_output(){
+function event_refresh() {
+    swal({
+        title: i18next.t('Do you want to refresh the data.?'),
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: i18next.t('No'),
+        confirmButtonText: i18next.t('Yes'),
+        reverseButtons: true
+    }).then((result) => {
+        if (result.value) {
+            window.location.reload();
+        }
+    });
+}
+
+function go_back_to_output() {
     window.location.href = "/events";
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+
+    fnc_set_scrollbars("nicescroll-iput");
+
+    $('.utooltip').tooltipster({
+        side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
+    });
+
     $.fn.datepicker.language['vi'] = {
         days: ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'],
         daysShort: ['CN', 'Th 2', 'Th 3', 'Th 4', 'Th 5', 'Th 6', 'Th 7'],
@@ -319,12 +439,7 @@ document.addEventListener('DOMContentLoaded', function () {
         language: 'vi',
         dateFormat: 'yyyy-mm-dd',
         timeFormat: 'hh:ii:ss',
-        firstDay: 1,
-        onSelect: function (fd, d, picker) {
-            if (calendar.state.loadingLevel == 0) {
-                calendar.gotoDate(fd);
-            }
-        }
+        firstDay: 1
     });
 
     $('.start-date').datepicker({
@@ -362,6 +477,9 @@ document.addEventListener('DOMContentLoaded', function () {
         toolbar: 'undo redo | bold italic forecolor backcolor | formatselect | fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat',
         content_css: [
             '/fonts/roboto/v18/roboto.css'
-        ]
+        ],
+        init_instance_callback: function (editor) {
+            event_edit(event);
+        }
     });
 });
