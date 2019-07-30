@@ -69,6 +69,7 @@ var is_image_delete = false;
                 if (result.value) {
                     listId = JSON.stringify(listId);
                     var params = jQuery.UbizOIWidget.w_get_param_search_sort();
+                    params.search['type'] = "0";
                     ubizapis('v1','/brands/'+listId+'/delete', 'delete',null, params,jQuery.UbizOIWidget.w_process_callback);
                 }
             });
@@ -160,7 +161,7 @@ var is_image_delete = false;
         w_search:function(){
 
             var params = jQuery.UbizOIWidget.w_get_param_search_sort();
-
+            params.search['type'] = "0";
             var event = new CustomEvent("click");
             document.body.dispatchEvent(event);
             ubizapis('v1', '/brands', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
@@ -235,7 +236,7 @@ var is_image_delete = false;
             var search_info = jQuery.UbizOIWidget.w_convert_fuzzy_to_search_info(fuzzy);
             jQuery.UbizOIWidget.w_update_search_form(search_info);
             params.search = search_info;
-
+            params.search['type'] = "0";
             ubizapis('v1', '/brands', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_fuzzy_search_handle_enter(e) {
@@ -316,6 +317,7 @@ var is_image_delete = false;
                                 var formData = jQuery.UbizOIWidget.w_get_images_upload();
                                 formData.append("brand", JSON.stringify(formInput));
                                 var params = jQuery.UbizOIWidget.w_get_param_search_sort();
+                                params.search['type'] = "0";
 
                                 formData.append("_method","put");
                                 ubizapis('v1','/brands/'+formInput.id+'/updatePaging', 'post', formData,params,function() {
@@ -402,6 +404,7 @@ var is_image_delete = false;
         w_refresh_output_page: function () {
             var params = {};
             params.page = jQuery.UbizOIWidget.page;
+            params.search['type'] = "0";
             ubizapis('v1', '/brands', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_sort_info: function () {
@@ -577,7 +580,7 @@ var is_image_delete = false;
             $(".ubiz-search.ubiz-search-brand").remove();
             $(".ubiz-search.ubiz-search-product").addClass("active");
             changeCreateFunction(_ADD_PRODUCT);
-            ubizapis('v1','/brands/detail', 'get', null, {'brd_id': id},jQuery.UbizOIWidget.w_render_data_to_input_page);
+            ubizapis('v1','/brands/detail', 'get', null, {'brd_id': id, 'type': "0"},jQuery.UbizOIWidget.w_render_data_to_input_page);
         },
         w_callback_remove_image: function(self) {
             is_image_delete = true;

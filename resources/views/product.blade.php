@@ -30,7 +30,7 @@
     <div class="main-content">
         <div class="l-content">
             <div class="zY">
-                <div class="yP" onclick="jQuery.UbizOIWidget.w_create()">{{ __("Add new") }}</div>
+                <div class="yP" onclick="createNew(1)">{{ __("Add new") }}</div>
             </div>
             <div id="nicescroll-sidebar" class="zX">
                 <nav role="navigation">
