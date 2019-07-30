@@ -3,6 +3,7 @@ const _NO = i18next.t("No");
 const _ADD_BRANDS = 1;
 const _ADD_PRODUCT = 2;
 var ACS_QUANTITY_DEFAULT = 0;
+var is_image_delete = false;
 var lst_image_delete = [];
 (function ($) {
     UbizOIWidget = function () {
@@ -1121,25 +1122,7 @@ var lst_image_delete = [];
         w_render_data_to_ouput_page: function (response) {
             var table_html = "";
             var products = response.data.product;
-            if (products.length > 0) {
-                var rows = [];
-                var index = 0 + (Number(response.data.paging.page) * Number(response.data.paging.rows_per_page));
-                for (let i = 0; i < products.length; i++) {
-                    var cols = [];
-                    cols.push(jQuery.UbizOIWidgetPrd.w_make_col_html(products[i].id, products[i].id, 1));
-                    cols.push(jQuery.UbizOIWidgetPrd.w_make_col_html(products[i].id, products[i].image, 2, products[i].prd_img_id));
-                    cols.push(jQuery.UbizOIWidgetPrd.w_make_col_html(products[i].id, products[i].name, 3));
-                    cols.push(jQuery.UbizOIWidgetPrd.w_make_col_html(products[i].id, products[i].name_type, 4));
-                    cols.push(jQuery.UbizOIWidgetPrd.w_make_col_html(products[i].id, products[i].acs_unit, 5));
-                    cols.push(jQuery.UbizOIWidgetPrd.w_make_col_html(products[i].id, products[i].acs_quantity, 6));
-                    rows.push(jQuery.UbizOIWidgetPrd.w_make_row_html(products[i].id, cols, index));
-                    index++;
-                }
-                table_html += rows.join("");
-            }
-            jQuery.UbizOIWidgetPrd.o_page.find("#table-content").empty();
-            jQuery.UbizOIWidgetPrd.o_page.find("#table-content").append(table_html);
-            jQuery.UbizOIWidgetPrd.w_reset_f_checkbox_status();
+            initProduct(products, response.data.paging.page);
             jQuery.UbizOIWidgetPrd.page = response.data.paging.page;
             jQuery.UbizOIWidgetPrd.w_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
         },
@@ -1365,7 +1348,7 @@ var lst_image_delete = [];
         },
         w_get_checked_rows: function () {
             var ids = [];
-            var checked_rows = jQuery.UbizOIWidgetPrd.o_page.find('.ckb-i:checked');
+            var checked_rows = jQuery.UbizOIWidgetPrd.i_page.find('.ckb-i:checked');
             checked_rows.each(function (idx, ele) {
                 var id = ele.value;
                 ids.push(id);
@@ -1452,9 +1435,19 @@ function copyKeeper(row) {
     var cloneNewRow = $(row).closest("tr").clone();
     var today = getCurrentDate();
     $(cloneNewRow).find(".inp_date").html(today);
+    var quantity =$(cloneNewRow).find(".quantity").html();
+    if (ACS_QUANTITY_DEFAULT - (countQuantityAcs() + Number(quantity)) < 0) {
+         var quantity_remain = ACS_QUANTITY_DEFAULT - countQuantityAcs();
+         swal(i18next.t("Not enough quantity!", {"quantity": quantity_remain}), {
+            type: "warning",
+        }).then(function(){
+
+        });
+        return;
+    }
+
     $(".tb-keeper").find("tbody").append(cloneNewRow);
     reOrderStt();
-    var quantity =$(cloneNewRow).find(".quantity").html();
     var keeper =$(cloneNewRow).find(".keeper").val();
     var note=$(cloneNewRow).find(".note").html();
     var expired_date = $(cloneNewRow).find(".expired_date").html();

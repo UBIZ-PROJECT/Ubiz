@@ -5,6 +5,7 @@ const _ADD_PRODUCT = 2;
 var current_screen;
 var current_brd_id = 0;
 var is_image_delete = false;
+var lst_image_delete = [];
 (function ($) {
     UbizOIWidget = function () {
         this.page = 0;
@@ -710,8 +711,6 @@ var is_image_delete = false;
     });
 })(jQuery);
 
-
-var lst_image_delete = [];
 (function ($) {
     UbizOIWidgetPrd = function () {
         this.page = 0;
@@ -1717,7 +1716,7 @@ function updateTableSeries(row) {
         name: keeper_txt,
         serial_note: series_note,
         inp_date: today,
-        serial_expired_date: isEmpty(keeper) ? txt_expired_date : "",
+        serial_expired_date: !isEmpty(keeper) ? txt_expired_date : "",
         serial_keep_date: !isEmpty(keeper) ? getCurrentDate() : ""
     };
     if (!isEmpty(row)) {
