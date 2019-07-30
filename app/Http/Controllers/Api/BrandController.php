@@ -84,6 +84,7 @@ class BrandController extends Controller
             if ($request->has("brand")) {
                 list($page, $sort, $search) = $this->getPageSortSearch($request);
                 $params = json_decode($request->input('brand'), true);
+                $search['type'] = $params['type'];
                 $this->getReqImages($params, $request);
                 $brand = new Brand();
                 $brand->insertBrand($params);
@@ -106,6 +107,7 @@ class BrandController extends Controller
                 list($page, $sort, $search) = $this->getPageSortSearch($request);
                 $params = json_decode($request->input('brand'), true);
                 $params['id'] = $id;
+                $search['type'] = $params['type'];
                 $this->getReqImages($params, $request);
                 $brand = new Brand();
                 $brand->updateBrand($params);
