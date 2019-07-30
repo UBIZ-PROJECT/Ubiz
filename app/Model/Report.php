@@ -216,12 +216,12 @@ class Report implements JWTSubject
         return $sum;
     }
 
-    public function countQP($orderFromDate, $orderToDate)
+    public function countQPs($qpFromDate, $qpToDate)
     {
         try {
-            $count = DB::table('qouteprice')
+            $count = DB::table('quoteprice')
                 ->where('delete_flg', '0')
-                ->whereRaw('order.ord_date between ? AND ?', [$orderFromDate, $orderToDate])
+                ->whereRaw('quoteprice.qp_date between ? AND ?', [$qpFromDate, $qpToDate])
                 ->count();
         } catch (\Throwable $e) {
             throw $e;
@@ -264,7 +264,7 @@ class Report implements JWTSubject
     {
         try {
             $rows_per_page = env('ROWS_PER_PAGE', 10);
-            $rows_num = $this->countOrders($qpFromDate, $qpToDate);
+            $rows_num = $this->countQPs($qpFromDate, $qpToDate);
         } catch (\Throwable $e) {
             throw $e;
         }
