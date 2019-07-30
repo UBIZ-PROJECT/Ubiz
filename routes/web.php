@@ -40,5 +40,9 @@ Route::middleware(['api', 'cors'])->group(function () {
         Route::get('orders/{ord_id}/history/{his_ord_id}', ['as' => 'orders-history-detail', 'uses' => 'Web\OrderHistoryController@detail'])->where(['ord_id' => '[0-9]+', 'his_ord_id' => '[0-9]+']);
         Route::get('quoteprices/{qp_id}/history', ['as' => 'quoteprices-history', 'uses' => 'Web\QuotepriceHistoryController@index'])->where('qp_id', '[0-9]+');
         Route::get('quoteprices/{qp_id}/history/{his_qp_id}', ['as' => 'quoteprices-history-detai', 'uses' => 'Web\QuotepriceHistoryController@detail'])->where(['qp_id' => '[0-9]+', 'his_qp_id' => '[0-9]+']);
+
+        Route::get('report', ['as'=>'report', 'uses'=>'Web\ReportController@index']);
+        Route::get('report/{type}', ['as'=>'report', 'uses'=>'Web\ReportController@index']);
+        Route::get('report/{type}/export', ['as'=>'report', 'uses'=>'Web\ReportController@exportExcel']);
     });
 });

@@ -118,5 +118,8 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::post('events', ['as' => 'api-insert-event', 'uses' => 'Api\EventController@insertEvent']);
         Route::post('events/{id}/update', ['as' => 'api-update-event', 'uses' => 'Api\EventController@updateEvent']);
         Route::delete('events/{id}/delete', ['as' => 'api-delete-event', 'uses' => 'Api\EventController@deleteEvent'])->where('id', '[0-9]+');;
+
+        Route::get('report/{type}', ['as' => 'api-get-report', 'uses' => 'Api\ReportController@getReport']);
+        Route::get('report', ['as' => 'api-get-report', 'uses' => 'Api\ReportController@getReport']);
     });
 });
