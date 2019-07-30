@@ -10,7 +10,13 @@
 @endsection
 @section('headbar')
 @section('search')
-    @include('layouts/accessory_search')
+    <div class="active ubiz-search ubiz-search-brand">
+        @include('layouts/brand_search')
+    </div>
+    <div class="ubiz-search ubiz-search-product">
+        @include('layouts/accessory_search')
+    </div>
+
 @section('headbar-icon')
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
         <path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"/>
@@ -156,13 +162,6 @@
                         <div class="aqK">
                             <div class="aqL">
                                 <div class="GtF">
-                                    <div class="select" onclick="jQuery.UbizOIWidget.w_f_checkbox_click(this)">
-                                        <div class="ax7 poK utooltip" title="{{ __("Select") }}">
-                                            <div class="asA">
-                                                <div class="asU ckb-f"></div>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div class="refresh" onclick="jQuery.UbizOIWidget.w_refresh_output_page(this)">
                                         <div class="ax7 poK utooltip" title="{{ __("Refresh") }}">
                                             <div class="asA">
@@ -186,11 +185,111 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="brd-content">
+                    <?php foreach ($data as $brd) { ?>
+                    <div class="brd-box" onclick="jQuery.UbizOIWidget.w_go_to_input_page('<?= $brd->brd_id ?>')">
+                        <img src="<?= $brd->brdImage['src'] ?>" class="brd-img rounded mx-auto d-block">
+                        <div class="brd-name"><?=$brd->brd_name ?></div>
+                    </div>
+                    <?php } ?>
+                </div>
+            </div>
+            <div class="jAQ" id="i-put"  style="display: none">
+                <div class="bkK onsite">
+                    <div class="aeH">
+                        <div class="aqK">
+                            <div class="aqL">
+                                <div class="GtF">
+                                    <div class="goback" onclick="jQuery.UbizOIWidget.w_go_back_to_output_page(this)">
+                                        <div class="ax7 poK utooltip" title="{{ __("Back") }}">
+                                            <div class="asA">
+                                                <div class="arB"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="save">
+                                        <div class="ax7 poK utooltip" title="{{ __("Save") }}">
+                                            <div class="asA">
+                                                <div class="arS"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="refresh">
+                                        <div class="ax7 poK utooltip" title="{{ __("Refresh") }}">
+                                            <div class="asA">
+                                                <div class="arR"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="delete">
+                                        <div class="ax7 poK utooltip" title="{{ __("Delete") }}">
+                                            <div class="asA">
+                                                <div class="asX"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="jAQ">
+                    <div class="aqI nicescroll" id="nicescroll-iput">
+                        <div class="row z-mgl z-mgr">
+                            <div class="col-sm-2 col-md-2 col-xl-2 z-pdl">
+                                @include('components.upload_image',['width'=>'200', 'height'=>'200'])
+                            </div>
+                            <div class="col-sm-3 col-md-3 col-xl-3 brd-info">
+                                <input type="hidden" value="" id="txt_brd_id">
+                                @include('components.input',['width'=>'250','type'=>'disabled', 'control_id'=>'txt_brd_id', 'label'=>__("Brand No"), 'length'=>5])
+                                @include('components.input',['width'=>'250','type'=>'required', 'control_id'=>'txt_brd_name', 'label'=>__("Brand Name"), 'length'=>100])
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bkK">
+                    <div class="aeH">
+                        <div class="aqK">
+                            <div class="aqL">
+                                <div class="GtF">
+                                    <div class="select" onclick="jQuery.UbizOIWidget.w_f_checkbox_click(this)">
+                                        <div class="ax7 poK utooltip-prd" title="{{ __("Select") }}">
+                                            <div class="asA">
+                                                <div class="asU ckb-f"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="save">
+                                        <div class="ax7 poK utooltip-prd" title="{{ __("Save") }}">
+                                            <div class="asA">
+                                                <div class="arS"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="refresh">
+                                        <div class="ax7 poK utooltip-prd" title="{{ __("Refresh") }}">
+                                            <div class="asA">
+                                                <div class="arR"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="delete">
+                                        <div class="ax7 poK utooltip-prd" title="{{ __("Delete") }}">
+                                            <div class="asA">
+                                                <div class="asX"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="aqJ">
                                 <div class="ar5">
                                 <span class="Di">
                                     @include('layouts/paging',['paging'=>$paging])
-                                    <div class="amD utooltip setting" title="{{ __("Setting") }}">
+                                    <div class="amD utooltip-prd setting" title="{{ __("Setting") }}">
                                         <span class="amF">&nbsp;</span>
                                         <img class="amG" src="{{ asset("images/cleardot.gif") }}" alt="">
                                     </div>
@@ -200,149 +299,151 @@
                         </div>
                     </div>
                 </div>
-                <div class="jAQ">
-                    <div class="aqH" role="presentation">
-                        <div class="yTP" role="presentation">
-                            <div class="clG">
-                                <div class="col-1" role="presentation"></div>
-                                <div class="col-2" role="presentation"></div>
-                                <div class="col-3" role="presentation"></div>
-                                <div class="col-4" role="presentation"></div>
-                                <div class="col-5" role="presentation"></div>
-                            </div>
-                            <div class="hdG">
-                                <div class="dcB col-1" role="presentation">
-                                    <div class="dWB" role="button" sort-name="" order-by="">
-                                        <div class="dvJ">
-                                            <div class="tDv"></div>
-                                            <div class="mhH">
-                                                <div class="acD">
-                                                    <div class="huK">
-                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
-                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
-                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
-                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
-                                                        </svg>
-                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
-                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
-                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
-                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
-                                                        </svg>
+                <div class="product-content">
+                    <div class="jAQ">
+                        <div class="aqH" role="presentation">
+                            <div class="yTP" role="presentation">
+                                <div class="clG">
+                                    <div class="col-1" role="presentation"></div>
+                                    <div class="col-2" role="presentation"></div>
+                                    <div class="col-3" role="presentation"></div>
+                                    <div class="col-4" role="presentation"></div>
+                                    <div class="col-5" role="presentation"></div>
+                                </div>
+                                <div class="hdG">
+                                    <div class="dcB col-1" role="presentation">
+                                        <div class="dWT" role="button" sort-name="" order-by="">
+                                            <div class="dvJ">
+                                                <div class="tDv"></div>
+                                                <div class="mhH">
+                                                    <div class="acD">
+                                                        <div class="huK">
+                                                            <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
+                                                                 viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                                <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                                <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                            </svg>
+                                                            <svg class="faH desc" x="0px" y="0px" width="18px"
+                                                                 height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                                <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                                <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                                                            </svg>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="dcB col-2" role="presentation">
-                                    <div class="dWT" role="button" sort-name="acs_name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
-                                        <div class="dvJ">
-                                            <div class="tDv">Hình Ảnh</div>
-                                            <div class="mhH">
-                                                <div class="acD">
-                                                    <div class="huK">
-                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
-                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
-                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
-                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
-                                                        </svg>
-                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
-                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
-                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
-                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
-                                                        </svg>
+                                    <div class="dcB col-2" role="presentation">
+                                        <div class="dWT" role="button" sort-name="prd_name" order-by="" onclick="jQuery.UbizOIWidgetPrd.w_sort(this)">
+                                            <div class="dvJ">
+                                                <div class="tDv">Hình Ảnh</div>
+                                                <div class="mhH">
+                                                    <div class="acD">
+                                                        <div class="huK">
+                                                            <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
+                                                                 viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                                <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                                <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                            </svg>
+                                                            <svg class="faH desc" x="0px" y="0px" width="18px"
+                                                                 height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                                <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                                <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                                                            </svg>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="dcB col-3" role="presentation">
-                                    <div class="dWT" role="button" sort-name="acs_name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
-                                        <div class="dvJ">
-                                            <div class="tDv">{{ __('Name') }}</div>
-                                            <div class="mhH">
-                                                <div class="acD">
-                                                    <div class="huK">
-                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
-                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
-                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
-                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
-                                                        </svg>
-                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
-                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
-                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
-                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
-                                                        </svg>
+                                    <div class="dcB col-3" role="presentation">
+                                        <div class="dWT" role="button" sort-name="prd_name" order-by="" onclick="jQuery.UbizOIWidgetPrd.w_sort(this)">
+                                            <div class="dvJ">
+                                                <div class="tDv">{{ __('Name') }}</div>
+                                                <div class="mhH">
+                                                    <div class="acD">
+                                                        <div class="huK">
+                                                            <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
+                                                                 viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                                <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                                <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                            </svg>
+                                                            <svg class="faH desc" x="0px" y="0px" width="18px"
+                                                                 height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                                <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                                <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                                                            </svg>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="dcB col-4" role="presentation">
-                                    <div class="dWB" role="button" sort-name="" order-by="" >
-                                        <div class="dvJ">
-                                            <div class="tDv">{{__('Type')}}</div>
-                                            <div class="mhH">
-                                                <div class="acD">
-                                                    <div class="huK">
-                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
-                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
-                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
-                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
-                                                        </svg>
-                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
-                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
-                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
-                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
-                                                        </svg>
+                                    <div class="dcB col-4" role="presentation">
+                                        <div class="dWB" role="button" sort-name="" order-by="" >
+                                            <div class="dvJ">
+                                                <div class="tDv">{{__('Brand')}}</div>
+                                                <div class="mhH">
+                                                    <div class="acD">
+                                                        <div class="huK">
+                                                            <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
+                                                                 viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                                <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                                <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                            </svg>
+                                                            <svg class="faH desc" x="0px" y="0px" width="18px"
+                                                                 height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                                <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                                <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                                                            </svg>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="dcB col-5" role="presentation">
-                                    <div class="dWB" role="button" sort-name="acs_unit" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
-                                        <div class="dvJ">
-                                            <div class="tDv">{{ __('Unit') }}</div>
-                                            <div class="mhH">
-                                                <div class="acD">
-                                                    <div class="huK">
-                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
-                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
-                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
-                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
-                                                        </svg>
-                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
-                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
-                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
-                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
-                                                        </svg>
+                                    <div class="dcB col-5" role="presentation">
+                                        <div class="dWB" role="button" sort-name="prd_model" order-by="" onclick="jQuery.UbizOIWidgetPrd.w_sort(this)">
+                                            <div class="dvJ">
+                                                <div class="tDv">{{ __('Type') }}</div>
+                                                <div class="mhH">
+                                                    <div class="acD">
+                                                        <div class="huK">
+                                                            <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
+                                                                 viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                                <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                                <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                            </svg>
+                                                            <svg class="faH desc" x="0px" y="0px" width="18px"
+                                                                 height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                                <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                                <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                                                            </svg>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="dcB col-6" role="presentation">
-                                    <div class="dWB" role="button" sort-name="acs_quantity" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
-                                        <div class="dvJ">
-                                            <div class="tDv">{{__("Quantity")}}</div>
-                                            <div class="mhH">
-                                                <div class="acD">
-                                                    <div class="huK">
-                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
-                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
-                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
-                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
-                                                        </svg>
-                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
-                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
-                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
-                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
-                                                        </svg>
+                                    <div class="dcB col-6" role="presentation">
+                                        <div class="dWB" role="button" sort-name="type_id" order-by="" onclick="jQuery.UbizOIWidgetPrd.w_sort(this)">
+                                            <div class="dvJ">
+                                                <div class="tDv">{{__("Quantity")}}</div>
+                                                <div class="mhH">
+                                                    <div class="acD">
+                                                        <div class="huK">
+                                                            <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
+                                                                 viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                                <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                                <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                            </svg>
+                                                            <svg class="faH desc" x="0px" y="0px" width="18px"
+                                                                 height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                                <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                                <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                                                            </svg>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -351,77 +452,19 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="aqB" id="nicescroll-oput">
-                        <div class="yTP">
-                            <div id="table-content" class="jFr">
-                                <?php $index = 0; ?>
-                                @foreach($data as $prd)
-                                    <div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{$prd->id}},{{$index}})">
-                                        <div class="tcB col-1">
-                                            <div class="cbo">
-                                                <div class="jgQ" onclick="jQuery.UbizOIWidget.w_c_checkbox_click(this)">
-                                                    <input type="checkbox" class="ckb-i" value="{{$prd->id}}" style="display: none"/>
-                                                    <div class="asU ckb-c"></div>
-                                                </div>
-                                                <div class="nCT" title="{{$prd->id}}">
-                                                    <span>{{$prd->id}}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="tcB col-2">
-                                            <div class="cbo">
-                                                <?php if ($prd->prd_img_id) {?>
-                                                <div class="nCji" title="{{$prd->prd_img_id}}">
-                                                    <img {{empty($prd->image) ? '' : 'src='.$prd->image}}  class="{{empty($prd->image) ? '' : 'img-thumbnail '}}prd-image"/>
-                                                </div>
-                                                <?php }?>
-                                            </div>
-                                        </div>
-                                        <div class="tcB col-3">
-                                            <div class="cbo">
-                                                <div class="nCj" title="{{$prd->name}}">
-                                                    <span>{{$prd->name}}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="tcB col-4">
-                                            <div class="cbo">
-                                                <div class="nCj" title="{{$prd->name_type}}">
-                                                    <span>{{$prd->name_type}}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="tcB col-5">
-                                            <div class="cbo">
-                                                <div class="nCj" title="{{$prd->acs_unit}}">
-                                                    <span>{{$prd->acs_unit}}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="tcB col-6">
-                                            <div class="cbo">
-                                                <div class="nCj" title="{{$prd->acs_quantity}}">
-                                                    <span>{{$prd->acs_quantity}}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                        <div class="aqB product-content-detail">
 
-                                    <?php $index=$index + 1; ?>
-                                @endforeach
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="jAQ" id="i-put"  style="display: none">
+            <div class="jAQ" id="i-put-2"  style="display: none">
                 <div class="bkK">
                     <div class="aeH">
                         <div class="aqK">
                             <div class="aqL">
                                 <div class="GtF">
-                                    <div class="goback" onclick="jQuery.UbizOIWidget.w_go_back_to_output_page(this)">
+                                    <div class="goback" onclick="jQuery.UbizOIWidgetPrd.w_go_back_to_output_page(this)">
                                         <div class="ax7 poK utooltip" title="{{ __("Back") }}">
                                             <div class="asA">
                                                 <div class="arB"></div>
@@ -478,7 +521,7 @@
                     </div>
                 </div>
                 <div class="jAQ">
-                    <div class="aqI nicescroll" id="nicescroll-iput">
+                    <div class="aqI nicescroll" id="nicescroll-iput-2">
                         <div class="row z-mgl z-mgr">
                             <div class="col-sm-5 col-md-5 col-xl-5 z-pdl">
                                 <ul>
@@ -489,7 +532,8 @@
                             </div>
                             <div class="col-sm-3 col-md-3 col-xl-3">
                                 <input type="hidden" value="" id="txt_acs_id">
-                                @include('components.input',['width'=>'250','type'=>'disabled','control_id'=>'txt_code', 'label'=>__('Code'), 'length'=>100])
+                                <input type="hidden" value="" id="txt_brd_id">
+                                @include('components.input',['width'=>'250','type'=>'disabled', 'control_id'=>'txt_brand_name', 'label'=>__("Brand"), 'length'=>100])
                                 @include('components.input',['width'=>'250','type'=>'required', 'control_id'=>'txt_name', 'label'=>__("Name"), 'length'=>100])
                                 @include('components.input',['width'=>'250','control_id'=>'txt_unit', 'label'=>__('Unit'), 'length'=>20])
                                 @include('components.dropdown',['width'=>'250','control_id'=>'txt_name_type', 'label'=>__('Type'), 'data'=> convertDataToDropdownOptions($product_type, 'id', 'name_type')])
