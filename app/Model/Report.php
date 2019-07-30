@@ -50,12 +50,12 @@ class Report implements JWTSubject
             case "revenue":
                 $orderFromDate = $request->report_from_date ? $request->report_from_date : date('Y/m') . "/01";
                 $orderToDate = $request->report_to_date ? $request->report_to_date : date('Y/m/d');
-                $report = $this->getRevReport($page, $sort, $orderFromDate, $orderToDate);
+                $report = $this->getRevReport($page, $sort, $orderFromDate, $orderToDate, $request->cus_name, $request->sale_name);
                 break;
             case "quoteprice":
-                $qpFromDate = $request->report_from_date ? $request->report_from_date : "";
+                $qpFromDate = $request->report_from_date ? $request->report_from_date : date('Y/m') . "/01";
                 $qpToDate = $request->report_to_date ? $request->report_to_date : date('Y/m') . "/01";
-                $report = $this->getQPReport($page, $sort, $qpFromDate, $qpToDate);
+                $report = $this->getQPReport($page, $sort, $qpFromDate, $qpToDate, $request->cus_name, $request->sale_name);
                 break;
             default:
                 $report = $this->getRepReport($page, $sort);
@@ -88,16 +88,29 @@ class Report implements JWTSubject
         return $data;
     }
 
-    public function getRevReport($page, $sort, $orderFromDate, $orderToDate) {
+    public function getRevReport($page, $sort, $orderFromDate, $orderToDate, $customerName, $saleName) {
         try{
             $rows_per_page = env('ROWS_PER_PAGE', 10);
             list($field_name, $order_by) = $this->makeOrderBy($sort, 'ord_id');
             $data = DB::table('order')
                         ->leftjoin('users', 'order.sale_id', '=', 'users.id')
-                        ->select('order.*', 'users.name as sale_name')
+                        ->leftjoin('customer', 'order.cus_id', '=', 'customer.cus_id')
+                        ->select('order.*', 'users.name as sale_name', 'customer.cus_name')
+                        ->selectRaw('FORMAT(order.ord_amount_tax, 0) as ord_amount_tax')
+                        ->selectRaw('DATE_FORMAT(order.ord_date, "%Y/%m/%d") as ord_date')
                         ->where('order.delete_flg', '0')
                         ->where('order.sale_step', '4')
                         ->whereRaw('order.ord_date between ? AND ?', [$orderFromDate, $orderToDate])
+                        ->when($customerName, function ($query) use ($customerName) {
+                            if ($customerName) {
+                                return $query->where('cus_name', $customerName);
+                            }
+                        })
+                        ->when($saleName, function ($query) use ($saleName) {
+                            if ($saleName) {
+                                return $query->where('users.name', $saleName);
+                            }
+                        })
                         ->orderBy($field_name, $order_by)
                         ->offset($page * $rows_per_page)
                         ->limit($rows_per_page)
@@ -109,15 +122,29 @@ class Report implements JWTSubject
         return $data;
     }
 
-    public function getQPReport($page, $sort, $qpFromDate, $qpToDate) {
+    public function getQPReport($page, $sort, $qpFromDate, $qpToDate, $customerName, $saleName) {
         try{
             $rows_per_page = env('ROWS_PER_PAGE', 10);
             list($field_name, $order_by) = $this->makeOrderBy($sort, 'qp_id');
             $data = DB::table('quoteprice')
                         ->leftjoin('users', 'quoteprice.sale_id', '=', 'users.id')
-                        ->select('quoteprice.*', 'users.name as sale_name')
+                        ->leftjoin('customer', 'quoteprice.cus_id', '=', 'customer.cus_id')
+                        ->select('quoteprice.*', 'users.name as sale_name', 'customer.cus_name')
+                        ->selectRaw('FORMAT(quoteprice.qp_amount_tax, 0) as qp_amount_tax')
+                        ->selectRaw('DATE_FORMAT(quoteprice.qp_date, "%Y/%m/%d") as qp_date')
+                        ->selectRaw('DATE_FORMAT(quoteprice.qp_exp_date, "%Y/%m/%d") as qp_exp_date')
                         ->where('quoteprice.delete_flg', '0')
                         ->whereRaw('quoteprice.qp_date between ? AND ?', [$qpFromDate, $qpToDate])
+                        ->when($customerName, function ($query) use ($customerName) {
+                            if ($customerName) {
+                                return $query->where('cus_name', $customerName);
+                            }
+                        })
+                        ->when($saleName, function ($query) use ($saleName) {
+                            if ($saleName) {
+                                return $query->where('users.name', $saleName);
+                            }
+                        })
                         ->orderBy($field_name, $order_by)
                         ->offset($page * $rows_per_page)
                         ->limit($rows_per_page)
@@ -166,6 +193,7 @@ class Report implements JWTSubject
                 ->where('sale_step', '4')
                 ->whereRaw('order.ord_date between ? AND ?', [$orderFromDate, $orderToDate])
                 ->sum('ord_amount_tax');
+            $sum = number_format($sum);
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -180,6 +208,7 @@ class Report implements JWTSubject
                 ->where('delete_flg', '0')
                 ->whereRaw('quoteprice.qp_date between ? AND ?', [$qpFromDate, $qpToDate])
                 ->sum('qp_amount_tax');
+            $sum = number_format($sum);
         } catch (\Throwable $e) {
             throw $e;
         }

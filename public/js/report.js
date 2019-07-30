@@ -60,7 +60,11 @@
 
             ubizapis('v1', current_path, 'get', null, {
                 'page': jQuery.UbizOIWidget.page,
-                'sort': sort
+                'sort': sort,
+                'report_from_date': jQuery("#report_from_date").val(),
+                'report_to_date': jQuery("#report_to_date").val(),
+                'cus_name': jQuery("#cus_name").val(),
+                'sale_name': jQuery("#sale_name").val()
             }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_paging: function (page, rows_num, rows_per_page) {
@@ -124,7 +128,11 @@
             var current_path = $(location).attr('pathname');
             ubizapis('v1', current_path, 'get', null, {
                 'page': page,
-                'sort': sort
+                'sort': sort,
+                'report_from_date': jQuery("#report_from_date").val(),
+                'report_to_date': jQuery("#report_to_date").val(),
+                'cus_name': jQuery("#cus_name").val(),
+                'sale_name': jQuery("#sale_name").val()
             }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_newer_data: function (page) {
@@ -135,7 +143,11 @@
             var current_path = $(location).attr('pathname');
             ubizapis('v1', current_path, 'get', null, {
                 'page': page,
-                'sort': sort
+                'sort': sort,
+                'report_from_date': jQuery("#report_from_date").val(),
+                'report_to_date': jQuery("#report_to_date").val(),
+                'cus_name': jQuery("#cus_name").val(),
+                'sale_name': jQuery("#sale_name").val()
             }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_render_data_to_ouput_page: function (response) {
@@ -149,22 +161,24 @@
                     if (response.data.type == "revenue") {
                         cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].ord_no, 1));
                         cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].ord_date, 2));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].ord_amount_tax, 3));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_name, 4));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_phone, 5));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_email, 6));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].sale_name, 7));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].ord_amount_tax + ' ₫', 3));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].cus_name, 4));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_name, 5));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_phone, 6));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_email, 7));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].sale_name, 8));
 
                         rows.push(jQuery.UbizOIWidget.w_make_row_html(report[i].ord_id, cols));
                     } else if (response.data.type == "quoteprice") {
                         cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].qp_no, 1));
                         cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].qp_date, 2));
                         cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].qp_exp_date, 3));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].qp_amount_tax, 4));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_name, 5));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_phone, 6));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_email, 7));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].sale_name, 8));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].qp_amount_tax + ' ₫', 4));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].cus_name, 5));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_name, 6));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_phone, 7));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_email, 8));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].sale_name, 9));
 
                         rows.push(jQuery.UbizOIWidget.w_make_row_html(report[i].qp_id, cols));
                     } else {
@@ -227,6 +241,8 @@
             var current_path = $(location).attr('pathname');
             params.report_from_date = jQuery("#report_from_date").val();
             params.report_to_date = jQuery("#report_to_date").val();
+            params.cus_name = jQuery("#cus_name").val();
+            params.sale_name = jQuery("#sale_name").val();
 
             ubizapis('v1', current_path, 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },

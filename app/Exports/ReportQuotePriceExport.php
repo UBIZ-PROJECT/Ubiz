@@ -31,11 +31,12 @@ class ReportQuotePriceExport implements FromCollection, WithHeadings, WithEvents
                 '0' => $row->qp_no,
                 '1' => $row->qp_date,
                 '2' => $row->qp_exp_date,
-                '3' => $row->qp_amount_tax,
-                '4' => $row->contact_name,
-                '5' => $row->contact_phone,
-                '6' => $row->contact_email,
-                '7' => $row->sale_name,
+                '3' => $row->qp_amount_tax . ' ₫',
+                '4' => $row->cus_name,
+                '5' => $row->contact_name,
+                '6' => $row->contact_phone,
+                '7' => $row->contact_email,
+                '8' => $row->sale_name,
             );
         }
 
@@ -48,7 +49,8 @@ class ReportQuotePriceExport implements FromCollection, WithHeadings, WithEvents
             'Mã Báo Giá',
             'Ngày Báo Giá',
             'Ngày Hết Hạn',
-            'Tổng Tiền (Bao gồm thuế)',
+            'Tổng Tiền (cả thuế)',
+            'Khách hàng',
             'Tên Người Liên Hệ',
             'Số ĐT Người Liên Hệ',
             'Email Người Liên Hệ',
@@ -60,7 +62,7 @@ class ReportQuotePriceExport implements FromCollection, WithHeadings, WithEvents
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $event->sheet->getDelegate()->getStyle('A1:H1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('A2C4C9');;
+                $event->sheet->getDelegate()->getStyle('A1:I1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('A2C4C9');;
             },
         ];
     }

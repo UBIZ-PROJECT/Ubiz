@@ -53,13 +53,17 @@
                         <table>
                             <tr>
                                 <td style="padding: 10px">@include('components.input',['control_id'=>'report_from_date', 'value'=> date('Y/m')."/01", 'width'=> '150', 'lbl_width'=>'70', 'label'=>'Từ ngày', 'class'=>'datepicker z-pdl z-pdr', 'i_focus'=>'', 'i_blur'=>'', 'onchange'=>"qp_date_change(this)"])</td>
+                                <td style="padding: 10px">@include('components.input',['control_id'=>'cus_name', 'value'=> '', 'width'=> '250', 'lbl_width'=>'80', 'label'=>'Khách hàng', 'length'=>'100'])</td>
+                            </tr>
+                            <tr>
                                 <td style="padding: 10px">@include('components.input',['control_id'=>'report_to_date', 'value'=> date('Y/m/d'), 'width'=> '150', 'lbl_width'=>'70', 'label'=>'Đến ngày', 'class'=>'datepicker z-pdl z-pdr', 'i_focus'=>'', 'i_blur'=>'', 'onchange'=>"qp_date_change(this)"])</td>
+                                <td style="padding: 10px">@include('components.input',['control_id'=>'sale_name', 'value'=> '', 'width'=> '250', 'lbl_width'=>'70', 'label'=>'Nhân viên', 'length'=>'100'])</td>
                                 <td><span class="btn btn-info" id="statis-button" onclick="jQuery.UbizOIWidget.w_statis()"> Thống kê </span></td>
                             </tr>
                         </table>
                     </form>
                     <p style="margin-top:10px; font-size:15px"><strong>Số lượng báo giá:</strong> <span id="report_count">{{ $paging['rows_num'] }}</span></p>
-                    <p style="margin-top:10px; font-size:15px"><strong>Tổng doanh thu dự kiến:</strong> <span id="report_sum">{{ $report->sum }}</span> VNĐ</p>
+                    <p style="margin-top:10px; font-size:15px"><strong>Tổng doanh thu dự kiến:</strong> <span id="report_sum">{{ $report->sum }}</span> ₫</p>
                     <div class="export">
                         <span class="btn btn-info export" id="rev-export-button" onclick="jQuery.UbizOIWidget.w_export('quoteprice')"> Xuất excel </span>
                     </div>
@@ -73,6 +77,8 @@
                                 <div class="col-5" role="presentation"></div>
                                 <div class="col-6" role="presentation"></div>
                                 <div class="col-7" role="presentation"></div>
+                                <div class="col-8" role="presentation"></div>
+                                <div class="col-9" role="presentation"></div>
                             </div>
                             <div class="hdG">
                                 <div class="dcB col-1" role="presentation">
@@ -155,7 +161,7 @@
                                     <div class="dWB" role="button" sort-name="qp_amount_tax" order-by=""
                                          onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">Tổng tiền (Bao gồm thuế)</div>
+                                            <div class="tDv">Tổng tiền (cả thuế)</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -177,6 +183,31 @@
                                     </div>
                                 </div>
                                 <div class="dcB col-5" role="presentation">
+                                    <div class="dWB" role="button" sort-name="cus_name" order-by=""
+                                         onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                        <div class="dvJ">
+                                            <div class="tDv">Khách hàng</div>
+                                            <div class="mhH">
+                                                <div class="acD">
+                                                    <div class="huK">
+                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
+                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                        </svg>
+                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
+                                                             height="18px" viewBox="0 0 48 48" focusable="false"
+                                                             fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dcB col-6" role="presentation">
                                     <div class="dWB" role="button" sort-name="contact_name" order-by=""
                                          onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
@@ -201,7 +232,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="dcB col-6" role="presentation">
+                                <div class="dcB col-7" role="presentation">
                                     <div class="dWB" role="button" sort-name="contact_phone" order-by=""
                                          onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
@@ -226,7 +257,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="dcB col-7" role="presentation">
+                                <div class="dcB col-8" role="presentation">
                                     <div class="dWB" role="button">
                                         <div class="dvJ" sort-name="contact_email" order-by=""
                                              onclick="jQuery.UbizOIWidget.w_sort(this)">
@@ -251,11 +282,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="dcB col-8" role="presentation">
+                                <div class="dcB col-9" role="presentation">
                                     <div class="dWB" role="button" sort-name="sale_name" order-by=""
                                          onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">Sale</div>
+                                            <div class="tDv">Nhân viên</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -310,32 +341,39 @@
                                         <div class="tcB col-4">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$row->qp_amount_tax}}">
-                                                    <span>{{$row->qp_amount_tax}}</span>
+                                                    <span>{{$row->qp_amount_tax}} ₫</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="tcB col-5">
+                                            <div class="cbo">
+                                                <div class="nCj" title="{{$row->cus_name}}">
+                                                    <span>{{$row->cus_name}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tcB col-6">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$row->contact_name}}">
                                                     <span>{{$row->contact_name}}</span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tcB col-6">
+                                        <div class="tcB col-7">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$row->contact_phone}}">
                                                     <span>{{$row->contact_phone}}</span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tcB col-7">
+                                        <div class="tcB col-8">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$row->contact_email}}">
                                                     <span>{{$row->contact_email}}</span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tcB col-8">
+                                        <div class="tcB col-9">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$row->sale_name}}">
                                                     <span>{{$row->sale_name}}</span>

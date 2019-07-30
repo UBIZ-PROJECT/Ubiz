@@ -30,11 +30,12 @@ class ReportRevenueExport implements FromCollection, WithHeadings, WithEvents, S
             $reportExportData[] = array(
                 '0' => $row->ord_no,
                 '1' => $row->ord_date,
-                '2' => $row->ord_amount_tax,
-                '3' => $row->contact_name,
-                '4' => $row->contact_phone,
-                '5' => $row->contact_email,
-                '6' => $row->sale_name,
+                '2' => $row->ord_amount_tax . ' ₫',
+                '3' => $row->cus_name,
+                '4' => $row->contact_name,
+                '5' => $row->contact_phone,
+                '6' => $row->contact_email,
+                '7' => $row->sale_name,
             );
         }
 
@@ -46,11 +47,12 @@ class ReportRevenueExport implements FromCollection, WithHeadings, WithEvents, S
         return [
             'Mã Đơn Hàng',
             'Ngày Đặt Hàng',
-            'Tổng Tiền (Bao gồm thuế)',
+            'Tổng Tiền (cả thuế)',
+            'Khách hàng',
             'Tên Người Liên Hệ',
             'Số ĐT Người Liên Hệ',
             'Email Người Liên Hệ',
-            'Sale',
+            'Nhân viên',
         ];
     }
 
@@ -58,7 +60,7 @@ class ReportRevenueExport implements FromCollection, WithHeadings, WithEvents, S
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $event->sheet->getDelegate()->getStyle('A1:G1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('A2C4C9');;
+                $event->sheet->getDelegate()->getStyle('A1:H1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('A2C4C9');;
             },
         ];
     }
