@@ -68,6 +68,11 @@ class OrderController extends Controller
             }
 
             $order = new Order();
+            $orderData = $order->getOrder($ord_id);
+            if($orderData == null){
+                return response()->json(['success' => false, 'message' => __("Order doesn't existed.!")], 200);
+            }
+
             $validator = $order->validateData($data);
             if ($validator['success'] == false) {
                 return response()->json(['success' => false, 'message' => $validator['message']], 200);
@@ -75,6 +80,29 @@ class OrderController extends Controller
 
             //update order
             $order->transactionUpdateOrder($ord_id, $data);
+
+            return response()->json(['success' => true, 'message' => __('Successfully processed.')], 200);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function updateSaleStep($ord_id, Request $request)
+    {
+        try {
+
+            $sale_step = $request->get('sale_step', null);
+            if (empty($sale_step) == true || $sale_step == null) {
+                return response()->json(['success' => false, 'message' => __('Data is wrong.!')], 200);
+            }
+
+            $order = new Order();
+            $orderData = $order->getOrder($ord_id);
+            if($orderData == null){
+                return response()->json(['success' => false, 'message' => __("Order doesn't existed.!")], 200);
+            }
+
+            $order->transactionUpdateSaleStep($ord_id, $orderData->qp_id, $sale_step);
 
             return response()->json(['success' => true, 'message' => __('Successfully processed.')], 200);
         } catch (\Throwable $e) {

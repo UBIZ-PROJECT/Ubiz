@@ -96,6 +96,7 @@ class EventController extends Controller
 
             $map_data = $this->mapData($data);
             $evModel->updateEvent($id ,$map_data);
+            $evModel->sendEmail($id);
 
             return response()->json([
                 'success' => true,
@@ -119,7 +120,8 @@ class EventController extends Controller
             }
 
             $map_data = $this->mapData($data);
-            $evModel->insertEvent($map_data);
+            $event_id = $evModel->insertEvent($map_data);
+            $evModel->sendEmail($event_id);
 
             return response()->json([
                 'success' => true,

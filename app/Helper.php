@@ -189,7 +189,6 @@ function checkUserRight($scr_id, $fnc_id)
         if ($usr_allow == '0') {
             abort(403);
         }
-        abort(403);
     } catch (\Throwable $e) {
         throw $e;
     }

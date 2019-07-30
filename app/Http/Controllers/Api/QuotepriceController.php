@@ -133,26 +133,50 @@ class QuotepriceController extends Controller
                 $tmp_quoteprices_detail[$item->type][] = $item;
             }
 
-            $uniqid = uniqid();
-            $file_name = '[TKP] ' . date('d.m.Y') . '_' . $qpData->qp_no . '_' . $qpData->cus_code;
-            file_put_contents(
-                "/tmp/$uniqid.html",
-                view('quoteprice_pdf',
-                    [
-                        'user' => $userData,
-                        'title' => $file_name,
-                        'quoteprice' => $qpData,
-                        'quoteprices_detail' => $tmp_quoteprices_detail
-                    ]
-                )->render()
-            );
             //send quoteprice
-//            $uniqid = $qpModel->sendQuoteprice($qpData, $qpDetailData);
-//            if ($uniqid == false) {
-//                return response()->json(['success' => false, 'message' => __('Send quoteprices fail.')], 200);
-//            }
+            $uniqid = $qpModel->sendQuoteprice($qpData, $qpDetailData);
+            if ($uniqid == false) {
+                return response()->json(['success' => false, 'message' => __('Send quoteprices fail.')], 200);
+            }
 
             return response()->json(['uniqid' => $uniqid, 'success' => true, 'message' => __('Successfully processed.')], 200);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function downloadQuoteprice($qp_id, Request $request)
+    {
+        try {
+
+            $qpModel = new Quoteprice();
+            $qpData = $qpModel->getQuoteprice($qp_id);
+            if (empty($qpData) == true || $qpData == null) {
+                return response()->json(['success' => false, 'message' => __('Data is wrong.!')], 200);
+            }
+
+            $qpDetailModel = new QuotepriceDetail();
+            $qpDetailData = $qpDetailModel->getQuotepriceDetailsByQpId($qp_id);
+
+            $user = new User();
+            $userData = $user->getCurrentUser();
+
+            $tmp_quoteprices_detail = [];
+            foreach ($qpDetailData as $idx => $item) {
+
+                if (array_key_exists($item->type, $tmp_quoteprices_detail) == false) {
+                    $tmp_quoteprices_detail[$item->type] = [];
+                }
+                $tmp_quoteprices_detail[$item->type][] = $item;
+            }
+
+            //send quoteprice
+            $file = $qpModel->makeFilePDF($qpData, $qpDetailData);
+            if ($file == false) {
+                return response()->json(['success' => false, 'message' => __('Download quoteprices fail.')], 200);
+            }
+
+            return response()->json(['uniqid' => $file['uniqid'], 'success' => true, 'message' => __('Successfully processed.')], 200);
         } catch (\Throwable $e) {
             throw $e;
         }
