@@ -21,6 +21,7 @@ class CreateBrandTable extends Migration
             $table->increments('brd_id');
             $table->char('brd_name', 255);
             $table->char('brd_img', 10)->nullable();
+            $table->char('type' , 1);
             $table->char('delete_flg', 1)->default('0');
             $table->timestamp('inp_date');
             $table->integer('inp_user');

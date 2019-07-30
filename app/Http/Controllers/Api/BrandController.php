@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Model\Accessory;
 use App\Model\Brand;
 use App\Model\Product;
 use Illuminate\Http\Request;
@@ -36,7 +37,12 @@ class BrandController extends Controller
 
             $brand = new Brand();
             $data = $brand->getEachBrandPaging($brd_id);
-            list($data_prd, $paging_prd) = $this->productByBrand($brd_id);
+            if ($data->type == "0") {
+                list($data_prd, $paging_prd) = $this->productByBrand($brd_id);
+            } else if ($data->type == "1") {
+                list($data_prd, $paging_prd) = $this->accessoryByBrand($brd_id);
+            }
+
             $paging['rows_per_page'] = 1;
         } catch (\Throwable $e) {
             throw $e;
@@ -50,6 +56,20 @@ class BrandController extends Controller
             $product = new Product();
             $data = $product->getProductPaging(0,'',$search);
             $paging = $product->getPagingInfo('',$search);
+//            $productType = $product->getAllProductType();
+            $paging['page'] = '0';
+            return array($data, $paging);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    private function accessoryByBrand($brd_id) {
+        try {
+            $search['brd_id'] = $brd_id;
+            $accessory = new Accessory();
+            $data = $accessory->getAccessoryPaging(0,'',$search);
+            $paging = $accessory->getPagingInfo('',$search);
 //            $productType = $product->getAllProductType();
             $paging['page'] = '0';
             return array($data, $paging);

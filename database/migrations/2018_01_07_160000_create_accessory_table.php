@@ -19,6 +19,7 @@ class CreateAccessoryTable extends Migration
     {
         Schema::create('accessory', function (Blueprint $table) {
             $table->increments('acs_id');
+            $table->integer('brd_id');
             $table->integer('acs_quantity')->default('0');
             $table->char('acs_name', 255);
             $table->string('acs_note')->nullable();

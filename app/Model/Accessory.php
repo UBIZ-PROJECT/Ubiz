@@ -56,12 +56,14 @@ class Accessory implements JWTSubject
         $rows_per_page = env('ROWS_PER_PAGE', 10);
         $accessory = DB::select("
             SELECT accessory.acs_id as id,accessory.acs_name as name,product_type.prd_type_id ,product_type.prd_type_name as name_type, 
-            accessory.acs_note,accessory.acs_unit, product_image.extension,product_image.prd_img_id, accessory.acs_quantity from (
+            accessory.acs_note,accessory.acs_unit, product_image.extension,product_image.prd_img_id, accessory.acs_quantity,brand.brd_name, brand.brd_id from (
                 SELECT *
                 FROM accessory $where_raw
                  ) accessory
             LEFT JOIN product_type product_type ON 
             accessory.acs_type_id = product_type.prd_type_id
+            LEFT JOIN brand brand ON 
+            accessory.brd_id = brand.brd_id
             LEFT JOIN product_image product_image ON
             product_image.prd_img_id = (select prd_img_id from product_image as pis where accessory.acs_id = pis.acs_id and pis.delete_flg = '0' and pis.prd_id is null limit 1) 
             WHERE product_type.prd_type_flg = '2'
@@ -82,13 +84,15 @@ class Accessory implements JWTSubject
         $rows_per_page = 1;
         $product = DB::select("
             SELECT accessory.acs_id,accessory.acs_name,product_type.prd_type_id ,product_type.prd_type_name,accessory.acs_note,accessory.acs_unit, 
-            product_image.extension,product_image.prd_img_id, accessory.acs_quantity from (
+            product_image.extension,product_image.prd_img_id, accessory.acs_quantity,  brand.brd_name, brand.brd_id from (
                 SELECT *
                 FROM accessory $where_raw 
             ORDER BY $field_name $order_by
                 LIMIT $rows_per_page OFFSET " . ($page * $rows_per_page)." ) accessory
             LEFT JOIN product_type product_type ON 
             accessory.acs_type_id = product_type.prd_type_id
+            LEFT JOIN brand brand ON 
+            accessory.brd_id = brand.brd_id
             LEFT JOIN product_image product_image ON
             product_image.prd_img_id in (select prd_img_id from product_image as pis where accessory.acs_id = pis.acs_id and pis.delete_flg = '0' and pis.prd_id is null)
             WHERE product_type.prd_type_flg = '2'
@@ -104,6 +108,8 @@ class Accessory implements JWTSubject
             $data[0]->acs_type_id = $item->prd_type_id;
             $data[0]->acs_unit = $item->acs_unit;
             $data[0]->acs_quantity = $item->acs_quantity;
+            $data[0]->brd_name = $item->brd_name;
+            $data[0]->brd_id = $item->brd_id;
             if (!empty($item->prd_img_id)) {
                 $imageName = $item->acs_id . '-' . $item->prd_img_id . '.' . $item->extension;
                 $images[$index]['src'] = readImage($imageName, "acs");
@@ -147,6 +153,7 @@ class Accessory implements JWTSubject
                     'acs_note'=>!empty($param['acs_note'])? $param['acs_note'] : null,
                     'acs_type_id'=>!empty($param['acs_type_id'])? $param['acs_type_id'] : null,
                     'acs_unit'=>!empty($param['acs_unit'])? $param['acs_unit'] : null,
+                    'brd_id'=> $param['brd_id'],
                     'delete_flg'=>'0',
                     'inp_date'=>date('Y-m-d H:i:s'),
                     'upd_date'=>date('Y-m-d H:i:s'),
@@ -307,7 +314,7 @@ class Accessory implements JWTSubject
 
     public function makeWhereRaw($search = [])
     {
-        $params = [0];
+        $params[] = "0";
         $where_raw = "where accessory.delete_flg = ? ";
         if (sizeof($search) > 0) {
             if (!empty($search['contain']) || !empty($search['notcontain'])) {
@@ -347,6 +354,10 @@ class Accessory implements JWTSubject
                 if (!empty($search['type_id'])) {
                     $where_raw_tmp[] = "accessory.acs_type_id = ?";
                     $params[] = $search['type_id'];
+                }
+                if (!empty($search['brd_id'])) {
+                    $where_raw_tmp[] = "accessory.brd_id = ?";
+                    $params[] = $search['brd_id'];
                 }
                 if (sizeof($where_raw_tmp) > 0) {
                     $where_raw .= " AND ( " . implode(" OR ", $where_raw_tmp) . " )";

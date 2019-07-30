@@ -80,7 +80,7 @@ class Brand implements JWTSubject
     public function getEachBrandPaging($brd_id) {
         $rows_per_page = 1;
         $brands = DB::table('brand')
-            ->select('brd_id','brd_name','brd_img')
+            ->select('brd_id','brd_name','brd_img', 'type')
             ->where('brd_id','=', $brd_id)
             ->limit($rows_per_page)
             ->get();
@@ -105,6 +105,7 @@ class Brand implements JWTSubject
                 [
                     'brd_name'=> $param['brd_name'],
                     'brd_img'=> $extension,
+                    'type'=>$param['type'],
                     'delete_flg'=>'0',
                     'inp_date'=>date('Y-m-d H:i:s'),
                     'upd_date'=>date('Y-m-d H:i:s'),
@@ -195,6 +196,8 @@ class Brand implements JWTSubject
                     $where_raw .= " AND (";
                     $where_raw .= " brand.brd_name like ?";
                     $params[] = $search_val;
+                    $where_raw .= " OR brand.type = ?";
+                    $params[] = $search_val;
                     $where_raw .= " ) ";
                 }
                 if(!empty($search['notcontain'])){
@@ -206,11 +209,14 @@ class Brand implements JWTSubject
                 }
 
             } else {
-
                 $where_raw_tmp = [];
                 if (!empty($search['name'])) {
                     $where_raw_tmp[] = " brand.brd_name = ?";
                     $params[] = $search['name'];
+                }
+                if ($search['type'] !== "") {
+                    $where_raw_tmp[] = " brand.type = ?";
+                    $params[] = $search['type'];
                 }
                 if (sizeof($where_raw_tmp) > 0) {
                     $where_raw .= " AND ( " . implode(" OR ", $where_raw_tmp) . " )";

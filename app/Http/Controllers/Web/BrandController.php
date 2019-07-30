@@ -18,12 +18,14 @@ class BrandController extends Controller
 {
     public function brands() {
         try {
+            $search = array();
+            $search['type'] = "0";
             $brand = new Brand();
             $user = new User();
             $product = new Product();
             $allUser = $user->getAllUsers();
             $product_type = $product->getAllProductType();
-            $data = $brand->getBrandPaging(0);
+            $data = $brand->getBrandPaging(0,'',$search);
             $paging = $brand->getPagingInfo();
             $paging['page'] = '0';
             return view('brand',['data'=>$data,'paging' => $paging, 'product_type'=>$product_type, 'users'=>$allUser]);

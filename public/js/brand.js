@@ -69,6 +69,7 @@ var is_image_delete = false;
                 if (result.value) {
                     listId = JSON.stringify(listId);
                     var params = jQuery.UbizOIWidget.w_get_param_search_sort();
+                    params.search['type'] = "0";
                     ubizapis('v1','/brands/'+listId+'/delete', 'delete',null, params,jQuery.UbizOIWidget.w_process_callback);
                 }
             });
@@ -160,7 +161,7 @@ var is_image_delete = false;
         w_search:function(){
 
             var params = jQuery.UbizOIWidget.w_get_param_search_sort();
-
+            params.search['type'] = "0";
             var event = new CustomEvent("click");
             document.body.dispatchEvent(event);
             ubizapis('v1', '/brands', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
@@ -235,7 +236,7 @@ var is_image_delete = false;
             var search_info = jQuery.UbizOIWidget.w_convert_fuzzy_to_search_info(fuzzy);
             jQuery.UbizOIWidget.w_update_search_form(search_info);
             params.search = search_info;
-
+            params.search['type'] = "0";
             ubizapis('v1', '/brands', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_fuzzy_search_handle_enter(e) {
@@ -281,6 +282,7 @@ var is_image_delete = false;
             var data = {
                 brd_id: $("#i-put #txt_brd_id").val(),
                 brd_name: $("#i-put #txt_brd_name").val(),
+                type: "0",
                 brd_img: is_image_delete
             };
             return data;
@@ -315,6 +317,7 @@ var is_image_delete = false;
                                 var formData = jQuery.UbizOIWidget.w_get_images_upload();
                                 formData.append("brand", JSON.stringify(formInput));
                                 var params = jQuery.UbizOIWidget.w_get_param_search_sort();
+                                params.search['type'] = "0";
 
                                 formData.append("_method","put");
                                 ubizapis('v1','/brands/'+formInput.id+'/updatePaging', 'post', formData,params,function() {
@@ -401,6 +404,7 @@ var is_image_delete = false;
         w_refresh_output_page: function () {
             var params = {};
             params.page = jQuery.UbizOIWidget.page;
+            params.search['type'] = "0";
             ubizapis('v1', '/brands', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_get_sort_info: function () {
@@ -576,7 +580,7 @@ var is_image_delete = false;
             $(".ubiz-search.ubiz-search-brand").remove();
             $(".ubiz-search.ubiz-search-product").addClass("active");
             changeCreateFunction(_ADD_PRODUCT);
-            ubizapis('v1','/brands/detail', 'get', null, {'brd_id': id},jQuery.UbizOIWidget.w_render_data_to_input_page);
+            ubizapis('v1','/brands/detail', 'get', null, {'brd_id': id, 'type': "0"},jQuery.UbizOIWidget.w_render_data_to_input_page);
         },
         w_callback_remove_image: function(self) {
             is_image_delete = true;
@@ -665,8 +669,8 @@ var is_image_delete = false;
             }
 
             var paging_label = '<div id="paging-label" class="amH" style="user-select: none"><span class="Dj"><span><span class="ts">' + f_num + '</span>–<span class="ts">' + m_num + '</span></span> / <span class="ts">' + rows_num + '</span></span></div>';
-            var paging_older = '<div id="paging-older" ' + get_older_data_func + ' class="amD utooltip" title="Cũ hơn"><span class="amF">&nbsp;</span><img class="amI ' + older_css + '" src="http://ubiz.local/images/cleardot.gif" alt=""></div>';
-            var paging_newer = '<div id="paging-newer" ' + get_newer_data_func + ' class="amD utooltip" title="Mới hơn"><span class="amF">&nbsp;</span><img class="amJ ' + newer_css + '" src="http://ubiz.local/images/cleardot.gif" alt=""></div>';
+            var paging_older = '<div id="paging-older" ' + get_older_data_func + ' class="amD utooltip" title="Cũ hơn"><span class="amF">&nbsp;</span><img class="amI ' + older_css + '" src="/images/cleardot.gif" alt=""></div>';
+            var paging_newer = '<div id="paging-newer" ' + get_newer_data_func + ' class="amD utooltip" title="Mới hơn"><span class="amF">&nbsp;</span><img class="amJ ' + newer_css + '" src="/images/cleardot.gif" alt=""></div>';
 
             jQuery("#paging-label").replaceWith(paging_label);
             jQuery("#paging-older").replaceWith(paging_older);
@@ -867,6 +871,8 @@ var lst_image_delete = [];
             if (jQuery('#search-form #notcontain').val().replace(/\s/g, '') != '') {
                 search_info.notcontain = jQuery('#search-form #notcontain').val();
             }
+
+            search_info.brd_id = jQuery("#i-put #nicescroll-iput #txt_brd_id").val();
 
             return search_info;
         },
@@ -1246,6 +1252,12 @@ var lst_image_delete = [];
             lst_image_delete = [];
             $("#i-put-2 #nicescroll-iput-2 .img-show").attr("src","../images/avatar.png").setName("");
             $("#i-put-2 #nicescroll-iput-2 .file-upload").val("").isChange("false");
+            $("#i-put #nicescroll-iput .os-content-glue").css({
+                "margin": "-10px 0px",
+                "width": "1647px",
+                "max-width": "100%",
+                "height": "224px"
+            });
             jQuery.UbizOIWidgetPrd.i_page_2.find(".tb-series").find("tbody").empty();
         },
         w_clear_search_form:function(){
@@ -1394,8 +1406,8 @@ var lst_image_delete = [];
             }
 
             var paging_label = '<div id="paging-label" class="amH" style="user-select: none"><span class="Dj"><span><span class="ts">' + f_num + '</span>–<span class="ts">' + m_num + '</span></span> / <span class="ts">' + rows_num + '</span></span></div>';
-            var paging_older = '<div id="paging-older" ' + get_older_data_func + ' class="amD utooltip" title="Cũ hơn"><span class="amF">&nbsp;</span><img class="amI ' + older_css + '" src="http://ubiz.local/images/cleardot.gif" alt=""></div>';
-            var paging_newer = '<div id="paging-newer" ' + get_newer_data_func + ' class="amD utooltip" title="Mới hơn"><span class="amF">&nbsp;</span><img class="amJ ' + newer_css + '" src="http://ubiz.local/images/cleardot.gif" alt=""></div>';
+            var paging_older = '<div id="paging-older" ' + get_older_data_func + ' class="amD utooltip" title="Cũ hơn"><span class="amF">&nbsp;</span><img class="amI ' + older_css + '" src="/images/cleardot.gif" alt=""></div>';
+            var paging_newer = '<div id="paging-newer" ' + get_newer_data_func + ' class="amD utooltip" title="Mới hơn"><span class="amF">&nbsp;</span><img class="amJ ' + newer_css + '" src="/images/cleardot.gif" alt=""></div>';
 
             jQuery("#paging-label").replaceWith(paging_label);
             jQuery("#paging-older").replaceWith(paging_older);
