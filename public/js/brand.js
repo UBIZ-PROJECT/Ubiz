@@ -281,6 +281,7 @@ var is_image_delete = false;
             var data = {
                 brd_id: $("#i-put #txt_brd_id").val(),
                 brd_name: $("#i-put #txt_brd_name").val(),
+                type: "0",
                 brd_img: is_image_delete
             };
             return data;
@@ -665,8 +666,8 @@ var is_image_delete = false;
             }
 
             var paging_label = '<div id="paging-label" class="amH" style="user-select: none"><span class="Dj"><span><span class="ts">' + f_num + '</span>–<span class="ts">' + m_num + '</span></span> / <span class="ts">' + rows_num + '</span></span></div>';
-            var paging_older = '<div id="paging-older" ' + get_older_data_func + ' class="amD utooltip" title="Cũ hơn"><span class="amF">&nbsp;</span><img class="amI ' + older_css + '" src="http://ubiz.local/images/cleardot.gif" alt=""></div>';
-            var paging_newer = '<div id="paging-newer" ' + get_newer_data_func + ' class="amD utooltip" title="Mới hơn"><span class="amF">&nbsp;</span><img class="amJ ' + newer_css + '" src="http://ubiz.local/images/cleardot.gif" alt=""></div>';
+            var paging_older = '<div id="paging-older" ' + get_older_data_func + ' class="amD utooltip" title="Cũ hơn"><span class="amF">&nbsp;</span><img class="amI ' + older_css + '" src="/images/cleardot.gif" alt=""></div>';
+            var paging_newer = '<div id="paging-newer" ' + get_newer_data_func + ' class="amD utooltip" title="Mới hơn"><span class="amF">&nbsp;</span><img class="amJ ' + newer_css + '" src="/images/cleardot.gif" alt=""></div>';
 
             jQuery("#paging-label").replaceWith(paging_label);
             jQuery("#paging-older").replaceWith(paging_older);
@@ -867,6 +868,8 @@ var lst_image_delete = [];
             if (jQuery('#search-form #notcontain').val().replace(/\s/g, '') != '') {
                 search_info.notcontain = jQuery('#search-form #notcontain').val();
             }
+
+            search_info.brd_id = jQuery("#i-put #nicescroll-iput #txt_brd_id").val();
 
             return search_info;
         },
@@ -1246,6 +1249,12 @@ var lst_image_delete = [];
             lst_image_delete = [];
             $("#i-put-2 #nicescroll-iput-2 .img-show").attr("src","../images/avatar.png").setName("");
             $("#i-put-2 #nicescroll-iput-2 .file-upload").val("").isChange("false");
+            $("#i-put #nicescroll-iput .os-content-glue").css({
+                "margin": "-10px 0px",
+                "width": "1647px",
+                "max-width": "100%",
+                "height": "224px"
+            });
             jQuery.UbizOIWidgetPrd.i_page_2.find(".tb-series").find("tbody").empty();
         },
         w_clear_search_form:function(){
@@ -1394,8 +1403,8 @@ var lst_image_delete = [];
             }
 
             var paging_label = '<div id="paging-label" class="amH" style="user-select: none"><span class="Dj"><span><span class="ts">' + f_num + '</span>–<span class="ts">' + m_num + '</span></span> / <span class="ts">' + rows_num + '</span></span></div>';
-            var paging_older = '<div id="paging-older" ' + get_older_data_func + ' class="amD utooltip" title="Cũ hơn"><span class="amF">&nbsp;</span><img class="amI ' + older_css + '" src="http://ubiz.local/images/cleardot.gif" alt=""></div>';
-            var paging_newer = '<div id="paging-newer" ' + get_newer_data_func + ' class="amD utooltip" title="Mới hơn"><span class="amF">&nbsp;</span><img class="amJ ' + newer_css + '" src="http://ubiz.local/images/cleardot.gif" alt=""></div>';
+            var paging_older = '<div id="paging-older" ' + get_older_data_func + ' class="amD utooltip" title="Cũ hơn"><span class="amF">&nbsp;</span><img class="amI ' + older_css + '" src="/images/cleardot.gif" alt=""></div>';
+            var paging_newer = '<div id="paging-newer" ' + get_newer_data_func + ' class="amD utooltip" title="Mới hơn"><span class="amF">&nbsp;</span><img class="amJ ' + newer_css + '" src="/images/cleardot.gif" alt=""></div>';
 
             jQuery("#paging-label").replaceWith(paging_label);
             jQuery("#paging-older").replaceWith(paging_older);
