@@ -97,6 +97,13 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="GNi" onclick="qp_download()">
+                                    <div class="ax7 poK utooltip" title="{{ __("Download") }}">
+                                        <div class="asA">
+                                            <div class="dlF"></div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div id="btn-delete" class="GNi" onclick="qp_delete()">
                                     <div class="ax7 poK utooltip" title="{{ __("Delete") }}">
                                         <div class="asA">
@@ -108,8 +115,8 @@
                             <div class="col-7 text-left pdt-5">
                                 @include('components.sale_step', ['sale_step'=>$quoteprice->sale_step])
                             </div>
-                            <div class="col-2 text-right">
-
+                            <div class="col-2 text-right pdt-5">
+                                <a href="/quoteprices/{{ $quoteprice->qp_id }}/history" class="btn btn-primary btn-sm" role="button" aria-pressed="true">{{ __("History") }}</a>
                             </div>
                         </div>
                     </div>

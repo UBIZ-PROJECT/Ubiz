@@ -1,0 +1,118 @@
+/* Material Design Icon*/
+/* Rules for sizing the icon. */
+.material-icons.md-18 {
+  font-size: 18px;
+}
+
+.material-icons.md-24 {
+  font-size: 24px;
+}
+
+.material-icons.md-36 {
+  font-size: 36px;
+}
+
+.material-icons.md-48 {
+  font-size: 48px;
+}
+
+/* Rules for using icons as black on a light background. */
+.material-icons.md-dark {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.material-icons.md-dark.md-inactive {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+/* Rules for using icons as white on a dark background. */
+.material-icons.md-light {
+  color: white;
+}
+
+.material-icons.md-light.md-inactive {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.order-input .dt-row {
+  padding: 0px 15px;
+  padding-left: 0px;
+  margin-top: 5px;
+}
+
+.order-input .dt-row .row {
+  background-color: #e8f0fe;
+}
+
+.order-input .dt-row .dt-row-head {
+  padding: 3px 0px;
+}
+
+.order-input .dt-row .dt-row-body {
+  padding: 5px 0px;
+  border-top: 1px solid #a6a6a6;
+}
+
+.order-input .dt-row .root-56 {
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  height: 22px;
+}
+
+.order-input .dt-row .fieldGroup {
+  height: 22px !important;
+}
+
+.order-input .dt-row .tox-tbtn {
+  height: 25px;
+}
+
+.order-input .dt-row i.i-btn {
+  cursor: pointer;
+}
+
+.order-input .total-info input {
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-bottom: 1px solid #a6a6a6;
+  background: none;
+  color: black !important;
+}
+
+.order-input .add-btn {
+  position: fixed;
+  right: 15px;
+  z-index: 999;
+}
+
+.order-input .tag-editor {
+  list-style-type: none;
+  padding: 0 5px 0 0;
+  margin: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border: 1px solid #eee;
+  cursor: text;
+  font: inherit;
+  border: 1px solid #a6a6a6;
+  color: #555;
+  background: #fff;
+  line-height: 20px;
+  width: 100%;
+  height: 100px;
+}
+
+.order-input .tag-editor .tag-editor-tag {
+  color: #263238;
+  background: #f57c00;
+}
+
+.order-input .tag-editor .tag-editor-delete {
+  border-left: 1px solid #ffffff;
+  background: #f57c00;
+}
+
+.order-input .tag-editor .tag-editor-delete i:before {
+  color: red;
+}

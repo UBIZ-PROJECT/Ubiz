@@ -244,6 +244,32 @@ class Order
         }
     }
 
+    public function transactionUpdateSaleStep($ord_id, $qp_id, $sale_step)
+    {
+        DB::beginTransaction();
+        try {
+
+            DB::table('order')
+                ->where([
+                    ['owner_id', '=', Auth::user()->id],
+                    ['ord_id', '=', $ord_id]
+                ])
+                ->update(['sale_step' => $sale_step]);
+
+            DB::table('quoteprice')
+                ->where([
+                    ['owner_id', '=', Auth::user()->id],
+                    ['qp_id', '=', $qp_id]
+                ])
+                ->update(['sale_step' => $sale_step]);
+
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
     public function transactionCreateOrder($quoteprice, $quoteprice_details)
     {
         DB::beginTransaction();
@@ -371,6 +397,14 @@ class Order
             if (array_key_exists('ord_date', $order) && $this->dateValidator($order['ord_date']) == false) {
                 $res['success'] = false;
                 $message[] = __('Order Date is wrong format YYYY/MM/DD.');
+            }
+            if (array_key_exists('ord_exp_date', $order) && $this->dateValidator($order['ord_exp_date']) == false) {
+                $res['success'] = false;
+                $message[] = __('Order Exp Date is wrong format YYYY/MM/DD.');
+            }
+            if (array_key_exists('ord_dlv_date', $order) && $this->dateValidator($order['ord_dlv_date']) == false) {
+                $res['success'] = false;
+                $message[] = __('Order Delivery Date is wrong format YYYY/MM/DD.');
             }
 
             $amount_check = true;

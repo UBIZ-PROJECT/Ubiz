@@ -121,7 +121,18 @@ class CustomerController extends Controller
         }
         return response()->json(['customers' => $customers, 'paging' => $paging, 'success' => true, 'message' => __('Successfully processed.')], 200);
     }
-	
+
+    public function generateCusCode(Request $request)
+    {
+        try {
+            $customer = new Customer();
+            $cus_code = $customer->generateCusCode();
+            return response()->json(['cus_code' => $cus_code, 'success' => true, 'message' => __('Successfully processed.')], 200);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
 	public function getRequestData(Request $request)
     {
         $page = 0;

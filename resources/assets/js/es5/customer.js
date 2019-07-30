@@ -195,12 +195,10 @@
                 $(".price-report").show();
                 $("input[name=cus_code]").attr('disabled', true);
                 $("input[name=cus_code]").closest('div.root_textfield').addClass('rootIsDisabled');
+                $(".Di").show();
             } else {
-                $(".price-report").hide();
-                $('#f-input input').val('');
-                $('#avt_img').attr('src', '../images/avatar.png');
-                $("input[name=cus_code]").attr('disabled', false);
-                $("input[name=cus_code]").closest('div.root_textfield').removeClass('rootIsDisabled');
+                $(".Di").hide();
+                ubizapis('v1', '/customers/cuscode', 'get', null, null, jQuery.UbizOIWidget.w_go_to_input_page_callback);
             }
             jQuery.UbizOIWidget.w_sleep_scrollbars(jQuery.UbizOIWidget.output_scrollbars);
             jQuery.UbizOIWidget.w_update_scrollbars(jQuery.UbizOIWidget.input_scrollbars);
@@ -210,13 +208,26 @@
             $(".save").click(function () {
                 jQuery.UbizOIWidget.w_save();
             });
-
             $(".delete").click(function () {
                 var id = $('input[name="cus_id"]').val();
                 var ids = [];
                 ids.push(id);
                 jQuery.UbizOIWidget.w_delete(ids);
             });
+        },
+        w_go_to_input_page_callback: function (response) {
+
+            var cus_code = '';
+            if (response.data.success == true) {
+                cus_code = response.data.cus_code;
+            }
+
+            $(".price-report").hide();
+            $('#f-input input').val('');
+            $('#avt_img').attr('src', '../images/avatar.png');
+            $("input[name=cus_code]").attr('disabled', false);
+            $("input[name=cus_code]").closest('div.root_textfield').removeClass('rootIsDisabled');
+            $("input[name=cus_code]").val(cus_code);
         },
         w_go_to_input_page_paging: function (index) {
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();

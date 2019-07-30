@@ -157,7 +157,7 @@
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, numeral(orders[i].ord_amount_tax).format('0,0'), 5));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, numeral(orders[i].ord_paid).format('0,0'), 6));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, numeral(orders[i].ord_debt).format('0,0'), 7));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, jQuery.UbizOIWidget.w_render_sale_step(orders[i].sale_step), 8));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_status_html(jQuery.UbizOIWidget.w_render_sale_step(orders[i].sale_step), 8));
                     rows.push(jQuery.UbizOIWidget.w_make_row_html(orders[i].ord_id, cols));
                 }
                 table_html += rows.join("");
@@ -214,6 +214,17 @@
                 col_html += '<div class="nCj" title="' + col_val + '">';
             }
             col_html += '<span>' + col_val + '</span>';
+            col_html += '</div>';
+            col_html += '</div>';
+            col_html += '</div>';
+            return col_html;
+        },
+        w_make_col_status_html: function (col_htm, col_idx) {
+            var col_html = "";
+            col_html += '<div class="tcB col-' + col_idx + '">';
+            col_html += '<div class="cbo">';
+            col_html += '<div class="nCj">';
+            col_html += col_htm;
             col_html += '</div>';
             col_html += '</div>';
             col_html += '</div>';

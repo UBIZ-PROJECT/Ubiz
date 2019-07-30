@@ -88,7 +88,7 @@ class Handler extends ExceptionHandler
                 case 403:
                     $message = __("You don't have permission to use this function.\nPlease contact with administrator.");
                     if ($request->expectsJson() === true) {
-                        return response()->json(['success' => false, 'message' => $message, 'trace' => $trace], 404);
+                        return response()->json(['success' => false, 'message' => $message, 'trace' => $trace], 403);
                     }
                     if (env('APP_ENV') == 'local') {
                         return parent::render($request, $exception);

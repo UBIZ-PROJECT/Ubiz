@@ -1013,6 +1013,23 @@ function qp_send_callback(response) {
     }
 }
 
+function qp_download() {
+    var qp_id = $("input[name=qp_id]").val();
+    ubizapis('v1', '/quoteprices/' + qp_id + '/download', 'post', null, null, qp_download_callback);
+}
+
+function qp_download_callback(response) {
+    if (response.data.success == true) {
+        var qp_id = $("input[name=qp_id]").val();
+        window.open('/quoteprices/' + qp_id + '/download/' + response.data.uniqid);
+    } else {
+        swal.fire({
+            type: 'error',
+            title: response.data.message
+        })
+    }
+}
+
 function qp_create_order() {
     swal({
         title: i18next.t('Do you want to create order the data.?'),
@@ -1088,7 +1105,8 @@ $(document).ready(function () {
     });
     sidebar_scrollbars = fnc_set_scrollbars("nicescroll-sidebar");
     input_scrollbars = fnc_set_scrollbars("nicescroll-iput");
-    fnc_datepicker('.datepicker');
+    fnc_datepicker('#qp_date');
+    fnc_datepicker('#qp_exp_date');
     jQuery('.utooltip').tooltipster({
         side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
     });
