@@ -56,15 +56,15 @@ class ReportController extends Controller
         }
     }
 
-    public function exportExcel(Request $request)
+    public function exportExcel($type, Request $request)
     {
-        switch ($request->type) {
+        switch ($type) {
             case "revenue":
                 return Excel::download(new ReportRevenueExport($request), 'reportRevenue.xlsx');
             case "quoteprice":
                 return Excel::download(new ReportQuotePriceExport($request), 'reportQuotePrice.xlsx');
             default:
-                return Excel::download(new ReportRepositoryExport, 'reportRepository.xlsx');
+                return Excel::download(new ReportRepositoryExport($request), 'reportRepository.xlsx');
         }
     }
 

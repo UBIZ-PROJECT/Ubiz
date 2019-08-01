@@ -11,14 +11,20 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
 class ReportRepositoryExport implements FromCollection, WithHeadings, WithEvents, ShouldAutoSize
 {
-    
+    protected $request;
+
+    function __construct($request)
+    {
+        $this->request = $request;
+    }
+
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     public function collection()
     {
         $reportModel = new Report();
-        $report = $reportModel->getReportData(0, '', 'repository');
+        $report = $reportModel->getReportData(0, '', $this->request);
 
         foreach ($report as $row) {
             $reportExportData[] = array(
@@ -51,7 +57,7 @@ class ReportRepositoryExport implements FromCollection, WithHeadings, WithEvents
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class    => function(AfterSheet $event) {
+            AfterSheet::class => function (AfterSheet $event) {
                 $event->sheet->getDelegate()->getStyle('A1:G1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('A2C4C9');;
             },
         ];
