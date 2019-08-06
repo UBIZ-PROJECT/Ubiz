@@ -284,6 +284,7 @@ class Event
             $event = $data['event'];
             $event['upd_user'] = Auth::user()->id;
             DB::table('m_event')->where('id', $id)->update($event);
+            $this->insertMailQueue($id, '1');
 
             //Update Event Pic
             $new_event_pic = $data['event_pic'];
@@ -372,6 +373,7 @@ class Event
             $event['upd_user'] = Auth::user()->id;
             $event['inp_user'] = Auth::user()->id;
             $event_id = DB::table('m_event')->insertGetId($event);
+            $this->insertMailQueue($event_id, '0');
 
             //Insert Event Pic
             foreach ($event_pic as &$item) {
@@ -385,6 +387,21 @@ class Event
             return $event_id;
         } catch (\Throwable $e) {
             DB::rollback();
+            throw $e;
+        }
+    }
+
+    public function insertMailQueue($id, $action = '0')
+    {
+        try {
+            $data = [
+                'event_id' => $id,
+                'send' => '0',
+                'action' => $action
+            ];
+
+            DB::table('m_event_mail')->insert($data);
+        } catch (\Throwable $e) {
             throw $e;
         }
     }
