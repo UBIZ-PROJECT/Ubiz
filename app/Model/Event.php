@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class Event
 {
 
-    public function getEvents($start, $end, $tag)
+    public function getEvents($start, $end, $tag, $user = null)
     {
         try {
 
@@ -69,6 +69,8 @@ class Event
                         'title' => $event->title,
                         'location' => $event->location,
                         'desc' => $event->desc,
+                        'result' => $event->result,
+                        'fee' => $event->fee,
                         'allDay' => ($event->all_day == '1' ? true : false),
                         'tag_id' => $event->tag_id,
                         'tag_title' => $event->tag_title,
@@ -160,6 +162,8 @@ class Event
                 'title' => $event_data_tmp->title,
                 'location' => $event_data_tmp->location,
                 'desc' => $event_data_tmp->desc,
+                'result' => $event_data_tmp->result,
+                'fee' => $event_data_tmp->fee,
                 'allDay' => ($event_data_tmp->all_day == '1' ? true : false),
                 'tag_id' => $event_data_tmp->tag_id,
                 'tag_title' => $event_data_tmp->tag_title,
@@ -284,6 +288,7 @@ class Event
             $event = $data['event'];
             $event['upd_user'] = Auth::user()->id;
             DB::table('m_event')->where('id', $id)->update($event);
+            $this->insertMailQueue($id, '1');
 
             //Update Event Pic
             $new_event_pic = $data['event_pic'];
@@ -372,6 +377,7 @@ class Event
             $event['upd_user'] = Auth::user()->id;
             $event['inp_user'] = Auth::user()->id;
             $event_id = DB::table('m_event')->insertGetId($event);
+            $this->insertMailQueue($event_id, '0');
 
             //Insert Event Pic
             foreach ($event_pic as &$item) {
@@ -385,6 +391,21 @@ class Event
             return $event_id;
         } catch (\Throwable $e) {
             DB::rollback();
+            throw $e;
+        }
+    }
+
+    public function insertMailQueue($id, $action = '0')
+    {
+        try {
+            $data = [
+                'event_id' => $id,
+                'send' => '0',
+                'action' => $action
+            ];
+
+            DB::table('m_event_mail')->insert($data);
+        } catch (\Throwable $e) {
             throw $e;
         }
     }
@@ -586,5 +607,18 @@ class Event
         } catch (\Throwable $e) {
             throw $e;
         }
+    }
+
+    public function exportExcel($start, $end, $tag, $user = null){
+        try {
+            $events = $this->getEvents($start, $end, $tag, $user);
+
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function dumpExcel($events){
+
     }
 }
