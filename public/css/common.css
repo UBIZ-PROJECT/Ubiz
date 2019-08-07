@@ -920,6 +920,11 @@
     height: calc(100% - 145px);
 }
 
+.main-content .r-content .aqC {
+    width: 100%;
+    height: calc(100% - 100px);
+}
+
 .main-content .r-content .aqI {
     width: 100%;
     height: calc(100% - 107px);

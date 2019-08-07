@@ -121,5 +121,8 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
 
         Route::get('report/{type}', ['as' => 'api-get-report', 'uses' => 'Api\ReportController@getReport']);
         Route::get('report', ['as' => 'api-get-report', 'uses' => 'Api\ReportController@getReport']);
+
+        Route::get('drive', ['as' => 'api-get-drives', 'uses' => 'Api\DriveController@getData']);
+        Route::get('drive/{uniqid}', ['as' => 'api-get-report', 'uses' => 'Api\DriveController@getData']);
     });
 });
