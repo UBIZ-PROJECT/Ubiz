@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App;
 use App\User;
 use Illuminate\Http\Request;
+use App\Exports\ReportEventExport;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 
 use App\Model\Event;
 
@@ -143,6 +145,30 @@ class EventController extends Controller
             $evModel->deleteEvent($id);
 
             return response()->json(['success' => true, 'message' => __("Successfully processed.")], 200);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function exportEvent(Request $request)
+    {
+        try {
+
+            $start = $request->get('start', null);
+            $end = $request->get('end', null);
+            $tag = $request->get('tag', []);
+            $user = $request->get('user', null);
+
+            if (isArrayValidator($tag) == false
+                || requiredValidator($start) == false
+                || dateValidator($start) == false
+                || requiredValidator($end) == false
+                || dateValidator($end) == false
+            ) {
+                return response()->json(['success' => false, 'message' => __('Filter data is wrong.')], 200);
+            }
+
+            return Excel::download(new ReportEventExport($request), 'reportQuotePrice.xlsx');
         } catch (\Throwable $e) {
             throw $e;
         }

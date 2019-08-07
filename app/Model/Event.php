@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class Event
 {
 
-    public function getEvents($start, $end, $tag)
+    public function getEvents($start, $end, $tag, $user = null)
     {
         try {
 
@@ -69,6 +69,8 @@ class Event
                         'title' => $event->title,
                         'location' => $event->location,
                         'desc' => $event->desc,
+                        'result' => $event->result,
+                        'fee' => $event->fee,
                         'allDay' => ($event->all_day == '1' ? true : false),
                         'tag_id' => $event->tag_id,
                         'tag_title' => $event->tag_title,
@@ -160,6 +162,8 @@ class Event
                 'title' => $event_data_tmp->title,
                 'location' => $event_data_tmp->location,
                 'desc' => $event_data_tmp->desc,
+                'result' => $event_data_tmp->result,
+                'fee' => $event_data_tmp->fee,
                 'allDay' => ($event_data_tmp->all_day == '1' ? true : false),
                 'tag_id' => $event_data_tmp->tag_id,
                 'tag_title' => $event_data_tmp->tag_title,
@@ -603,5 +607,18 @@ class Event
         } catch (\Throwable $e) {
             throw $e;
         }
+    }
+
+    public function exportExcel($start, $end, $tag, $user = null){
+        try {
+            $events = $this->getEvents($start, $end, $tag, $user);
+
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function dumpExcel($events){
+
     }
 }
