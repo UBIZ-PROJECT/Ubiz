@@ -51,6 +51,8 @@ function event_edit(info) {
     $("#event-tag-dropdown").find("div.dropdown-menu").find("a.dropdown-item").removeClass('active');
     $("#event-tag-dropdown").find("div.dropdown-menu").find("a[tag_id=" + info.event.extendedProps.tag_id + "].dropdown-item").addClass('active');
 
+    $('#event_fee').val(numeral(info.event.extendedProps.fee).format('0,0'));
+
     if (info.event.extendedProps.pic_edit == '1') {
         $("#event_pic_edit").prop("checked", true);
     } else {
@@ -86,6 +88,7 @@ function event_edit(info) {
     }
 
     tinyMCE.get('event_desc').setContent(info.event.extendedProps.desc);
+    tinyMCE.get('event_result').setContent(info.event.extendedProps.result);
 
     var assigned_list = new Array();
     $.map(info.event.extendedProps.pic, function (user, idx) {
@@ -164,12 +167,14 @@ function event_add(arg) {
     $("#event-tag-dropdown").find("div.dropdown-menu").find("a.dropdown-item").removeClass('active');
     $("#event-tag-dropdown").find("div.dropdown-menu").find("a[tag_id=" + event_tag.tag_id + "].dropdown-item").addClass('active');
 
+    $('#event_fee').val('0');
     $("#btn-assign").show();
     $(".assigned-list").show();
     $("#event_pic_edit").prop("checked", false);
     $("#event_pic_assign").prop("checked", false);
     $("#event_pic_see_list").prop("checked", false);
     tinyMCE.get('event_desc').setContent('');
+    tinyMCE.get('event_result').setContent('');
 
     $(".assigned-list").empty();
 
@@ -343,7 +348,12 @@ function event_colect_data() {
 
     data.event_tag = $("#event-tag").attr('tag_id');
     data.event_location = $("#event-location").val();
-    data.event_desc = tinyMCE.get('event_desc').getContent();
+
+    var desc_selector = row.find('textarea[name=txt_desc]').attr('id');
+    data.event_desc = tinyMCE.get(desc_selector).getContent();
+    data.event_desc_origin = tinyMCE.get(desc_selector).getContent({'format': 'text'});
+
+    data.event_fee = numeral($("#event_fee").val()).value();
 
     data.event_pic_edit = '0';
     if ($("#event_pic_edit").is(":checked") == true) {
@@ -365,6 +375,11 @@ function event_colect_data() {
         var pic = $(ele).attr('pic');
         data.event_pic_list.push(pic);
     });
+
+    var result_selector = row.find('textarea[name=txt_result]').attr('id');
+    data.event_result = tinyMCE.get(result_selector).getContent();
+    data.event_result_origin = tinyMCE.get(result_selector).getContent({'format': 'text'});
+
     return data;
 }
 
@@ -618,6 +633,22 @@ document.addEventListener('DOMContentLoaded', function () {
         menubar: false,
         toolbar_drawer: 'floating',
         selector: '#event_desc',
+        plugins: [
+            'advlist autolink lists link image charmap print preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code wordcount autoresize'
+        ],
+        toolbar: 'undo redo | bold italic forecolor backcolor | formatselect | fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat',
+        content_css: [
+            '/fonts/roboto/v18/roboto.css'
+        ]
+    });
+
+    tinymce.init({
+        width: '100%',
+        min_height: 190,
+        max_height: 500,
+        menubar: false,
+        toolbar_drawer: 'floating',
+        selector: '#event_result',
         plugins: [
             'advlist autolink lists link image charmap print preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code wordcount autoresize'
         ],

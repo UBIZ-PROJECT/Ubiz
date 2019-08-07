@@ -11,7 +11,7 @@
 </div>
 <hr>
 <div class="row margin-bottom-15">
-    <div class="col-12">
+    <div class="col-md-8 col-lg-8">
         <input type="text" readonly style="width: 140px" class="form-control light-color d-inline-flex text-center start-date" id="event-start-date">
         <select readonly class="form-control light-color d-inline-flex justify-content-center w-auto"
                 id="event-start-time">
@@ -115,12 +115,8 @@
             <option value="11:00pm">11:00CH</option>
             <option value="11:30pm">11:30CH</option>
         </select>
-        <input type="text" readonly style="width: 140px" class="form-control light-color d-inline-flex text-center end-date" id="event-end-date">
-    </div>
-</div>
-<div class="row margin-bottom-15">
-    <div class="col-12">
-        <table>
+        <input type="text" readonly style="width: 140px" class="form-control margin-bottom-15 light-color d-inline-flex text-center end-date" id="event-end-date">
+        <table class="margin-bottom-15">
             <tbody>
             <tr style="line-height: 1px">
                 <td>
@@ -129,21 +125,17 @@
                 <td>
                     <span class="d-inline-flex">{{ __('All day') }}</span>
                     {{--<select readonly class="form-control light-color d-inline-flex justify-content-center w-auto">--}}
-                        {{--<option>Does not repeat</option>--}}
-                        {{--<option>Daily</option>--}}
-                        {{--<option>Weekly on Monday</option>--}}
-                        {{--<option>Monthly on the third Monday</option>--}}
-                        {{--<option>Annually on July 20</option>--}}
-                        {{--<option>Every weekday (Monday to Friday)</option>--}}
+                    {{--<option>Does not repeat</option>--}}
+                    {{--<option>Daily</option>--}}
+                    {{--<option>Weekly on Monday</option>--}}
+                    {{--<option>Monthly on the third Monday</option>--}}
+                    {{--<option>Annually on July 20</option>--}}
+                    {{--<option>Every weekday (Monday to Friday)</option>--}}
                     {{--</select>--}}
                 </td>
             </tr>
             </tbody>
         </table>
-    </div>
-</div>
-<div class="row margin-bottom-15">
-    <div class="col-md-8 col-lg-8">
         <span class="text-primary">{{ __('Detail') }}</span>
         <hr class="z-mgt">
         <table>
@@ -219,6 +211,9 @@
         </table>
     </div>
     <div class="col-md-4 col-lg-4">
+        <span class="text-primary">{{ __('Fee') }}</span>
+        <hr class="z-mgt margin-bottom-10">
+        <input type="text" id="event_fee" style="width: 100%"  onfocus="num_focus(this)" onblur="num_blur(this)" onkeydown="num_keydown(event)" min="0" max="9999999999" placeholder="" spellcheck="false" type="text" maxlength="10" value="" class="form-control light-color d-inline-flex text-right margin-bottom-15">
         <div class="dropdown event-pic">
             <span class="text-primary">{{ __('Person in charge') }}</span>
             <i id="btn-assign" class="fas fa-cog float-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
@@ -227,7 +222,7 @@
         <hr class="z-mgt">
         <ul class="list-group assigned-list list-group-flush margin-bottom-30" style="width: 300px"></ul>
         <span>{{ __('Person in charge permission:') }}</span>
-        <table>
+        <table class="margin-bottom-15">
             <tbody>
             <tr style="line-height: 1px">
                 <td style="height: 30px">
@@ -255,6 +250,9 @@
             </tr>
             </tbody>
         </table>
+        <span class="text-primary">{{ __('Result') }}</span>
+        <hr class="z-mgt">
+        <textarea id="event_result" class="form-control" name="txt_result"></textarea>
     </div>
 </div>
 <hr>
