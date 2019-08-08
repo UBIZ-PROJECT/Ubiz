@@ -7,16 +7,13 @@ use Illuminate\Support\Facades\DB as DB;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\Validator as Validator;
 
-function resizeImage($img, $target_img, $new_img_width, $new_img_height, $img_type = '')
+function resizeImage($img, $target_img, $new_img_width, $new_img_height, $img_type)
 {
     try {
-        $target_dir = base_path() . '/resources/images/' . $img_type;
-        if ($img_type != '') {
-            $target_file = $target_dir . '/' . $target_img;
-        } else {
-            $target_file = $target_dir . $target_img;
-        }
-
+        $drive_path = getDrivePath();
+        $target_dir = $drive_path . '/images/' . $img_type;
+        makeDir($target_dir);
+        $target_file = $target_dir . '/' . $target_img;
         $image = Image::make($img);
         $image->resize($new_img_width, $new_img_height);
         $image->save($target_file);
@@ -25,16 +22,14 @@ function resizeImage($img, $target_img, $new_img_width, $new_img_height, $img_ty
     }
 }
 
-function resizeImageToHeight($img, $target_img, $new_img_height, $img_type = '')
+function resizeImageToHeight($img, $target_img, $new_img_height, $img_type)
 {
     try {
 
-        $target_dir = base_path() . '/resources/images/' . $img_type;
-        if ($img_type != '') {
-            $target_file = $target_dir . '/' . $target_img;
-        } else {
-            $target_file = $target_dir . $target_img;
-        }
+        $drive_path = getDrivePath();
+        $target_dir = $drive_path . '/images/' . $img_type;
+        makeDir($target_dir);
+        $target_file = $target_dir . '/' . $target_img;
 
         $image = Image::make($img);
         $image->resize(null, $new_img_height, function ($constraint) {
@@ -50,12 +45,10 @@ function resizeImageToWidth($img, $target_img, $new_img_height, $img_type = '')
 {
     try {
 
-        $target_dir = base_path() . '/resources/images/' . $img_type;
-        if ($img_type != '') {
-            $target_file = $target_dir . '/' . $target_img;
-        } else {
-            $target_file = $target_dir . $target_img;
-        }
+        $drive_path = getDrivePath();
+        $target_dir = $drive_path . '/images/' . $img_type;
+        makeDir($target_dir);
+        $target_file = $target_dir . '/' . $target_img;
 
         $image = Image::make($img);
         // resize the image to a width and constrain aspect ratio (auto height)
@@ -68,16 +61,14 @@ function resizeImageToWidth($img, $target_img, $new_img_height, $img_type = '')
     }
 }
 
-function scaleImage($img, $scale, $img_type = '')
+function scaleImage($img, $scale, $img_type)
 {
     try {
-        $image = new SimpleImage();
-        $target_dir = base_path() . '/resources/images/' . $img_type;
-        if ($img_type != '') {
-            $target_file = $target_dir . '/' . $target_img;
-        } else {
-            $target_file = $target_dir . $target_img;
-        }
+
+        $drive_path = getDrivePath();
+        $target_dir = $drive_path . '/images/' . $img_type;
+        makeDir($target_dir);
+        $target_file = $target_dir . '/' . $target_img;
 
         $image = Image::make($img);
 
@@ -92,18 +83,14 @@ function scaleImage($img, $scale, $img_type = '')
     }
 }
 
-function saveOriginalImage($img, $target_img, $img_type = '')
+function saveOriginalImage($img, $target_img, $img_type)
 {
     try {
-        $target_dir = base_path() . '/resources/images/' . $img_type;
-        if ($img_type != '') {
-            $target_file = $target_dir . '/' . $target_img;
-        } else {
-            $target_file = $target_dir . $target_img;
-        }
-        if ($target_dir !== "/" && $target_dir !== "" && !is_dir($target_dir)) {
-            mkdir($target_dir, 0777, true);
-        }
+
+        $drive_path = getDrivePath();
+        $target_dir = $drive_path . '/images/' . $img_type;
+        makeDir($target_dir);
+        $target_file = $target_dir . '/' . $target_img;
 
         $image = Image::make($img);
         $image->save($target_file);
@@ -112,21 +99,21 @@ function saveOriginalImage($img, $target_img, $img_type = '')
     }
 }
 
-function readImage($img, $img_type = '')
+function readImage($img_name, $img_type)
 {
     try {
-        if ($img_type != '') {
-            $path = base_path() . '/resources/images/' . $img_type . '/' . $img;
-        } else {
-            $path = base_path() . '/resources/images/' . $img;
-        }
-        if (empty($img) || !file_exists($path)) {
+
+        $drive_path = getDrivePath();
+        $file_path = $drive_path . '/images/' . $img_type . '/' . $img_name;
+
+        if (empty($file_path) || !file_exists($file_path)) {
             return "";
         }
-        $type = pathinfo($path, PATHINFO_EXTENSION);
-        $data = file_get_contents($path);
-        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-        return $base64;
+
+        $file_type = pathinfo($file_path, PATHINFO_EXTENSION);
+        $file_data = file_get_contents($file_path);
+        $file_base64 = 'data:image/' . $file_type . ';base64,' . base64_encode($file_data);
+        return $file_base64;
     } catch (\Throwable $e) {
         throw $e;
     }
@@ -417,4 +404,22 @@ function beforeOrEqualValidator($start_date, $end_date)
         return false;
     }
     return true;
+}
+
+function getDrivePath()
+{
+    try {
+        return env('DRIVE_PATH', '/home/drive');
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function makeDir($path)
+{
+    try {
+        return is_dir($path) || mkdir($path);
+    } catch (\Throwable $e) {
+        throw $e;
+    }
 }

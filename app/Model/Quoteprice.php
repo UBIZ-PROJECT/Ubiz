@@ -640,7 +640,7 @@ class Quoteprice
                 'quoteprice' => $quoteprice,
                 'quoteprices_detail' => $tmp_quoteprices_detail
             ])->setPaper('a4');
-            $is_put = Storage::put("quoteprices/$uniqid.pdf", $pdf->output());
+            $is_put = Storage::disk('quoteprices')->put("$uniqid.pdf", $pdf->output());
             if ($is_put == false)
                 return false;
 
