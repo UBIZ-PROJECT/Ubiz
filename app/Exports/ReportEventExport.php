@@ -60,7 +60,7 @@ class ReportEventExport implements FromCollection, WithHeadings, WithEvents, Sho
                 '5' => $row->tag_title,
                 '6' => $row->desc,
                 '7' => $row->result,
-                '9' => $row->fee,
+                '9' => number_format($row->fee),
                 '10' => implode(', ', $pic)
             );
         }

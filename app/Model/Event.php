@@ -509,12 +509,19 @@ class Event
                 $message[] = __('Event tag is not exists.');
             }
 
+            if (numericValidator($data['event_fee']) == false) {
+                $res['success'] = false;
+                $message[] = __('Event fee is not number.');
+            }
+
             if (inArrayValidator($data['event_all_day'], ['0', '1']) == false
                 || inArrayValidator($data['event_pic_edit'], ['0', '1']) == false
                 || inArrayValidator($data['event_pic_assign'], ['0', '1']) == false
                 || inArrayValidator($data['event_pic_see_list'], ['0', '1']) == false
                 || isArrayValidator($data['event_pic_list']) == false
                 || presentValidator($data['event_desc']) == false
+                || presentValidator($data['event_result']) == false
+                || presentValidator($data['event_fee']) == false
             ) {
                 $res['success'] = false;
                 $message[] = __('Data is wrong');

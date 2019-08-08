@@ -349,7 +349,7 @@ function event_colect_data() {
     data.event_tag = $("#event-tag").attr('tag_id');
     data.event_location = $("#event-location").val();
 
-    var desc_selector = row.find('textarea[name=txt_desc]').attr('id');
+    var desc_selector = $('textarea[name=txt_desc]').attr('id');
     data.event_desc = tinyMCE.get(desc_selector).getContent();
     data.event_desc_origin = tinyMCE.get(desc_selector).getContent({'format': 'text'});
 
@@ -376,7 +376,7 @@ function event_colect_data() {
         data.event_pic_list.push(pic);
     });
 
-    var result_selector = row.find('textarea[name=txt_result]').attr('id');
+    var result_selector = $('textarea[name=txt_result]').attr('id');
     data.event_result = tinyMCE.get(result_selector).getContent();
     data.event_result_origin = tinyMCE.get(result_selector).getContent({'format': 'text'});
 
