@@ -615,17 +615,4 @@ class Event
             throw $e;
         }
     }
-
-    public function exportExcel($start, $end, $tag, $user = null){
-        try {
-            $events = $this->getEvents($start, $end, $tag, $user);
-
-        } catch (\Throwable $e) {
-            throw $e;
-        }
-    }
-
-    public function dumpExcel($events){
-
-    }
 }

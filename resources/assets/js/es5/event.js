@@ -464,6 +464,10 @@ function event_cancel() {
     $('#event-modal').modal('hide');
 }
 
+function downloadCallback(response) {
+    window.open('events/export/' + response.data.uniqid + '/' + response.data.file_name);
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     var initialLocaleCode = 'vi';
     var calendarEl = document.getElementById('calendar');
@@ -502,9 +506,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 click: function () {
                     var fetchInfo = {};
                     fetchInfo.viewType = calendar.view.type;
-                    ubizapis('v1', '/events', 'get', null, fetchInfo, function (response) {
+                    fetchInfo.start = calendar.view.activeStart;
+                    fetchInfo.end = calendar.view.activeEnd;
+                    fetchInfo.tag = event_get_filter_tag();
+                    fetchInfo.user = new Array();
+                    ubizapis('v1', '/events/export', 'get', null, fetchInfo, function (response) {
                         if (response.data.success == true) {
-                            successCallback(response.data.events);
+                            downloadCallback(response);
                         } else {
                             swal.fire({
                                 type: 'error',

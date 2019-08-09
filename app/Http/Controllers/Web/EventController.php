@@ -41,4 +41,27 @@ class EventController extends Controller
             throw $e;
         }
     }
+
+    public function exportEvent(Request $request, $uniqid, $file_name)
+    {
+        try {
+
+            $is_exists = Storage::disk('event')->exists("$uniqid.xlsx");
+            if ($is_exists == false) {
+                return response()->view('errors.404', [], 404);
+            }
+
+            $headers = [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'Expires' => '0',
+                'Cache-Control' => 'max-age=0'
+            ];
+
+            $file_path = Storage::disk('event')->path("$uniqid.xlsx");
+
+            return response()->download($file_path, $file_name, $headers);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
 }

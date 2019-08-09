@@ -157,9 +157,10 @@ class EventController extends Controller
             $start = $request->get('start', null);
             $end = $request->get('end', null);
             $tag = $request->get('tag', []);
-            $user = $request->get('user', null);
+            $user = $request->get('user', []);
 
             if (isArrayValidator($tag) == false
+                || isArrayValidator($user) == false
                 || requiredValidator($start) == false
                 || dateValidator($start) == false
                 || requiredValidator($end) == false
@@ -168,7 +169,17 @@ class EventController extends Controller
                 return response()->json(['success' => false, 'message' => __('Filter data is wrong.')], 200);
             }
 
-            return Excel::download(new ReportEventExport($request), 'reportQuotePrice.xlsx');
+            $uniqid = uniqid();
+            $start_dt = new \DateTime($start);
+            $start_fm = $start_dt->format('Ymd');
+
+            $end_dt = new \DateTime($end);
+            $end_fm = $end_dt->format('Ymd');
+            $file_name = "LLV-$start_fm-$end_fm.xlsx";
+
+            // Store on a different disk with a defined writer type.
+            Excel::store(new ReportEventExport($request), "$uniqid.xlsx", 'event', Excel::XLSX);
+            return response()->json(['uniqid' => $uniqid, 'file_name' => $file_name, 'success' => true, 'message' => __('Successfully processed.')], 200);
         } catch (\Throwable $e) {
             throw $e;
         }

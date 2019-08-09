@@ -114,6 +114,7 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
 
         Route::get('events', ['as' => 'api-get-events', 'uses' => 'Api\EventController@getEvents']);
         Route::get('events/pic', ['as' => 'api-get-events', 'uses' => 'Api\EventController@getPic']);
+        Route::get('events/export', ['as' => 'api-get-events', 'uses' => 'Api\EventController@exportEvent']);
         Route::get('events/{id}', ['as' => 'api-get-event', 'uses' => 'Api\EventController@getEvent']);
         Route::post('events', ['as' => 'api-insert-event', 'uses' => 'Api\EventController@insertEvent']);
         Route::post('events/{id}/update', ['as' => 'api-update-event', 'uses' => 'Api\EventController@updateEvent']);

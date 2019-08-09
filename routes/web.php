@@ -34,7 +34,8 @@ Route::middleware(['api', 'cors'])->group(function () {
         Route::get('quoteprices/{qp_id}/download/{uniqid}', ['as' => 'quoteprices-pdf', 'uses' => 'Web\QuotepriceController@download'])->where('qp_id', '[0-9]+');
         Route::get('quoteprices/{cus_id}/create', ['as' => 'quoteprices-create', 'uses' => 'Web\QuotepriceController@create'])->where('cus_id', '[0-9]+');
         Route::get('events', ['as' => 'events', 'uses' => 'Web\EventController@index']);
-        Route::get('events/{id}', ['as' => 'event-detail', 'uses' => 'Web\EventController@detail'])->where('id', '[0-9]+');;
+        Route::get('events/{id}', ['as' => 'event-detail', 'uses' => 'Web\EventController@detail'])->where('id', '[0-9]+');
+        Route::get('events/export/{uniqid}/{file_name}', ['as' => 'event-export', 'uses' => 'Web\EventController@exportEvent']);
 
         Route::get('orders/{ord_id}/history', ['as' => 'orders-history', 'uses' => 'Web\OrderHistoryController@index'])->where('ord_id', '[0-9]+');
         Route::get('orders/{ord_id}/history/{his_ord_id}', ['as' => 'orders-history-detail', 'uses' => 'Web\OrderHistoryController@detail'])->where(['ord_id' => '[0-9]+', 'his_ord_id' => '[0-9]+']);
