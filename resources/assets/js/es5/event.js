@@ -496,13 +496,30 @@ document.addEventListener('DOMContentLoaded', function () {
                 click: function () {
                     calendar.refetchEvents();
                 }
+            },
+            download: {
+                text: 'Tải lịch làm việc',
+                click: function () {
+                    var fetchInfo = {};
+                    fetchInfo.viewType = calendar.view.type;
+                    ubizapis('v1', '/events', 'get', null, fetchInfo, function (response) {
+                        if (response.data.success == true) {
+                            successCallback(response.data.events);
+                        } else {
+                            swal.fire({
+                                type: 'error',
+                                title: response.data.message
+                            });
+                        }
+                    });
+                }
             }
         },
         timeZone: time_zone,
         plugins: ['interaction', 'bootstrap', 'dayGrid', 'timeGrid', 'list', 'momentTimezone', 'rrule'],
         height: 'parent',
         header: {
-            left: 'prev,next today refresh',
+            left: 'prev,next today refresh download',
             center: 'title',
             right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
         },

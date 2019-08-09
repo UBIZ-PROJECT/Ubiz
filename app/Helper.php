@@ -4,6 +4,7 @@ use App as App;
 use App\User as User;
 use Illuminate\Validation\Rule as Rule;
 use Illuminate\Support\Facades\DB as DB;
+use Illuminate\Support\Facades\Storage as Storage;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\Validator as Validator;
 
@@ -418,7 +419,7 @@ function getDrivePath()
 function makeDir($path)
 {
     try {
-        return is_dir($path) || mkdir($path);
+        return is_dir($path) || mkdir($path, 0777, true);
     } catch (\Throwable $e) {
         throw $e;
     }
