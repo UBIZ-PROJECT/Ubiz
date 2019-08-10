@@ -48,8 +48,8 @@ class Event
                 )
                 ->where([
                     ['m_event.delete_flg', '=', '0'],
-                    ['m_event.start', '>=', $start],
-                    ['m_event.end', '<=', $end]
+                    ['m_event.start', '>', $start],
+                    ['m_event.end', '<', $end]
                 ]);
 
             if (sizeof($tag) > 0) {

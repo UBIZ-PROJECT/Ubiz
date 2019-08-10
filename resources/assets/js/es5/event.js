@@ -465,7 +465,7 @@ function event_cancel() {
 }
 
 function downloadCallback(response) {
-    window.open('events/export/' + response.data.uniqid + '/' + response.data.file_name);
+    window.open('events/download/' + response.data.uniqid + '/' + response.data.file_name);
 }
 
 document.addEventListener('DOMContentLoaded', function () {

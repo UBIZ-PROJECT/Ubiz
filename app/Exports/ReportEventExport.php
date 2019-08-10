@@ -3,14 +3,18 @@
 namespace App\Exports;
 
 use App\Model\Event;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
-class ReportEventExport implements FromCollection, WithHeadings, WithEvents, ShouldAutoSize
+class ReportEventExport implements FromView, WithEvents, ShouldAutoSize, WithColumnFormatting, WithMapping
 {
     protected $request;
 
@@ -19,22 +23,18 @@ class ReportEventExport implements FromCollection, WithHeadings, WithEvents, Sho
         $this->request = $request;
     }
 
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    public function collection()
+    public function view(): View
     {
-
-        $start = $request->get('startStr', null);
-        $end = $request->get('endStr', null);
-        $tag = $request->get('tag', []);
-        $user = $request->get('user', null);
+        $start = $this->request->get('start', null);
+        $end = $this->request->get('end', null);
+        $tag = $this->request->get('tag', []);
+        $user = $this->request->get('user', null);
 
         $start_dt = new \DateTime($start);
-        $start_fm = $start_dt->format('Y-m-d H:i:s');
+        $start_fm = $start_dt->format('Y-m-d');
 
         $end_dt = new \DateTime($end);
-        $end_fm = $end_dt->format('Y-m-d H:i:s');
+        $end_fm = $end_dt->format('Y-m-d');
 
         $eventModel = new Event();
         $eventData = $eventModel->getEvents($start, $end, $tag, $user);
@@ -44,43 +44,61 @@ class ReportEventExport implements FromCollection, WithHeadings, WithEvents, Sho
 
             $pic = [];
             if ($row['pic_see_list'] == '1'
-                || $row['owner_id'] == Auth::user()->id) {
-                
+                || $row['owner_id'] == Auth::user()->id
+            ) {
+
                 foreach ($row['pic'] as $item) {
                     $pic[] = $item['name'];
                 }
             }
 
+            $start_dt = new \DateTime($row['start']);
+            $start_fm = $start_dt->format('Y-m-d g:i A');
+
+            $end_dt = new \DateTime($row['end']);
+            $end_fm = $start_dt->format('Y-m-d g:i A');
+
             $eventExportData[] = array(
-                '0' => $row->title,
-                '1' => $row->start,
-                '2' => $row->end,
-                '3' => ($row->allDay == '0' ? 'x' : ''),
-                '4' => $row->location,
-                '5' => $row->tag_title,
-                '6' => $row->desc,
-                '7' => $row->result,
-                '9' => number_format($row->fee),
-                '10' => implode(', ', $pic)
+                'title' => $row['title'],
+                'start' => $start_fm,
+                'end' => $end_fm,
+                'allDay' => ($row['allDay'] == '0' ? 'x' : ''),
+                'location' => $row['location'],
+                'tag_title' => $row['tag_title'],
+                'desc' => $row['desc'],
+                'result' => $row['result'],
+                'fee' => $row['fee'],
+                'pic' => implode(', ', $pic)
             );
         }
 
-        return (collect($eventExportData));
+        return view('event_export', [
+            'events' => $eventExportData
+        ]);
     }
 
-    public function headings(): array
+    public function map($event): array
     {
         return [
-            'Tiêu đề',
-            'Bắt đầu',
-            'Kết thúc',
-            'Cả ngày',
-            'Địa điểm',
-            'Thẻ',
-            'Nội dung',
-            'Kết quả',
-            'Chi phí',
-            'Người phụ trách'
+            $event['fee'],
+            Date::dateTimeToExcel($event['start']),
+            Date::dateTimeToExcel($event['end'])
+        ];
+    }
+
+    public function columnFormats(): array
+    {
+        return [
+            'A' => NumberFormat::FORMAT_TEXT,
+            'B' => 'yyyy-mm-dd h:mm AM/PM',
+            'C' => 'yyyy-mm-dd h:mm AM/PM',
+            'D' => NumberFormat::FORMAT_TEXT,
+            'E' => NumberFormat::FORMAT_TEXT,
+            'F' => NumberFormat::FORMAT_TEXT,
+            'G' => NumberFormat::FORMAT_TEXT,
+            'H' => NumberFormat::FORMAT_TEXT,
+            'I' => '#,##0',
+            'J' => NumberFormat::FORMAT_TEXT
         ];
     }
 
@@ -90,11 +108,10 @@ class ReportEventExport implements FromCollection, WithHeadings, WithEvents, Sho
             AfterSheet::class => function (AfterSheet $event) {
                 $event->sheet
                     ->getDelegate()
-                    ->getStyle('A1:H1')
+                    ->getStyle('A1:J1')
                     ->getFill()
                     ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                    ->getStartColor()
-                    ->setARGB('A2C4C9');;
+                    ->getStartColor()->setARGB('A2C4C9');;
             },
         ];
     }

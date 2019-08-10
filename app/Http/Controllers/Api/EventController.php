@@ -178,7 +178,7 @@ class EventController extends Controller
             $file_name = "LLV-$start_fm-$end_fm.xlsx";
 
             // Store on a different disk with a defined writer type.
-            Excel::store(new ReportEventExport($request), "$uniqid.xlsx", 'event', Excel::XLSX);
+            Excel::store(new ReportEventExport($request), "$uniqid.xlsx", 'event');
             return response()->json(['uniqid' => $uniqid, 'file_name' => $file_name, 'success' => true, 'message' => __('Successfully processed.')], 200);
         } catch (\Throwable $e) {
             throw $e;

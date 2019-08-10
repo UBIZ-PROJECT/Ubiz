@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 use App\Model\Event;
 
@@ -42,7 +43,7 @@ class EventController extends Controller
         }
     }
 
-    public function exportEvent(Request $request, $uniqid, $file_name)
+    public function downloadEvent(Request $request, $uniqid, $file_name)
     {
         try {
 
