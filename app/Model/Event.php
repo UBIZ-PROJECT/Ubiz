@@ -48,14 +48,14 @@ class Event
                 )
                 ->where([
                     ['m_event.delete_flg', '=', '0'],
-                    ['m_event.start', '>', $start],
-                    ['m_event.end', '<', $end]
+                    [DB::raw('date(m_event.start)'), '>', $start],
+                    [DB::raw('date(m_event.end)'), '<', $end]
                 ]);
 
             if (sizeof($tag) > 0) {
                 $query_builder->whereIn('m_event.tag_id', $tag);
             }
-            $data_tmp = $query_builder->orderBy('m_event.id', 'asc')->get();
+            $data_tmp = $query_builder->orderBy('m_event.start', 'asc')->get();
 
             $data = [];
             $pic_list = [];
@@ -68,8 +68,8 @@ class Event
                         'end' => $event->end,
                         'title' => $event->title,
                         'location' => $event->location,
-                        'desc' => $event->desc,
-                        'result' => $event->result,
+                        'desc' => ($event->desc == null ? '' : $event->desc == null),
+                        'result' => ($event->result == null ? '' : $event->result),
                         'fee' => $event->fee,
                         'allDay' => ($event->all_day == '1' ? true : false),
                         'tag_id' => $event->tag_id,

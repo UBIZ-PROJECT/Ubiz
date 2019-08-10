@@ -31,10 +31,10 @@ class EventController extends Controller
             }
 
             $start_dt = new \DateTime($start);
-            $start_fm = $start_dt->format('Y-m-d H:i:s');
+            $start_fm = $start_dt->format('Y-m-d');
 
             $end_dt = new \DateTime($end);
-            $end_fm = $end_dt->format('Y-m-d H:i:s');
+            $end_fm = $end_dt->format('Y-m-d');
 
 
             $event = new Event();

@@ -1,5 +1,7 @@
 var calendar = null;
 var time_zone = 'local';
+var detail_scroll_1 = null;
+var detail_scroll_2 = null;
 
 function event_get_filter_tag() {
     var filter_tag = new Array();
@@ -175,7 +177,6 @@ function event_add(arg) {
     $("#event_pic_see_list").prop("checked", false);
     tinyMCE.get('event_desc').setContent('');
     tinyMCE.get('event_result').setContent('');
-
     $(".assigned-list").empty();
 
     $("#btn-delete").hide();
@@ -464,6 +465,13 @@ function event_cancel() {
     $('#event-modal').modal('hide');
 }
 
+function update_scrollbars(instance) {
+    if (typeof instance == "undefined")
+        return false;
+    instance.update();
+    instance.scroll({y: "0"}, 1000);
+}
+
 function downloadCallback(response) {
     window.open('events/download/' + response.data.uniqid + '/' + response.data.file_name);
 }
@@ -504,10 +512,27 @@ document.addEventListener('DOMContentLoaded', function () {
             download: {
                 text: 'Tải lịch làm việc',
                 click: function () {
+
                     var fetchInfo = {};
                     fetchInfo.viewType = calendar.view.type;
-                    fetchInfo.start = calendar.view.activeStart;
-                    fetchInfo.end = calendar.view.activeEnd;
+
+                    if (fetchInfo.viewType == 'dayGridMonth') {
+                        var year = calendar.getDate().getFullYear();
+                        var month = calendar.getDate().getMonth();
+
+                        fetchInfo.start = moment(year + '-' + month)
+                            .endOf('month')
+                            .format('YYYY-MM-DD');
+
+                        fetchInfo.end = moment(year + '-' + month)
+                            .add(2, 'months')
+                            .startOf('month')
+                            .format('YYYY-MM-DD');
+
+                    } else {
+                        fetchInfo.start = calendar.view.activeStart;
+                        fetchInfo.end = calendar.view.activeEnd;
+                    }
                     fetchInfo.tag = event_get_filter_tag();
                     fetchInfo.user = new Array();
                     ubizapis('v1', '/events/export', 'get', null, fetchInfo, function (response) {
@@ -588,6 +613,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     calendar.render();
 
+    detail_scroll_1 = fnc_set_scrollbars("detail-scroll-1");
+    detail_scroll_2 = fnc_set_scrollbars("detail-scroll-2");
+
     $.fn.datepicker.language['vi'] = {
         days: ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'],
         daysShort: ['CN', 'Th 2', 'Th 3', 'Th 4', 'Th 5', 'Th 6', 'Th 7'],
@@ -638,9 +666,9 @@ document.addEventListener('DOMContentLoaded', function () {
         $('#event-tag-head').removeClass('tag-show');
     });
 
-    $('#event-modal').on('hidden.bs.modal', function (e) {
-        $("#event-start-date").val("");
-        $("#event-end-date").val("");
+    $('#event-modal').on('shown.bs.modal', function (e) {
+        update_scrollbars(detail_scroll_1);
+        update_scrollbars(detail_scroll_2);
     })
 
     $('.event-pic').on('show.bs.dropdown', function () {
@@ -653,7 +681,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     tinymce.init({
         width: '100%',
-        min_height: 246,
+        min_height: 250,
         max_height: 500,
         menubar: false,
         toolbar_drawer: 'floating',
@@ -669,7 +697,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     tinymce.init({
         width: '100%',
-        min_height: 190,
+        min_height: 250,
         max_height: 500,
         menubar: false,
         toolbar_drawer: 'floating',
