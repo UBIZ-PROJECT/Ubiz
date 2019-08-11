@@ -170,14 +170,26 @@ class Report implements JWTSubject
         return $count;
     }
 
-    public function countOrders($orderFromDate, $orderToDate)
+    public function countOrders($orderFromDate, $orderToDate, $customerName, $saleName)
     {
         try {
             $count = DB::table('order')
-                ->where('delete_flg', '0')
-                ->where('sale_step', '4')
-                ->whereRaw('order.ord_date between ? AND ?', [$orderFromDate, $orderToDate])
-                ->count();
+                        ->leftjoin('users', 'order.sale_id', '=', 'users.id')
+                        ->leftjoin('customer', 'order.cus_id', '=', 'customer.cus_id')
+                        ->where('order.delete_flg', '0')
+                        ->where('order.sale_step', '4')
+                        ->whereRaw('order.ord_date between ? AND ?', [$orderFromDate, $orderToDate])
+                        ->when($customerName, function ($query) use ($customerName) {
+                            if ($customerName) {
+                                return $query->where('cus_name', $customerName);
+                            }
+                        })
+                        ->when($saleName, function ($query) use ($saleName) {
+                            if ($saleName) {
+                                return $query->where('users.name', $saleName);
+                            }
+                        })
+                        ->count();
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -185,14 +197,26 @@ class Report implements JWTSubject
         return $count;
     }
 
-    public function sumOrders($orderFromDate, $orderToDate)
+    public function sumOrders($orderFromDate, $orderToDate, $customerName, $saleName)
     {
         try {
             $sum = DB::table('order')
-                ->where('delete_flg', '0')
-                ->where('sale_step', '4')
-                ->whereRaw('order.ord_date between ? AND ?', [$orderFromDate, $orderToDate])
-                ->sum('ord_amount_tax');
+                    ->leftjoin('users', 'order.sale_id', '=', 'users.id')
+                    ->leftjoin('customer', 'order.cus_id', '=', 'customer.cus_id')
+                    ->where('order.delete_flg', '0')
+                    ->where('order.sale_step', '4')
+                    ->whereRaw('order.ord_date between ? AND ?', [$orderFromDate, $orderToDate])
+                    ->when($customerName, function ($query) use ($customerName) {
+                        if ($customerName) {
+                            return $query->where('cus_name', $customerName);
+                        }
+                    })
+                    ->when($saleName, function ($query) use ($saleName) {
+                        if ($saleName) {
+                            return $query->where('users.name', $saleName);
+                        }
+                    })
+                    ->sum('ord_amount_tax');
             $sum = number_format($sum);
         } catch (\Throwable $e) {
             throw $e;
@@ -201,33 +225,57 @@ class Report implements JWTSubject
         return $sum;
     }
 
-    public function sumQPs($qpFromDate, $qpToDate)
-    {
-        try {
-            $sum = DB::table('quoteprice')
-                ->where('delete_flg', '0')
-                ->whereRaw('quoteprice.qp_date between ? AND ?', [$qpFromDate, $qpToDate])
-                ->sum('qp_amount_tax');
-            $sum = number_format($sum);
-        } catch (\Throwable $e) {
-            throw $e;
-        }
-
-        return $sum;
-    }
-
-    public function countQPs($qpFromDate, $qpToDate)
+    public function countQPs($qpFromDate, $qpToDate, $customerName, $saleName)
     {
         try {
             $count = DB::table('quoteprice')
-                ->where('delete_flg', '0')
-                ->whereRaw('quoteprice.qp_date between ? AND ?', [$qpFromDate, $qpToDate])
-                ->count();
+                        ->leftjoin('users', 'quoteprice.sale_id', '=', 'users.id')
+                        ->leftjoin('customer', 'quoteprice.cus_id', '=', 'customer.cus_id')
+                        ->where('quoteprice.delete_flg', '0')
+                        ->whereRaw('quoteprice.qp_date between ? AND ?', [$qpFromDate, $qpToDate])
+                        ->when($customerName, function ($query) use ($customerName) {
+                            if ($customerName) {
+                                return $query->where('cus_name', $customerName);
+                            }
+                        })
+                        ->when($saleName, function ($query) use ($saleName) {
+                            if ($saleName) {
+                                return $query->where('users.name', $saleName);
+                            }
+                        })
+                        ->count();
         } catch (\Throwable $e) {
             throw $e;
         }
 
         return $count;
+    }
+
+    public function sumQPs($qpFromDate, $qpToDate, $customerName, $saleName)
+    {
+        try {
+            $sum = DB::table('quoteprice')
+                    ->leftjoin('users', 'quoteprice.sale_id', '=', 'users.id')
+                    ->leftjoin('customer', 'quoteprice.cus_id', '=', 'customer.cus_id')
+                    ->where('quoteprice.delete_flg', '0')
+                    ->whereRaw('quoteprice.qp_date between ? AND ?', [$qpFromDate, $qpToDate])
+                    ->when($customerName, function ($query) use ($customerName) {
+                        if ($customerName) {
+                            return $query->where('cus_name', $customerName);
+                        }
+                    })
+                    ->when($saleName, function ($query) use ($saleName) {
+                        if ($saleName) {
+                            return $query->where('users.name', $saleName);
+                        }
+                    })
+                    ->sum('qp_amount_tax');
+            $sum = number_format($sum);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+
+        return $sum;
     }
 
     public function getPagingInfoRep()
@@ -245,11 +293,11 @@ class Report implements JWTSubject
         ];
     }
 
-    public function getPagingInfoRev($orderFromDate, $orderToDate)
+    public function getPagingInfoRev($orderFromDate, $orderToDate, $customerName, $saleName)
     {
         try {
             $rows_per_page = env('ROWS_PER_PAGE', 10);
-            $rows_num = $this->countOrders($orderFromDate, $orderToDate);
+            $rows_num = $this->countOrders($orderFromDate, $orderToDate, $customerName, $saleName);
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -260,11 +308,11 @@ class Report implements JWTSubject
         ];
     }
 
-    public function getPagingInfoQP($qpFromDate, $qpToDate)
+    public function getPagingInfoQP($qpFromDate, $qpToDate, $customerName, $saleName)
     {
         try {
             $rows_per_page = env('ROWS_PER_PAGE', 10);
-            $rows_num = $this->countQPs($qpFromDate, $qpToDate);
+            $rows_num = $this->countQPs($qpFromDate, $qpToDate, $customerName, $saleName);
         } catch (\Throwable $e) {
             throw $e;
         }
