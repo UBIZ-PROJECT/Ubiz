@@ -20,11 +20,15 @@ class EventController extends Controller
             $start = $request->get('start', null);
             $end = $request->get('end', null);
             $tag = $request->get('tag', []);
+            $view = $request->get('view', 'dayGridMonth');
+            $user = $request->get('user', []);
 
             if (isArrayValidator($tag) == false
+                || isArrayValidator($user) == false
                 || requiredValidator($start) == false
                 || dateValidator($start) == false
                 || requiredValidator($end) == false
+                || requiredValidator($view) == false
                 || dateValidator($end) == false
             ) {
                 return response()->json(['success' => false, 'message' => __('Filter data is wrong.')], 200);
@@ -38,7 +42,7 @@ class EventController extends Controller
 
 
             $event = new Event();
-            $events = $event->getEvents($start_fm, $end_fm, $tag);
+            $events = $event->getEvents($start_fm, $end_fm, $tag, $view, $user);
             return response()->json(['events' => $events, 'success' => true, 'message' => __("Successfully processed.")], 200);
         } catch (\Throwable $e) {
             throw $e;
@@ -157,6 +161,7 @@ class EventController extends Controller
             $start = $request->get('start', null);
             $end = $request->get('end', null);
             $tag = $request->get('tag', []);
+            $view = $request->get('view', 'dayGridMonth');
             $user = $request->get('user', []);
 
             if (isArrayValidator($tag) == false
@@ -164,6 +169,7 @@ class EventController extends Controller
                 || requiredValidator($start) == false
                 || dateValidator($start) == false
                 || requiredValidator($end) == false
+                || requiredValidator($view) == false
                 || dateValidator($end) == false
             ) {
                 return response()->json(['success' => false, 'message' => __('Filter data is wrong.')], 200);

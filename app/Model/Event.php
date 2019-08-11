@@ -9,9 +9,25 @@ use Illuminate\Support\Facades\Auth;
 class Event
 {
 
-    public function getEvents($start, $end, $tag, $user = null)
+    public function getEvents($start, $end, $tag, $view = 'dayGridMonth', $user = [])
     {
         try {
+
+            $whereRaw = '`m_event`.`delete_flg` = ?
+                        AND (
+                            ( date(`m_event`.`start`) > ? AND date(`m_event`.`start`) < ? )
+                            OR ( date(`m_event`.`start`) < ? AND date(`m_event`.`end`) > ? )
+                            OR ( date(`m_event`.`end`) > ? AND date(`m_event`.`end`) < ? )
+                        )';
+
+            if ($view == 'timeGridDay') {
+                $whereRaw = '`m_event`.`delete_flg` = ?
+                            AND (
+                                ( date(`m_event`.`start`) >= ? AND date(`m_event`.`start`) <= ? )
+                                OR ( date(`m_event`.`start`) <= ? AND date(`m_event`.`end`) >= ? )
+                                OR ( date(`m_event`.`end`) > ? AND date(`m_event`.`end`) <= ? )
+                            )';
+            }
 
             $query_builder = DB::table('m_event')
                 ->leftJoin('m_event_pic', function ($join) {
@@ -46,11 +62,10 @@ class Event
                     'm_tag.title as tag_title',
                     'm_tag.color as tag_color'
                 )
-                ->where([
-                    ['m_event.delete_flg', '=', '0'],
-                    [DB::raw('date(m_event.start)'), '>', $start],
-                    [DB::raw('date(m_event.end)'), '<', $end]
-                ]);
+                ->whereRaw(
+                    $whereRaw,
+                    ['0', $start, $end, $start, $end, $start, $end]
+                );
 
             if (sizeof($tag) > 0) {
                 $query_builder->whereIn('m_event.tag_id', $tag);

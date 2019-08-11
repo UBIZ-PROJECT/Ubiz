@@ -514,9 +514,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 click: function () {
 
                     var fetchInfo = {};
-                    fetchInfo.viewType = calendar.view.type;
+                    fetchInfo.view = calendar.view.type;
 
-                    if (fetchInfo.viewType == 'dayGridMonth') {
+                    if (fetchInfo.view == 'dayGridMonth') {
                         var year = calendar.getDate().getFullYear();
                         var month = calendar.getDate().getMonth();
 
@@ -577,6 +577,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 events: function (fetchInfo, successCallback, failureCallback) {
 
                     fetchInfo.tag = event_get_filter_tag();
+                    if (calendar != null) {
+                        fetchInfo.view = calendar.view.type;
+                    }
+
                     ubizapis('v1', '/events', 'get', null, fetchInfo, function (response) {
                         if (response.data.success == true) {
                             successCallback(response.data.events);

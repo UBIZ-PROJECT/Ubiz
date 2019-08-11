@@ -28,7 +28,8 @@ class ReportEventExport implements FromView, WithEvents, ShouldAutoSize, WithCol
         $start = $this->request->get('start', null);
         $end = $this->request->get('end', null);
         $tag = $this->request->get('tag', []);
-        $user = $this->request->get('user', null);
+        $user = $this->request->get('user', []);
+        $view = $this->request->get('view', 'dayGridMonth');
 
         $start_dt = new \DateTime($start);
         $start_fm = $start_dt->format('Y-m-d');
@@ -37,7 +38,7 @@ class ReportEventExport implements FromView, WithEvents, ShouldAutoSize, WithCol
         $end_fm = $end_dt->format('Y-m-d');
 
         $eventModel = new Event();
-        $eventData = $eventModel->getEvents($start, $end, $tag, $user);
+        $eventData = $eventModel->getEvents($start, $end, $tag, $view, $user);
 
         $eventExportData = [];
         foreach ($eventData as $row) {
