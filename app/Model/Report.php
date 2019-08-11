@@ -96,7 +96,8 @@ class Report implements JWTSubject
                         ->leftjoin('users', 'order.sale_id', '=', 'users.id')
                         ->leftjoin('customer', 'order.cus_id', '=', 'customer.cus_id')
                         ->select('order.*', 'users.name as sale_name', 'customer.cus_name')
-                        ->selectRaw('FORMAT(order.ord_amount_tax, 0) as ord_amount_tax')
+                        ->selectRaw('FORMAT(order.ord_amount + order.ord_rel_fee, 0) as ord_amount')
+                        ->selectRaw('FORMAT(order.ord_rel_fee, 0) as ord_rel_fee')
                         ->selectRaw('DATE_FORMAT(order.ord_date, "%Y/%m/%d") as ord_date')
                         ->where('order.delete_flg', '0')
                         ->where('order.sale_step', '4')
@@ -216,7 +217,7 @@ class Report implements JWTSubject
                             return $query->where('users.name', $saleName);
                         }
                     })
-                    ->sum('ord_amount_tax');
+                    ->sum(DB::raw('order.ord_amount + order.ord_rel_fee'));
             $sum = number_format($sum);
         } catch (\Throwable $e) {
             throw $e;

@@ -60,7 +60,7 @@ class ReportController extends Controller
     {
         switch ($type) {
             case "revenue":
-                return Excel::download(new ReoprtRevenueExport($request), 'reportRevenue.xlsx');
+                return Excel::download(new ReportRevenueExport($request), 'reportRevenue.xlsx');
             case "quoteprice":
                 return Excel::download(new ReportQuotePriceExport($request), 'reportQuotePrice.xlsx');
             default:

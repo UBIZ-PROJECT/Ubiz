@@ -161,12 +161,13 @@
                     if (response.data.type == "revenue") {
                         cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].ord_no, 1));
                         cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].ord_date, 2));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].ord_amount_tax + ' ₫', 3));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].cus_name, 4));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_name, 5));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_phone, 6));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_email, 7));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].sale_name, 8));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].ord_rel_fee + ' ₫', 3));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].ord_amount + ' ₫', 4));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].cus_name, 5));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_name, 6));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_phone, 7));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_email, 8));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].sale_name, 9));
 
                         rows.push(jQuery.UbizOIWidget.w_make_row_html(report[i].ord_id, cols));
                     } else if (response.data.type == "quoteprice") {
