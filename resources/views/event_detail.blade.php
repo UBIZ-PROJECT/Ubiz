@@ -231,8 +231,8 @@
             <i id="btn-assign" class="fas fa-cog float-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
             <div class="dropdown-menu dropdown-menu-right z-pdt z-pdb margin-bottom-15 mgt-10"></div>
         </div>
+        <hr class="z-mgt">
         <div id="detail-scroll-2" style="height: 350px;">
-            <hr class="z-mgt">
             <ul class="list-group assigned-list list-group-flush margin-bottom-30" style="width: 300px"></ul>
             <span>{{ __('Person in charge permission:') }}
             <table class="margin-bottom-15">
