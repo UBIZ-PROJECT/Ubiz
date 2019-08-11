@@ -57,7 +57,7 @@ class ReportEventExport implements FromView, WithEvents, ShouldAutoSize, WithCol
             $start_fm = $start_dt->format('Y-m-d g:i A');
 
             $end_dt = new \DateTime($row['end']);
-            $end_fm = $start_dt->format('Y-m-d g:i A');
+            $end_fm = $end_dt->format('Y-m-d g:i A');
 
             $eventExportData[] = array(
                 'title' => $row['title'],
@@ -81,9 +81,16 @@ class ReportEventExport implements FromView, WithEvents, ShouldAutoSize, WithCol
     public function map($event): array
     {
         return [
-            $event['fee'],
+            $event['title'],
             Date::dateTimeToExcel($event['start']),
-            Date::dateTimeToExcel($event['end'])
+            Date::dateTimeToExcel($event['end']),
+            $event['allDay'],
+            $event['location'],
+            $event['tag_title'],
+            $event['desc'],
+            $event['result'],
+            $event['fee'],
+            $event['pic']
         ];
     }
 
@@ -96,8 +103,8 @@ class ReportEventExport implements FromView, WithEvents, ShouldAutoSize, WithCol
             'D' => NumberFormat::FORMAT_TEXT,
             'E' => NumberFormat::FORMAT_TEXT,
             'F' => NumberFormat::FORMAT_TEXT,
-            'G' => NumberFormat::FORMAT_TEXT,
-            'H' => NumberFormat::FORMAT_TEXT,
+            'G' => NumberFormat::FORMAT_GENERAL,
+            'H' => NumberFormat::FORMAT_GENERAL,
             'I' => '#,##0',
             'J' => NumberFormat::FORMAT_TEXT
         ];
