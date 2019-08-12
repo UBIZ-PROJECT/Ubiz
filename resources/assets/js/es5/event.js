@@ -400,7 +400,6 @@ function event_get_list_of_assigned_pic() {
     return assigned_list;
 }
 
-
 function main_get_list_of_checked_dropdown_pic() {
     var checked_list = {};
     $(".main-pic").find('div.dropdown-menu').find('a').each(function (idx, ele) {
@@ -442,7 +441,7 @@ function main_render_assigned_dropdown_list(assigned_list) {
         html += '<small>' + user.dep_name + '</small>';
         html += '</div>';
         html += '<div style="height: 30px; line-height: 30px">';
-        html += '<i class="fas fa-times pdr-5" onclick="event_delete_selected_pic(this)"></i>';
+        html += '<i class="fas fa-times pdr-5" onclick="main_delete_selected_pic(this)"></i>';
         html += '</div>';
         html += '</li>';
     });
@@ -452,6 +451,7 @@ function main_render_assigned_dropdown_list(assigned_list) {
 
 function main_delete_selected_pic(self) {
     $(self).closest('li.list-group-item').remove();
+    calendar.refetchEvents();
 }
 
 function event_all_day_change(self) {
@@ -665,7 +665,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         fetchInfo.end = calendar.view.activeEnd;
                     }
                     fetchInfo.tag = event_get_filter_tag();
-                    fetchInfo.user = new Array();
+                    fetchInfo.user = event_get_list_of_assigned_pic();
                     ubizapis('v1', '/events/export', 'get', null, fetchInfo, function (response) {
                         if (response.data.success == true) {
                             downloadCallback(response);
@@ -822,5 +822,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     $('.main-pic').on('hide.bs.dropdown', function () {
         main_set_assigned_list();
+        calendar.refetchEvents();
     })
 });
