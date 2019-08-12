@@ -89,8 +89,8 @@ function event_edit(info) {
         $(".assigned-list").hide();
     }
 
-    tinyMCE.get('event_desc').setContent(info.event.extendedProps.desc);
-    tinyMCE.get('event_result').setContent(info.event.extendedProps.result);
+    $("#event_desc").val(info.event.extendedProps.desc);
+    $("#event_result").val(info.event.extendedProps.result);
 
     var assigned_list = new Array();
     $.map(info.event.extendedProps.pic, function (user, idx) {
@@ -175,8 +175,8 @@ function event_add(arg) {
     $("#event_pic_edit").prop("checked", false);
     $("#event_pic_assign").prop("checked", false);
     $("#event_pic_see_list").prop("checked", false);
-    tinyMCE.get('event_desc').setContent('');
-    tinyMCE.get('event_result').setContent('');
+    $("#event_desc").val('');
+    $("#event_result").val('');
     $(".assigned-list").empty();
 
     $("#btn-delete").hide();
@@ -350,9 +350,7 @@ function event_colect_data() {
     data.event_tag = $("#event-tag").attr('tag_id');
     data.event_location = $("#event-location").val();
 
-    var desc_selector = $('textarea[name=txt_desc]').attr('id');
-    data.event_desc = tinyMCE.get(desc_selector).getContent();
-    data.event_desc_origin = tinyMCE.get(desc_selector).getContent({'format': 'text'});
+    data.event_desc = $("#event_desc").val();
 
     data.event_fee = numeral($("#event_fee").val()).value();
 
@@ -377,10 +375,7 @@ function event_colect_data() {
         data.event_pic_list.push(pic);
     });
 
-    var result_selector = $('textarea[name=txt_result]').attr('id');
-    data.event_result = tinyMCE.get(result_selector).getContent();
-    data.event_result_origin = tinyMCE.get(result_selector).getContent({'format': 'text'});
-
+    data.event_result = $("#event_result").val();
     return data;
 }
 
@@ -682,36 +677,4 @@ document.addEventListener('DOMContentLoaded', function () {
     $('.event-pic').on('hide.bs.dropdown', function () {
         event_set_assigned_list();
     })
-
-    tinymce.init({
-        width: '100%',
-        min_height: 250,
-        max_height: 500,
-        menubar: false,
-        toolbar_drawer: 'floating',
-        selector: '#event_desc',
-        plugins: [
-            'advlist autolink lists link image charmap print preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code wordcount autoresize'
-        ],
-        toolbar: 'undo redo | bold italic forecolor backcolor | formatselect | fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat',
-        content_css: [
-            '/fonts/roboto/v18/roboto.css'
-        ]
-    });
-
-    tinymce.init({
-        width: '100%',
-        min_height: 250,
-        max_height: 500,
-        menubar: false,
-        toolbar_drawer: 'floating',
-        selector: '#event_result',
-        plugins: [
-            'advlist autolink lists link image charmap print preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code wordcount autoresize'
-        ],
-        toolbar: 'undo redo | bold italic forecolor backcolor | formatselect | fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat',
-        content_css: [
-            '/fonts/roboto/v18/roboto.css'
-        ]
-    });
 });

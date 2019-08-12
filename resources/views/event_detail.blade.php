@@ -138,8 +138,8 @@
         </table>
         <span class="text-primary">{{ __('Detail') }}</span>
         <hr class="z-mgt">
-        <div id="detail-scroll-1" style="height: 350px;">
-            <table>
+        <div id="detail-scroll-1" style="height: 300px;">
+            <table style="width: 95%">
                 <tbody>
                 <tr>
                     <td style="height: 45px">
@@ -206,7 +206,8 @@
                         <i class="fas fa-align-left text-primary mgr-10"></i>
                     </td>
                     <td>
-                        <textarea id="event_desc" class="form-control" name="txt_desc"></textarea>
+                        <textarea style="width: 100%; height: 180px; resize: vertical; overflow-x: hidden; overflow-y: auto"
+                                  id="event_desc" class="form-control" name="txt_desc"></textarea>
                     </td>
                 </tr>
                 <tr><td colspan="2" style="height: 10px"></td></tr>
@@ -215,7 +216,8 @@
                         <i class="fas fa-flag-checkered text-primary mgr-10"></i>
                     </td>
                     <td>
-                        <textarea id="event_result" class="form-control" name="txt_result"></textarea>
+                        <textarea style="width: 100%; height: 180px; resize: vertical; overflow-x: hidden; overflow-y: auto"
+                                  id="event_result" class="form-control" name="txt_result"></textarea>
                     </td>
                 </tr>
                 </tbody>
@@ -232,7 +234,7 @@
             <div class="dropdown-menu dropdown-menu-right z-pdt z-pdb margin-bottom-15 mgt-10"></div>
         </div>
         <hr class="z-mgt">
-        <div id="detail-scroll-2" style="height: 350px;">
+        <div id="detail-scroll-2" style="height: 300px;">
             <ul class="list-group assigned-list list-group-flush margin-bottom-30" style="width: 300px"></ul>
             <span>{{ __('Person in charge permission:') }}
             <table class="margin-bottom-15">
