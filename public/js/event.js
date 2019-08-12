@@ -137,6 +137,16 @@ function event_pic_select(self, event) {
     }
 }
 
+function main_pic_select(self, event) {
+    event.stopPropagation();
+    var fa_check = $(self).find('div:first');
+    if (fa_check.hasClass('assigned')) {
+        fa_check.removeClass('assigned');
+    } else {
+        fa_check.addClass('assigned');
+    }
+}
+
 function event_add(arg) {
 
     if (arg == null && calendar != null) {
@@ -315,6 +325,132 @@ function event_render_assigned_dropdown_list(assigned_list) {
 }
 
 function event_delete_selected_pic(self) {
+    $(self).closest('li.list-group-item').remove();
+}
+
+function main_load_pic() {
+    if (pic_list.length == 0) {
+        ubizapis('v1', 'events/pic', 'get', null, null, function (response) {
+            if (response.data.success == true) {
+                pic_list = response.data.users;
+                main_load_pic_callback(response.data.users);
+            } else {
+                swal.fire({
+                    type: 'error',
+                    title: response.data.message
+                });
+            }
+        });
+    } else {
+        main_load_pic_callback(pic_list);
+    }
+}
+
+function main_load_pic_callback(users) {
+    var assigned_list = main_get_list_of_assigned_pic();
+    main_render_pic_dropdown_list(users, assigned_list);
+}
+
+function main_render_pic_dropdown_list(users, checked_list) {
+    var html = "";
+    $.map(users, function (user, idx) {
+
+        var assigned_class = 'assigned';
+        if (typeof checked_list[user.id] === "undefined") {
+            assigned_class = '';
+        }
+
+        html += '<a pic="' + user.id + '" class="dropdown-item media pdl-5" href="#" onclick="main_pic_select(this, event)">';
+        html += '<div class="' + assigned_class + '" style="height: 30px; width: 20px; line-height: 30px">';
+        html += '<i class="fas fa-check pdr-5"></i>';
+        html += '</div>';
+        html += '<div style="width: 30px; height: 30px" class="mr-3">';
+        html += '<img src="' + user.avatar + '" class="img-fluid img-thumbnail" alt="">';
+        html += '</div>';
+        html += '<div class="media-body" style="height: 30px; line-height: 5px">';
+        html += '<h6 class="mt-0 mb-1">' + user.name + '</h6>';
+        html += '<small>' + user.dep_name + '</small>';
+        html += '</div>';
+        html += '</a>';
+        if (idx < (users.length - 1)) {
+            html += '<div class="dropdown-divider z-mgt z-mgb"></div>';
+        }
+    });
+    $(".main-pic").find('.dropdown-menu').empty();
+    $(".main-pic").find('.dropdown-menu').html(html);
+}
+
+function main_get_list_of_assigned_pic() {
+
+    var assigned_list = {};
+    $(".main-pic-sel").find('li.list-group-item').each(function (idx, ele) {
+        var pic = $(ele).attr('pic');
+        assigned_list[pic] = pic;
+    });
+    return assigned_list;
+}
+
+function event_get_list_of_assigned_pic() {
+
+    var assigned_list = new Array();
+    $(".main-pic-sel").find('li.list-group-item').each(function (idx, ele) {
+        var pic = $(ele).attr('pic');
+        assigned_list.push(pic);
+    });
+    return assigned_list;
+}
+
+
+function main_get_list_of_checked_dropdown_pic() {
+    var checked_list = {};
+    $(".main-pic").find('div.dropdown-menu').find('a').each(function (idx, ele) {
+        if ($(ele).find('div:first').hasClass('assigned')) {
+            var pic = $(ele).attr('pic');
+            checked_list[pic] = pic;
+        }
+    });
+    return checked_list;
+}
+
+function main_get_list_of_selected_pic() {
+
+    var selected_list = new Array();
+    var checked_list = main_get_list_of_checked_dropdown_pic();
+    $.map(pic_list, function (user, idx) {
+
+        if (typeof checked_list[user.id] !== "undefined") {
+            selected_list.push(user);
+        }
+    });
+    return selected_list;
+}
+
+function main_set_assigned_list() {
+    var assigned_list = main_get_list_of_selected_pic();
+    main_render_assigned_dropdown_list(assigned_list);
+}
+
+function main_render_assigned_dropdown_list(assigned_list) {
+    var html = "";
+    $.map(assigned_list, function (user, idx) {
+        html += '<li pic="' + user.id + '" class="border-top-0  border-bottom-0 list-group-item z-pdl z-pdr z-pdb" style="display: flex; align-items: flex-start;">';
+        html += '<div style="width: 30px; height: 30px" class="mr-3">';
+        html += '<img src="' + user.avatar + '" class="img-fluid img-thumbnail" alt="">';
+        html += '</div>';
+        html += '<div class="media-body" style="height: 30px; line-height: 5px">';
+        html += '<h6 class="mt-0 mb-1">' + user.name + '</h6>';
+        html += '<small>' + user.dep_name + '</small>';
+        html += '</div>';
+        html += '<div style="height: 30px; line-height: 30px">';
+        html += '<i class="fas fa-times pdr-5" onclick="event_delete_selected_pic(this)"></i>';
+        html += '</div>';
+        html += '</li>';
+    });
+    $(".main-pic-sel").empty();
+    $(".main-pic-sel").html(html);
+}
+
+function main_delete_selected_pic(self) {
     $(self).closest('li.list-group-item').remove();
 }
 
@@ -572,6 +708,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 events: function (fetchInfo, successCallback, failureCallback) {
 
                     fetchInfo.tag = event_get_filter_tag();
+                    fetchInfo.user = event_get_list_of_assigned_pic();
                     if (calendar != null) {
                         fetchInfo.view = calendar.view.type;
                     }
@@ -614,6 +751,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     detail_scroll_1 = fnc_set_scrollbars("detail-scroll-1");
     detail_scroll_2 = fnc_set_scrollbars("detail-scroll-2");
+    fnc_set_scrollbars("nicescroll-sidebar");
 
     $.fn.datepicker.language['vi'] = {
         days: ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'],
@@ -676,5 +814,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     $('.event-pic').on('hide.bs.dropdown', function () {
         event_set_assigned_list();
+    })
+
+    $('.main-pic').on('show.bs.dropdown', function () {
+        main_load_pic();
+    })
+
+    $('.main-pic').on('hide.bs.dropdown', function () {
+        main_set_assigned_list();
     })
 });

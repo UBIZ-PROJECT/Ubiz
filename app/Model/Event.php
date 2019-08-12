@@ -67,9 +67,16 @@ class Event
                     ['0', $start, $end, $start, $end, $start, $end]
                 );
 
+            //filter by tag
             if (sizeof($tag) > 0) {
                 $query_builder->whereIn('m_event.tag_id', $tag);
             }
+
+            //filter by user
+            if (sizeof($user) > 0) {
+                $query_builder->whereIn('m_event_pic.user_id', $user);
+            }
+
             $data_tmp = $query_builder->orderBy('m_event.start', 'asc')->get();
 
             $data = [];

@@ -80,6 +80,14 @@
     display: inline-flex;
 }
 
+.main-pic .dropdown-menu .dropdown-item i {
+    display: none;
+}
+
+.main-pic .dropdown-menu .dropdown-item .assigned i {
+    display: inline-flex;
+}
+
 .txt-hidden{
     display: none !important;
 }
