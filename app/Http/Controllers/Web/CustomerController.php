@@ -9,7 +9,7 @@ use App\Model\CustomerType;
 
 class CustomerController extends Controller
 {
-    public function customer(Request $request)
+    public function index(Request $request)
     {
 		try {
 			$customer = new Customer();

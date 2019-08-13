@@ -157,10 +157,10 @@
                                     </div>
                                 </div>
                                 <div class="dcB col-2" role="presentation">
-                                    <div class="dWB" role="button" sort-name="cus_name" order-by=""
+                                    <div class="dWB" role="button" sort-name="cus_type" order-by=""
                                          onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">Tên Khách Hàng</div>
+                                            <div class="tDv">Loại Khách Hàng</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -182,10 +182,10 @@
                                     </div>
                                 </div>
                                 <div class="dcB col-3" role="presentation">
-                                    <div class="dWB" role="button" sort-name="cus_type" order-by=""
+                                    <div class="dWB" role="button" sort-name="cus_name" order-by=""
                                          onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">Loại Khách Hàng</div>
+                                            <div class="tDv">Tên Công Ty</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -330,13 +330,6 @@
                                         </div>
                                         <div class="tcB col-2">
                                             <div class="cbo">
-                                                <div class="nCj" title="{{$customer->cus_name}}">
-                                                    <span>{{$customer->cus_name}}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="tcB col-3">
-                                            <div class="cbo">
                                                 <div class="nCj" title="{{$customer->cus_type}}">
                                                     @if ($customer->cus_type == 1)
                                                         <span>Khách hàng mới</span>
@@ -345,6 +338,14 @@
                                                     @else
                                                         <span>Khách hàng thân thiết</span>
                                                     @endif
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="tcB col-3">
+                                            <div class="cbo">
+                                                <div class="nCj" title="{{$customer->cus_name}}">
+                                                    <span>{{$customer->cus_name}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -451,100 +452,113 @@
                     <div class="aqI nicescroll" id="nicescroll-iput">
                         <form id="f-input">
                             <div class="row z-mgl z-mgr">
-                                <div class="col-sm-2 col-md-2 col-xl-2 z-pdl">
-                                    <div class="image-upload mb-1" style="max-width: 150px; max-height: 150px">
-                                        <img id="avt_img" src="{{ asset("images/avatar.png") }}" img-name=""
-                                             style="height: 150px; width:150px" alt="" class="img-thumbnail img-show ">
-                                        <input id="avatar" type="file" accept="image/*" name="cus_avatar"
-                                               style="display:none">
-                                        <input id="avatar_flg" type="text" name="cus_avatar_flg" value="0"
-                                               style="display:none">
-                                        <button type="button" style="top: -150px;" class="close" aria-label="Close"
-                                                onclick="removeImage(this, jQuery.UbizOIWidget.w_callback_remove_image)">
-                                            <span aria-hidden="true">×</span>
-                                        </button>
-                                        <span id="change_avt" class="label-change"
-                                              style="width: 150px;">{{ __("Change") }}</span>
+                                <div class="col-sm-8 col-md-8 col-xl-8 z-pdl">
+                                    <div class="row z-mgl z-mgr z-pdl z-pdr">
+                                        <div class="col-sm-3 col-md-3 col-xl-3 z-pdl">
+                                            <div class="image-upload mb-1" style="max-width: 150px; max-height: 150px">
+                                                <img id="avt_img" src="{{ asset("images/avatar.png") }}" img-name=""
+                                                     style="height: 150px; width:150px" alt="" class="img-thumbnail img-show ">
+                                                <input id="avatar" type="file" accept="image/*" name="cus_avatar"
+                                                       style="display:none">
+                                                <input id="avatar_flg" type="text" name="cus_avatar_flg" value="0"
+                                                       style="display:none">
+                                                <button type="button" style="top: -150px;" class="close" aria-label="Close"
+                                                        onclick="removeImage(this, jQuery.UbizOIWidget.w_callback_remove_image)">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                                <span id="change_avt" class="label-change"
+                                                      style="width: 150px;">{{ __("Change") }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-9 col-md-9 col-xl-9">
+                                            <input type="hidden" name="cus_id" value="0"/>
+                                            @include('components.input',['type'=>'required', 'control_id'=>'cus_code', 'label'=>'Mã', 'length'=>5])
+                                            @include('components.input',['type'=>'required', 'control_id'=>'cus_name', 'label'=>'Tên công ty', 'length'=>100])
+                                            @include('components.input',['control_id'=>'cus_fax', 'label'=>'Fax', 'length'=>20])
+                                            @include('components.input',['control_id'=>'cus_mail', 'label'=>'Email', 'length'=>100])
+                                            @include('components.input',['control_id'=>'cus_phone', 'label'=>'Số điện thoại', 'width'=>450])
+                                            @include('components.input',['control_id'=>'cus_field', 'label'=>'Lĩnh vực', 'width'=>450])
+                                            @include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 1', 'width'=>450])
+                                            @include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 2', 'width'=>450])
+                                            @include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 3', 'width'=>450])
+                                            <div class="textfield  root_textfield rootIsUnderlined cus_type_container"
+                                                 style="width: 300px">
+                                                <div class="wrapper">
+                                                    <label for="user_id" class="ms-Label root-56 lbl-primary" style="">Loại
+                                                        khách hàng:&nbsp;&nbsp;&nbsp;</label>
+                                                    <div class="fieldGroup">
+                                                        <select class="dropdown_field" name="cus_type">
+                                                            @foreach($customerTypeList as $item)
+                                                                <option value="{{ $item->id }}">{{ $item->title }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <span class="error_message hidden-content">
+                                           <div class="message-container">
+                                              <p class="label_errorMessage css-57 errorMessage">
+                                                  <span class="error-message-text"></span>
+                                              </p>
+                                           </div>
+                                        </span>
+                                            </div>
+                                            <div class="textfield  root_textfield rootIsUnderlined user_id_container"
+                                                 style="width: 300px">
+                                                <div class="wrapper">
+                                                    <label for="user_id" class="ms-Label root-56 lbl-primary" style="">Nhân viên
+                                                        phụ trách:&nbsp;&nbsp;&nbsp;</label>
+                                                    <div class="fieldGroup">
+                                                        <select class="dropdown_field" name="user_id">
+                                                            @foreach($users as $user)
+                                                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <span class="error_message hidden-content">
+                                           <div class="message-container">
+                                              <p class="label_errorMessage css-57 errorMessage">
+                                                  <span class="error-message-text"></span>
+                                              </p>
+                                           </div>
+                                        </span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-5 col-md-5 col-xl-5">
-                                    <input type="hidden" name="cus_id" value="0"/>
-                                    @include('components.input',['type'=>'required', 'control_id'=>'cus_code', 'label'=>'Mã', 'length'=>5])
-                                    @include('components.input',['type'=>'required', 'control_id'=>'cus_name', 'label'=>'Tên khách hàng', 'length'=>100])
-                                    <div class="textfield  root_textfield rootIsUnderlined cus_type_container"
-                                         style="width: 300px">
-                                        <div class="wrapper">
-                                            <label for="user_id" class="ms-Label root-56 lbl-primary" style="">Loại
-                                                khách hàng:&nbsp;&nbsp;&nbsp;</label>
-                                            <div class="fieldGroup">
-                                                <select class="dropdown_field" name="cus_type">
-                                                    @foreach($customerTypeList as $item)
-                                                        <option value="{{ $item->id }}">{{ $item->title }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <span class="error_message hidden-content">
-                                           <div class="message-container">
-                                              <p class="label_errorMessage css-57 errorMessage">
-                                                  <span class="error-message-text"></span>
-                                              </p>
-                                           </div>
-                                        </span>
+                                <div class="col-sm-4 col-md-4 col-xl-4 z-pdr cus-part-2">
+                                    <div class="row z-mgl z-mgr">
+                                        <span class="text-primary">Người liên hệ</span>
                                     </div>
-                                    @include('components.input',['control_id'=>'cus_phone', 'label'=>'Số điện thoại', 'length'=>15])
-                                    <div class="textfield  root_textfield rootIsUnderlined cus_type_container"
-                                         style="width: 130px">
-                                        <div class="wrapper">
-                                            <label for="user_id" class="ms-Label root-56 lbl-primary" style="">Giới
-                                                tính:&nbsp;&nbsp;&nbsp;</label>
-                                            <div class="fieldGroup">
-                                                <select class="dropdown_field" name="cus_sex">
-                                                    <option value="0">Nữ</option>
-                                                    <option value="1">Nam</option>
-                                                </select>
+                                    <hr class="z-mgt">
+                                    <div class="row z-mgl z-mgr">
+                                        <div class="PnGFPb">
+                                            <div class="qpLcp dagkwb">
+                                                <div class="cnTo8e FYQzvb K2GaRc" style="border-color: rgb(240, 147, 0); background-color: rgb(240, 147, 0);">
+                                                    <div class="Hbkijd">
+                                                        <div class="kMp0We YaPvld nO3x3e">
+                                                            <div class="nGJqzd OLw7vb cSfOjc">
+                                                                <div class="T6JWhd" style="width: 22px; height: 22px;">
+                                                                    <div class="EzBbpc" aria-hidden="true">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" enable-background="new 0 0 192 192" width="22px" height="22px"><path fill="#E0E0E0" d="M96,0C43.01,0,0,43.01,0,96s43.01,96,96,96s96-43.01,96-96S148.99,0,96,0z"></path><path fill="#BDBDBD" d="M96,85.09c13.28,0,24-10.72,24-24c0-13.28-10.72-24-24-24s-24,10.72-24,24C72,74.37,82.72,85.09,96,85.09z"></path><path fill="#BDBDBD" d="M96,99.27c-29.33,0-52.36,14.18-52.36,27.27c11.09,17.06,30.51,28.36,52.36,28.36s41.27-11.3,52.36-28.36C148.36,113.45,125.33,99.27,96,99.27z"></path><rect fill="none" width="192" height="192"></rect></svg>
+                                                                    </div>
+                                                                    <div class="jPtXgd" style="background-image: url(&quot;https://lh3.googleusercontent.com/a-/AAuE7mCUEKpolEMyQLCKmEO92SjU5IWCBhGJgightowZ=s22-c&quot;);"></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="NI2kfb YnkeVe pXxjhe">
+                                                                <span class="HfUiNb"></span>
+                                                                <span class="Lt0sAf ynRLnc">Nghia Hiep Quach &lt;hiep@brights.vn&gt;</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="RpN9Ve" role="button" tabindex="0"></div>
+                                                </div>
                                             </div>
+                                            <div class="Gk2rXd"></div>
                                         </div>
-                                        <span class="error_message hidden-content">
-                                           <div class="message-container">
-                                              <p class="label_errorMessage css-57 errorMessage">
-                                                  <span class="error-message-text"></span>
-                                              </p>
-                                           </div>
-                                        </span>
                                     </div>
-                                </div>
-                                <div class="col-sm-5 col-md-5 col-xl-5 z-pdr cus-part-2">
-                                    @include('components.input',['control_id'=>'cus_fax', 'label'=>'Fax', 'length'=>20])
-                                    @include('components.input',['control_id'=>'cus_mail', 'label'=>'Email', 'length'=>100])
-                                    <div class="textfield  root_textfield rootIsUnderlined user_id_container"
-                                         style="width: 300px">
-                                        <div class="wrapper">
-                                            <label for="user_id" class="ms-Label root-56 lbl-primary" style="">Nhân viên
-                                                phụ trách:&nbsp;&nbsp;&nbsp;</label>
-                                            <div class="fieldGroup">
-                                                <select class="dropdown_field" name="user_id">
-                                                    @foreach($users as $user)
-                                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <span class="error_message hidden-content">
-                                           <div class="message-container">
-                                              <p class="label_errorMessage css-57 errorMessage">
-                                                  <span class="error-message-text"></span>
-                                              </p>
-                                           </div>
-                                        </span>
-                                    </div>
-                                    @include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 1', 'length'=>250])
-                                    @include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 2', 'length'=>250])
-                                    @include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 3', 'length'=>250])
                                 </div>
                             </div>
-
-                            <div class="btn-b price-report" onclick="">Tạo báo giá</div>
                         </form>
                     </div>
                 </div>

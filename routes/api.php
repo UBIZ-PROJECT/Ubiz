@@ -37,14 +37,14 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::delete('suppliers/{ids}/delete', ['as' => 'suppliers-delete', 'uses' => 'Api\SupplierController@deleteSuppliersById']);
         Route::get('suppliers/{id}', ['as' => 'suppliers-detail', 'uses' => 'Api\SupplierController@getSupplierById']);
 
-        Route::get('customer', ['as' => 'api-customer', 'uses' => 'Api\CustomerController@getCustomers']);
-        Route::get('customer/{id}', ['as' => 'delete-customer', 'uses' => 'Api\CustomerController@deleteCustomer']);
-        Route::get('customers/cuscode', ['as' => 'generate-cus-code', 'uses' => 'Api\CustomerController@generateCusCode']);
-        Route::get('customers', ['as' => 'api-customer', 'uses' => 'Api\CustomerController@getCustomers']);
-        Route::get('customer-edit', ['as' => 'get-customer', 'uses' => 'Api\CustomerController@getCustomer']);
-        Route::post('customer-create', ['as' => 'insert-customer', 'uses' => 'Api\CustomerController@insertCustomer']);
-        Route::post('customer-update', ['as' => 'update-customer', 'uses' => 'Api\CustomerController@updateCustomer']);
-        Route::delete('customers/{ids}/delete', ['as' => 'delete-customer', 'uses' => 'Api\CustomerController@deleteCustomer']);
+        Route::get('customers', ['as' => 'get-customers', 'uses' => 'Api\CustomerController@getCustomers']);
+        Route::get('customers/{cus_id}', ['as' => 'get-customer', 'uses' => 'Api\CustomerController@getCustomer']);
+        Route::put('customers', ['as' => 'insert-customer', 'uses' => 'Api\CustomerController@insertCustomer']);
+        Route::post('customers/{cus_id}/update', ['as' => 'update-currency', 'uses' => 'Api\CustomerController@updateCustomer']);
+        Route::delete('customers/{cus_ids}/delete', ['as' => 'delete-currency', 'uses' => 'Api\CustomerController@deleteCustomer']);
+
+        Route::get('customers/{cus_id}/contact', ['as' => 'get-contacts', 'uses' => 'Api\CustomerController@getContacts']);
+        Route::get('customers/{cus_id}/contact/{con_id}', ['as' => 'get-contact', 'uses' => 'Api\CustomerController@getContact']);
 
         Route::get('currency', ['as' => 'get-currency', 'uses' => 'Api\CurrencyController@getCurrency']);
         Route::get('currencies', ['as' => 'get-all-currency', 'uses' => 'Api\CurrencyController@getAllCurrency']);

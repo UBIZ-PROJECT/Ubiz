@@ -3,62 +3,20 @@
 namespace App\Model;
 
 use App\User;
-use Illuminate\Notifications\Notifiable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class Customer implements JWTSubject
+class Customer
 {
-    use Notifiable;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'cus_name', 'cus_type', 'cus_phone', 'cus_fax', 'cus_mail',
-    ];
-
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [
-
-    ];
-
-    /**
-     * Get the identifier that will be stored in the subject claim of the JWT.
-     *
-     * @return mixed
-     */
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-
-    /**
-     * Return a key value array, containing any custom claims to be added to the JWT.
-     *
-     * @return array
-     */
-    public function getJWTCustomClaims()
-    {
-        return [];
-    }
-
     public function getAllCustomers()
     {
         try {
             $user_id = Auth::user()->id;
-            $customers = DB::table('customer')
+            $customers = DB::table('customer_copy')
                 ->where([
                     ['delete_flg', '=', '0'],
-                    ['user_id', '=', $user_id],
+                    ['cus_pic', '=', $user_id],
                 ])
                 ->get();
             return $customers;
@@ -70,7 +28,9 @@ class Customer implements JWTSubject
     public function getCustomerAddress($cus_id)
     {
         try {
-            $customerAddress = DB::table('customer_address')->where('cus_id', $cus_id)->where('delete_flg', '0')->get();
+            $customerAddress = DB::table('customer_address_copy')
+                ->where('cus_id', $cus_id)
+                ->where('delete_flg', '0')->get();
             return $customerAddress;
         } catch (\Throwable $e) {
             throw $e;
@@ -82,10 +42,10 @@ class Customer implements JWTSubject
         DB::beginTransaction();
         try {
             $user_id = Auth::user()->id;
-            DB::table('customer')
+            DB::table('customer_copy')
                 ->where([
                     ['delete_flg', '=', '0'],
-                    ['user_id', '=', $user_id],
+                    ['cus_pic', '=', $user_id],
                 ])
                 ->whereIn('cus_id', explode(',', $ids))
                 ->update(['delete_flg' => '1']);
@@ -103,17 +63,17 @@ class Customer implements JWTSubject
             list($field_name, $order_by) = $this->makeOrderBy($sort);
 
             $rows_per_page = env('ROWS_PER_PAGE', 10);
-            $firstAddress = DB::table('customer_address')
+            $firstAddress = DB::table('customer_address_copy')
                 ->select('cus_id as cad_cus_id', DB::raw('min(cad_id) as cad_id'))
                 ->whereRaw("delete_flg = '0'")
                 ->groupBy('cus_id')->toSql();
 
-            $customers = DB::table('customer')
+            $customers = DB::table('customer_copy')
                 ->leftJoin(DB::raw('(' . $firstAddress . ') customer_adr'), function ($join) {
-                    $join->on('customer_adr.cad_cus_id', '=', 'customer.cus_id');
+                    $join->on('customer_adr.cad_cus_id', '=', 'customer_copy.cus_id');
                 })
-                ->leftJoin('customer_address', 'customer_adr.cad_id', '=', 'customer_address.cad_id')
-                ->select('customer.*', 'customer_address.cad_address as address', 'customer_address.cad_id')
+                ->leftJoin('customer_address_copy', 'customer_adr.cad_id', '=', 'customer_address_copy.cad_id')
+                ->select('customer_copy.*', 'customer_address_copy.cad_address as address', 'customer_address_copy.cad_id')
                 ->whereRaw($where_raw, $params)
                 ->orderBy($field_name, $order_by)
                 ->offset($page * $rows_per_page)
@@ -129,10 +89,10 @@ class Customer implements JWTSubject
     {
         try {
             $user_id = Auth::user()->id;
-            $totalCustomers = DB::table('customer')
+            $totalCustomers = DB::table('customer_copy')
                 ->where([
                     ['delete_flg', '=', '0'],
-                    ['user_id', '=', $user_id],
+                    ['cus_pic', '=', $user_id],
                 ])
                 ->count();
             return $totalCustomers;
@@ -145,11 +105,11 @@ class Customer implements JWTSubject
     {
         try {
             $user_id = Auth::user()->id;
-            $customers = DB::table('customer')
+            $customers = DB::table('customer_copy')
                 ->where([
                     ['delete_flg', '=', '0'],
                     ['cus_id', '=', $cus_id],
-                    ['user_id', '=', $user_id]
+                    ['cus_pic', '=', $user_id]
                 ])
                 ->get();
             $customers[0]->avt_src = readImage($customers[0]->cus_avatar, 'cus');
@@ -163,14 +123,14 @@ class Customer implements JWTSubject
     {
         try {
             $user_id = Auth::user()->id;
-            $data = DB::table('customer')
-                ->leftJoin('m_customer_type', 'customer.cus_type', '=', 'm_customer_type.id')
+            $data = DB::table('customer_copy')
+                ->leftJoin('m_customer_type', 'customer_copy.cus_type', '=', 'm_customer_type.id')
                 ->where([
-                    ['customer.delete_flg', '=', '0'],
-                    ['customer.cus_id', '=', $cus_id],
-                    ['customer.user_id', '=', $user_id]
+                    ['customer_copy.delete_flg', '=', '0'],
+                    ['customer_copy.cus_id', '=', $cus_id],
+                    ['customer_copy.cus_pic', '=', $user_id]
                 ])
-                ->select('customer.*', 'm_customer_type.title as cus_type')
+                ->select('customer_copy.*', 'm_customer_type.title as cus_type')
                 ->first();
             if ($data != null) {
                 $data->avt_src = readImage($data->cus_avatar, 'cus');
@@ -185,10 +145,10 @@ class Customer implements JWTSubject
     {
         try {
             $user_id = Auth::user()->id;
-            $customers = DB::table('customer')
+            $customers = DB::table('customer_copy')
                 ->where([
                     ['delete_flg', '=', '0'],
-                    ['user_id', '=', $user_id]
+                    ['cus_pic', '=', $user_id]
                 ])
                 ->orderBy($sort, $order)
                 ->offset($index)
@@ -205,10 +165,10 @@ class Customer implements JWTSubject
     {
         try {
             $user_id = Auth::user()->id;
-            $count = DB::table('customer')
+            $count = DB::table('customer_copy')
                 ->where([
                     ['delete_flg', '=', '0'],
-                    ['user_id', '=', $user_id]
+                    ['cus_pic', '=', $user_id]
                 ])
                 ->count();
         } catch (\Throwable $e) {
@@ -240,7 +200,7 @@ class Customer implements JWTSubject
             } else {
                 $avatar = '';
             }
-            $id = DB::table('customer')->insertGetId(
+            $id = DB::table('customer_copy')->insertGetId(
                 [
                     'cus_code' => $param['cus_code'],
                     'cus_name' => $param['cus_name'],
@@ -250,7 +210,7 @@ class Customer implements JWTSubject
                     'cus_fax' => $param['cus_fax'],
                     'cus_mail' => $param['cus_mail'],
                     'cus_sex' => $param['cus_sex'],
-                    'user_id' => $param['user_id'],
+                    'cus_pic' => $param['cus_pic'],
                     'inp_date' => now(),
                     'upd_date' => now(),
                     'inp_user' => Auth::user()->id,
@@ -271,7 +231,7 @@ class Customer implements JWTSubject
     public function insertCustomerAddress($cus_id, $cad_address)
     {
         try {
-            DB::table('customer_address')->insert(
+            DB::table('customer_address_copy')->insert(
                 [
                     'cus_id' => $cus_id,
                     'cad_address' => $cad_address,
@@ -294,7 +254,7 @@ class Customer implements JWTSubject
                 resizeImage($param['cus_avatar']->getRealPath(), $param['cus_id'] . '.' . $param['cus_avatar']->getClientOriginalExtension(), 200, 200, 'cus');
             } else {
                 if ($param['cus_avatar_flg'] == 0) {
-                    $customerAvatar = DB::table('customer')
+                    $customerAvatar = DB::table('customer_copy')
                         ->select('cus_avatar')
                         ->where('cus_id', $param['cus_id'])
                         ->get();
@@ -305,7 +265,7 @@ class Customer implements JWTSubject
                 }
             }
 
-            DB::table('customer')->where('cus_id', $param['cus_id'])->update(
+            DB::table('customer_copy')->where('cus_id', $param['cus_id'])->update(
                 [
                     'cus_code' => $param['cus_code'],
                     'cus_name' => $param['cus_name'],
@@ -315,13 +275,13 @@ class Customer implements JWTSubject
                     'cus_fax' => $param['cus_fax'],
                     'cus_mail' => $param['cus_mail'],
                     'cus_sex' => $param['cus_sex'],
-                    'user_id' => $param['user_id'],
+                    'cus_pic' => $param['cus_pic'],
                     'upd_date' => now(),
                     'upd_user' => '1'
                 ]
             );
 
-            DB::table('customer_address')->where('cus_id', '=', $param['cus_id'])->delete();
+            DB::table('customer_address_copy')->where('cus_id', '=', $param['cus_id'])->delete();
 
             foreach ($param['cus_address'] as $cad_address) {
                 if ($cad_address) {
@@ -404,9 +364,9 @@ class Customer implements JWTSubject
     public function makeWhereRaw($search = [])
     {
         $params = [0];
-        $where_raw = 'customer.delete_flg = ?';
+        $where_raw = 'customer_copy.delete_flg = ?';
         $params[] = Auth::user()->id;
-        $where_raw .= ' AND customer.user_id = ?';
+        $where_raw .= ' AND customer_copy.cus_pic = ?';
 
         if (sizeof($search) > 0) {
             if (isset($search['contain']) || isset($search['notcontain'])) {
@@ -414,37 +374,37 @@ class Customer implements JWTSubject
                 if (isset($search['contain'])) {
                     $search_val = "%" . $search['contain'] . "%";
                     $where_raw .= " AND (";
-                    $where_raw .= "customer.cus_code like ?";
+                    $where_raw .= "customer_copy.cus_code like ?";
                     $params[] = $search_val;
-                    $where_raw .= " OR customer.cus_name like ?";
+                    $where_raw .= " OR customer_copy.cus_name like ?";
                     $params[] = $search_val;
-                    $where_raw .= " OR customer.cus_type like ?";
+                    $where_raw .= " OR customer_copy.cus_type like ?";
                     $params[] = $search_val;
-                    $where_raw .= " OR customer.cus_fax like ?";
+                    $where_raw .= " OR customer_copy.cus_fax like ?";
                     $params[] = $search_val;
-                    $where_raw .= " OR customer.cus_mail like ?";
+                    $where_raw .= " OR customer_copy.cus_mail like ?";
                     $params[] = $search_val;
-                    $where_raw .= " OR customer.cus_phone like ?";
+                    $where_raw .= " OR customer_copy.cus_phone like ?";
                     $params[] = $search_val;
-                    $where_raw .= " OR customer_address.cad_address like ?";
+                    $where_raw .= " OR customer_address_copy.cad_address like ?";
                     $params[] = $search_val;
                     $where_raw .= " ) ";
                 }
                 if (isset($search['notcontain'])) {
                     $search_val = "%" . $search['notcontain'] . "%";
-                    $where_raw .= "customer.cus_code not like ?";
+                    $where_raw .= "customer_copy.cus_code not like ?";
                     $params[] = $search_val;
-                    $where_raw .= " OR customer.cus_name not like ?";
+                    $where_raw .= " OR customer_copy.cus_name not like ?";
                     $params[] = $search_val;
-                    $where_raw .= " OR customer.cus_type not like ?";
+                    $where_raw .= " OR customer_copy.cus_type not like ?";
                     $params[] = $search_val;
-                    $where_raw .= " OR customer.cus_fax not like ?";
+                    $where_raw .= " OR customer_copy.cus_fax not like ?";
                     $params[] = $search_val;
-                    $where_raw .= " OR customer.cus_mail not like ?";
+                    $where_raw .= " OR customer_copy.cus_mail not like ?";
                     $params[] = $search_val;
-                    $where_raw .= " OR customer.cus_phone not like ?";
+                    $where_raw .= " OR customer_copy.cus_phone not like ?";
                     $params[] = $search_val;
-                    $where_raw .= " OR customer_address.cad_address not like ?";
+                    $where_raw .= " OR customer_address_copy.cad_address not like ?";
                     $params[] = $search_val;
                 }
 
@@ -452,31 +412,31 @@ class Customer implements JWTSubject
 
                 $where_raw_tmp = [];
                 if (isset($search['cus_code'])) {
-                    $where_raw_tmp[] = "customer.cus_code = ?";
+                    $where_raw_tmp[] = "customer_copy.cus_code = ?";
                     $params[] = $search['cus_code'];
                 }
                 if (isset($search['cus_name'])) {
-                    $where_raw_tmp[] = "customer.cus_name = ?";
+                    $where_raw_tmp[] = "customer_copy.cus_name = ?";
                     $params[] = $search['cus_name'];
                 }
                 if (isset($search['cus_mail'])) {
-                    $where_raw_tmp[] = "customer.cus_mail = ?";
+                    $where_raw_tmp[] = "customer_copy.cus_mail = ?";
                     $params[] = $search['cus_mail'];
                 }
                 if (isset($search['cus_type'])) {
-                    $where_raw_tmp[] = "customer.cus_type = ?";
+                    $where_raw_tmp[] = "customer_copy.cus_type = ?";
                     $params[] = $search['cus_type'];
                 }
                 if (isset($search['cus_fax'])) {
-                    $where_raw_tmp[] = "customer.cus_fax = ?";
+                    $where_raw_tmp[] = "customer_copy.cus_fax = ?";
                     $params[] = $search['cus_fax'];
                 }
                 if (isset($search['cus_phone'])) {
-                    $where_raw_tmp[] = "customer.cus_phone = ?";
+                    $where_raw_tmp[] = "customer_copy.cus_phone = ?";
                     $params[] = $search['cus_phone'];
                 }
                 if (isset($search['address'])) {
-                    $where_raw_tmp[] = "customer_address.cad_address = ?";
+                    $where_raw_tmp[] = "customer_address_copy.cad_address = ?";
                     $params[] = $search['address'];
                 }
                 if (sizeof($where_raw_tmp) > 0) {
@@ -508,7 +468,7 @@ class Customer implements JWTSubject
             $curUser = $user->getCurrentUser();
             $pre_reg = strtoupper(explode('@', $curUser->email)[0]) . '_CUS';
             $reg = '^' . $pre_reg . '[0-9]{5,}$';
-            $customer = DB::select("SELECT MAX(cus_code) AS cus_code FROM `customer` WHERE user_id = $user_id AND cus_code REGEXP :reg;", ['reg' => $reg]);
+            $customer = DB::select("SELECT MAX(cus_code) AS cus_code FROM `customer` WHERE cus_pic = $user_id AND cus_code REGEXP :reg;", ['reg' => $reg]);
             if ($customer[0]->cus_code == null) {
                 $cus_code_num = 1;
             } else {

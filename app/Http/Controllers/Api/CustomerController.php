@@ -26,7 +26,7 @@ class CustomerController extends Controller
         return response()->json(['customers' => $customers, 'paging' => $paging, 'success' => true, 'message' => ''], 200);
     }
 	
-	public function getCustomer(Request $request)
+	public function getCustomer($cus_id, Request $request)
     {
         try {
 			if ($request->has('page')) {
@@ -86,7 +86,7 @@ class CustomerController extends Controller
         return response()->json(['customers' => $customers, 'paging' => $paging, 'success' => true, 'message' => __('Successfully processed.')], 200);
     }
 	
-	public function updateCustomer(Request $request)
+	public function updateCustomer($cus_id, Request $request)
     {
         try {
             $customer = new Customer();
@@ -104,7 +104,7 @@ class CustomerController extends Controller
         return response()->json(['customers' => $customers, 'paging' => $paging, 'success' => true, 'message' => __('Successfully processed.')], 200);
     }
 
-    public function deleteCustomer($ids, Request $request)
+    public function deleteCustomer($cus_ids, Request $request)
     {
         try {
             $customer = new Customer();
@@ -120,6 +120,60 @@ class CustomerController extends Controller
             throw $e;
         }
         return response()->json(['customers' => $customers, 'paging' => $paging, 'success' => true, 'message' => __('Successfully processed.')], 200);
+    }
+
+    public function getContacts($cus_id, Request $request)
+    {
+        try {
+            list($page, $sort, $search) = $this->getRequestData($request);
+            $customer = new Customer();
+            $customers = $customer->getCustomers($page, $sort, $search);
+            $paging = $customer->getPagingInfo();
+            $paging['page'] = $page;
+            foreach($customers as $key => $item){
+                $customerAddress = $customer->getCustomerAddress($item->cus_id);
+                $customers[$key]->address = $customerAddress;
+            }
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['customers' => $customers, 'paging' => $paging, 'success' => true, 'message' => ''], 200);
+    }
+
+    public function getContact($cus_id, $con_id, Request $request)
+    {
+        try {
+            if ($request->has('page')) {
+                $page = $request->page;
+            }else{
+                $page = 0;
+            }
+
+            if ($request->has('sort')) {
+                $sort = $request->sort;
+            }else{
+                $sort = '';
+            }
+
+            if ($request->has('order')) {
+                $order = $request->order;
+            }else{
+                $order = '';
+            }
+
+            $customer = new Customer();
+            if($request->cus_id != 0){
+                $customers = $customer->getCustomer($request->cus_id);
+            }else{
+                $customers = $customer->getCustomerPaging($request->index, $sort, $order);
+            }
+            $totalCustomers = $customer->countCustomers();
+            $customerAddress = $customer->getCustomerAddress($customers[0]->cus_id);
+            $customers[0]->address = $customerAddress;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+        return response()->json(['customers' => $customers, 'totalCustomers' => $totalCustomers, 'success' => true, 'message' => ''], 200);
     }
 
     public function generateCusCode(Request $request)
