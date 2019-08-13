@@ -534,7 +534,7 @@
                                     <div class="row z-mgl z-mgr">
                                         <div class="PnGFPb">
                                             <div class="qpLcp dagkwb">
-                                                <div class="cnTo8e FYQzvb K2GaRc" style="border-color: rgb(240, 147, 0); background-color: rgb(240, 147, 0);">
+                                                <div class="cnTo8e cnTo9e FYQzvb K2GaRc min-width-180">
                                                     <div class="Hbkijd">
                                                         <div class="kMp0We YaPvld nO3x3e">
                                                             <div class="nGJqzd OLw7vb cSfOjc">
@@ -546,15 +546,51 @@
                                                                 </div>
                                                             </div>
                                                             <div class="NI2kfb YnkeVe pXxjhe">
-                                                                <span class="HfUiNb"></span>
-                                                                <span class="Lt0sAf ynRLnc">Nghia Hiep Quach &lt;hiep@brights.vn&gt;</span>
+                                                                <span class="HfUiNb">Nghia Hiep Quach</span>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="RpN9Ve" role="button" tabindex="0"></div>
+                                                    <i class="fas fa-times RpN9Ve" role="button" tabindex="0"></i>
                                                 </div>
                                             </div>
                                             <div class="Gk2rXd"></div>
+                                        </div>
+                                        <div class="PnGFPb">
+                                            <div class="qpLcp dagkwb">
+                                                <div class="cnTo8e cnTo9e FYQzvb K2GaRc min-width-180">
+                                                    <div class="Hbkijd">
+                                                        <div class="kMp0We YaPvld nO3x3e">
+                                                            <div class="nGJqzd OLw7vb cSfOjc">
+                                                                <div class="T6JWhd" style="width: 22px; height: 22px;">
+                                                                    <div class="EzBbpc" aria-hidden="true">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" enable-background="new 0 0 192 192" width="22px" height="22px"><path fill="#E0E0E0" d="M96,0C43.01,0,0,43.01,0,96s43.01,96,96,96s96-43.01,96-96S148.99,0,96,0z"></path><path fill="#BDBDBD" d="M96,85.09c13.28,0,24-10.72,24-24c0-13.28-10.72-24-24-24s-24,10.72-24,24C72,74.37,82.72,85.09,96,85.09z"></path><path fill="#BDBDBD" d="M96,99.27c-29.33,0-52.36,14.18-52.36,27.27c11.09,17.06,30.51,28.36,52.36,28.36s41.27-11.3,52.36-28.36C148.36,113.45,125.33,99.27,96,99.27z"></path><rect fill="none" width="192" height="192"></rect></svg>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="NI2kfb YnkeVe pXxjhe">
+                                                                <span class="HfUiNb">Nghia Hiep Quach</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <i class="fas fa-times RpN9Ve" role="button" tabindex="0"></i>
+                                                </div>
+                                            </div>
+                                            <div class="Gk2rXd"></div>
+                                        </div>
+                                    </div>
+                                    <div class="row z-mgl z-mgr">
+                                        <div class="PnGFPb">
+                                            <div class="qpLcp dagkwb">
+                                                <div class="cnTo8e cnTo7e FYQzvb K2GaRc min-width-100">
+                                                    <div class="Hbkijd w-100">
+                                                        <div class="kMp0We YaPvld nO3x3e w-100 z-pdr">
+                                                            <div class="NI2kox YnkeVe pXxjhe w-100">
+                                                                <span>Thêm mới</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
