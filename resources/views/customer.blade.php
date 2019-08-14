@@ -472,15 +472,15 @@
                                         </div>
                                         <div class="col-sm-9 col-md-9 col-xl-9">
                                             <input type="hidden" name="cus_id" value="0"/>
-                                            @include('components.input',['type'=>'required', 'control_id'=>'cus_code', 'label'=>'Mã', 'length'=>5])
-                                            @include('components.input',['type'=>'required', 'control_id'=>'cus_name', 'label'=>'Tên công ty', 'length'=>100])
-                                            @include('components.input',['control_id'=>'cus_fax', 'label'=>'Fax', 'length'=>20])
-                                            @include('components.input',['control_id'=>'cus_mail', 'label'=>'Email', 'length'=>100])
-                                            @include('components.input',['control_id'=>'cus_phone', 'label'=>'Số điện thoại', 'width'=>450])
-                                            @include('components.input',['control_id'=>'cus_field', 'label'=>'Lĩnh vực', 'width'=>450])
-                                            @include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 1', 'width'=>450])
-                                            @include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 2', 'width'=>450])
-                                            @include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 3', 'width'=>450])
+                                            @include('components.input',['type'=>'required', 'control_id'=>'cus_code', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'Mã', 'length'=>5])
+                                            @include('components.input',['type'=>'required', 'control_id'=>'cus_name', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'Tên công ty', 'length'=>100])
+                                            @include('components.input',['control_id'=>'cus_fax', 'label'=>'Fax', 'i_focus'=>'', 'i_blur'=>'', 'length'=>20])
+                                            @include('components.input',['control_id'=>'cus_mail', 'label'=>'Email', 'i_focus'=>'', 'i_blur'=>'', 'length'=>100])
+                                            @include('components.input',['control_id'=>'cus_phone', 'label'=>'Số điện thoại', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
+                                            @include('components.input',['control_id'=>'cus_field', 'label'=>'Lĩnh vực', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
+                                            @include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 1', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
+                                            @include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 2', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
+                                            @include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 3', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
                                             <div class="textfield  root_textfield rootIsUnderlined cus_type_container"
                                                  style="width: 300px">
                                                 <div class="wrapper">
@@ -531,55 +531,9 @@
                                         <span class="text-primary">Người liên hệ</span>
                                     </div>
                                     <hr class="z-mgt">
+                                    <div name="con-area" class="row z-mgl z-mgr"></div>
                                     <div class="row z-mgl z-mgr">
-                                        <div class="PnGFPb">
-                                            <div class="qpLcp dagkwb">
-                                                <div class="cnTo8e cnTo9e FYQzvb K2GaRc min-width-180">
-                                                    <div class="Hbkijd">
-                                                        <div class="kMp0We YaPvld nO3x3e">
-                                                            <div class="nGJqzd OLw7vb cSfOjc">
-                                                                <div class="T6JWhd" style="width: 22px; height: 22px;">
-                                                                    <div class="EzBbpc" aria-hidden="true">
-                                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" enable-background="new 0 0 192 192" width="22px" height="22px"><path fill="#E0E0E0" d="M96,0C43.01,0,0,43.01,0,96s43.01,96,96,96s96-43.01,96-96S148.99,0,96,0z"></path><path fill="#BDBDBD" d="M96,85.09c13.28,0,24-10.72,24-24c0-13.28-10.72-24-24-24s-24,10.72-24,24C72,74.37,82.72,85.09,96,85.09z"></path><path fill="#BDBDBD" d="M96,99.27c-29.33,0-52.36,14.18-52.36,27.27c11.09,17.06,30.51,28.36,52.36,28.36s41.27-11.3,52.36-28.36C148.36,113.45,125.33,99.27,96,99.27z"></path><rect fill="none" width="192" height="192"></rect></svg>
-                                                                    </div>
-                                                                    <div class="jPtXgd" style="background-image: url(&quot;https://lh3.googleusercontent.com/a-/AAuE7mCUEKpolEMyQLCKmEO92SjU5IWCBhGJgightowZ=s22-c&quot;);"></div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="NI2kfb YnkeVe pXxjhe">
-                                                                <span class="HfUiNb">Nghia Hiep Quach</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <i class="fas fa-times RpN9Ve" role="button" tabindex="0"></i>
-                                                </div>
-                                            </div>
-                                            <div class="Gk2rXd"></div>
-                                        </div>
-                                        <div class="PnGFPb">
-                                            <div class="qpLcp dagkwb">
-                                                <div class="cnTo8e cnTo9e FYQzvb K2GaRc min-width-180">
-                                                    <div class="Hbkijd">
-                                                        <div class="kMp0We YaPvld nO3x3e">
-                                                            <div class="nGJqzd OLw7vb cSfOjc">
-                                                                <div class="T6JWhd" style="width: 22px; height: 22px;">
-                                                                    <div class="EzBbpc" aria-hidden="true">
-                                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" enable-background="new 0 0 192 192" width="22px" height="22px"><path fill="#E0E0E0" d="M96,0C43.01,0,0,43.01,0,96s43.01,96,96,96s96-43.01,96-96S148.99,0,96,0z"></path><path fill="#BDBDBD" d="M96,85.09c13.28,0,24-10.72,24-24c0-13.28-10.72-24-24-24s-24,10.72-24,24C72,74.37,82.72,85.09,96,85.09z"></path><path fill="#BDBDBD" d="M96,99.27c-29.33,0-52.36,14.18-52.36,27.27c11.09,17.06,30.51,28.36,52.36,28.36s41.27-11.3,52.36-28.36C148.36,113.45,125.33,99.27,96,99.27z"></path><rect fill="none" width="192" height="192"></rect></svg>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="NI2kfb YnkeVe pXxjhe">
-                                                                <span class="HfUiNb">Nghia Hiep Quach</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <i class="fas fa-times RpN9Ve" role="button" tabindex="0"></i>
-                                                </div>
-                                            </div>
-                                            <div class="Gk2rXd"></div>
-                                        </div>
-                                    </div>
-                                    <div class="row z-mgl z-mgr">
-                                        <div class="PnGFPb">
+                                        <div class="PnGFPb" onclick="jQuery.UbizOIWidget.w_con_add()">
                                             <div class="qpLcp dagkwb">
                                                 <div class="cnTo8e cnTo7e FYQzvb K2GaRc min-width-100">
                                                     <div class="Hbkijd w-100">
@@ -600,6 +554,75 @@
                 </div>
             </div>
         </div>
+    </div>
+    <!-- Contact Modal -->
+    <div class="modal fade" id="contact-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-4 col-md-4 col-xl-4 z-pdr">
+                            <div class="image-upload mb-1" style="max-width: 150px; max-height: 150px">
+                                <img id="con_avatar_img" onclick="jQuery.UbizOIWidget.w_con_avatar_click()" src="{{ asset("images/avatar.png") }}" img-name="" style="height: 150px; width:150px" class="img-thumbnail img-show ">
+                                <input id="con_avatar" onchange="jQuery.UbizOIWidget.w_con_avatar_change(this)" type="file" accept="image/*" name="con_avatar" style="display:none">
+                                <input id="con_avatar_flg" type="text" name="con_avatar_flg" value="0" style="display:none">
+                                <button type="button" style="top: -150px;" class="close" aria-label="Close"
+                                        onclick="removeImage(this, jQuery.UbizOIWidget.w_con_remove_image)">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                                <span id="change_con_avatar" onclick="jQuery.UbizOIWidget.w_con_avatar_click()" class="label-change" style="width: 150px;">{{ __("Change") }}</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-8 col-md-8 col-xl-8">
+                            <input type="hidden" name="m_con_id" value="0"/>
+                            @include('components.input',['control_id'=>'m_con_name', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'Tên', 'length'=>200])
+                            @include('components.input',['control_id'=>'m_con_mail', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'E-mail', 'length'=>200])
+                            @include('components.input',['control_id'=>'m_con_phone', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'Điện thoại', 'length'=>200])
+                            @include('components.input',['control_id'=>'m_con_duty', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'Chức vụ', 'length'=>200])
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+                    <button type="button" class="btn btn-primary">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div name="con-src" class="PnGFPb" style="display: none">
+        <input type="hidden" name="dt_con_id" value="0"/>
+        <input type="hidden" name="dt_con_name" value=""/>
+        <input type="hidden" name="dt_con_mail" value=""/>
+        <input type="hidden" name="dt_con_phone" value=""/>
+        <input type="hidden" name="dt_con_duty" value=""/>
+        <div class="qpLcp dagkwb">
+            <div class="cnTo8e cnTo9e FYQzvb K2GaRc min-width-180">
+                <div class="Hbkijd">
+                    <div class="kMp0We YaPvld nO3x3e">
+                        <div class="nGJqzd OLw7vb cSfOjc">
+                            <div class="T6JWhd" style="width: 22px; height: 22px;">
+                                <div class="EzBbpc" aria-hidden="true">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" enable-background="new 0 0 192 192" width="22px" height="22px"><path fill="#E0E0E0" d="M96,0C43.01,0,0,43.01,0,96s43.01,96,96,96s96-43.01,96-96S148.99,0,96,0z"></path><path fill="#BDBDBD" d="M96,85.09c13.28,0,24-10.72,24-24c0-13.28-10.72-24-24-24s-24,10.72-24,24C72,74.37,82.72,85.09,96,85.09z"></path><path fill="#BDBDBD" d="M96,99.27c-29.33,0-52.36,14.18-52.36,27.27c11.09,17.06,30.51,28.36,52.36,28.36s41.27-11.3,52.36-28.36C148.36,113.45,125.33,99.27,96,99.27z"></path><rect fill="none" width="192" height="192"></rect></svg>
+                                </div>
+                                <div class="jPtXgd" style="background-image: url(&quot;https://lh3.googleusercontent.com/a-/AAuE7mCUEKpolEMyQLCKmEO92SjU5IWCBhGJgightowZ=s22-c&quot;);"></div>
+                            </div>
+                        </div>
+                        <div class="NI2kfb YnkeVe pXxjhe">
+                            <span class="HfUiNb">Nghia Hiep Quach</span>
+                        </div>
+                    </div>
+                </div>
+                <i class="fas fa-times RpN9Ve" role="button" tabindex="0"></i>
+            </div>
+        </div>
+        <div class="Gk2rXd"></div>
     </div>
 @endsection
 @section('end-javascript')

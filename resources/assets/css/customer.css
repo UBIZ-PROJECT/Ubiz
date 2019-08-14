@@ -126,6 +126,7 @@ div.btn-b::before {
     max-width: calc(100% - 5px);
     overflow: hidden;
     padding: 0 4px 0 2px;
+    cursor: pointer;
 }
 
 .cnTo9e{
@@ -133,10 +134,17 @@ div.btn-b::before {
     background-color: rgb(240, 147, 0) !important;
 }
 
+.cnTo9e:hover{
+    background-color: rgb(23, 162, 184) !important;
+}
 
 .cnTo7e{
-    border-color: rgb(240, 147, 0) !important;;
-    background-color: rgb(240, 147, 0) !important;;
+    border-color: rgb(23, 162, 184) !important;
+    background-color: rgb(3, 169, 244) !important;
+}
+
+.cnTo7e:hover{
+    background-color: rgb(126, 220, 148) !important;
 }
 
 .min-width-180 {

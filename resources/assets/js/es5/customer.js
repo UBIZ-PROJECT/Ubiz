@@ -592,52 +592,48 @@
             if (typeof instance == "undefined")
                 return false;
             instance.update();
+        },
+        w_con_avatar_change: function (self) {
+            if (self.files && self.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#con_avatar_img').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(self.files[0]);
+            }
+            $("#con_avatar_flg").val(2);
+        },
+        w_con_avatar_click: function () {
+            $('#con_avatar').click();
+        },
+        w_con_remove_image: function () {
+            $("#con_avatar").val("");
+            $("#con_avatar_flg").val(1);
+        },
+        w_con_clean_modal: function () {
+            $("#m_con_id").val("0");
+            $("#m_con_name").val("");
+            $("#m_con_mail").val("");
+            $("#m_con_phone").val("");
+            $("#m_con_duty").val("");
+            $('#con_avatar_img').attr('src', '../images/avatar.png');
+        },
+        w_con_add: function () {
+            $("#contact-modal").find(".modal-title").text('Thêm người liên hệ');
+            jQuery.UbizOIWidget.w_con_clean_modal();
+            $("#contact-modal").modal('show');
+        },
+        w_con_edit: function (self, event) {
+
+        },
+        w_con_del: function (self, event) {
+
         }
     });
 })(jQuery);
 jQuery(document).ready(function () {
     jQuery.UbizOIWidget.w_init();
-});
-
-(function ($) {
-    $.fn.getForm2obj = function () {
-        var _ = {}, _t = this;
-        this.c = function (k, v) {
-            eval("c = typeof " + k + ";");
-            if (c == 'undefined') _t.b(k, v);
-        }
-        this.b = function (k, v, a = 0) {
-            if (a) eval(k + ".push(" + v + ");"); else eval(k + "=" + v + ";");
-        };
-        $.map(this.serializeArray(), function (n) {
-            if (n.name.indexOf('[') > -1) {
-                var keys = n.name.match(/[a-zA-Z0-9_]+|(?=\[\])/g), le = Object.keys(keys).length, tmp = '_';
-                $.map(keys, function (key, i) {
-                    if (key == '') {
-                        eval("ale = Object.keys(" + tmp + ").length;");
-                        if (!ale) _t.b(tmp, '[]');
-                        if (le == (i + 1)) _t.b(tmp, "'" + n['value'] + "'", 1);
-                        else _t.b(tmp += "[" + ale + "]", '{}');
-                    } else {
-                        _t.c(tmp += "['" + key + "']", '{}');
-                        if (le == (i + 1)) _t.b(tmp, "'" + n['value'] + "'");
-                    }
-                });
-            } else _t.b("_['" + n['name'] + "']", "'" + n['value'] + "'");
-        });
-        return _;
-    }
-})(jQuery);
-
-$("#change_avt").click(function () {
-    $("#avatar").click();
-});
-
-$("#avt_img").click(function () {
-    $("#avatar").click();
-});
-
-$("#avatar").change(function () {
-    jQuery.UbizOIWidget.w_preview_avatar(this);
-    $("#avatar_flg").val(2);
+    $('#contact-modal').on('shown.bs.modal', function () {
+        $('#m_con_name').trigger('focus');
+    })
 });
