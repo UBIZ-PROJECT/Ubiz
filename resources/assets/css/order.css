@@ -70,6 +70,10 @@
 }
 
 .main-content .r-content .col-8 {
+	width: 100px;
+}
+
+.main-content .r-content .col-9 {
 	width: auto;
 }
 .badge {
