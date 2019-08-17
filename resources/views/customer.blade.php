@@ -313,9 +313,9 @@
                     <div class="aqB nicescroll" id="nicescroll-oput">
                         <div class="yTP">
                             <div id="table-content" class="jFr">
-                                @foreach($customers as $customer)
+                                @foreach($customers as $key => $customer)
                                     <div class="jvD"
-                                         ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{$customer->cus_id}}, this)">
+                                         ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{ $key + 1 }}, {{$customer->cus_id}})">
                                         <div class="tcB col-1">
                                             <div class="cbo">
                                                 <div class="jgQ" onclick="jQuery.UbizOIWidget.w_c_checkbox_click(this)">
@@ -426,8 +426,11 @@
                                 <span class="Di">
                                     <div class="amH" style="user-select: none">
                                         <span class="Dj">
-                                            <span><span class="ts curindex"></span></span> / <span
-                                                    class="ts totalindex"></span>
+                                            <span>
+                                                <span class="ts curindex"></span>
+                                            </span>
+                                            /
+                                            <span class="ts totalindex"></span>
                                         </span>
                                     </div>
                                     <div class="amD utooltip" title="Cũ hơn">
@@ -456,35 +459,39 @@
                                     <div class="row z-mgl z-mgr z-pdl z-pdr">
                                         <div class="col-sm-3 col-md-3 col-xl-3 z-pdl">
                                             <div class="image-upload mb-1" style="max-width: 150px; max-height: 150px">
-                                                <img id="avt_img" src="{{ asset("images/avatar.png") }}" img-name=""
-                                                     style="height: 150px; width:150px" alt="" class="img-thumbnail img-show ">
-                                                <input id="avatar" type="file" accept="image/*" name="cus_avatar"
+                                                <img id="cus-img" name="cus-img" style="height: 150px; width:150px"
+                                                     onclick="jQuery.UbizOIWidget.w_cus_avatar_click()"
+                                                     src="{{ asset("images/avatar.png") }}"
+                                                     class="img-thumbnail img-show ">
+                                                <input id="cus-file" type="file" accept="image/*" name="cus-file"
+                                                       onchange="jQuery.UbizOIWidget.w_cus_avatar_change(this)"
                                                        style="display:none">
-                                                <input id="avatar_flg" type="text" name="cus_avatar_flg" value="0"
-                                                       style="display:none">
+                                                <input id="cus-flag" type="text" name="cus-flag" value="0" style="display:none">
+                                                <input id="cus-avatar" type="text" name="con-avatar" value="" style="display:none">
                                                 <button type="button" style="top: -150px;" class="close" aria-label="Close"
                                                         onclick="removeImage(this, jQuery.UbizOIWidget.w_callback_remove_image)">
                                                     <span aria-hidden="true">×</span>
                                                 </button>
-                                                <span id="change_avt" class="label-change"
+                                                <span class="label-change"
+                                                      onclick="jQuery.UbizOIWidget.w_cus_avatar_click()"
                                                       style="width: 150px;">{{ __("Change") }}</span>
                                             </div>
                                         </div>
                                         <div class="col-sm-9 col-md-9 col-xl-9">
                                             <input type="hidden" name="cus_id" value="0"/>
-                                            @include('components.input',['type'=>'required', 'control_id'=>'cus_code', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'Mã', 'length'=>5])
-                                            @include('components.input',['type'=>'required', 'control_id'=>'cus_name', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'Tên công ty', 'length'=>100])
-                                            @include('components.input',['control_id'=>'cus_fax', 'label'=>'Fax', 'i_focus'=>'', 'i_blur'=>'', 'length'=>20])
-                                            @include('components.input',['control_id'=>'cus_mail', 'label'=>'Email', 'i_focus'=>'', 'i_blur'=>'', 'length'=>100])
-                                            @include('components.input',['control_id'=>'cus_phone', 'label'=>'Số điện thoại', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
-                                            @include('components.input',['control_id'=>'cus_field', 'label'=>'Lĩnh vực', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
-                                            @include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 1', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
-                                            @include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 2', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
-                                            @include('components.input',['control_id'=>'cus_address[]', 'label'=>'Địa chỉ 3', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
+                                            @include('components.input',['type'=>'required', 'control_id'=>'cus-code', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'Mã', 'length'=>5])
+                                            @include('components.input',['type'=>'required', 'control_id'=>'cus-name', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'Tên công ty', 'length'=>100])
+                                            @include('components.input',['control_id'=>'cus-fax', 'label'=>'Fax', 'i_focus'=>'', 'i_blur'=>'', 'length'=>20])
+                                            @include('components.input',['control_id'=>'cus-mail', 'label'=>'Email', 'i_focus'=>'', 'i_blur'=>'', 'length'=>100])
+                                            @include('components.input',['control_id'=>'cus-phone', 'label'=>'Điện thoại', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
+                                            @include('components.input',['control_id'=>'cus-field', 'label'=>'Lĩnh vực', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
+                                            @include('components.input',['control_id'=>'cus-address-1', 'label'=>'Địa chỉ 1', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
+                                            @include('components.input',['control_id'=>'cus-address-2', 'label'=>'Địa chỉ 2', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
+                                            @include('components.input',['control_id'=>'cus-address-3', 'label'=>'Địa chỉ 3', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
                                             <div class="textfield  root_textfield rootIsUnderlined cus_type_container"
                                                  style="width: 300px">
                                                 <div class="wrapper">
-                                                    <label for="user_id" class="ms-Label root-56 lbl-primary" style="">Loại
+                                                    <label for="cus_type" class="ms-Label root-56 lbl-primary" style="">Loại
                                                         khách hàng:&nbsp;&nbsp;&nbsp;</label>
                                                     <div class="fieldGroup">
                                                         <select class="dropdown_field" name="cus_type">
@@ -502,13 +509,14 @@
                                            </div>
                                         </span>
                                             </div>
-                                            <div class="textfield  root_textfield rootIsUnderlined user_id_container"
+                                            <div class="textfield  root_textfield rootIsUnderlined"
                                                  style="width: 300px">
                                                 <div class="wrapper">
-                                                    <label for="user_id" class="ms-Label root-56 lbl-primary" style="">Nhân viên
-                                                        phụ trách:&nbsp;&nbsp;&nbsp;</label>
+                                                    <label for="cus_pic"
+                                                           class="ms-Label root-56 lbl-primary"
+                                                           style="">Nhân viên phụ trách:&nbsp;&nbsp;&nbsp;</label>
                                                     <div class="fieldGroup">
-                                                        <select class="dropdown_field" name="user_id">
+                                                        <select class="dropdown_field" name="cus_pic">
                                                             @foreach($users as $user)
                                                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
                                                             @endforeach
@@ -531,7 +539,7 @@
                                         <span class="text-primary">Người liên hệ</span>
                                     </div>
                                     <hr class="z-mgt">
-                                    <div name="con-area" class="row z-mgl z-mgr"></div>
+                                    <div id="con-summary-container" class="row z-mgl z-mgr"></div>
                                     <div class="row z-mgl z-mgr">
                                         <div class="PnGFPb" onclick="jQuery.UbizOIWidget.w_con_add()">
                                             <div class="qpLcp dagkwb">
@@ -561,6 +569,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"></h5>
+                    <img name="ajax-loader" src="{{ asset('images/ajax-loader.gif') }}" style="display: none; height: 28px; margin-left: 10px">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -569,61 +578,80 @@
                     <div class="row">
                         <div class="col-sm-4 col-md-4 col-xl-4 z-pdr">
                             <div class="image-upload mb-1" style="max-width: 150px; max-height: 150px">
-                                <img id="con_avatar_img" onclick="jQuery.UbizOIWidget.w_con_avatar_click()" src="{{ asset("images/avatar.png") }}" img-name="" style="height: 150px; width:150px" class="img-thumbnail img-show ">
-                                <input id="con_avatar" onchange="jQuery.UbizOIWidget.w_con_avatar_change(this)" type="file" accept="image/*" name="con_avatar" style="display:none">
-                                <input id="con_avatar_flg" type="text" name="con_avatar_flg" value="0" style="display:none">
+                                <img id="m-con-img" style="height: 150px; width:150px"
+                                     onclick="jQuery.UbizOIWidget.w_con_avatar_click()"
+                                     src="{{ asset("images/avatar.png") }}"
+                                     class="img-thumbnail img-show ">
+                                <input id="m-con-file"
+                                       onchange="jQuery.UbizOIWidget.w_con_avatar_change(this)"
+                                       type="file" accept="image/*"
+                                       name="m-con-file" style="display:none">
+                                <input id="m-con-flag" type="text" name="m-con-flag" value="0" style="display:none">
+                                <input id="m-con-avatar" type="text" name="m-con-avatar" value="" style="display:none">
                                 <button type="button" style="top: -150px;" class="close" aria-label="Close"
                                         onclick="removeImage(this, jQuery.UbizOIWidget.w_con_remove_image)">
                                     <span aria-hidden="true">×</span>
                                 </button>
-                                <span id="change_con_avatar" onclick="jQuery.UbizOIWidget.w_con_avatar_click()" class="label-change" style="width: 150px;">{{ __("Change") }}</span>
+                                <span onclick="jQuery.UbizOIWidget.w_con_avatar_click()"
+                                      class="label-change" style="width: 150px;">{{ __("Change") }}</span>
                             </div>
                         </div>
                         <div class="col-sm-8 col-md-8 col-xl-8">
-                            <input type="hidden" name="m_con_id" value="0"/>
-                            @include('components.input',['control_id'=>'m_con_name', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'Tên', 'length'=>200])
-                            @include('components.input',['control_id'=>'m_con_mail', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'E-mail', 'length'=>200])
-                            @include('components.input',['control_id'=>'m_con_phone', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'Điện thoại', 'length'=>200])
-                            @include('components.input',['control_id'=>'m_con_duty', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'Chức vụ', 'length'=>200])
+                            <input type="hidden" name="m-con-id" value="0"/>
+                            @include('components.input',['control_id'=>'m-con-name', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'Tên', 'length'=>200])
+                            @include('components.input',['control_id'=>'m-con-mail', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'E-mail', 'length'=>200])
+                            @include('components.input',['control_id'=>'m-con-phone', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'Điện thoại', 'length'=>200])
+                            @include('components.input',['control_id'=>'m-con-duty', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'Chức vụ', 'length'=>200])
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
-                    <button type="button" class="btn btn-primary">Lưu</button>
+                    <button type="button" class="btn btn-primary" onclick="jQuery.UbizOIWidget.w_con_modal_save()">Lưu</button>
                 </div>
             </div>
         </div>
     </div>
-
-    <div name="con-src" class="PnGFPb" style="display: none">
-        <input type="hidden" name="dt_con_id" value="0"/>
-        <input type="hidden" name="dt_con_name" value=""/>
-        <input type="hidden" name="dt_con_mail" value=""/>
-        <input type="hidden" name="dt_con_phone" value=""/>
-        <input type="hidden" name="dt_con_duty" value=""/>
-        <div class="qpLcp dagkwb">
-            <div class="cnTo8e cnTo9e FYQzvb K2GaRc min-width-180">
-                <div class="Hbkijd">
-                    <div class="kMp0We YaPvld nO3x3e">
-                        <div class="nGJqzd OLw7vb cSfOjc">
-                            <div class="T6JWhd" style="width: 22px; height: 22px;">
-                                <div class="EzBbpc" aria-hidden="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" enable-background="new 0 0 192 192" width="22px" height="22px"><path fill="#E0E0E0" d="M96,0C43.01,0,0,43.01,0,96s43.01,96,96,96s96-43.01,96-96S148.99,0,96,0z"></path><path fill="#BDBDBD" d="M96,85.09c13.28,0,24-10.72,24-24c0-13.28-10.72-24-24-24s-24,10.72-24,24C72,74.37,82.72,85.09,96,85.09z"></path><path fill="#BDBDBD" d="M96,99.27c-29.33,0-52.36,14.18-52.36,27.27c11.09,17.06,30.51,28.36,52.36,28.36s41.27-11.3,52.36-28.36C148.36,113.45,125.33,99.27,96,99.27z"></path><rect fill="none" width="192" height="192"></rect></svg>
+    <!-- Contact Summary -->
+    <div name="con-summary" style="display: none">
+        <div name="con-summary-detail" class="PnGFPb width-230">
+            <input type="hidden" name="dt-con-id" value="0"/>
+            <input type="hidden" name="dt-con-name" value=""/>
+            <input type="hidden" name="dt-con-mail" value=""/>
+            <input type="hidden" name="dt-con-phone" value=""/>
+            <input type="hidden" name="dt-con-duty" value=""/>
+            <input type="hidden" name="dt-con-avatar" value=""/>
+            <div class="qpLcp dagkwb">
+                <div class="cnTo8e cnTo9e FYQzvb K2GaRc">
+                    <div onclick="jQuery.UbizOIWidget.w_con_edit(this, event)" class="Hbkijd">
+                        <div class="kMp0We YaPvld nO3x3e">
+                            <div class="nGJqzd OLw7vb cSfOjc">
+                                <div class="T6JWhd" style="width: 22px; height: 22px;">
+                                    <div class="EzBbpc" aria-hidden="true">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" enable-background="new 0 0 192 192" width="22px" height="22px">
+                                            <path fill="#E0E0E0" d="M96,0C43.01,0,0,43.01,0,96s43.01,96,96,96s96-43.01,96-96S148.99,0,96,0z"></path>
+                                            <path fill="#BDBDBD" d="M96,85.09c13.28,0,24-10.72,24-24c0-13.28-10.72-24-24-24s-24,10.72-24,24C72,74.37,82.72,85.09,96,85.09z"></path>
+                                            <path fill="#BDBDBD" d="M96,99.27c-29.33,0-52.36,14.18-52.36,27.27c11.09,17.06,30.51,28.36,52.36,28.36s41.27-11.3,52.36-28.36C148.36,113.45,125.33,99.27,96,99.27z"></path>
+                                            <rect fill="none" width="192" height="192"></rect>
+                                        </svg>
+                                    </div>
+                                    <div class="jPtXgd">
+                                        <img name="dt-con-avatar-view" src="">
+                                    </div>
                                 </div>
-                                <div class="jPtXgd" style="background-image: url(&quot;https://lh3.googleusercontent.com/a-/AAuE7mCUEKpolEMyQLCKmEO92SjU5IWCBhGJgightowZ=s22-c&quot;);"></div>
+                            </div>
+                            <div class="NI2kfb YnkeVe pXxjhe">
+                                <span name="dt-con-name-view" class="HfUiNb"></span>
                             </div>
                         </div>
-                        <div class="NI2kfb YnkeVe pXxjhe">
-                            <span class="HfUiNb">Nghia Hiep Quach</span>
-                        </div>
                     </div>
+                    <i onclick="jQuery.UbizOIWidget.w_con_del(this, event)" class="fas fa-times RpN9Ve" role="button" tabindex="0"></i>
                 </div>
-                <i class="fas fa-times RpN9Ve" role="button" tabindex="0"></i>
             </div>
+            <div class="Gk2rXd"></div>
         </div>
-        <div class="Gk2rXd"></div>
     </div>
+</div>
 @endsection
 @section('end-javascript')
     <script type="text/javascript" src="{{ asset('js/customer.js') }}"></script>

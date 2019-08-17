@@ -90,6 +90,10 @@ div.btn-b::before {
     width: 35px;
 }
 
+.PnGFPb.deleted {
+    display: none;
+}
+
 .qXIcZc .qpLcp {
     padding: 5px 0 0 5px;
 }
@@ -129,26 +133,26 @@ div.btn-b::before {
     cursor: pointer;
 }
 
-.cnTo9e{
+.cnTo9e {
     border-color: rgb(240, 147, 0) !important;
     background-color: rgb(240, 147, 0) !important;
 }
 
-.cnTo9e:hover{
+.cnTo9e:hover {
     background-color: rgb(23, 162, 184) !important;
 }
 
-.cnTo7e{
+.cnTo7e {
     border-color: rgb(23, 162, 184) !important;
     background-color: rgb(3, 169, 244) !important;
 }
 
-.cnTo7e:hover{
+.cnTo7e:hover {
     background-color: rgb(126, 220, 148) !important;
 }
 
-.min-width-180 {
-    min-width: 180px;
+.width-230 {
+    min-width: 230px;
 }
 
 .min-width-100 {
@@ -242,12 +246,14 @@ div.btn-b::before {
     right: 0;
 }
 
-.jPtXgd {
-    background-color: #fff;
-    -webkit-background-size: contain;
-    background-size: contain;
-    -webkit-border-radius: 50%;
+.jPtXgd img {
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
+}
+
+.jPtXgd img[src=""] {
+    display: none;
 }
 
 .pXxjhe {
@@ -276,13 +282,14 @@ div.btn-b::before {
     box-flex: 1;
     -webkit-flex-grow: 1;
     flex-grow: 1;
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: flex;
     -webkit-align-items: center;
     align-items: center;
     -webkit-flex-wrap: wrap;
     flex-wrap: wrap;
+    width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .NI2kox {

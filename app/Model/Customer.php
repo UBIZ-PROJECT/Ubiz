@@ -30,8 +30,22 @@ class Customer
         try {
             $customerAddress = DB::table('customer_address_copy')
                 ->where('cus_id', $cus_id)
-                ->where('delete_flg', '0')->get();
+                ->where('delete_flg', '0')
+                ->get();
             return $customerAddress;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function getCustomerContact($cus_id)
+    {
+        try {
+            $customerContact = DB::table('customer_contact')
+                ->where('cus_id', $cus_id)
+                ->where('delete_flg', '0')
+                ->get();
+            return $customerContact;
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -56,7 +70,7 @@ class Customer
         }
     }
 
-    public function getCustomers($page = 0, $sort = '', $search = [])
+    public function getCustomers($page = 0, $sort = '', $search = '')
     {
         try {
             list($where_raw, $params) = $this->makeWhereRaw($search);
@@ -73,7 +87,12 @@ class Customer
                     $join->on('customer_adr.cad_cus_id', '=', 'customer_copy.cus_id');
                 })
                 ->leftJoin('customer_address_copy', 'customer_adr.cad_id', '=', 'customer_address_copy.cad_id')
-                ->select('customer_copy.*', 'customer_address_copy.cad_address as address', 'customer_address_copy.cad_id')
+                ->leftJoin('m_customer_type', 'customer_copy.cus_type', '=', 'm_customer_type.id')
+                ->select('customer_copy.*',
+                    'customer_address_copy.cad_address as address',
+                    'customer_address_copy.cad_id',
+                    'm_customer_type.title as cus_type_name'
+                )
                 ->whereRaw($where_raw, $params)
                 ->orderBy($field_name, $order_by)
                 ->offset($page * $rows_per_page)
@@ -133,7 +152,7 @@ class Customer
                 ->select('customer_copy.*', 'm_customer_type.title as cus_type')
                 ->first();
             if ($data != null) {
-                $data->avt_src = readImage($data->cus_avatar, 'cus');
+                $data->cus_avatar = readImage($data->cus_avatar, 'cus');
             }
             return $data;
         } catch (\Throwable $e) {
@@ -141,24 +160,24 @@ class Customer
         }
     }
 
-    public function getCustomerPaging($index, $sort, $order)
+    public function getUserByPos($pos = 0, $sort = '', $search = '')
     {
         try {
-            $user_id = Auth::user()->id;
-            $customers = DB::table('customer_copy')
-                ->where([
-                    ['delete_flg', '=', '0'],
-                    ['cus_pic', '=', $user_id]
-                ])
-                ->orderBy($sort, $order)
-                ->offset($index)
+
+            list($where_raw, $params) = $this->makeWhereRaw($search);
+            list($field_name, $order_by) = $this->makeOrderBy($sort);
+
+            $data = DB::table('customer_copy')
+                ->leftJoin('m_customer_type', 'customer_copy.cus_type', '=', 'm_customer_type.id')
+                ->whereRaw($where_raw, $params)
+                ->orderBy($field_name, $order_by)
+                ->offset($pos - 1)
                 ->limit(1)
-                ->get();
-            $customers[0]->avt_src = readImage($customers[0]->cus_avatar, 'cus');
+                ->first();
+            return $data;
         } catch (\Throwable $e) {
             throw $e;
         }
-        return $customers;
     }
 
     public function countAllCustomers()
@@ -361,89 +380,33 @@ class Customer
         return true;
     }
 
-    public function makeWhereRaw($search = [])
+    public function makeWhereRaw($search = '')
     {
         $params = [0];
         $where_raw = 'customer_copy.delete_flg = ?';
         $params[] = Auth::user()->id;
         $where_raw .= ' AND customer_copy.cus_pic = ?';
 
-        if (sizeof($search) > 0) {
-            if (isset($search['contain']) || isset($search['notcontain'])) {
+        if ($search != '') {
+            $search_val = "%" . $search . "%";
+            $where_raw .= " AND ( ";
+            $where_raw .= " customer_copy.cus_code like ? ";
+            $params[] = $search_val;
+            $params[] = $search_val;
+            $where_raw .= " OR customer_copy.cus_name like ?";
+            $params[] = $search_val;
+            $where_raw .= " OR m_customer_type.title like ?";
+            $params[] = $search_val;
+            $where_raw .= " OR customer_copy.cus_fax like ?";
+            $params[] = $search_val;
+            $where_raw .= " OR customer_copy.cus_mail like ?";
+            $params[] = $search_val;
+            $where_raw .= " OR customer_copy.cus_phone like ?";
+            $params[] = $search_val;
+            $where_raw .= " ) ";
 
-                if (isset($search['contain'])) {
-                    $search_val = "%" . $search['contain'] . "%";
-                    $where_raw .= " AND (";
-                    $where_raw .= "customer_copy.cus_code like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR customer_copy.cus_name like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR customer_copy.cus_type like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR customer_copy.cus_fax like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR customer_copy.cus_mail like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR customer_copy.cus_phone like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR customer_address_copy.cad_address like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " ) ";
-                }
-                if (isset($search['notcontain'])) {
-                    $search_val = "%" . $search['notcontain'] . "%";
-                    $where_raw .= "customer_copy.cus_code not like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR customer_copy.cus_name not like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR customer_copy.cus_type not like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR customer_copy.cus_fax not like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR customer_copy.cus_mail not like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR customer_copy.cus_phone not like ?";
-                    $params[] = $search_val;
-                    $where_raw .= " OR customer_address_copy.cad_address not like ?";
-                    $params[] = $search_val;
-                }
-
-            } else {
-
-                $where_raw_tmp = [];
-                if (isset($search['cus_code'])) {
-                    $where_raw_tmp[] = "customer_copy.cus_code = ?";
-                    $params[] = $search['cus_code'];
-                }
-                if (isset($search['cus_name'])) {
-                    $where_raw_tmp[] = "customer_copy.cus_name = ?";
-                    $params[] = $search['cus_name'];
-                }
-                if (isset($search['cus_mail'])) {
-                    $where_raw_tmp[] = "customer_copy.cus_mail = ?";
-                    $params[] = $search['cus_mail'];
-                }
-                if (isset($search['cus_type'])) {
-                    $where_raw_tmp[] = "customer_copy.cus_type = ?";
-                    $params[] = $search['cus_type'];
-                }
-                if (isset($search['cus_fax'])) {
-                    $where_raw_tmp[] = "customer_copy.cus_fax = ?";
-                    $params[] = $search['cus_fax'];
-                }
-                if (isset($search['cus_phone'])) {
-                    $where_raw_tmp[] = "customer_copy.cus_phone = ?";
-                    $params[] = $search['cus_phone'];
-                }
-                if (isset($search['address'])) {
-                    $where_raw_tmp[] = "customer_address_copy.cad_address = ?";
-                    $params[] = $search['address'];
-                }
-                if (sizeof($where_raw_tmp) > 0) {
-                    $where_raw .= " AND ( " . implode(" OR ", $where_raw_tmp) . " )";
-                }
-            }
         }
+
         return [$where_raw, $params];
     }
 

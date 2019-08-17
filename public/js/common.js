@@ -444,6 +444,13 @@ function html_escape(s) {
         .replace(/\n/g, '<br />')
 }
 
+function fnc_is_image(file) {
+    if (file.type.match('image.*')) {
+        return true;
+    }
+    return false;
+}
+
 moment.locale('vi', {
     months: 'Tháng 1_Tháng 2_Tháng 3_Tháng 4_Tháng 5_Tháng 6_Tháng 7_Tháng 8_Tháng 9_Tháng 10_Tháng 11_Tháng 12'.split('_'),
     monthsShort: 'Tháng 1_Tháng 2_Tháng 3_Tháng 4_Tháng 5_Tháng 6_Tháng 7_Tháng 8_Tháng 9_Tháng 10_Tháng 11_Tháng 12'.split('_'),
