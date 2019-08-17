@@ -43,9 +43,6 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::post('customers/{cus_id}/update', ['as' => 'update-currency', 'uses' => 'Api\CustomerController@updateCustomer']);
         Route::delete('customers/{cus_ids}/delete', ['as' => 'delete-currency', 'uses' => 'Api\CustomerController@deleteCustomer']);
 
-        Route::get('customers/{cus_id}/contact', ['as' => 'get-contacts', 'uses' => 'Api\CustomerController@getContacts']);
-        Route::get('customers/{cus_id}/contact/{con_id}', ['as' => 'get-contact', 'uses' => 'Api\CustomerController@getContact']);
-
         Route::get('currency', ['as' => 'get-currency', 'uses' => 'Api\CurrencyController@getCurrency']);
         Route::get('currencies', ['as' => 'get-all-currency', 'uses' => 'Api\CurrencyController@getAllCurrency']);
         Route::get('currency/{id}', ['as' => 'get-currency', 'uses' => 'Api\CurrencyController@getCurrencyById']);

@@ -8,10 +8,10 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/customer.css') }}">
 @endsection
 @section('headbar')
-    @section('search')
-        @include('customer_search')
-    @endsection
-    @include('layouts/headbar')
+@section('search')
+    @include('customer_search')
+@endsection
+@include('layouts/headbar')
 @endsection
 @section('content')
     <div class="main-content">
@@ -80,14 +80,14 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_refresh_output_page(this)">
+                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_refresh_output_page()">
                                         <div class="ax7 poK utooltip" title="Làm mới">
                                             <div class="asA">
                                                 <div class="asF"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_delete(0)">
+                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_o_delete()">
                                         <div class="ax7 poK utooltip" title="Xóa">
                                             <div class="asA">
                                                 <div class="asX"></div>
@@ -398,21 +398,21 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="GNi">
+                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_save()">
                                         <div class="ax7 poK utooltip save" title="Lưu trữ">
                                             <div class="asA">
                                                 <div class="arS"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="GNi">
+                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_i_refresh()">
                                         <div class="ax7 poK utooltip" title="Làm mới">
                                             <div class="asA">
                                                 <div class="arR"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="GNi">
+                                    <div class="GNi" onclick="jQuery.UbizOIWidget.w_i_delete()">
                                         <div class="ax7 poK utooltip delete" title="Xóa">
                                             <div class="asA">
                                                 <div class="asX"></div>
@@ -424,26 +424,12 @@
                             <div class="aqJ">
                                 <div class="ar5">
                                 <span class="Di">
-                                    <div class="amH" style="user-select: none">
-                                        <span class="Dj">
-                                            <span>
-                                                <span class="ts curindex"></span>
-                                            </span>
-                                            /
-                                            <span class="ts totalindex"></span>
-                                        </span>
-                                    </div>
-                                    <div class="amD utooltip" title="Cũ hơn">
+                                    <div id="i-paging-label"></div>
+                                    <div id="i-paging-older"></div>
+                                    <div id="i-paging-newer"></div>
+                                    <div class="amD utooltip" title="{{ __("Setting") }}">
                                         <span class="amF">&nbsp;</span>
-                                        <img class="amI prev" src="./images/cleardot.gif" alt="">
-                                    </div>
-                                    <div class="amD utooltip" title="Mới hơn">
-                                        <span class="amF">&nbsp;</span>
-                                        <img class="amJ next" src="./images/cleardot.gif" alt="">
-                                    </div>
-                                    <div class="amD utooltip" title="Cài đặt">
-                                        <span class="amF">&nbsp;</span>
-                                        <img class="amG" src="./images/cleardot.gif" alt="">
+                                        <img class="amG" src="{{ asset("images/cleardot.gif") }}" alt="">
                                     </div>
                                 </span>
                                 </div>
@@ -466,9 +452,12 @@
                                                 <input id="cus-file" type="file" accept="image/*" name="cus-file"
                                                        onchange="jQuery.UbizOIWidget.w_cus_avatar_change(this)"
                                                        style="display:none">
-                                                <input id="cus-flag" type="text" name="cus-flag" value="0" style="display:none">
-                                                <input id="cus-avatar" type="text" name="con-avatar" value="" style="display:none">
-                                                <button type="button" style="top: -150px;" class="close" aria-label="Close"
+                                                <input id="cus-flag" type="text" name="cus-flag" value="0"
+                                                       style="display:none">
+                                                <input id="cus-avatar" type="text" name="con-avatar" value=""
+                                                       style="display:none">
+                                                <button type="button" style="top: -150px;" class="close"
+                                                        aria-label="Close"
                                                         onclick="removeImage(this, jQuery.UbizOIWidget.w_callback_remove_image)">
                                                     <span aria-hidden="true">×</span>
                                                 </button>
@@ -478,7 +467,7 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-9 col-md-9 col-xl-9">
-                                            <input type="hidden" name="cus_id" value="0"/>
+                                            <input type="hidden" name="cus-id" value="0"/>
                                             @include('components.input',['type'=>'required', 'control_id'=>'cus-code', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'Mã', 'length'=>5])
                                             @include('components.input',['type'=>'required', 'control_id'=>'cus-name', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'Tên công ty', 'length'=>100])
                                             @include('components.input',['control_id'=>'cus-fax', 'label'=>'Fax', 'i_focus'=>'', 'i_blur'=>'', 'length'=>20])
@@ -486,15 +475,17 @@
                                             @include('components.input',['control_id'=>'cus-phone', 'label'=>'Điện thoại', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
                                             @include('components.input',['control_id'=>'cus-field', 'label'=>'Lĩnh vực', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
                                             @include('components.input',['control_id'=>'cus-address-1', 'label'=>'Địa chỉ 1', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
+                                            @include('components.hidden_input',['control_id'=>'cad-id-1', 'value'=>'0'])
                                             @include('components.input',['control_id'=>'cus-address-2', 'label'=>'Địa chỉ 2', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
+                                            @include('components.hidden_input',['control_id'=>'cad-id-2', 'value'=>'0'])
                                             @include('components.input',['control_id'=>'cus-address-3', 'label'=>'Địa chỉ 3', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
+                                            @include('components.hidden_input',['control_id'=>'cad-id-3', 'value'=>'0'])
                                             <div class="textfield  root_textfield rootIsUnderlined cus_type_container"
                                                  style="width: 300px">
                                                 <div class="wrapper">
-                                                    <label for="cus_type" class="ms-Label root-56 lbl-primary" style="">Loại
-                                                        khách hàng:&nbsp;&nbsp;&nbsp;</label>
+                                                    <label for="cus-type" class="ms-Label root-56 lbl-primary" style="">Loại khách hàng:&nbsp;&nbsp;&nbsp;</label>
                                                     <div class="fieldGroup">
-                                                        <select class="dropdown_field" name="cus_type">
+                                                        <select class="dropdown_field" name="cus-type">
                                                             @foreach($customerTypeList as $item)
                                                                 <option value="{{ $item->id }}">{{ $item->title }}</option>
                                                             @endforeach
@@ -512,11 +503,11 @@
                                             <div class="textfield  root_textfield rootIsUnderlined"
                                                  style="width: 300px">
                                                 <div class="wrapper">
-                                                    <label for="cus_pic"
+                                                    <label for="cus-pic"
                                                            class="ms-Label root-56 lbl-primary"
                                                            style="">Nhân viên phụ trách:&nbsp;&nbsp;&nbsp;</label>
                                                     <div class="fieldGroup">
-                                                        <select class="dropdown_field" name="cus_pic">
+                                                        <select class="dropdown_field" name="cus-pic">
                                                             @foreach($users as $user)
                                                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
                                                             @endforeach
@@ -569,7 +560,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"></h5>
-                    <img name="ajax-loader" src="{{ asset('images/ajax-loader.gif') }}" style="display: none; height: 28px; margin-left: 10px">
+                    <img name="ajax-loader" src="{{ asset('images/ajax-loader.gif') }}"
+                         style="display: none; height: 28px; margin-left: 10px">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -607,7 +599,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
-                    <button type="button" class="btn btn-primary" onclick="jQuery.UbizOIWidget.w_con_modal_save()">Lưu</button>
+                    <button type="button" class="btn btn-primary" onclick="jQuery.UbizOIWidget.w_con_modal_save()">Lưu
+                    </button>
                 </div>
             </div>
         </div>
@@ -628,10 +621,14 @@
                             <div class="nGJqzd OLw7vb cSfOjc">
                                 <div class="T6JWhd" style="width: 22px; height: 22px;">
                                     <div class="EzBbpc" aria-hidden="true">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" enable-background="new 0 0 192 192" width="22px" height="22px">
-                                            <path fill="#E0E0E0" d="M96,0C43.01,0,0,43.01,0,96s43.01,96,96,96s96-43.01,96-96S148.99,0,96,0z"></path>
-                                            <path fill="#BDBDBD" d="M96,85.09c13.28,0,24-10.72,24-24c0-13.28-10.72-24-24-24s-24,10.72-24,24C72,74.37,82.72,85.09,96,85.09z"></path>
-                                            <path fill="#BDBDBD" d="M96,99.27c-29.33,0-52.36,14.18-52.36,27.27c11.09,17.06,30.51,28.36,52.36,28.36s41.27-11.3,52.36-28.36C148.36,113.45,125.33,99.27,96,99.27z"></path>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"
+                                             enable-background="new 0 0 192 192" width="22px" height="22px">
+                                            <path fill="#E0E0E0"
+                                                  d="M96,0C43.01,0,0,43.01,0,96s43.01,96,96,96s96-43.01,96-96S148.99,0,96,0z"></path>
+                                            <path fill="#BDBDBD"
+                                                  d="M96,85.09c13.28,0,24-10.72,24-24c0-13.28-10.72-24-24-24s-24,10.72-24,24C72,74.37,82.72,85.09,96,85.09z"></path>
+                                            <path fill="#BDBDBD"
+                                                  d="M96,99.27c-29.33,0-52.36,14.18-52.36,27.27c11.09,17.06,30.51,28.36,52.36,28.36s41.27-11.3,52.36-28.36C148.36,113.45,125.33,99.27,96,99.27z"></path>
                                             <rect fill="none" width="192" height="192"></rect>
                                         </svg>
                                     </div>
@@ -645,14 +642,18 @@
                             </div>
                         </div>
                     </div>
-                    <i onclick="jQuery.UbizOIWidget.w_con_del(this, event)" class="fas fa-times RpN9Ve" role="button" tabindex="0"></i>
+                    <i onclick="jQuery.UbizOIWidget.w_con_del(this, event)" class="fas fa-times RpN9Ve" role="button"
+                       tabindex="0"></i>
                 </div>
             </div>
             <div class="Gk2rXd"></div>
         </div>
     </div>
-</div>
+    </div>
 @endsection
 @section('end-javascript')
     <script type="text/javascript" src="{{ asset('js/customer.js') }}"></script>
+    <script type="text/javascript">
+        jQuery.UbizOIWidget.rows_num = {{ intval($paging['rows_num']) }};
+    </script>
 @endsection
