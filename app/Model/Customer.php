@@ -196,66 +196,58 @@ class Customer
 
     public function insertCustomer($data)
     {
+        DB::beginTransaction();
         try {
 
+            //Insert customer
             $cus = $data['cus'];
-            $cad = $data['cad'];
-            $con = $data['con'];
-
-            if ($param['cus_avatar']) {
-                $avatar = $param['cus_id'] . '.' . $param['cus_avatar']->getClientOriginalExtension();
-                resizeImage($param['cus_avatar']->getRealPath(), $param['cus_id'] . '.' . $param['cus_avatar']->getClientOriginalExtension(), 200, 200, 'cus');
-            } else {
-                $avatar = '';
-            }
-
             if ($cus['cus_avatar'] != '') {
-                $cus['cus_avatar'] = uniqid(). ".png";
+                $cus_avatar = uniqid(). ".png";
                 resizeImage($cus['cus_avatar'], $cus_avatar, 200, 200, 'cus');
+                $cus['cus_avatar'] = $cus_avatar;
             }
 
-            $id = DB::table('customer_copy')->insertGetId(
-                [
-                    'cus_code' => $cus['cus_code'],
-                    'cus_name' => $cus['cus_name'],
-                    'cus_avatar' => $cus_avatar,
-                    'cus_type' => $cus['cus_type'],
-                    'cus_phone' => $cus['cus_phone'],
-                    'cus_fax' => $cus['cus_fax'],
-                    'cus_mail' => $param['cus_mail'],
-                    'cus_sex' => $param['cus_sex'],
-                    'cus_pic' => $param['cus_pic'],
-                    'inp_date' => now(),
-                    'upd_date' => now(),
-                    'inp_user' => Auth::user()->id,
-                    'upd_user' => Auth::user()->id
-                ]
-            );
-            foreach ($param['cus_address'] as $cad_address) {
-                if ($cad_address) {
-                    $this->insertCustomerAddress($id, $cad_address);
+            unset($cus['cus_id']);
+            $cus['inp_date'] = now();
+            $cus['inp_user'] = Auth::user()->id;
+            $cus['upd_date'] = now();
+            $cus['upd_user'] = Auth::user()->id;
+            $cus_id = DB::table('customer_copy')->insertGetId($cus);
+
+            //Insert customer address
+            $cad = $data['cad'];
+            foreach ($cad as &$item) {
+                unset($item['cad_id']);
+                $item['cus_id'] = $cus_id;
+                $item['inp_date'] = now();
+                $item['inp_user'] = Auth::user()->id;
+                $item['upd_date'] = now();
+                $item['upd_user'] = Auth::user()->id;
+            }
+            DB::table('customer_address_copy')->insert($cad);
+
+            //Insert customer contact
+            $con = $data['con'];
+            foreach ($con as &$item) {
+                unset($item['con_id']);
+
+                if ($item['con_avatar'] != '') {
+                    $con_avatar = uniqid(). ".png";
+                    resizeImage($item['con_avatar'], $con_avatar, 200, 200, 'con');
+                    $item['con_avatar'] = $con_avatar;
                 }
-            }
-        } catch (\Throwable $e) {
-            throw $e;
-        }
-        return $id;
-    }
 
-    public function insertCustomerAddress($cus_id, $cad_address)
-    {
-        try {
-            DB::table('customer_address_copy')->insert(
-                [
-                    'cus_id' => $cus_id,
-                    'cad_address' => $cad_address,
-                    'inp_date' => now(),
-                    'upd_date' => now(),
-                    'inp_user' => '1',
-                    'upd_user' => '1'
-                ]
-            );
+                $item['cus_id'] = $cus_id;
+                $item['inp_date'] = now();
+                $item['inp_user'] = Auth::user()->id;
+                $item['upd_date'] = now();
+                $item['upd_user'] = Auth::user()->id;
+            }
+            DB::table('customer_contact')->insert($con);
+
+            DB::commit();
         } catch (\Throwable $e) {
+            DB::rollback();
             throw $e;
         }
     }
@@ -466,7 +458,7 @@ class Customer
             foreach ($data['con'] as $idx => $con) {
 
                 //validate con_name
-                if (requiredValidator($con['con_name']) == ) {
+                if (requiredValidator($con['con_name']) == false) {
                     $res['success'] = false;
                     $message[] = __('[' . ($idx + 1) . ']Contact name is required.');
                 }
@@ -476,7 +468,7 @@ class Customer
                 }
 
                 //validate con_mail
-                if (requiredValidator($con['con_mail']) == ) {
+                if (requiredValidator($con['con_mail']) == false) {
                     $res['success'] = false;
                     $message[] = __('[' . ($idx + 1) . ']Contact mail is required.');
                 }
@@ -598,7 +590,7 @@ class Customer
             $curUser = $user->getCurrentUser();
             $pre_reg = strtoupper(explode('@', $curUser->email)[0]) . '_CUS';
             $reg = '^' . $pre_reg . '[0-9]{5,}$';
-            $customer = DB::select("SELECT MAX(cus_code) AS cus_code FROM `customer` WHERE cus_pic = $user_id AND cus_code REGEXP :reg;", ['reg' => $reg]);
+            $customer = DB::select("SELECT MAX(cus_code) AS cus_code FROM `customer_copy` WHERE cus_pic = $user_id AND cus_code REGEXP :reg;", ['reg' => $reg]);
             if ($customer[0]->cus_code == null) {
                 $cus_code_num = 1;
             } else {

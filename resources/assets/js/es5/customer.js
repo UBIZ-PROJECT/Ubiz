@@ -100,43 +100,6 @@
         w_create: function () {
             jQuery.UbizOIWidget.w_go_to_input_page(0);
         },
-        w_search: function () {
-            var params = {};
-            params.page = '0';
-
-            if (jQuery('#cus_code').val().replace(/\s/g, '') != '') {
-                params.cus_code = jQuery('#cus_code').val();
-            }
-
-
-            if (jQuery('#cus_type').val().replace(/\s/g, '') != '') {
-                params.cus_type = jQuery('#cus_type').val();
-            }
-
-            if (jQuery('#cus_name').val().replace(/\s/g, '') != '') {
-                params.cus_name = jQuery('#cus_name').val();
-            }
-
-            if (jQuery('#cus_phone').val().replace(/\s/g, '') != '') {
-                params.cus_phone = jQuery('#cus_phone').val();
-            }
-
-            if (jQuery('#cus_fax').val().replace(/\s/g, '') != '') {
-                params.cus_fax = jQuery('#cus_fax').val();
-            }
-
-            if (jQuery('#cus_mail').val().replace(/\s/g, '') != '') {
-                params.cus_mail = jQuery('#cus_mail').val();
-            }
-
-            if (jQuery('#cus_address').val().replace(/\s/g, '') != '') {
-                params.cus_address = jQuery('#cus_address').val();
-            }
-
-            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-            params.sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/customers', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
-        },
         w_fuzzy_search: function () {
 
             jQuery.UbizOIWidget.page = '0';
@@ -161,25 +124,35 @@
         w_go_to_input_page: function (pos, id) {
             jQuery.UbizOIWidget.pos = pos;
             if (id == 0 || pos == 0) {
-                jQuery("#btn-delete").hide();
-                jQuery("#i-paging-label").hide();
-                jQuery("#i-paging-older").hide();
-                jQuery("#i-paging-newer").hide();
-                jQuery.UbizOIWidget.w_clean_input_page();
-
-                jQuery.UbizOIWidget.w_sleep_scrollbars(jQuery.UbizOIWidget.output_scrollbars);
-                jQuery.UbizOIWidget.w_update_scrollbars(jQuery.UbizOIWidget.input_scrollbars);
-
-                jQuery.UbizOIWidget.o_page.hide();
-                jQuery.UbizOIWidget.i_page.fadeIn("slow");
-                $("input[name=cus_code]").attr('disabled', false);
-                $("input[name=cus_code]").closest('div.root_textfield').removeClass('rootIsDisabled');
+                ubizapis('v1', '/customers/cuscode', 'get', null, null, jQuery.UbizOIWidget.w_go_to_input_page_callback);
             } else {
                 jQuery("#btn-delete").show();
                 $("input[name=cus_code]").attr('disabled', true);
                 $("input[name=cus_code]").closest('div.root_textfield').addClass('rootIsDisabled');
                 ubizapis('v1', '/customers/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
             }
+        },
+        w_go_to_input_page_callback: function (response) {
+
+            var cus_code = '';
+            if (response.data.success == true) {
+                cus_code = response.data.cus_code;
+            }
+
+            jQuery("#btn-delete").hide();
+            jQuery("#i-paging-label").hide();
+            jQuery("#i-paging-older").hide();
+            jQuery("#i-paging-newer").hide();
+            jQuery.UbizOIWidget.w_clean_input_page();
+
+            jQuery.UbizOIWidget.w_sleep_scrollbars(jQuery.UbizOIWidget.output_scrollbars);
+            jQuery.UbizOIWidget.w_update_scrollbars(jQuery.UbizOIWidget.input_scrollbars);
+
+            jQuery.UbizOIWidget.o_page.hide();
+            jQuery.UbizOIWidget.i_page.fadeIn("slow");
+            $("input[name=cus-code]").attr('disabled', false);
+            $("input[name=cus-code]").closest('div.root_textfield').removeClass('rootIsDisabled');
+            $("input[name=cus-code]").val(cus_code);
         },
         w_clean_input_page: function () {
             $('input[name="cus-id"]').val('0');

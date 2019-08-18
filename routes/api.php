@@ -39,6 +39,7 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
 
         Route::get('customers', ['as' => 'get-customers', 'uses' => 'Api\CustomerController@getCustomers']);
         Route::get('customers/{cus_id}', ['as' => 'get-customer', 'uses' => 'Api\CustomerController@getCustomer']);
+        Route::get('customers/cuscode', ['as' => 'generate-cus-code', 'uses' => 'Api\CustomerController@generateCusCode']);
         Route::put('customers', ['as' => 'insert-customer', 'uses' => 'Api\CustomerController@insertCustomer']);
         Route::post('customers/{cus_id}/update', ['as' => 'update-currency', 'uses' => 'Api\CustomerController@updateCustomer']);
         Route::delete('customers/{cus_ids}/delete', ['as' => 'delete-currency', 'uses' => 'Api\CustomerController@deleteCustomer']);

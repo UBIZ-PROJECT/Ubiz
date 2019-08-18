@@ -20,7 +20,7 @@ class CustomerController extends Controller
             $customerTypeList = $customerType->getAllTypes();
 
             $usersModel = new User();
-			$usersData = $userModel->getAllUsers();
+			$usersData = $usersModel->getAllUsers();
 			$paging = $customer->getPagingInfo();
 			$paging['page'] = 0;
 			foreach($customerList as $key => $item){
