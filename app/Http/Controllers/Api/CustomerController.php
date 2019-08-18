@@ -162,11 +162,9 @@ class CustomerController extends Controller
                 'cus_code' => $data['cus']['cus_code'],
                 'cus_name' => $data['cus']['cus_name'],
                 'cus_fax' => $data['cus']['cus_fax'],
+                'cus_mail' => $data['cus']['cus_mail'],
                 'cus_phone' => $data['cus']['cus_phone'],
                 'cus_field' => $data['cus']['cus_field'],
-                'cus_address_1' => $data['cus']['cus_address_1'],
-                'cus_address_2' => $data['cus']['cus_address_2'],
-                'cus_address_3' => $data['cus']['cus_address_3'],
                 'cus_type' => $data['cus']['cus_type'],
                 'cus_pic' => $data['cus']['cus_pic'],
                 'cus_avatar' => $data['cus']['cus_avatar']
@@ -194,7 +192,7 @@ class CustomerController extends Controller
                     'con_mail' => $con['con_mail'],
                     'con_phone' => $con['con_phone'],
                     'con_duty' => $con['con_duty'],
-                    'con_avata' => $con['con_avatar']
+                    'con_avatar' => $con['con_avatar']
                 ];
             }
 

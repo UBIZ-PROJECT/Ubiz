@@ -42,9 +42,21 @@ class Customer
     {
         try {
             $customerContact = DB::table('customer_contact')
-                ->where('cus_id', $cus_id)
-                ->where('delete_flg', '0')
+                ->where([
+                    ['delete_flg', '=', '0'],
+                    ['cus_id', '=', $cus_id]
+                ])
+                ->orderBy('con_id', 'asc')
                 ->get();
+
+            foreach ($customerContact as &$data) {
+                if ($data->con_avatar == '' || $data->con_avatar == null){
+                    $data->con_avatar = '';
+                    continue;
+                }
+                $data->con_avatar = readImage($data->con_avatar, 'con');
+            }
+
             return $customerContact;
         } catch (\Throwable $e) {
             throw $e;
@@ -180,6 +192,22 @@ class Customer
         return $count;
     }
 
+    public function getAddressLocation()
+    {
+        try {
+            $data = DB::table('m_location')
+                ->where([
+                    ['delete_flg', '=', '0']
+                ])
+                ->orderBy('lct_id', 'asc')
+                ->get();
+
+            return $data;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
     public function getPagingInfo()
     {
         try {
@@ -202,8 +230,8 @@ class Customer
             //Insert customer
             $cus = $data['cus'];
             if ($cus['cus_avatar'] != '') {
-                $cus_avatar = uniqid(). ".png";
-                resizeImage($cus['cus_avatar'], $cus_avatar, 200, 200, 'cus');
+                $cus_avatar = uniqid() . ".png";
+                resizeImageBase64($cus['cus_avatar'], uniqid(), 200, 200, 'cus');
                 $cus['cus_avatar'] = $cus_avatar;
             }
 
@@ -232,8 +260,8 @@ class Customer
                 unset($item['con_id']);
 
                 if ($item['con_avatar'] != '') {
-                    $con_avatar = uniqid(). ".png";
-                    resizeImage($item['con_avatar'], $con_avatar, 200, 200, 'con');
+                    $con_avatar = uniqid() . ".png";
+                    resizeImageBase64($item['con_avatar'], uniqid(), 200, 200, 'con');
                     $item['con_avatar'] = $con_avatar;
                 }
 
@@ -257,7 +285,7 @@ class Customer
         try {
             if ($param['cus_avatar'] && ($param['cus_avatar_flg'] == 2)) {
                 $avatar = $param['cus_id'] . '.' . $param['cus_avatar']->getClientOriginalExtension();
-                resizeImage($param['cus_avatar']->getRealPath(), $param['cus_id'] . '.' . $param['cus_avatar']->getClientOriginalExtension(), 200, 200, 'cus');
+                resizeImageBase64($param['cus_avatar']->getRealPath(), $param['cus_id'] . '.' . $param['cus_avatar']->getClientOriginalExtension(), 200, 200, 'cus');
             } else {
                 if ($param['cus_avatar_flg'] == 0) {
                     $customerAvatar = DB::table('customer_copy')
@@ -335,7 +363,7 @@ class Customer
             $res = ['success' => true, 'message' => ''];
             $message = [];
 
-            if (presentValidator($data['cus']) == true) {
+            if (presentValidator($data['cus']) == false) {
                 $res['success'] = false;
                 $message[] = __('Data is wrong.!');
                 return $res;
@@ -449,7 +477,7 @@ class Customer
             $res = ['success' => true, 'message' => ''];
             $message = [];
 
-            if (presentValidator($data['con']) == true) {
+            if (presentValidator($data['con']) == false) {
                 $res['success'] = false;
                 $message[] = __('Contact data is wrong.!');
                 return $res;

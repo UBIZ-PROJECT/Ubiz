@@ -98,7 +98,7 @@
             }
         },
         w_create: function () {
-            jQuery.UbizOIWidget.w_go_to_input_page(0);
+            jQuery.UbizOIWidget.w_go_to_input_page(0, 0);
         },
         w_fuzzy_search: function () {
 
@@ -124,7 +124,7 @@
         w_go_to_input_page: function (pos, id) {
             jQuery.UbizOIWidget.pos = pos;
             if (id == 0 || pos == 0) {
-                ubizapis('v1', '/customers/cuscode', 'get', null, null, jQuery.UbizOIWidget.w_go_to_input_page_callback);
+                ubizapis('v1', '/customers/generate-cus-code', 'get', null, null, jQuery.UbizOIWidget.w_go_to_input_page_callback);
             } else {
                 jQuery("#btn-delete").show();
                 $("input[name=cus_code]").attr('disabled', true);
@@ -453,31 +453,31 @@
         },
         w_get_cus_form_data: function () {
             var data = {};
-            data.cus_id = jQuery('input[name="cus-id"]').val();
-            data.cus_code = jQuery('input[name="cus-code"]').val();
-            data.cus_name = jQuery('input[name="cus-name"]').val();
-            data.cus_fax = jQuery('input[name="cus-fax"]').val();
-            data.cus_mail = jQuery('input[name="cus-mail"]').val();
-            data.cus_phone = jQuery('input[name="cus-phone"]').val();
-            data.cus_field = jQuery('input[name="cus-field"]').val();
-            data.cad_id_1 = jQuery('input[name="cad-id-1"]').val();
-            data.cus_address_1 = jQuery('input[name="cus-address-1"]').val();
-            data.cad_id_2 = jQuery('input[name="cad-id-2"]').val();
-            data.cus_address_2 = jQuery('input[name="cus-address-2"]').val();
-            data.cad_id_3 = jQuery('input[name="cad-id-3"]').val();
-            data.cus_address_3 = jQuery('input[name="cus-address-3"]').val();
-            data.cus_type = jQuery('select[name="cus-type"]').val();
-            data.cus_pic = jQuery('select[name="cus-pic"]').val();
-            data.cus_avatar = jQuery('input[name="cus-avatar"]').val();
+            data.cus_id = $('input[name="cus-id"]').val();
+            data.cus_code = $('input[name="cus-code"]').val();
+            data.cus_name = $('input[name="cus-name"]').val();
+            data.cus_fax = $('input[name="cus-fax"]').val();
+            data.cus_mail = $('input[name="cus-mail"]').val();
+            data.cus_phone = $('input[name="cus-phone"]').val();
+            data.cus_field = $('input[name="cus-field"]').val();
+            data.cad_id_1 = $('input[name="cad-id-1"]').val();
+            data.cus_address_1 = $('input[name="cus-address-1"]').val();
+            data.cad_id_2 = $('input[name="cad-id-2"]').val();
+            data.cus_address_2 = $('input[name="cus-address-2"]').val();
+            data.cad_id_3 = $('input[name="cad-id-3"]').val();
+            data.cus_address_3 = $('input[name="cus-address-3"]').val();
+            data.cus_type = $('select[name="cus-type"]').val();
+            data.cus_pic = $('select[name="cus-pic"]').val();
+            data.cus_avatar = $('input[name="cus-avatar"]').val();
             return data;
         },
         w_set_con_form_data: function (data) {
-            var data = new Array();
-            $("div[name=con-summary-detail]").each(function (index) {
-                var con_data = jQuery.UbizOIWidget.w_get_con_form_data_detail($(this));
-                data.push(con_data);
-            });
-            return data;
+            for (let i = 0; i < data.length; i++) {
+                let summary_data = data[i];
+                var summary_html = jQuery.UbizOIWidget.w_con_clone_summary_html();
+                var summary_detail = jQuery.UbizOIWidget.w_con_add_summary_html(summary_html);
+                jQuery.UbizOIWidget.w_con_set_summary_data(summary_detail, summary_data);
+            }
         },
         w_get_con_form_data: function () {
             var data = new Array();
@@ -500,8 +500,8 @@
         w_save: function () {
 
             var data = {};
-            data.cus_data = jQuery.UbizOIWidget.w_get_cus_form_data();
-            data.con_data = jQuery.UbizOIWidget.w_get_con_form_data();
+            data.cus = jQuery.UbizOIWidget.w_get_cus_form_data();
+            data.con = jQuery.UbizOIWidget.w_get_con_form_data();
 
             swal({
                 title: i18next.t('Do you want to save the data.?'),
@@ -514,10 +514,10 @@
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
-                    if (data.cus_data.cus_id != 0) {
-                        ubizapis('v1', '/customers/' + data.cus_data.cus_id + '/update', 'post', {'data': data}, null, jQuery.UbizOIWidget.w_save_callback);
+                    if (data.cus.cus_id != 0) {
+                        ubizapis('v1', '/customers/' + data.cus.cus_id + '/update', 'post', {'data': data}, null, jQuery.UbizOIWidget.w_save_callback);
                     } else {
-                        ubizapis('v1', '/customers', 'put', data, null, jQuery.UbizOIWidget.w_save_callback);
+                        ubizapis('v1', '/customers', 'put', {'data': data}, null, jQuery.UbizOIWidget.w_save_callback);
                     }
                 }
             });
@@ -528,8 +528,8 @@
                     type: 'success',
                     title: response.data.message,
                     onClose: () => {
-                        jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
-                        jQuery.UbizOIWidget.w_go_back_to_output_page(this);
+                        jQuery.UbizOIWidget.w_go_back_to_output_page();
+                        jQuery.UbizOIWidget.w_refresh_output_page();
                     }
                 })
             } else {
@@ -647,7 +647,7 @@
                 var reader = new FileReader();
                 reader.onload = function (e) {
                     $('#cus-img').attr('src', e.target.result);
-                    $('#cus-avatar').attr('src', e.target.result);
+                    $('#cus-avatar').val(e.target.result);
                 }
                 reader.readAsDataURL(self.files[0]);
             }

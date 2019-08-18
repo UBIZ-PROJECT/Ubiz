@@ -441,7 +441,7 @@
                     <div class="aqI nicescroll" id="nicescroll-iput">
                         <form id="f-input">
                             <div class="row z-mgl z-mgr">
-                                <div class="col-sm-8 col-md-8 col-xl-8 z-pdl">
+                                <div class="col-sm-9 col-md-9 col-xl-9 z-pdl">
                                     <div class="row z-mgl z-mgr z-pdl z-pdr">
                                         <div class="col-sm-3 col-md-3 col-xl-3 z-pdl">
                                             <div class="image-upload mb-1" style="max-width: 150px; max-height: 150px">
@@ -454,7 +454,7 @@
                                                        style="display:none">
                                                 <input id="cus-flag" type="text" name="cus-flag" value="0"
                                                        style="display:none">
-                                                <input id="cus-avatar" type="text" name="con-avatar" value=""
+                                                <input id="cus-avatar" type="text" name="cus-avatar" value=""
                                                        style="display:none">
                                                 <button type="button" style="top: -150px;" class="close"
                                                         aria-label="Close"
@@ -469,17 +469,84 @@
                                         <div class="col-sm-9 col-md-9 col-xl-9">
                                             <input type="hidden" name="cus-id" value="0"/>
                                             @include('components.input',['type'=>'required', 'control_id'=>'cus-code', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'Mã', 'length'=>5])
-                                            @include('components.input',['type'=>'required', 'control_id'=>'cus-name', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'Tên công ty', 'length'=>100])
+                                            @include('components.input',['type'=>'required', 'control_id'=>'cus-name', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'Tên công ty', 'length'=>250])
                                             @include('components.input',['control_id'=>'cus-fax', 'label'=>'Fax', 'i_focus'=>'', 'i_blur'=>'', 'length'=>20])
-                                            @include('components.input',['control_id'=>'cus-mail', 'label'=>'Email', 'i_focus'=>'', 'i_blur'=>'', 'length'=>100])
+                                            @include('components.input',['control_id'=>'cus-mail', 'label'=>'Email', 'i_focus'=>'', 'i_blur'=>'', 'length'=>250])
                                             @include('components.input',['control_id'=>'cus-phone', 'label'=>'Điện thoại', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
                                             @include('components.input',['control_id'=>'cus-field', 'label'=>'Lĩnh vực', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
-                                            @include('components.input',['control_id'=>'cus-address-1', 'label'=>'Địa chỉ 1', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
-                                            @include('components.hidden_input',['control_id'=>'cad-id-1', 'value'=>'0'])
-                                            @include('components.input',['control_id'=>'cus-address-2', 'label'=>'Địa chỉ 2', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
-                                            @include('components.hidden_input',['control_id'=>'cad-id-2', 'value'=>'0'])
-                                            @include('components.input',['control_id'=>'cus-address-3', 'label'=>'Địa chỉ 3', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
-                                            @include('components.hidden_input',['control_id'=>'cad-id-3', 'value'=>'0'])
+
+                                            <table>
+                                                <tbody>
+                                                <tr>
+                                                    <td>
+                                                        @include('components.input',['control_id'=>'cus-address-1', 'label'=>'Địa chỉ 1', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
+                                                        @include('components.hidden_input',['control_id'=>'cad-id-1', 'value'=>'0'])
+                                                    </td>
+                                                    <td>
+                                                        <div class="textfield  root_textfield rootIsUnderlined" style="width: 100px">
+                                                            <div class="wrapper" style="height: 33px">
+                                                                <div class="fieldGroup">
+                                                                    <select class="dropdown_field" name="lct-location-1"">
+                                                                        @foreach($addLocations as $lct)
+                                                                            <option value="{{ $lct->lct_id }}">{{ $lct->lct_location }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <table>
+                                                <tbody>
+                                                <tr>
+                                                    <td>
+                                                        @include('components.input',['control_id'=>'cus-address-2', 'label'=>'Địa chỉ 2', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
+                                                        @include('components.hidden_input',['control_id'=>'cad-id-2', 'value'=>'0'])
+                                                    </td>
+                                                    <td>
+                                                        <div class="textfield  root_textfield rootIsUnderlined" style="width: 100px">
+                                                            <div class="wrapper" style="height: 33px">
+                                                                <div class="fieldGroup">
+                                                                    <select class="dropdown_field" name="lct-location-2">
+                                                                        @foreach($addLocations as $lct)
+                                                                            <option value="{{ $lct->lct_id }}">{{ $lct->lct_location }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <table>
+                                                <tbody>
+                                                <tr>
+                                                    <td>
+                                                        @include('components.input',['control_id'=>'cus-address-3', 'label'=>'Địa chỉ 3', 'i_focus'=>'', 'i_blur'=>'', 'width'=>450])
+                                                        @include('components.hidden_input',['control_id'=>'cad-id-3', 'value'=>'0'])
+                                                    </td>
+                                                    <td>
+                                                        <div class="textfield  root_textfield rootIsUnderlined" style="width: 100px">
+                                                            <div class="wrapper" style="height: 33px">
+                                                                <div class="fieldGroup">
+                                                                    <select class="dropdown_field" name="lct-location-3">
+                                                                        @foreach($addLocations as $lct)
+                                                                            <option value="{{ $lct->lct_id }}">{{ $lct->lct_location }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+
                                             <div class="textfield  root_textfield rootIsUnderlined cus_type_container"
                                                  style="width: 300px">
                                                 <div class="wrapper">
@@ -525,7 +592,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-4 col-md-4 col-xl-4 z-pdr cus-part-2">
+                                <div class="col-sm-3 col-md-3 col-xl-3 z-pdr cus-part-2">
                                     <div class="row z-mgl z-mgr">
                                         <span class="text-primary">Người liên hệ</span>
                                     </div>

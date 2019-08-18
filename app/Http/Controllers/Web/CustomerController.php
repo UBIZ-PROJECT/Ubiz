@@ -17,7 +17,10 @@ class CustomerController extends Controller
             $customerType = new CustomerType();
 
             $customerList = $customer->getCustomers();
+
             $customerTypeList = $customerType->getAllTypes();
+
+            $addLocations = $customer->getAddressLocation();
 
             $usersModel = new User();
 			$usersData = $usersModel->getAllUsers();
@@ -29,6 +32,7 @@ class CustomerController extends Controller
 			return view('customer', [
 			    'customers' => $customerList,
                 'customerTypeList' => $customerTypeList,
+                'addLocations' => $addLocations,
                 'users' => $usersData,
                 'paging' => $paging
             ]);

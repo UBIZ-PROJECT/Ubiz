@@ -4,6 +4,7 @@ use App as App;
 use App\User as User;
 use Illuminate\Validation\Rule as Rule;
 use Illuminate\Support\Facades\DB as DB;
+use Illuminate\Http\Testing\MimeType as MimeType;
 use Illuminate\Support\Facades\Storage as Storage;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\Validator as Validator;
@@ -18,6 +19,24 @@ function resizeImage($img, $target_img, $new_img_width, $new_img_height, $img_ty
         $image = Image::make($img);
         $image->resize($new_img_width, $new_img_height);
         $image->save($target_file);
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function resizeImageBase64($img_base64, $img_uuid, $img_width, $img_height, $img_type)
+{
+    try {
+        $drive_path = getDrivePath();
+        $img_dir = $drive_path . '/images/' . $img_type;
+        makeDir($img_dir);
+
+        $image = Image::make($img_base64);
+        $image_ext = MimeType::search($image->mime());
+
+        $img_file = "$img_dir/$img_uuid.$image_ext";
+        $image->resize($img_width, $img_height);
+        $image->save($img_file);
     } catch (\Throwable $e) {
         throw $e;
     }
