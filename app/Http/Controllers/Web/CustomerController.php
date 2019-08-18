@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\User;
 use App\Model\Customer;
 use App\Model\CustomerType;
 
@@ -18,7 +19,8 @@ class CustomerController extends Controller
             $customerList = $customer->getCustomers();
             $customerTypeList = $customerType->getAllTypes();
 
-			$users = $customer->getUsers();
+            $usersModel = new User();
+			$usersData = $userModel->getAllUsers();
 			$paging = $customer->getPagingInfo();
 			$paging['page'] = 0;
 			foreach($customerList as $key => $item){
@@ -27,7 +29,7 @@ class CustomerController extends Controller
 			return view('customer', [
 			    'customers' => $customerList,
                 'customerTypeList' => $customerTypeList,
-                'users' => $users,
+                'users' => $usersData,
                 'paging' => $paging
             ]);
 		} catch (\Throwable $e) {

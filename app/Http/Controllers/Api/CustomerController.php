@@ -69,7 +69,7 @@ class CustomerController extends Controller
             }
 
             $cusModel = new Customer();
-            $validator = $cusModel->validateData($data);
+            $validator = $cusModel->insertValidation($data);
             if ($validator['success'] == false) {
                 return response()->json(['success' => false, 'message' => $validator['message']], 200);
             }
@@ -99,7 +99,7 @@ class CustomerController extends Controller
                 return response()->json(['success' => false, 'message' => __("Order doesn't existed.!")], 200);
             }
 
-            $validator = $cusModel->validateData($data);
+            $validator = $cusModel->updateValidation($data);
             if ($validator['success'] == false) {
                 return response()->json(['success' => false, 'message' => $validator['message']], 200);
             }
@@ -117,8 +117,8 @@ class CustomerController extends Controller
     public function deleteCustomer($cus_ids, Request $request)
     {
         try {
-            $customer = new Customer();
-            $customer->deleteCustomer($cus_ids);
+            $cusModel = new Customer();
+            $cusModel->deleteCustomer($cus_ids);
             return response()->json(['success' => true, 'message' => __('Successfully processed.')], 200);
         } catch (\Throwable $e) {
             throw $e;

@@ -119,40 +119,6 @@ class Customer
         }
     }
 
-    public function countCustomers()
-    {
-        try {
-            $user_id = Auth::user()->id;
-            $totalCustomers = DB::table('customer_copy')
-                ->where([
-                    ['delete_flg', '=', '0'],
-                    ['cus_pic', '=', $user_id],
-                ])
-                ->count();
-            return $totalCustomers;
-        } catch (\Throwable $e) {
-            throw $e;
-        }
-    }
-
-    public function getCustomer($cus_id)
-    {
-        try {
-            $user_id = Auth::user()->id;
-            $customers = DB::table('customer_copy')
-                ->where([
-                    ['delete_flg', '=', '0'],
-                    ['cus_id', '=', $cus_id],
-                    ['cus_pic', '=', $user_id]
-                ])
-                ->get();
-            $customers[0]->avt_src = readImage($customers[0]->cus_avatar, 'cus');
-        } catch (\Throwable $e) {
-            throw $e;
-        }
-        return $customers;
-    }
-
     public function getCustomerById($cus_id)
     {
         try {
@@ -228,23 +194,34 @@ class Customer
         ];
     }
 
-    public function insertCustomer($param)
+    public function insertCustomer($data)
     {
         try {
+
+            $cus = $data['cus'];
+            $cad = $data['cad'];
+            $con = $data['con'];
+
             if ($param['cus_avatar']) {
                 $avatar = $param['cus_id'] . '.' . $param['cus_avatar']->getClientOriginalExtension();
                 resizeImage($param['cus_avatar']->getRealPath(), $param['cus_id'] . '.' . $param['cus_avatar']->getClientOriginalExtension(), 200, 200, 'cus');
             } else {
                 $avatar = '';
             }
+
+            if ($cus['cus_avatar'] != '') {
+                $cus['cus_avatar'] = uniqid(). ".png";
+                resizeImage($cus['cus_avatar'], $cus_avatar, 200, 200, 'cus');
+            }
+
             $id = DB::table('customer_copy')->insertGetId(
                 [
-                    'cus_code' => $param['cus_code'],
-                    'cus_name' => $param['cus_name'],
-                    'cus_avatar' => $avatar,
-                    'cus_type' => $param['cus_type'],
-                    'cus_phone' => $param['cus_phone'],
-                    'cus_fax' => $param['cus_fax'],
+                    'cus_code' => $cus['cus_code'],
+                    'cus_name' => $cus['cus_name'],
+                    'cus_avatar' => $cus_avatar,
+                    'cus_type' => $cus['cus_type'],
+                    'cus_phone' => $cus['cus_phone'],
+                    'cus_fax' => $cus['cus_fax'],
                     'cus_mail' => $param['cus_mail'],
                     'cus_sex' => $param['cus_sex'],
                     'cus_pic' => $param['cus_pic'],
@@ -338,196 +315,17 @@ class Customer
             $res = ['success' => true, 'message' => ''];
             $message = [];
 
-            if (!array_key_exists('order', $data)) {
+            $cusValidator = $this->validateCusData($data);
+            $conValidator = $this->validateConData($data);
+
+            if ($cusValidator['success'] == false) {
                 $res['success'] = false;
-                $message[] = __('Data is wrong.!');
-                return $res;
+                $message[] = implode("\n", $cusValidator['message']);
             }
 
-            $order = $data['order'];
-            if (!array_key_exists('ord_no', $order) || $order['ord_no'] == '' || $order['ord_no'] == null) {
+            if ($conValidator['success'] == false) {
                 $res['success'] = false;
-                $message[] = __('Order No is required.');
-            }
-            if (array_key_exists('ord_no', $order) && mb_strlen($order['ord_no'], "utf-8") > 30) {
-                $res['success'] = false;
-                $message[] = __('Order No is too long.');
-            }
-            if (!array_key_exists('ord_date', $order) || $order['ord_date'] == '' || $order['ord_date'] == null) {
-                $res['success'] = false;
-                $message[] = __('Order Date is required.');
-            }
-            if (array_key_exists('ord_date', $order) && $this->dateValidator($order['ord_date']) == false) {
-                $res['success'] = false;
-                $message[] = __('Order Date is wrong format YYYY/MM/DD.');
-            }
-            if (array_key_exists('ord_exp_date', $order) && $this->dateValidator($order['ord_exp_date']) == false) {
-                $res['success'] = false;
-                $message[] = __('Order Exp Date is wrong format YYYY/MM/DD.');
-            }
-            if (array_key_exists('ord_dlv_date', $order) && $this->dateValidator($order['ord_dlv_date']) == false) {
-                $res['success'] = false;
-                $message[] = __('Order Delivery Date is wrong format YYYY/MM/DD.');
-            }
-
-            $amount_check = true;
-            if (!array_key_exists('ord_tax', $order)) {
-                $amount_check = false;
-                $res['success'] = false;
-                $message[] = __('Order Tax is required.');
-            }
-            if (!array_key_exists('ord_amount', $order)) {
-                $amount_check = false;
-                $res['success'] = false;
-                $message[] = __('Total value of orders (before VAT) is required.');
-            }
-            if (!array_key_exists('ord_amount_tax', $order)) {
-                $amount_check = false;
-                $res['success'] = false;
-                $message[] = __('Total value of orders (VAT included) is required.');
-            }
-            if (!array_key_exists('ord_paid', $order)) {
-                $amount_check = false;
-                $res['success'] = false;
-                $message[] = __('Paid is required.');
-            }
-            if (!array_key_exists('ord_debt', $order)) {
-                $res['success'] = false;
-                $message[] = __('Debt is required.');
-            }
-            if (array_key_exists('ord_tax', $order) && (is_numeric($order['ord_tax']) == false || intval($order['ord_tax']) < 0 || intval($order['ord_tax']) > 2147483647)) {
-                $amount_check = false;
-                $res['success'] = false;
-                $message[] = __('Order Tax is wrong data.');
-            }
-            if (array_key_exists('ord_amount', $order) && (is_numeric($order['ord_amount']) == false || floatval($order['ord_amount']) < 0 || floatval($order['ord_amount']) > 9223372036854775807)) {
-                $amount_check = false;
-                $res['success'] = false;
-                $message[] = __('Total value of orders (before VAT) is wrong.');
-            }
-            if (array_key_exists('ord_amount_tax', $order) && (is_numeric($order['ord_amount_tax']) == false || floatval($order['ord_amount_tax']) < 0 || floatval($order['ord_amount']) > 9223372036854775807)) {
-                $amount_check = false;
-                $res['success'] = false;
-                $message[] = __('Total value of orders (VAT included) is wrong.');
-            }
-            if (array_key_exists('ord_paid', $order) && (is_numeric($order['ord_paid']) == false || floatval($order['ord_paid']) < 0 || floatval($order['ord_paid']) > 9223372036854775807)) {
-                $amount_check = false;
-                $res['success'] = false;
-                $message[] = __('Paid is wrong.');
-            }
-            if (array_key_exists('ord_debt', $order) && (is_numeric($order['ord_debt']) == false || floatval($order['ord_debt']) < 0 || floatval($order['ord_debt']) > 9223372036854775807)) {
-                $amount_check = false;
-                $res['success'] = false;
-                $message[] = __('Debt is wrong.');
-            }
-
-            if ($amount_check == true) {
-
-                $ord_tax = $order['ord_tax'] == null || $order['ord_tax'] == '' ? 0 : intval($order['ord_tax']);
-                $ord_amount = $order['ord_amount'] == null || $order['ord_amount'] == '' ? 0 : doubleval($order['ord_amount']);
-                $ord_amount_tax = $order['ord_amount_tax'] == null || $order['ord_amount_tax'] == '' ? 0 : doubleval($order['ord_amount_tax']);
-                $ord_paid = $order['ord_paid'] == null || $order['ord_paid'] == '' ? 0 : doubleval($order['ord_paid']);
-                $ord_debt = $order['ord_debt'] == null || $order['ord_debt'] == '' ? 0 : doubleval($order['ord_debt']);
-
-                $chk_ord_amount_tax = $ord_amount + $ord_amount * $ord_tax / 100;
-                $chk_ord_debt = $ord_amount_tax - $ord_paid;
-                if ($ord_amount_tax != $chk_ord_amount_tax || $chk_ord_debt != $ord_debt) {
-                    $amount_check = false;
-                    $res['success'] = false;
-                    $message[] = __('Amount total is wrong.');
-                }
-            }
-
-            $prdModel = new Product();
-            $dt_total_amount = 0;
-            $order_details = array_key_exists('order_detail', $data) ? $data['order_detail'] : [];
-            foreach ($order_details as $line_no => $item) {
-
-                if (!array_key_exists('dt_note', $item)
-                    || !array_key_exists('dt_unit', $item)
-                    || !array_key_exists('dt_quantity', $item)
-                    || !array_key_exists('dt_delivery_time', $item)
-                    || !array_key_exists('dt_status', $item)
-                    || !array_key_exists('dt_price', $item)
-                    || !array_key_exists('dt_amount', $item)
-                    || !array_key_exists('dt_type', $item)
-                    || !array_key_exists('dt_sort_no', $item)
-                    || !array_key_exists('action', $item)
-                ) {
-                    $res['success'] = false;
-                    switch ($item['dt_type']) {
-                        case '1':
-                            $message[] = __('[Row : :line ] pump detail is wrong data.', ['line' => "No." + ($line_no + 1)]);
-                            break;
-                        case '2':
-                            $message[] = __('[Row : :line ] accessory detail is wrong data.', ['line' => "No." + ($line_no + 1)]);
-                            break;
-                    }
-                    continue;
-                }
-                switch ($item['dt_type']) {
-                    case '1':
-                        if (!array_key_exists('dt_prod_specs_mce', $item)
-                            || !array_key_exists('dt_prod_specs', $item)
-                            || !array_key_exists('dt_prod_model', $item)
-                            || !array_key_exists('dt_prod_series', $item)
-                        ) {
-                            $res['success'] = false;
-                            $message[] = __('[Row : :line ] pump detail is wrong data.', ['line' => "No." + ($line_no + 1)]);
-                            continue;
-                        }
-                        break;
-                    case '2':
-                        if (!array_key_exists('dt_acce_code', $item)
-                            || !array_key_exists('dt_acce_name', $item)
-                        ) {
-                            $res['success'] = false;
-                            $message[] = __('[Row : :line ] accessory detail is wrong data.', ['line' => "No." + ($line_no + 1)]);
-                            continue;
-                        }
-                        break;
-                }
-
-                if ($item['action'] == 'delete')
-                    continue;
-
-                if ($item['dt_type'] == 1 && $item['dt_prod_model'] != '') {
-                    $is_exists = $prdModel->checkProductIsExistsByModel($item['dt_prod_model']);
-                    if ($is_exists == false) {
-                        $res['success'] = false;
-                        $message[] = __('[Row : :line ] model [ :model ] is not exists.', ['line' => "No." + ($line_no + 1), 'model' => $item['dt_prod_model']]);
-                    }
-                }
-
-                if ($item['dt_type'] == 1 && $item['dt_prod_model'] != '' && $item['dt_prod_series'] != '') {
-
-                    $prdSeriesObjData = $prdModel->getProductSeriesByModel($item['dt_prod_model']);
-                    $prdSeriesArrData = [];
-                    foreach ($prdSeriesObjData as $seri) {
-                        $prdSeriesArrData[] = $seri->serial_no;
-                    }
-
-                    $dt_prod_series = explode(",", $item['dt_prod_series']);
-                    $not_exists_series = [];
-                    foreach ($dt_prod_series as $seri) {
-                        if (in_array($seri, $prdSeriesArrData) == false) {
-                            $not_exists_series[] = $seri;
-                        }
-                    }
-
-                    if (sizeof($not_exists_series) > 0) {
-                        $res['success'] = false;
-                        $message[] = __('[Row : :line ] series [ :series ] is not exists.', ['line' => "No." + ($line_no + 1), 'series' => implode(",", $not_exists_series)]);
-                    }
-                }
-
-                $dt_total_amount += $item['dt_amount'] == null || $item['dt_amount'] == '' ? 0 : doubleval($item['dt_amount']);
-            }
-
-            if ($amount_check == true && $dt_total_amount != $ord_amount) {
-                $amount_check = false;
-                $res['success'] = false;
-                $message[] = __('Amount total of order details is not equal amount total of order.');
+                $message[] = implode("\n", $conValidator['message']);
             }
 
             $res['message'] = implode("\n", $message);
@@ -538,30 +336,215 @@ class Customer
 
     }
 
-    public function getUsers()
+    public function validateCusData($data)
     {
-        $users = DB::table('users')
-            ->select('id', 'name')
-            ->get();
+        try {
 
-        return $users;
+            $res = ['success' => true, 'message' => ''];
+            $message = [];
+
+            if (presentValidator($data['cus']) == true) {
+                $res['success'] = false;
+                $message[] = __('Data is wrong.!');
+                return $res;
+            }
+
+            $cus = $data['cus'];
+            //validate cus_code
+            if (requiredValidator($cus['cus_code']) == false) {
+                $res['success'] = false;
+                $message[] = __('Customer code is required.');
+            }
+            if (presentValidator($cus['cus_code']) == true && maxlengthValidator($cus['cus_code'], 50) == false) {
+                $res['success'] = false;
+                $message[] = __('Customer code is too long.');
+            }
+
+            //validate cus_name
+            if (requiredValidator($cus['cus_name']) == false) {
+                $res['success'] = false;
+                $message[] = __('Customer name is required.');
+            }
+            if (presentValidator($cus['cus_name']) == true && maxlengthValidator($cus['cus_name'], 250) == false) {
+                $res['success'] = false;
+                $message[] = __('Customer name is too long.');
+            }
+
+            //validate cus_fax
+            if (presentValidator($cus['cus_fax']) == false) {
+                $res['success'] = false;
+                $message[] = __('Customer fax is missing.');
+            }
+            if (presentValidator($cus['cus_fax']) == true && maxlengthValidator($cus['cus_fax'], 250) == false) {
+                $res['success'] = false;
+                $message[] = __('Customer fax is too long.');
+            }
+
+            //validate cus_mail
+            if (presentValidator($cus['cus_mail']) == false) {
+                $res['success'] = false;
+                $message[] = __('Customer mail is missing.');
+            }
+            if (presentValidator($cus['cus_mail']) == true && maxlengthValidator($cus['cus_mail'], 250) == false) {
+                $res['success'] = false;
+                $message[] = __('Customer mail is too long.');
+            }
+
+            //validate cus_field
+            if (presentValidator($cus['cus_field']) == false) {
+                $res['success'] = false;
+                $message[] = __('Customer field is missing.');
+            }
+            if (presentValidator($cus['cus_field']) == true && maxlengthValidator($cus['cus_field'], 250) == false) {
+                $res['success'] = false;
+                $message[] = __('Customer field is too long.');
+            }
+
+            //validate cus_phone
+            if (presentValidator($cus['cus_phone']) == false) {
+                $res['success'] = false;
+                $message[] = __('Customer phone is missing.');
+            }
+
+            //validate cus_avatar
+            if (presentValidator($cus['cus_avatar']) == false) {
+                $res['success'] = false;
+                $message[] = __('Customer avatar is missing.');
+            }
+
+            //validate cus_address_1
+            if (presentValidator($cus['cus_address_1']) == false) {
+                $res['success'] = false;
+                $message[] = __('Customer address 1 is missing.');
+            }
+
+            //validate cus_address_2
+            if (presentValidator($cus['cus_address_2']) == false) {
+                $res['success'] = false;
+                $message[] = __('Customer address 2 is missing.');
+            }
+
+            //validate cus_address_3
+            if (presentValidator($cus['cus_address_3']) == false) {
+                $res['success'] = false;
+                $message[] = __('Customer address 3 is missing.');
+            }
+
+            //validate cus_type
+            if (existsInDBValidator($cus['cus_type'], 'm_customer_type', 'id') == false) {
+                $res['success'] = false;
+                $message[] = __('Customer type is not exists.');
+            }
+
+            //validate cus_pic
+            if (existsInDBValidator($cus['cus_pic'], 'users', 'id') == false) {
+                $res['success'] = false;
+                $message[] = __('Customer pic is not exists.');
+            }
+
+            $res['message'] = implode("\n", $message);
+            return $res;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+
     }
 
-    public function mailValidator($mail)
+    public function validateConData($data)
     {
-        $credential_name = "name";
-        $credential_data = $mail;
-        $rules = [
-            $credential_name => 'email'
-        ];
-        $credentials = [
-            $credential_name => $credential_data
-        ];
-        $validator = Validator::make($credentials, $rules);
-        if ($validator->fails()) {
-            return false;
+        try {
+
+            $res = ['success' => true, 'message' => ''];
+            $message = [];
+
+            if (presentValidator($data['con']) == true) {
+                $res['success'] = false;
+                $message[] = __('Contact data is wrong.!');
+                return $res;
+            }
+
+            foreach ($data['con'] as $idx => $con) {
+
+                //validate con_name
+                if (requiredValidator($con['con_name']) == ) {
+                    $res['success'] = false;
+                    $message[] = __('[' . ($idx + 1) . ']Contact name is required.');
+                }
+                if (presentValidator($con['con_name']) == true && maxlengthValidator($con['con_name'], 250) == false) {
+                    $res['success'] = false;
+                    $message[] = __('[' . ($idx + 1) . ']Customer name is too long.');
+                }
+
+                //validate con_mail
+                if (requiredValidator($con['con_mail']) == ) {
+                    $res['success'] = false;
+                    $message[] = __('[' . ($idx + 1) . ']Contact mail is required.');
+                }
+                if (presentValidator($con['con_mail']) == true && maxlengthValidator($con['con_mail'], 250) == false) {
+                    $res['success'] = false;
+                    $message[] = __('[' . ($idx + 1) . ']Contact mail is too long.');
+                }
+
+                //validate cus_phone
+                if (presentValidator($con['con_phone']) == false) {
+                    $res['success'] = false;
+                    $message[] = __('[' . ($idx + 1) . ']Contact phone is missing.');
+                }
+
+                //validate con_duty
+                if (presentValidator($con['con_duty']) == false) {
+                    $res['success'] = false;
+                    $message[] = __('[' . ($idx + 1) . ']Contact duty is missing.');
+                }
+
+                //validate con_avatar
+                if (presentValidator($con['con_avatar']) == false) {
+                    $res['success'] = false;
+                    $message[] = __('[' . ($idx + 1) . ']Contact avatar is missing.');
+                }
+
+            }
+
+            $res['message'] = implode("\n", $message);
+            return $res;
+        } catch (\Throwable $e) {
+            throw $e;
         }
-        return true;
+
+    }
+
+    public function insertValidation($data)
+    {
+        try {
+            return $this->validateData($data);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function updateValidation($cus_id, $data)
+    {
+        try {
+
+            $res = ['success' => true, 'message' => ''];
+
+            if (requiredValidator($cus_id) == false || numericValidator($cus_id) == false) {
+                $res['success'] = false;
+                $message[] = __('Data is wrong');
+                return $res;
+            }
+
+            $cusData = $this->getCustomerById($cus_id);
+            if ($cusData == null) {
+                $res['success'] = false;
+                $res['message'] = __('Customer is not exists.');
+                return $res;
+            }
+
+            return $this->validateData($data);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
     }
 
     public function makeWhereRaw($search = '')

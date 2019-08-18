@@ -484,6 +484,7 @@
             data.cus_code = jQuery('input[name="cus-code"]').val();
             data.cus_name = jQuery('input[name="cus-name"]').val();
             data.cus_fax = jQuery('input[name="cus-fax"]').val();
+            data.cus_mail = jQuery('input[name="cus-mail"]').val();
             data.cus_phone = jQuery('input[name="cus-phone"]').val();
             data.cus_field = jQuery('input[name="cus-field"]').val();
             data.cad_id_1 = jQuery('input[name="cad-id-1"]').val();

@@ -301,6 +301,23 @@ function numericValidator($data)
     return true;
 }
 
+function mailValidator($mail)
+{
+    $credential_name = "name";
+    $credential_data = $mail;
+    $rules = [
+        $credential_name => 'email'
+    ];
+    $credentials = [
+        $credential_name => $credential_data
+    ];
+    $validator = Validator::make($credentials, $rules);
+    if ($validator->fails()) {
+        return false;
+    }
+    return true;
+}
+
 function existsInDBValidator($data, $table, $column)
 {
 
