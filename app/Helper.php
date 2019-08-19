@@ -34,9 +34,11 @@ function resizeImageBase64($img_base64, $img_uuid, $img_width, $img_height, $img
         $image = Image::make($img_base64);
         $image_ext = MimeType::search($image->mime());
 
-        $img_file = "$img_dir/$img_uuid.$image_ext";
+        $img_name = "$img_uuid.$image_ext";
+        $img_file = "$img_dir/$img_name";
         $image->resize($img_width, $img_height);
         $image->save($img_file);
+        return $img_name;
     } catch (\Throwable $e) {
         throw $e;
     }

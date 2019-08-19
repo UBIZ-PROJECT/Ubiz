@@ -449,13 +449,12 @@
                                                      onclick="jQuery.UbizOIWidget.w_cus_avatar_click()"
                                                      src="{{ asset("images/avatar.png") }}"
                                                      class="img-thumbnail img-show ">
-                                                <input id="cus-file" type="file" accept="image/*" name="cus-file"
+                                                <input id="cus-file"
+                                                       type="file" accept="image/*" name="cus-file"
                                                        onchange="jQuery.UbizOIWidget.w_cus_avatar_change(this)"
                                                        style="display:none">
-                                                <input id="cus-flag" type="text" name="cus-flag" value="0"
-                                                       style="display:none">
-                                                <input id="cus-avatar" type="text" name="cus-avatar" value=""
-                                                       style="display:none">
+                                                <input id="cus-avatar" type="hidden" name="cus-avatar" value="">
+                                                <input id="cus-avatar-base64" type="hidden" name="cus-avatar-base64" value="">
                                                 <button type="button" style="top: -150px;" class="close"
                                                         aria-label="Close"
                                                         onclick="removeImage(this, jQuery.UbizOIWidget.w_callback_remove_image)">
@@ -642,11 +641,11 @@
                                      src="{{ asset("images/avatar.png") }}"
                                      class="img-thumbnail img-show ">
                                 <input id="m-con-file"
-                                       onchange="jQuery.UbizOIWidget.w_con_avatar_change(this)"
+                                       onchange="jQuery.UbizOIWidget.w_con_avatar_change(this);"
                                        type="file" accept="image/*"
                                        name="m-con-file" style="display:none">
-                                <input id="m-con-flag" type="text" name="m-con-flag" value="0" style="display:none">
-                                <input id="m-con-avatar" type="text" name="m-con-avatar" value="" style="display:none">
+                                <input id="m-con-avatar" type="hidden" name="m-con-avatar" value="">
+                                <input id="m-con-avatar-base64" type="hidden" name="m-con-avatar-base64" value="">
                                 <button type="button" style="top: -150px;" class="close" aria-label="Close"
                                         onclick="removeImage(this, jQuery.UbizOIWidget.w_con_remove_image)">
                                     <span aria-hidden="true">×</span>
@@ -656,7 +655,7 @@
                             </div>
                         </div>
                         <div class="col-sm-8 col-md-8 col-xl-8">
-                            <input type="hidden" name="m-con-id" value="0"/>
+                            <input type="hidden" id="m-con-id" name="m-con-id" value="0"/>
                             @include('components.input',['control_id'=>'m-con-name', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'Tên', 'length'=>200])
                             @include('components.input',['control_id'=>'m-con-mail', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'E-mail', 'length'=>200])
                             @include('components.input',['control_id'=>'m-con-phone', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'Điện thoại', 'length'=>200])
@@ -681,6 +680,7 @@
             <input type="hidden" name="dt-con-phone" value=""/>
             <input type="hidden" name="dt-con-duty" value=""/>
             <input type="hidden" name="dt-con-avatar" value=""/>
+            <input type="hidden" name="dt-con-avatar-base64" value=""/>
             <div class="qpLcp dagkwb">
                 <div class="cnTo8e cnTo9e FYQzvb K2GaRc">
                     <div onclick="jQuery.UbizOIWidget.w_con_edit(this, event)" class="Hbkijd">

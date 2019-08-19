@@ -127,32 +127,39 @@
                 ubizapis('v1', '/customers/generate-cus-code', 'get', null, null, jQuery.UbizOIWidget.w_go_to_input_page_callback);
             } else {
                 jQuery("#btn-delete").show();
-                $("input[name=cus_code]").attr('disabled', true);
-                $("input[name=cus_code]").closest('div.root_textfield').addClass('rootIsDisabled');
+                $("input[name=cus-code]").attr('disabled', true);
+                $("input[name=cus-code]").closest('div.root_textfield').addClass('rootIsDisabled');
                 ubizapis('v1', '/customers/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
             }
         },
         w_go_to_input_page_callback: function (response) {
 
-            var cus_code = '';
             if (response.data.success == true) {
-                cus_code = response.data.cus_code;
+                var cus_code = '';
+                if (response.data.success == true) {
+                    cus_code = response.data.cus_code;
+                }
+
+                jQuery("#btn-delete").hide();
+                jQuery("#i-paging-label").hide();
+                jQuery("#i-paging-older").hide();
+                jQuery("#i-paging-newer").hide();
+                jQuery.UbizOIWidget.w_clean_input_page();
+
+                jQuery.UbizOIWidget.w_sleep_scrollbars(jQuery.UbizOIWidget.output_scrollbars);
+                jQuery.UbizOIWidget.w_update_scrollbars(jQuery.UbizOIWidget.input_scrollbars);
+
+                jQuery.UbizOIWidget.o_page.hide();
+                jQuery.UbizOIWidget.i_page.fadeIn("slow");
+                $("input[name=cus-code]").attr('disabled', false);
+                $("input[name=cus-code]").closest('div.root_textfield').removeClass('rootIsDisabled');
+                $("input[name=cus-code]").val(cus_code);
+            } else {
+                swal.fire({
+                    type: 'error',
+                    title: response.data.message
+                })
             }
-
-            jQuery("#btn-delete").hide();
-            jQuery("#i-paging-label").hide();
-            jQuery("#i-paging-older").hide();
-            jQuery("#i-paging-newer").hide();
-            jQuery.UbizOIWidget.w_clean_input_page();
-
-            jQuery.UbizOIWidget.w_sleep_scrollbars(jQuery.UbizOIWidget.output_scrollbars);
-            jQuery.UbizOIWidget.w_update_scrollbars(jQuery.UbizOIWidget.input_scrollbars);
-
-            jQuery.UbizOIWidget.o_page.hide();
-            jQuery.UbizOIWidget.i_page.fadeIn("slow");
-            $("input[name=cus-code]").attr('disabled', false);
-            $("input[name=cus-code]").closest('div.root_textfield').removeClass('rootIsDisabled');
-            $("input[name=cus-code]").val(cus_code);
         },
         w_clean_input_page: function () {
             $('input[name="cus-id"]').val('0');
@@ -163,16 +170,19 @@
             $('input[name="cus-phone"]').val('');
             $('input[name="cus-field"]').val('');
             $('input[name="cus-avatar"]').val('');
+            $('input[name="cus-avatar-base64"]').val('');
             $('input[name="cad-id-1"]').val('0');
             $('input[name="cus-address-1"]').val('');
+            $('select[name="lct-location-1"]').val('1');
             $('input[name="cad-id-2"]').val('0');
             $('input[name="cus-address-2"]').val('');
+            $('select[name="lct-location-2"]').val('1');
             $('input[name="cad-id-3"]').val('0');
             $('input[name="cus-address-3"]').val('');
-            $('select[name="cus-type"]').val('');
-            $('select[name="cus-pic"]').val('');
+            $('select[name="lct-location-3"]').val('1');
+            $('select[name="cus-type"]').val($('select[name="cus-type"] option:first').val()).change();
+            $('select[name="cus-pic"]').val($('select[name="cus-pic"] option:first').val()).change();
             $('input[name="cus-file"]').val('');
-            $('input[name="cus-flag"]').val('1');
             $("#con-summary-container").empty();
             $('img[name="cus-img"]').attr('src', jQuery.UbizOIWidget.none_img);
         },
@@ -294,14 +304,21 @@
             jQuery.UbizOIWidget.rows_num = response.data.paging.rows_num;
         },
         w_render_data_to_input_page: function (response) {
-            var cus = response.data.cus;
-            var con = response.data.con;
-            jQuery.UbizOIWidget.w_clean_input_page();
-            jQuery.UbizOIWidget.w_set_input_page(cus, con);
-            jQuery.UbizOIWidget.w_i_paging();
+            if (response.data.success == true) {
+                var cus = response.data.cus;
+                var con = response.data.con;
+                jQuery.UbizOIWidget.w_clean_input_page();
+                jQuery.UbizOIWidget.w_set_input_page(cus, con);
+                jQuery.UbizOIWidget.w_i_paging();
 
-            jQuery.UbizOIWidget.o_page.hide();
-            jQuery.UbizOIWidget.i_page.fadeIn("slow");
+                jQuery.UbizOIWidget.o_page.hide();
+                jQuery.UbizOIWidget.i_page.fadeIn("slow");
+            } else {
+                swal.fire({
+                    type: 'error',
+                    title: response.data.message
+                })
+            }
         },
         w_set_input_page: function (cus, con) {
             jQuery.UbizOIWidget.w_set_cus_form_data(cus);
@@ -440,15 +457,17 @@
             jQuery('input[name="cus-field"]').val(data.cus_field);
             if (data.address.length > 0) {
                 for (let i = 0; i < data.address.length; i++) {
-                    jQuery('input[name="cad-id-' + (i + 1) + '"]').val(data.address[i].cad_id);
-                    jQuery('input[name="cus-address-' + (i + 1) + '"]').val(data.address[i].cad_address);
+                    $('input[name="cad-id-' + (i + 1) + '"]').val(data.address[i].cad_id);
+                    $('input[name="cus-address-' + (i + 1) + '"]').val(data.address[i].cad_address);
+                    $('select[name="lct-location-' + (i + 1) + '"]').val(data.address[i].lct_id);
                 }
             }
             jQuery('select[name="cus-type"]').val(data.cus_type);
             jQuery('select[name="cus-pic"]').val(data.cus_pic);
             jQuery('input[name="cus-avatar"]').val(data.cus_avatar);
-            if (data.cus_avatar != "") {
-                jQuery('img[name="cus-img"]').attr('src', data.cus_avatar);
+            jQuery('input[name="cus-avatar-base64"]').val(data.cus_avatar_base64);
+            if (data.cus_avatar_base64 != "") {
+                jQuery('img[name="cus-img"]').attr('src', data.cus_avatar_base64);
             }
         },
         w_get_cus_form_data: function () {
@@ -462,13 +481,17 @@
             data.cus_field = $('input[name="cus-field"]').val();
             data.cad_id_1 = $('input[name="cad-id-1"]').val();
             data.cus_address_1 = $('input[name="cus-address-1"]').val();
+            data.lct_location_1 = $('select[name="lct-location-1"]').val();
             data.cad_id_2 = $('input[name="cad-id-2"]').val();
             data.cus_address_2 = $('input[name="cus-address-2"]').val();
+            data.lct_location_2 = $('select[name="lct-location-2"]').val();
             data.cad_id_3 = $('input[name="cad-id-3"]').val();
             data.cus_address_3 = $('input[name="cus-address-3"]').val();
+            data.lct_location_3 = $('select[name="lct-location-3"]').val();
             data.cus_type = $('select[name="cus-type"]').val();
             data.cus_pic = $('select[name="cus-pic"]').val();
             data.cus_avatar = $('input[name="cus-avatar"]').val();
+            data.cus_avatar_base64 = $('input[name="cus-avatar-base64"]').val();
             return data;
         },
         w_set_con_form_data: function (data) {
@@ -495,6 +518,15 @@
             data.con_phone = form.find('input[name=dt-con-phone]').val();
             data.con_duty = form.find('input[name=dt-con-duty]').val();
             data.con_avatar = form.find('input[name=dt-con-avatar]').val();
+            data.con_avatar_base64 = form.find('input[name=dt-con-avatar-base64]').val();
+            data.con_action = "";
+            if (numeral(data.con_id).value() == 0) {
+                data.con_action = 'add';
+            } else if (numeral(data.con_id).value() > '0' && form.hasClass('deleted') == true) {
+                data.con_action = 'del';
+            } else if (numeral(data.con_id).value() > '0' && form.hasClass('deleted') == false) {
+                data.con_action = 'upd';
+            }
             return data;
         },
         w_save: function () {
@@ -625,8 +657,7 @@
             jQuery("#paging-newer").replaceWith(paging_newer);
         },
         w_callback_remove_image: function () {
-            $("#cus-file").val("");
-            $("#cus-flag").val(1);
+            $("#cus-file").val("")
         },
         w_sleep_scrollbars: function (instance) {
             if (typeof instance == "undefined")
@@ -647,30 +678,27 @@
                 var reader = new FileReader();
                 reader.onload = function (e) {
                     $('#cus-img').attr('src', e.target.result);
-                    $('#cus-avatar').val(e.target.result);
+                    $('#cus-avatar-base64').val(e.target.result);
                 }
                 reader.readAsDataURL(self.files[0]);
             }
-            $("#cus-flag").val(2);
         },
         w_con_avatar_change: function (self) {
             if (self.files && self.files[0]) {
                 var reader = new FileReader();
                 reader.onload = function (e) {
                     $('#m-con-img').attr('src', e.target.result);
-                    $('#m-con-avatar').val(e.target.result);
+                    $('#m-con-avatar-base64').val(e.target.result);
                 }
                 reader.readAsDataURL(self.files[0]);
             }
-            $("#m-con-flag").val(2);
         },
         w_con_avatar_click: function () {
             $('#m-con-file').click();
         },
         w_con_remove_image: function () {
-            $("#m-con-flag").val(1);
             $("#m-con-file").val("");
-            $("#m-con-avatar").val("");
+            $("#m-con-avatar-base64").val("");
         },
         w_con_set_modal_data: function (data) {
             $("#m-con-id").val(data.con_id);
@@ -678,16 +706,14 @@
             $("#m-con-mail").val(data.con_mail);
             $("#m-con-phone").val(data.con_phone);
             $("#m-con-duty").val(data.con_duty);
+            $("#m-con-avatar").val(data.con_avatar);
 
-            if (data.con_avatar == '') {
-                data.con_avatar = jQuery.UbizOIWidget.none_img;
-            }
-
-            $("#m-con-img").attr('src', data.con_avatar);
-            if (data.con_avatar == jQuery.UbizOIWidget.none_img) {
-                $("#m-con-avatar").val('');
-            } else {
-                $("#m-con-avatar").val(data.con_avatar);
+            if (data.con_avatar_base64 == '') {
+                $("#m-con-avatar-base64").val('');
+                $("#m-con-img").attr('src', jQuery.UbizOIWidget.none_img);
+            }else{
+                $("#m-con-avatar-base64").val(data.con_avatar_base64);
+                $("#m-con-img").attr('src', data.con_avatar_base64);
             }
         },
         w_con_get_modal_data: function () {
@@ -698,6 +724,7 @@
             data.con_phone = $("#contact-modal").find('input[name=m-con-phone]').val();
             data.con_duty = $("#contact-modal").find('input[name=m-con-duty]').val();
             data.con_avatar = $("#contact-modal").find('input[name=m-con-avatar]').val();
+            data.con_avatar_base64 = $("#contact-modal").find('input[name=m-con-avatar-base64]').val();
             return data;
         },
         w_con_modal_save: function () {
@@ -716,7 +743,8 @@
                 con_mail: '',
                 con_phone: '',
                 con_duty: '',
-                con_avatar: jQuery.UbizOIWidget.none_img
+                con_avatar: '',
+                con_avatar_base64: '',
             };
             jQuery.UbizOIWidget.con_summary_detail = null;
             jQuery.UbizOIWidget.w_con_set_modal_data(clean_data);
@@ -764,7 +792,8 @@
             form.find('input[name=dt-con-phone]').val(data.con_phone);
             form.find('input[name=dt-con-duty]').val(data.con_duty);
             form.find('input[name=dt-con-avatar]').val(data.con_avatar);
-            form.find('img[name=dt-con-avatar-view]').attr('src', data.con_avatar);
+            form.find('input[name=dt-con-avatar-base64]').val(data.con_avatar_base64);
+            form.find('img[name=dt-con-avatar-view]').attr('src', data.con_avatar_base64);
             form.find('span[name=dt-con-name-view]').text(data.con_name);
         }
     });

@@ -5,6 +5,7 @@ namespace App\Model;
 use App\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class Customer
@@ -50,11 +51,11 @@ class Customer
                 ->get();
 
             foreach ($customerContact as &$data) {
-                if ($data->con_avatar == '' || $data->con_avatar == null){
-                    $data->con_avatar = '';
+                if ($data->con_avatar == '' || $data->con_avatar == null) {
+                    $data->con_avatar_base64 = '';
                     continue;
                 }
-                $data->con_avatar = readImage($data->con_avatar, 'con');
+                $data->con_avatar_base64 = readImage($data->con_avatar, 'con');
             }
 
             return $customerContact;
@@ -145,7 +146,7 @@ class Customer
                 ->select('customer_copy.*')
                 ->first();
             if ($data != null) {
-                $data->cus_avatar = readImage($data->cus_avatar, 'cus');
+                $data->cus_avatar_base64 = readImage($data->cus_avatar, 'cus');
             }
             return $data;
         } catch (\Throwable $e) {
@@ -168,7 +169,7 @@ class Customer
                 ->limit(1)
                 ->first();
             if ($data != null) {
-                $data->cus_avatar = readImage($data->cus_avatar, 'cus');
+                $data->cus_avatar_base64 = readImage($data->cus_avatar, 'cus');
             }
             return $data;
         } catch (\Throwable $e) {
@@ -196,9 +197,7 @@ class Customer
     {
         try {
             $data = DB::table('m_location')
-                ->where([
-                    ['delete_flg', '=', '0']
-                ])
+                ->where('delete_flg', '0')
                 ->orderBy('lct_id', 'asc')
                 ->get();
 
@@ -229,13 +228,14 @@ class Customer
 
             //Insert customer
             $cus = $data['cus'];
-            if ($cus['cus_avatar'] != '') {
-                $cus_avatar = uniqid() . ".png";
-                resizeImageBase64($cus['cus_avatar'], uniqid(), 200, 200, 'cus');
-                $cus['cus_avatar'] = $cus_avatar;
+            if ($cus['cus_avatar_base64'] != '') {
+                $cus['cus_avatar'] = resizeImageBase64($cus['cus_avatar_base64'], uniqid(), 200, 200, 'cus');
+
             }
 
             unset($cus['cus_id']);
+            unset($cus['cus_avatar_base64']);
+
             $cus['inp_date'] = now();
             $cus['inp_user'] = Auth::user()->id;
             $cus['upd_date'] = now();
@@ -257,13 +257,13 @@ class Customer
             //Insert customer contact
             $con = $data['con'];
             foreach ($con as &$item) {
-                unset($item['con_id']);
 
-                if ($item['con_avatar'] != '') {
-                    $con_avatar = uniqid() . ".png";
-                    resizeImageBase64($item['con_avatar'], uniqid(), 200, 200, 'con');
-                    $item['con_avatar'] = $con_avatar;
+                if ($item['con_avatar_base64'] != '') {
+                    $item['con_avatar'] = resizeImageBase64($item['con_avatar_base64'], uniqid(), 200, 200, 'con');
                 }
+
+                unset($item['con_id']);
+                unset($item['con_avatar_base64']);
 
                 $item['cus_id'] = $cus_id;
                 $item['inp_date'] = now();
@@ -280,50 +280,167 @@ class Customer
         }
     }
 
-    public function updateCustomer($param)
+    public function updateCustomer($cus_id, $data)
     {
+        DB::beginTransaction();
         try {
-            if ($param['cus_avatar'] && ($param['cus_avatar_flg'] == 2)) {
-                $avatar = $param['cus_id'] . '.' . $param['cus_avatar']->getClientOriginalExtension();
-                resizeImageBase64($param['cus_avatar']->getRealPath(), $param['cus_id'] . '.' . $param['cus_avatar']->getClientOriginalExtension(), 200, 200, 'cus');
-            } else {
-                if ($param['cus_avatar_flg'] == 0) {
-                    $customerAvatar = DB::table('customer_copy')
-                        ->select('cus_avatar')
-                        ->where('cus_id', $param['cus_id'])
-                        ->get();
 
-                    $avatar = $customerAvatar[0]->cus_avatar;
-                } else {
-                    $avatar = '';
+            //Update customer
+            $cus = $data['cus'];
+            $user_id = Auth::user()->id;
+
+            //Add image
+            if ($cus['cus_avatar'] == '' && $cus['cus_avatar_base64'] != '') {
+                $cus['cus_avatar'] = resizeImageBase64($cus['cus_avatar_base64'], uniqid(), 200, 200, 'cus');
+            }else//Upd image
+            if ($cus['cus_avatar'] != '' && $cus['cus_avatar_base64'] != '') {
+                Storage::disk('images')->delete('cus/' . $cus['cus_avatar']);
+                $cus['cus_avatar'] = resizeImageBase64($cus['cus_avatar_base64'], uniqid(), 200, 200, 'cus');
+            }else//Del image
+            if ($cus['cus_avatar'] != '' && $cus['cus_avatar_base64'] == '') {
+                Storage::disk('images')->delete('cus/' . $cus['cus_avatar']);
+                $cus['cus_avatar'] = '';
+            }
+
+            unset($cus['cus_id']);
+            unset($cus['cus_avatar_base64']);
+
+            $cus['upd_date'] = now();
+            $cus['upd_user'] = $user_id;
+
+            DB::table('customer_copy')
+                ->where([
+                    ['cus_id', '=', $cus_id],
+                    ['cus_pic', '=', $user_id],
+                    ['delete_flg', '=', '0'],
+                ])
+                ->update($cus);
+
+            //Update customer address
+            $cad = $data['cad'];
+            foreach ($cad as $item) {
+
+                $cad_id = $item['cad_id'];
+                unset($item['cad_id']);
+
+                $item['upd_date'] = now();
+                $item['upd_user'] = $user_id;
+
+                DB::table('customer_address_copy')
+                    ->where([
+                        ['cad_id', '=', $cad_id],
+                        ['cus_id', '=', $cus_id],
+                        ['delete_flg', '=', '0']
+                    ])
+                    ->update($item);
+            }
+
+
+            //Customer contact
+            $con_insert = [];
+            $con_update = [];
+            $con_delete = [];
+
+            $con = $data['con'];
+            foreach ($con as $item) {
+
+                $item['upd_date'] = now();
+                $item['upd_user'] = $user_id;
+
+                //insert array
+                if ($item['con_id'] == '0') {
+
+                    $item['cus_id'] = $cus_id;
+                    $item['inp_date'] = now();
+                    $item['inp_user'] = Auth::user()->id;
+
+                    if ($item['con_avatar_base64'] != '') {
+                        $item['con_avatar'] = resizeImageBase64($item['con_avatar_base64'], uniqid(), 200, 200, 'con');
+                    }
+
+                    unset($item['con_id']);
+                    unset($item['con_action']);
+                    unset($item['con_avatar_base64']);
+
+                    $con_insert[] = $item;
+                    continue;
+                }
+
+                //delete array
+                if ($item['con_id'] != '0' && $item['con_action'] == 'del') {
+                    $con_delete[] = $item['con_id'];
+                    continue;
+                }
+
+                //update array
+                if ($item['con_id'] != '0' && $item['con_action'] == 'upd') {
+
+                    //Add image
+                    if ($item['con_avatar'] == '' && $item['con_avatar_base64'] != '') {
+                        $item['con_avatar'] = resizeImageBase64($item['con_avatar_base64'], uniqid(), 200, 200, 'con');
+                    }else//Upd image
+                    if ($item['con_avatar'] != '' && $item['con_avatar_base64'] != '') {
+                        Storage::disk('images')->delete('con/' . $item['con_avatar']);
+                        $item['con_avatar'] = resizeImageBase64($item['con_avatar_base64'], uniqid(), 200, 200, 'con');
+                    }else//Del image
+                    if ($item['con_avatar'] != '' && $item['con_avatar_base64'] == '') {
+                        Storage::disk('images')->delete('con/' . $item['con_avatar']);
+                        $item['con_avatar'] = '';
+                    }
+
+                    unset($item['con_action']);
+                    unset($item['con_avatar_base64']);
+
+                    $con_update[] = $item;
+                    continue;
+                }
+
+            }
+
+            //Insert Contact
+            if (sizeof($con_insert) > 0) {
+                DB::table('customer_contact')->insert($con_insert);
+            }
+
+            //Update Contact
+            if (sizeof($con_update) > 0) {
+                foreach ($con_update as $item) {
+
+                    $con_id = $item['con_id'];
+                    unset($item['con_id']);
+
+                    $item['upd_date'] = now();
+                    $item['upd_user'] = $user_id;
+
+                    DB::table('customer_contact')
+                        ->where([
+                            ['con_id', '=', $con_id],
+                            ['cus_id', '=', $cus_id],
+                            ['delete_flg', '=', '0']
+                        ])
+                        ->update($item);
                 }
             }
 
-            DB::table('customer_copy')->where('cus_id', $param['cus_id'])->update(
-                [
-                    'cus_code' => $param['cus_code'],
-                    'cus_name' => $param['cus_name'],
-                    'cus_avatar' => $avatar,
-                    'cus_type' => $param['cus_type'],
-                    'cus_phone' => $param['cus_phone'],
-                    'cus_fax' => $param['cus_fax'],
-                    'cus_mail' => $param['cus_mail'],
-                    'cus_sex' => $param['cus_sex'],
-                    'cus_pic' => $param['cus_pic'],
-                    'upd_date' => now(),
-                    'upd_user' => '1'
-                ]
-            );
+            //Update Contact
+            if (sizeof($con_delete) > 0) {
 
-            DB::table('customer_address_copy')->where('cus_id', '=', $param['cus_id'])->delete();
-
-            foreach ($param['cus_address'] as $cad_address) {
-                if ($cad_address) {
-                    $this->insertCustomerAddress($param['cus_id'], $cad_address);
-                }
+                DB::table('customer_contact')
+                    ->whereIn('con_id', $con_delete)
+                    ->where([
+                        ['cus_id', '=', $cus_id],
+                        ['delete_flg', '=', '0']
+                    ])
+                    ->update([
+                        'delete_flg' => '1',
+                        'upd_date' => now(),
+                        'upd_user' => $user_id
+                    ]);
             }
 
+            DB::commit();
         } catch (\Throwable $e) {
+            DB::rollback();
             throw $e;
         }
     }
@@ -427,7 +544,8 @@ class Customer
             }
 
             //validate cus_avatar
-            if (presentValidator($cus['cus_avatar']) == false) {
+            if (presentValidator($cus['cus_avatar']) == false
+                || presentValidator($cus['cus_avatar_base64']) == false) {
                 $res['success'] = false;
                 $message[] = __('Customer avatar is missing.');
             }
@@ -438,16 +556,34 @@ class Customer
                 $message[] = __('Customer address 1 is missing.');
             }
 
+            //validate lct_location_1
+            if (existsInDBValidator($cus['lct_location_1'], 'm_location', 'lct_id') == false) {
+                $res['success'] = false;
+                $message[] = __('Customer address location 1 is not exists.');
+            }
+
             //validate cus_address_2
             if (presentValidator($cus['cus_address_2']) == false) {
                 $res['success'] = false;
                 $message[] = __('Customer address 2 is missing.');
             }
 
+            //validate lct_location_2
+            if (existsInDBValidator($cus['lct_location_2'], 'm_location', 'lct_id') == false) {
+                $res['success'] = false;
+                $message[] = __('Customer address location 2 is not exists.');
+            }
+
             //validate cus_address_3
             if (presentValidator($cus['cus_address_3']) == false) {
                 $res['success'] = false;
                 $message[] = __('Customer address 3 is missing.');
+            }
+
+            //validate lct_location_3
+            if (existsInDBValidator($cus['lct_location_3'], 'm_location', 'lct_id') == false) {
+                $res['success'] = false;
+                $message[] = __('Customer address location 3 is not exists.');
             }
 
             //validate cus_type
@@ -518,7 +654,8 @@ class Customer
                 }
 
                 //validate con_avatar
-                if (presentValidator($con['con_avatar']) == false) {
+                if (presentValidator($con['con_avatar']) == false
+                    || presentValidator($con['con_avatar_base64']) == false) {
                     $res['success'] = false;
                     $message[] = __('[' . ($idx + 1) . ']Contact avatar is missing.');
                 }

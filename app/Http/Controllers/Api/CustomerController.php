@@ -99,13 +99,13 @@ class CustomerController extends Controller
                 return response()->json(['success' => false, 'message' => __("Order doesn't existed.!")], 200);
             }
 
-            $validator = $cusModel->updateValidation($data);
+            $validator = $cusModel->updateValidation($cus_id, $data);
             if ($validator['success'] == false) {
                 return response()->json(['success' => false, 'message' => $validator['message']], 200);
             }
 
             $map_data = $this->mapData($data);
-            $cusModel->updateCustomer($map_data);
+            $cusModel->updateCustomer($cus_id, $map_data);
 
             return response()->json(['success' => true, 'message' => __('Successfully processed.')], 200);
 
@@ -167,21 +167,25 @@ class CustomerController extends Controller
                 'cus_field' => $data['cus']['cus_field'],
                 'cus_type' => $data['cus']['cus_type'],
                 'cus_pic' => $data['cus']['cus_pic'],
-                'cus_avatar' => $data['cus']['cus_avatar']
+                'cus_avatar' => ($data['cus']['cus_avatar'] == null ? '' : $data['cus']['cus_avatar']),
+                'cus_avatar_base64' => ($data['cus']['cus_avatar_base64'] == null ? '' : $data['cus']['cus_avatar_base64']),
             ];
 
             $map_data['cad'] = [];
             $map_data['cad'][] = [
                 'cad_id' => $data['cus']['cad_id_1'],
                 'cad_address' => $data['cus']['cus_address_1'],
+                'lct_id' => $data['cus']['lct_location_1'],
             ];
             $map_data['cad'][] = [
                 'cad_id' => $data['cus']['cad_id_2'],
                 'cad_address' => $data['cus']['cus_address_2'],
+                'lct_id' => $data['cus']['lct_location_2'],
             ];
             $map_data['cad'][] = [
                 'cad_id' => $data['cus']['cad_id_3'],
                 'cad_address' => $data['cus']['cus_address_3'],
+                'lct_id' => $data['cus']['lct_location_3'],
             ];
 
             $map_data['con'] = [];
@@ -192,7 +196,9 @@ class CustomerController extends Controller
                     'con_mail' => $con['con_mail'],
                     'con_phone' => $con['con_phone'],
                     'con_duty' => $con['con_duty'],
-                    'con_avatar' => $con['con_avatar']
+                    'con_action' => $con['con_action'],
+                    'con_avatar' => ($con['con_avatar'] == null ? '' : $con['con_avatar']),
+                    'con_avatar_base64' => ($con['con_avatar_base64'] == null ? '' : $con['con_avatar_base64'])
                 ];
             }
 
