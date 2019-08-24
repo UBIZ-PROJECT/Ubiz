@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\User;
+use App\Model\Company;
 use App\Model\Customer;
 use App\Model\Quoteprice;
 use App\Model\QuotepriceDetail;
@@ -48,10 +49,20 @@ class QuotepriceController extends Controller
             $cusModel = new Customer();
             $contactData = $cusModel->getCustomerContact($qpData->cus_id);
 
+            $comModel = new Company();
+            $comData = $comModel->getAllCompany();
+
+            $languages = [
+                'en' => 'Tiếng Anh',
+                'vn' => 'Tiếng Việt',
+            ];
+
             return view('quoteprice_detail', [
                 'quoteprice' => $qpData,
                 'quotepriceDetail' => $qpDetailData,
                 'contacts' => $contactData,
+                'languages' => $languages,
+                'company' => convertDataToDropdownOptions($comData, 'com_id', 'com_nm_shot'),
                 'prdStatus' => convertDataToDropdownOptions($prdStatusData, 'id', 'title'),
                 'cusAddress' => convertDataToDropdownOptions($cusAddressData, 'cad_id', 'cad_address'),
             ]);

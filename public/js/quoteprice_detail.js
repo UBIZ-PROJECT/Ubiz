@@ -978,21 +978,13 @@ function qp_refresh() {
 }
 
 function qp_send() {
-    swal({
-        title: i18next.t('Do you want to send quoteprice to the customer.?'),
-        type: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        cancelButtonText: i18next.t('No'),
-        confirmButtonText: i18next.t('Yes'),
-        reverseButtons: true
-    }).then((result) => {
-        if (result.value) {
-            var qp_id = $("input[name=qp_id]").val();
-            ubizapis('v1', '/quoteprices/' + qp_id + '/send', 'post', null, null, qp_send_callback);
-        }
-    })
+    $("#confirm-btn").text('Gửi báo giá');
+    $("#confirm-btn").unbind('click');
+    $("#confirm-btn").bind('click', function () {
+        var qp_id = $("input[name=qp_id]").val();
+        ubizapis('v1', '/quoteprices/' + qp_id + '/send', 'post', null, null, qp_send_callback);
+    });
+    $("#confirm-modal").modal('show');
 }
 
 function qp_send_callback(response) {
@@ -1015,8 +1007,13 @@ function qp_send_callback(response) {
 }
 
 function qp_download() {
-    var qp_id = $("input[name=qp_id]").val();
-    ubizapis('v1', '/quoteprices/' + qp_id + '/download', 'post', null, null, qp_download_callback);
+    $("#confirm-btn").text('Tải xuống');
+    $("#confirm-btn").unbind('click');
+    $("#confirm-btn").bind('click', function () {
+        var qp_id = $("input[name=qp_id]").val();
+        ubizapis('v1', '/quoteprices/' + qp_id + '/download', 'post', null, null, qp_download_callback);
+    });
+    $("#confirm-modal").modal('show');
 }
 
 function qp_download_callback(response) {
@@ -1097,7 +1094,7 @@ function qp_render_drd_contact() {
             drd_html += '</div>';
             drd_html += '</a>';
         });
-    }else{
+    } else {
         drd_html = '<div style="margin: 10px 15px"><h5>Không có người liên hệ.</h5></div>';
     }
 
@@ -1108,7 +1105,7 @@ function qp_render_drd_contact() {
 function qp_drd_contact_select(self, event) {
     var con_id = $(self).attr('con_id');
     var contact = qp_get_selected_contact(con_id);
-    if(contact == null)
+    if (contact == null)
         return false;
     qp_set_contact_form(contact);
 }
@@ -1122,7 +1119,7 @@ function qp_get_selected_contact(con_id) {
     return contact;
 }
 
-function qp_set_contact_form(contact){
+function qp_set_contact_form(contact) {
     $("input[name=qp_contact_id]").val(contact.con_id);
     $("input[name=qp_contact_name]").val(contact.con_name);
     $("input[name=qp_contact_rank]").val(contact.con_rank);

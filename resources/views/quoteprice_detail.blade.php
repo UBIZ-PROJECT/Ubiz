@@ -445,6 +445,31 @@
                         </div>
                     </div>
                 </div>
+                <!-- Contact Modal -->
+                <div class="modal fade" id="confirm-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Báo giá</h5>
+                                <img name="ajax-loader" src="{{ asset('images/ajax-loader.gif') }}"
+                                     style="display: none; height: 28px; margin-left: 10px">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    @include('components.dropdown',['value'=>'1', 'control_id'=>'md_company', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Company') ,'data'=> $company])
+                                    @include('components.dropdown',['value'=>'1', 'control_id'=>'md_language', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Language') ,'data'=> $languages])
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+                                <button type="button" id="confirm-btn" class="btn btn-primary">Gửi</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
