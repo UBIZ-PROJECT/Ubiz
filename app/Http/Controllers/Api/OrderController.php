@@ -115,7 +115,7 @@ class OrderController extends Controller
         try {
 
             if (empty($ord_ids) || $ord_ids == '') {
-                return response()->json(['success' => false, 'message' => __('Successfully processed.')], 200);
+                return response()->json(['success' => false, 'message' => __('Data is wrong')], 200);
             }
 
             $order = new Order();
