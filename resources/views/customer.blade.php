@@ -625,7 +625,7 @@
         <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title"></h5>
+                    <h5 class="modal-title">Người liên hệ</h5>
                     <img name="ajax-loader" src="{{ asset('images/ajax-loader.gif') }}"
                          style="display: none; height: 28px; margin-left: 10px">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">

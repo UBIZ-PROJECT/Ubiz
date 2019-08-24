@@ -174,18 +174,18 @@ class CustomerController extends Controller
             $map_data['cad'] = [];
             $map_data['cad'][] = [
                 'cad_id' => $data['cus']['cad_id_1'],
-                'cad_address' => $data['cus']['cus_address_1'],
                 'lct_id' => $data['cus']['lct_location_1'],
+                'cad_address' => $data['cus']['cus_address_1'],
             ];
             $map_data['cad'][] = [
                 'cad_id' => $data['cus']['cad_id_2'],
-                'cad_address' => $data['cus']['cus_address_2'],
                 'lct_id' => $data['cus']['lct_location_2'],
+                'cad_address' => $data['cus']['cus_address_2'],
             ];
             $map_data['cad'][] = [
                 'cad_id' => $data['cus']['cad_id_3'],
-                'cad_address' => $data['cus']['cus_address_3'],
                 'lct_id' => $data['cus']['lct_location_3'],
+                'cad_address' => $data['cus']['cus_address_3'],
             ];
 
             $map_data['con'] = [];

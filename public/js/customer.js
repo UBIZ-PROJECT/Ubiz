@@ -711,7 +711,7 @@
             if (data.con_avatar_base64 == '') {
                 $("#m-con-avatar-base64").val('');
                 $("#m-con-img").attr('src', jQuery.UbizOIWidget.none_img);
-            }else{
+            } else {
                 $("#m-con-avatar-base64").val(data.con_avatar_base64);
                 $("#m-con-img").attr('src', data.con_avatar_base64);
             }
@@ -729,12 +729,20 @@
         },
         w_con_modal_save: function () {
             var summary_data = jQuery.UbizOIWidget.w_con_get_modal_data();
-            var summary_html = jQuery.UbizOIWidget.w_con_clone_summary_html();
-            if (jQuery.UbizOIWidget.con_summary_detail == null) {
-                jQuery.UbizOIWidget.con_summary_detail = jQuery.UbizOIWidget.w_con_add_summary_html(summary_html);
+            if (summary_data.con_name.replace(/ /g, '+') == '') {
+                swal.fire({
+                    type: 'error',
+                    title: 'Xin hãy nhập tên người liên hệ.'
+                })
+                return false;
+            } else {
+                var summary_html = jQuery.UbizOIWidget.w_con_clone_summary_html();
+                if (jQuery.UbizOIWidget.con_summary_detail == null) {
+                    jQuery.UbizOIWidget.con_summary_detail = jQuery.UbizOIWidget.w_con_add_summary_html(summary_html);
+                }
+                jQuery.UbizOIWidget.w_con_set_summary_data(jQuery.UbizOIWidget.con_summary_detail, summary_data);
+                $('#contact-modal').modal('hide');
             }
-            jQuery.UbizOIWidget.w_con_set_summary_data(jQuery.UbizOIWidget.con_summary_detail, summary_data);
-            $('#contact-modal').modal('hide');
         },
         w_con_add: function () {
             var clean_data = {
@@ -802,12 +810,6 @@ jQuery(document).ready(function () {
     jQuery.UbizOIWidget.w_init();
     $('#contact-modal').on('shown.bs.modal', function () {
         $('#m-con-name').trigger('focus');
-        var con_id = $(self).closest('div[name=con-summary-detail]').find('input[name=dt-con-id]').val();
-        if (con_id == '0') {
-            $("#contact-modal").find(".modal-title").text('Thêm người liên hệ');
-        } else {
-            $("#contact-modal").find(".modal-title").text('Sửa người liên hệ');
-        }
     });
     $('#contact-modal').on('hidden.bs.modal', function () {
         $("img[name=ajax-loader]").hide();

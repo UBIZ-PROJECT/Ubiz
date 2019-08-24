@@ -226,6 +226,8 @@ class Customer
         DB::beginTransaction();
         try {
 
+            $user_id = Auth::user()->id;
+
             //Insert customer
             $cus = $data['cus'];
             if ($cus['cus_avatar_base64'] != '') {
@@ -237,9 +239,9 @@ class Customer
             unset($cus['cus_avatar_base64']);
 
             $cus['inp_date'] = now();
-            $cus['inp_user'] = Auth::user()->id;
+            $cus['inp_user'] = $user_id;
             $cus['upd_date'] = now();
-            $cus['upd_user'] = Auth::user()->id;
+            $cus['upd_user'] = $user_id;
             $cus_id = DB::table('customer_copy')->insertGetId($cus);
 
             //Insert customer address
@@ -248,9 +250,9 @@ class Customer
                 unset($item['cad_id']);
                 $item['cus_id'] = $cus_id;
                 $item['inp_date'] = now();
-                $item['inp_user'] = Auth::user()->id;
+                $item['inp_user'] = $user_id;
                 $item['upd_date'] = now();
-                $item['upd_user'] = Auth::user()->id;
+                $item['upd_user'] = $user_id;
             }
             DB::table('customer_address_copy')->insert($cad);
 
@@ -267,9 +269,9 @@ class Customer
 
                 $item['cus_id'] = $cus_id;
                 $item['inp_date'] = now();
-                $item['inp_user'] = Auth::user()->id;
+                $item['inp_user'] = $user_id;
                 $item['upd_date'] = now();
-                $item['upd_user'] = Auth::user()->id;
+                $item['upd_user'] = $user_id;
             }
             DB::table('customer_contact')->insert($con);
 
@@ -317,11 +319,21 @@ class Customer
                 ->update($cus);
 
             //Update customer address
+            $cad_insert = [];
             $cad = $data['cad'];
             foreach ($cad as $item) {
 
                 $cad_id = $item['cad_id'];
                 unset($item['cad_id']);
+                if($cad_id == '0'){
+                    $item['cus_id'] = $cus_id;
+                    $item['inp_date'] = now();
+                    $item['inp_user'] = $user_id;
+                    $item['upd_date'] = now();
+                    $item['upd_user'] = $user_id;
+                    $cad_insert[] = $item;
+                    continue;
+                }
 
                 $item['upd_date'] = now();
                 $item['upd_user'] = $user_id;
@@ -335,6 +347,9 @@ class Customer
                     ->update($item);
             }
 
+            if (sizeof($cad_insert) > 0) {
+                DB::table('customer_address_copy')->insert($cad_insert);
+            }
 
             //Customer contact
             $con_insert = [];
@@ -352,7 +367,7 @@ class Customer
 
                     $item['cus_id'] = $cus_id;
                     $item['inp_date'] = now();
-                    $item['inp_user'] = Auth::user()->id;
+                    $item['inp_user'] = $user_id;
 
                     if ($item['con_avatar_base64'] != '') {
                         $item['con_avatar'] = resizeImageBase64($item['con_avatar_base64'], uniqid(), 200, 200, 'con');
