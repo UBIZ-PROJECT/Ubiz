@@ -291,6 +291,7 @@ class Order
                 "cad_id" => $quoteprice->cad_id,
                 "sale_step" => '2',
                 "sale_id" => Auth::user()->id,
+                "contact_id" => $quoteprice->contact_id,
                 "contact_name" => $quoteprice->contact_name,
                 "contact_rank" => $quoteprice->contact_rank,
                 "contact_phone" => $quoteprice->contact_phone,
@@ -636,7 +637,6 @@ class Order
         } catch (\Throwable $e) {
             throw $e;
         }
-        return $id;
     }
 
     public function updateOrder($order)

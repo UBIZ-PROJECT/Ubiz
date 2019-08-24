@@ -14,7 +14,7 @@ class Customer
     {
         try {
             $user_id = Auth::user()->id;
-            $customers = DB::table('customer_copy')
+            $customers = DB::table('customer')
                 ->where([
                     ['delete_flg', '=', '0'],
                     ['cus_pic', '=', $user_id],
@@ -29,7 +29,7 @@ class Customer
     public function getCustomerAddress($cus_id)
     {
         try {
-            $customerAddress = DB::table('customer_address_copy')
+            $customerAddress = DB::table('customer_address')
                 ->where('cus_id', $cus_id)
                 ->where('delete_flg', '0')
                 ->get();
@@ -69,7 +69,7 @@ class Customer
         DB::beginTransaction();
         try {
             $user_id = Auth::user()->id;
-            DB::table('customer_copy')
+            DB::table('customer')
                 ->where([
                     ['delete_flg', '=', '0'],
                     ['cus_pic', '=', $user_id],
@@ -77,7 +77,7 @@ class Customer
                 ->whereIn('cus_id', explode(',', $ids))
                 ->update(['delete_flg' => '1']);
 
-            DB::table('customer_address_copy')
+            DB::table('customer_address')
                 ->where([
                     ['delete_flg', '=', '0']
                 ])
@@ -105,20 +105,20 @@ class Customer
             list($field_name, $order_by) = $this->makeOrderBy($sort);
 
             $rows_per_page = env('ROWS_PER_PAGE', 10);
-            $firstAddress = DB::table('customer_address_copy')
+            $firstAddress = DB::table('customer_address')
                 ->select('cus_id as cad_cus_id', DB::raw('min(cad_id) as cad_id'))
                 ->whereRaw("delete_flg = '0'")
                 ->groupBy('cus_id')->toSql();
 
-            $customers = DB::table('customer_copy')
+            $customers = DB::table('customer')
                 ->leftJoin(DB::raw('(' . $firstAddress . ') customer_adr'), function ($join) {
-                    $join->on('customer_adr.cad_cus_id', '=', 'customer_copy.cus_id');
+                    $join->on('customer_adr.cad_cus_id', '=', 'customer.cus_id');
                 })
-                ->leftJoin('customer_address_copy', 'customer_adr.cad_id', '=', 'customer_address_copy.cad_id')
-                ->leftJoin('m_customer_type', 'customer_copy.cus_type', '=', 'm_customer_type.id')
-                ->select('customer_copy.*',
-                    'customer_address_copy.cad_address as address',
-                    'customer_address_copy.cad_id',
+                ->leftJoin('customer_address', 'customer_adr.cad_id', '=', 'customer_address.cad_id')
+                ->leftJoin('m_customer_type', 'customer.cus_type', '=', 'm_customer_type.id')
+                ->select('customer.*',
+                    'customer_address.cad_address as address',
+                    'customer_address.cad_id',
                     'm_customer_type.title as cus_type_name'
                 )
                 ->whereRaw($where_raw, $params)
@@ -136,14 +136,15 @@ class Customer
     {
         try {
             $user_id = Auth::user()->id;
-            $data = DB::table('customer_copy')
-                ->leftJoin('m_customer_type', 'customer_copy.cus_type', '=', 'm_customer_type.id')
+            $data = DB::table('customer')
+                ->leftJoin('m_customer_type', 'customer.cus_type', '=', 'm_customer_type.id')
+                ->leftJoin('m_customer_type', 'customer.cus_type', '=', 'm_customer_type.id')
                 ->where([
-                    ['customer_copy.delete_flg', '=', '0'],
-                    ['customer_copy.cus_id', '=', $cus_id],
-                    ['customer_copy.cus_pic', '=', $user_id]
+                    ['customer.delete_flg', '=', '0'],
+                    ['customer.cus_id', '=', $cus_id],
+                    ['customer.cus_pic', '=', $user_id]
                 ])
-                ->select('customer_copy.*')
+                ->select('customer.*', 'm_customer_type.title as cus_type_name')
                 ->first();
             if ($data != null) {
                 $data->cus_avatar_base64 = readImage($data->cus_avatar, 'cus');
@@ -161,8 +162,8 @@ class Customer
             list($where_raw, $params) = $this->makeWhereRaw($search);
             list($field_name, $order_by) = $this->makeOrderBy($sort);
 
-            $data = DB::table('customer_copy')
-                ->leftJoin('m_customer_type', 'customer_copy.cus_type', '=', 'm_customer_type.id')
+            $data = DB::table('customer')
+                ->leftJoin('m_customer_type', 'customer.cus_type', '=', 'm_customer_type.id')
                 ->whereRaw($where_raw, $params)
                 ->orderBy($field_name, $order_by)
                 ->offset($pos - 1)
@@ -181,7 +182,7 @@ class Customer
     {
         try {
             $user_id = Auth::user()->id;
-            $count = DB::table('customer_copy')
+            $count = DB::table('customer')
                 ->where([
                     ['delete_flg', '=', '0'],
                     ['cus_pic', '=', $user_id]
@@ -242,7 +243,7 @@ class Customer
             $cus['inp_user'] = $user_id;
             $cus['upd_date'] = now();
             $cus['upd_user'] = $user_id;
-            $cus_id = DB::table('customer_copy')->insertGetId($cus);
+            $cus_id = DB::table('customer')->insertGetId($cus);
 
             //Insert customer address
             $cad = $data['cad'];
@@ -254,7 +255,7 @@ class Customer
                 $item['upd_date'] = now();
                 $item['upd_user'] = $user_id;
             }
-            DB::table('customer_address_copy')->insert($cad);
+            DB::table('customer_address')->insert($cad);
 
             //Insert customer contact
             $con = $data['con'];
@@ -310,7 +311,7 @@ class Customer
             $cus['upd_date'] = now();
             $cus['upd_user'] = $user_id;
 
-            DB::table('customer_copy')
+            DB::table('customer')
                 ->where([
                     ['cus_id', '=', $cus_id],
                     ['cus_pic', '=', $user_id],
@@ -338,7 +339,7 @@ class Customer
                 $item['upd_date'] = now();
                 $item['upd_user'] = $user_id;
 
-                DB::table('customer_address_copy')
+                DB::table('customer_address')
                     ->where([
                         ['cad_id', '=', $cad_id],
                         ['cus_id', '=', $cus_id],
@@ -348,7 +349,7 @@ class Customer
             }
 
             if (sizeof($cad_insert) > 0) {
-                DB::table('customer_address_copy')->insert($cad_insert);
+                DB::table('customer_address')->insert($cad_insert);
             }
 
             //Customer contact
@@ -662,8 +663,8 @@ class Customer
                     $message[] = __('[' . ($idx + 1) . ']Contact phone is missing.');
                 }
 
-                //validate con_duty
-                if (presentValidator($con['con_duty']) == false) {
+                //validate con_rank
+                if (presentValidator($con['con_rank']) == false) {
                     $res['success'] = false;
                     $message[] = __('[' . ($idx + 1) . ']Contact duty is missing.');
                 }
@@ -722,25 +723,25 @@ class Customer
     public function makeWhereRaw($search = '')
     {
         $params = [0];
-        $where_raw = 'customer_copy.delete_flg = ?';
+        $where_raw = 'customer.delete_flg = ?';
         $params[] = Auth::user()->id;
-        $where_raw .= ' AND customer_copy.cus_pic = ?';
+        $where_raw .= ' AND customer.cus_pic = ?';
 
         if ($search != '') {
             $search_val = "%" . $search . "%";
             $where_raw .= " AND ( ";
-            $where_raw .= " customer_copy.cus_code like ? ";
+            $where_raw .= " customer.cus_code like ? ";
             $params[] = $search_val;
             $params[] = $search_val;
-            $where_raw .= " OR customer_copy.cus_name like ?";
+            $where_raw .= " OR customer.cus_name like ?";
             $params[] = $search_val;
             $where_raw .= " OR m_customer_type.title like ?";
             $params[] = $search_val;
-            $where_raw .= " OR customer_copy.cus_fax like ?";
+            $where_raw .= " OR customer.cus_fax like ?";
             $params[] = $search_val;
-            $where_raw .= " OR customer_copy.cus_mail like ?";
+            $where_raw .= " OR customer.cus_mail like ?";
             $params[] = $search_val;
-            $where_raw .= " OR customer_copy.cus_phone like ?";
+            $where_raw .= " OR customer.cus_phone like ?";
             $params[] = $search_val;
             $where_raw .= " ) ";
 
@@ -770,7 +771,7 @@ class Customer
             $curUser = $user->getCurrentUser();
             $pre_reg = strtoupper(explode('@', $curUser->email)[0]) . '_CUS';
             $reg = '^' . $pre_reg . '[0-9]{5,}$';
-            $customer = DB::select("SELECT MAX(cus_code) AS cus_code FROM `customer_copy` WHERE cus_pic = $user_id AND cus_code REGEXP :reg;", ['reg' => $reg]);
+            $customer = DB::select("SELECT MAX(cus_code) AS cus_code FROM `customer` WHERE cus_pic = $user_id AND cus_code REGEXP :reg;", ['reg' => $reg]);
             if ($customer[0]->cus_code == null) {
                 $cus_code_num = 1;
             } else {

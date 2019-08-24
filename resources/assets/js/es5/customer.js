@@ -516,7 +516,7 @@
             data.con_name = form.find('input[name=dt-con-name]').val();
             data.con_mail = form.find('input[name=dt-con-mail]').val();
             data.con_phone = form.find('input[name=dt-con-phone]').val();
-            data.con_duty = form.find('input[name=dt-con-duty]').val();
+            data.con_rank = form.find('input[name=dt-con-rank]').val();
             data.con_avatar = form.find('input[name=dt-con-avatar]').val();
             data.con_avatar_base64 = form.find('input[name=dt-con-avatar-base64]').val();
             data.con_action = "";
@@ -705,13 +705,13 @@
             $("#m-con-name").val(data.con_name);
             $("#m-con-mail").val(data.con_mail);
             $("#m-con-phone").val(data.con_phone);
-            $("#m-con-duty").val(data.con_duty);
+            $("#m-con-rank").val(data.con_rank);
             $("#m-con-avatar").val(data.con_avatar);
 
             if (data.con_avatar_base64 == '') {
                 $("#m-con-avatar-base64").val('');
                 $("#m-con-img").attr('src', jQuery.UbizOIWidget.none_img);
-            }else{
+            } else {
                 $("#m-con-avatar-base64").val(data.con_avatar_base64);
                 $("#m-con-img").attr('src', data.con_avatar_base64);
             }
@@ -722,19 +722,27 @@
             data.con_name = $("#contact-modal").find('input[name=m-con-name]').val();
             data.con_mail = $("#contact-modal").find('input[name=m-con-mail]').val();
             data.con_phone = $("#contact-modal").find('input[name=m-con-phone]').val();
-            data.con_duty = $("#contact-modal").find('input[name=m-con-duty]').val();
+            data.con_rank = $("#contact-modal").find('input[name=m-con-rank]').val();
             data.con_avatar = $("#contact-modal").find('input[name=m-con-avatar]').val();
             data.con_avatar_base64 = $("#contact-modal").find('input[name=m-con-avatar-base64]').val();
             return data;
         },
         w_con_modal_save: function () {
             var summary_data = jQuery.UbizOIWidget.w_con_get_modal_data();
-            var summary_html = jQuery.UbizOIWidget.w_con_clone_summary_html();
-            if (jQuery.UbizOIWidget.con_summary_detail == null) {
-                jQuery.UbizOIWidget.con_summary_detail = jQuery.UbizOIWidget.w_con_add_summary_html(summary_html);
+            if (summary_data.con_name.replace(/ /g, '+') == '') {
+                swal.fire({
+                    type: 'error',
+                    title: 'Xin hãy nhập tên người liên hệ.'
+                })
+                return false;
+            } else {
+                var summary_html = jQuery.UbizOIWidget.w_con_clone_summary_html();
+                if (jQuery.UbizOIWidget.con_summary_detail == null) {
+                    jQuery.UbizOIWidget.con_summary_detail = jQuery.UbizOIWidget.w_con_add_summary_html(summary_html);
+                }
+                jQuery.UbizOIWidget.w_con_set_summary_data(jQuery.UbizOIWidget.con_summary_detail, summary_data);
+                $('#contact-modal').modal('hide');
             }
-            jQuery.UbizOIWidget.w_con_set_summary_data(jQuery.UbizOIWidget.con_summary_detail, summary_data);
-            $('#contact-modal').modal('hide');
         },
         w_con_add: function () {
             var clean_data = {
@@ -742,7 +750,7 @@
                 con_name: '',
                 con_mail: '',
                 con_phone: '',
-                con_duty: '',
+                con_rank: '',
                 con_avatar: '',
                 con_avatar_base64: '',
             };
@@ -790,7 +798,7 @@
             form.find('input[name=dt-con-name]').val(data.con_name);
             form.find('input[name=dt-con-mail]').val(data.con_mail);
             form.find('input[name=dt-con-phone]').val(data.con_phone);
-            form.find('input[name=dt-con-duty]').val(data.con_duty);
+            form.find('input[name=dt-con-rank]').val(data.con_rank);
             form.find('input[name=dt-con-avatar]').val(data.con_avatar);
             form.find('input[name=dt-con-avatar-base64]').val(data.con_avatar_base64);
             form.find('img[name=dt-con-avatar-view]').attr('src', data.con_avatar_base64);
@@ -802,12 +810,6 @@ jQuery(document).ready(function () {
     jQuery.UbizOIWidget.w_init();
     $('#contact-modal').on('shown.bs.modal', function () {
         $('#m-con-name').trigger('focus');
-        var con_id = $(self).closest('div[name=con-summary-detail]').find('input[name=dt-con-id]').val();
-        if (con_id == '0') {
-            $("#contact-modal").find(".modal-title").text('Thêm người liên hệ');
-        } else {
-            $("#contact-modal").find(".modal-title").text('Sửa người liên hệ');
-        }
     });
     $('#contact-modal').on('hidden.bs.modal', function () {
         $("img[name=ajax-loader]").hide();

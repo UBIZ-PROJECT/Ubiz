@@ -1,3 +1,5 @@
+var deafult_profile = '../../images/deafult-profile.png';
+
 function showProgress() {
     var progress = jQuery('.ubiz-progress');
     if (progress.length == 0) {

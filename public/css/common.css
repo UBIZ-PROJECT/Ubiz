@@ -1181,6 +1181,11 @@
     border-width: 0;
 }
 
+.root_textfield.rootIsUnderlined .fieldGroup svg{
+    margin-top: 5px;
+    cursor: pointer;
+}
+
 .fieldGroup {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;

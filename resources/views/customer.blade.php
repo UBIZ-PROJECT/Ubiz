@@ -659,7 +659,7 @@
                             @include('components.input',['control_id'=>'m-con-name', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'Tên', 'length'=>200])
                             @include('components.input',['control_id'=>'m-con-mail', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'E-mail', 'length'=>200])
                             @include('components.input',['control_id'=>'m-con-phone', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'Điện thoại', 'length'=>200])
-                            @include('components.input',['control_id'=>'m-con-duty', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'Chức vụ', 'length'=>200])
+                            @include('components.input',['control_id'=>'m-con-rank', 'i_focus'=>'', 'i_blur'=>'', 'label'=>'Chức vụ', 'length'=>200])
                         </div>
                     </div>
                 </div>
@@ -678,7 +678,7 @@
             <input type="hidden" name="dt-con-name" value=""/>
             <input type="hidden" name="dt-con-mail" value=""/>
             <input type="hidden" name="dt-con-phone" value=""/>
-            <input type="hidden" name="dt-con-duty" value=""/>
+            <input type="hidden" name="dt-con-rank" value=""/>
             <input type="hidden" name="dt-con-avatar" value=""/>
             <input type="hidden" name="dt-con-avatar-base64" value=""/>
             <div class="qpLcp dagkwb">

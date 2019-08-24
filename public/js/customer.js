@@ -516,7 +516,7 @@
             data.con_name = form.find('input[name=dt-con-name]').val();
             data.con_mail = form.find('input[name=dt-con-mail]').val();
             data.con_phone = form.find('input[name=dt-con-phone]').val();
-            data.con_duty = form.find('input[name=dt-con-duty]').val();
+            data.con_rank = form.find('input[name=dt-con-rank]').val();
             data.con_avatar = form.find('input[name=dt-con-avatar]').val();
             data.con_avatar_base64 = form.find('input[name=dt-con-avatar-base64]').val();
             data.con_action = "";
@@ -705,7 +705,7 @@
             $("#m-con-name").val(data.con_name);
             $("#m-con-mail").val(data.con_mail);
             $("#m-con-phone").val(data.con_phone);
-            $("#m-con-duty").val(data.con_duty);
+            $("#m-con-rank").val(data.con_rank);
             $("#m-con-avatar").val(data.con_avatar);
 
             if (data.con_avatar_base64 == '') {
@@ -722,7 +722,7 @@
             data.con_name = $("#contact-modal").find('input[name=m-con-name]').val();
             data.con_mail = $("#contact-modal").find('input[name=m-con-mail]').val();
             data.con_phone = $("#contact-modal").find('input[name=m-con-phone]').val();
-            data.con_duty = $("#contact-modal").find('input[name=m-con-duty]').val();
+            data.con_rank = $("#contact-modal").find('input[name=m-con-rank]').val();
             data.con_avatar = $("#contact-modal").find('input[name=m-con-avatar]').val();
             data.con_avatar_base64 = $("#contact-modal").find('input[name=m-con-avatar-base64]').val();
             return data;
@@ -750,7 +750,7 @@
                 con_name: '',
                 con_mail: '',
                 con_phone: '',
-                con_duty: '',
+                con_rank: '',
                 con_avatar: '',
                 con_avatar_base64: '',
             };
@@ -798,7 +798,7 @@
             form.find('input[name=dt-con-name]').val(data.con_name);
             form.find('input[name=dt-con-mail]').val(data.con_mail);
             form.find('input[name=dt-con-phone]').val(data.con_phone);
-            form.find('input[name=dt-con-duty]').val(data.con_duty);
+            form.find('input[name=dt-con-rank]').val(data.con_rank);
             form.find('input[name=dt-con-avatar]').val(data.con_avatar);
             form.find('input[name=dt-con-avatar-base64]').val(data.con_avatar_base64);
             form.find('img[name=dt-con-avatar-view]').attr('src', data.con_avatar_base64);

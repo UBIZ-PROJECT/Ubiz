@@ -195,7 +195,7 @@ class CustomerController extends Controller
                     'con_name' => $con['con_name'],
                     'con_mail' => $con['con_mail'],
                     'con_phone' => $con['con_phone'],
-                    'con_duty' => $con['con_duty'],
+                    'con_rank' => $con['con_rank'],
                     'con_action' => $con['con_action'],
                     'con_avatar' => ($con['con_avatar'] == null ? '' : $con['con_avatar']),
                     'con_avatar_base64' => ($con['con_avatar_base64'] == null ? '' : $con['con_avatar_base64'])
