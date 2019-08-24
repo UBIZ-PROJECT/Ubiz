@@ -312,27 +312,31 @@ class Quoteprice
             }
 
             $quoteprice = $data['quoteprice'];
-            if (!array_key_exists('qp_no', $quoteprice) || $quoteprice['qp_no'] == '' || $quoteprice['qp_no'] == null) {
+            if (requiredValidator($quoteprice['qp_no']) == false) {
                 $res['success'] = false;
                 $message[] = __('QP No is required.');
             }
-            if (array_key_exists('qp_no', $quoteprice) && mb_strlen($quoteprice['qp_no'], "utf-8") > 30) {
+            if (requiredValidator($quoteprice['qp_no']) == true && maxlengthValidator($quoteprice['qp_no'], 30) == false) {
                 $res['success'] = false;
                 $message[] = __('QP No is too long.');
             }
-            if (!array_key_exists('qp_date', $quoteprice) || $quoteprice['qp_date'] == '' || $quoteprice['qp_date'] == null) {
+            if (requiredValidator($quoteprice['qp_date']) == false) {
                 $res['success'] = false;
                 $message[] = __('QP Date is required.');
             }
-            if (array_key_exists('qp_date', $quoteprice) && $this->dateValidator($quoteprice['qp_date']) == false) {
+            if (requiredValidator($quoteprice['qp_date']) == true && dateValidator($quoteprice['qp_date']) == false) {
                 $res['success'] = false;
                 $message[] = __('QP Date is wrong format YYYY/MM/DD.');
             }
-            if (!array_key_exists('qp_exp_date', $quoteprice) || $quoteprice['qp_exp_date'] == '' || $quoteprice['qp_exp_date'] == null) {
+            if (requiredValidator($quoteprice['qp_exp_date']) == false) {
                 $res['success'] = false;
                 $message[] = __('QP Exp Date is required.');
             }
-            if (array_key_exists('qp_exp_date', $quoteprice) && $this->dateValidator($quoteprice['qp_exp_date']) == false) {
+            if (array_key_exists('qp_exp_date', $quoteprice) && dateValidator($quoteprice['qp_exp_date']) == false) {
+                $res['success'] = false;
+                $message[] = __('QP Exp Date is wrong format YYYY/MM/DD.');
+            }
+            if (requiredValidator($quoteprice['qp_exp_date']) == true && dateValidator($quoteprice['qp_exp_date']) == false) {
                 $res['success'] = false;
                 $message[] = __('QP Exp Date is wrong format YYYY/MM/DD.');
             }
@@ -573,23 +577,6 @@ class Quoteprice
         }
     }
 
-    public function dateValidator($date)
-    {
-        $credential_name = "name";
-        $credential_data = $date;
-        $rules = [
-            $credential_name => 'date'
-        ];
-        $credentials = [
-            $credential_name => $credential_data
-        ];
-        $validator = Validator::make($credentials, $rules);
-        if ($validator->fails()) {
-            return false;
-        }
-        return true;
-    }
-
     public function getPdfFile($qp_id, $uniqid)
     {
         try {
@@ -666,7 +653,7 @@ class Quoteprice
             $where_raw .= " AND ( ";
             $where_raw .= " quoteprice.qp_no like ? ";
             $params[] = $search_val;
-            if ($this->dateValidator($search) == true) {
+            if (dateValidator($search) == true) {
                 $where_raw .= " OR quoteprice.qp_date = ? ";
                 $params[] = $search;
                 $where_raw .= " OR quoteprice.qp_exp_date = ? ";
