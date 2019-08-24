@@ -14,19 +14,23 @@ class ReportController extends Controller
             list($page, $sort) = $this->getRequestData($request);
 			$reportModel = new Report();
             $report = $reportModel->getReportData($page, $sort, $request);
-            if ($request->type == "revenue") {
-                $orderFromDate = $request->report_from_date ? $request->report_from_date : "";
-                $orderToDate = $request->report_to_date ? $request->report_to_date : date('Y/m/d');
-                $paging = $reportModel->getPagingInfoRev($orderFromDate, $orderToDate, $request->get('cus_name',''), $request->get('sale_name',''));
-                $sum = $reportModel->sumOrders($orderFromDate, $orderToDate, $request->get('cus_name',''), $request->get('sale_name',''));
-            } elseif ($request->type == "quoteprice") {
-                $qpFromDate = $request->report_from_date ? $request->report_from_date : "";
-                $qpToDate = $request->report_to_date ? $request->report_to_date : date('Y/m/d');
-                $paging = $reportModel->getPagingInfoQP($qpFromDate, $qpToDate, $request->get('cus_name',''), $request->get('sale_name',''));
-                $sum = $reportModel->sumQPs($qpFromDate, $qpToDate, $request->get('cus_name',''), $request->get('sale_name',''));
-            } else {
-                $paging = $reportModel->getPagingInfoRep();
-                $sum = 0;
+            switch ($request->type) {
+                case "revenue":
+                    $orderFromDate = $request->report_from_date ? $request->report_from_date : "";
+                    $orderToDate = $request->report_to_date ? $request->report_to_date : date('Y/m/d');
+                    $paging = $reportModel->getPagingInfoRev($orderFromDate, $orderToDate, $request->get('cus_name',''), $request->get('sale_name',''));
+                    $sum = $reportModel->sumOrders($orderFromDate, $orderToDate, $request->get('cus_name',''), $request->get('sale_name',''));
+                    break;
+                case "quoteprice":
+                    $qpFromDate = $request->report_from_date ? $request->report_from_date : "";
+                    $qpToDate = $request->report_to_date ? $request->report_to_date : date('Y/m/d');
+                    $paging = $reportModel->getPagingInfoQP($qpFromDate, $qpToDate, $request->get('cus_name',''), $request->get('sale_name',''));
+                    $sum = $reportModel->sumQPs($qpFromDate, $qpToDate, $request->get('cus_name',''), $request->get('sale_name',''));
+                    break;
+                default:
+                    $paging = $reportModel->getPagingInfoRep($request->get('prd_name',''), $request->get('brd_name',''));
+                    $sum = 0;
+                    break;
             }
 			$paging['page'] = $page;
             

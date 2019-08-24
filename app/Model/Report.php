@@ -44,9 +44,6 @@ class Report implements JWTSubject
     public function getReportData($page = 0, $sort = '', $request)
     {
         switch ($request->type) {
-            case "repository":
-                $report = $this->getRepReport($page, $sort);
-                break;
             case "revenue":
                 $orderFromDate = $request->report_from_date ? $request->report_from_date : date('Y/m') . "/01";
                 $orderToDate = $request->report_to_date ? $request->report_to_date : date('Y/m/d');
@@ -54,11 +51,13 @@ class Report implements JWTSubject
                 break;
             case "quoteprice":
                 $qpFromDate = $request->report_from_date ? $request->report_from_date : date('Y/m') . "/01";
-                $qpToDate = $request->report_to_date ? $request->report_to_date : date('Y/m') . "/01";
+                $qpToDate = $request->report_to_date ? $request->report_to_date : date('Y/m/d');
                 $report = $this->getQPReport($page, $sort, $qpFromDate, $qpToDate, $request->cus_name, $request->sale_name);
                 break;
             default:
-                $report = $this->getRepReport($page, $sort);
+                $prdFromDate = $request->report_from_date ? $request->report_from_date : date('Y/m') . "/01";
+                $prdToDate = $request->report_to_date ? $request->report_to_date : date('Y/m/d');
+                $report = $this->getRepReport($page, $sort, $prdFromDate, $prdToDate, $request->prd_name, $request->brd_name);
                 break;
             
         }
@@ -66,21 +65,76 @@ class Report implements JWTSubject
         return $report;
     }
 
-    public function getRepReport($page, $sort) {
+    public function getRepReport($page, $sort, $prdFromDate, $prdToDate, $prdName, $brdName) {
         try{
             $rows_per_page = env('ROWS_PER_PAGE', 10);
             list($field_name, $order_by) = $this->makeOrderBy($sort, 'prd_id');
-            $data = DB::table('product_series')
-                        ->leftJoin('product', 'product_series.prd_id', '=', 'product.prd_id')
+            $data = DB::table('product')
+                        ->leftJoin('product_series', function ($join) {
+                            $join->on('product.prd_id', '=', 'product_series.prd_id')
+                                ->where('product_series.delete_flg', '0')
+                                ->whereNull('product_series.export_date');
+                        })
                         ->leftJoin('brand', 'product.brd_id', '=', 'brand.brd_id')
                         ->leftjoin('product_type', 'product.type_id', '=', 'product_type.prd_type_id')
-                        ->select('product_series.*', 'product.prd_name', 'product.prd_model', 'brand.brd_name', 'product_type.prd_type_name')
-                        ->where('product_series.delete_flg', '0')
-                        ->where('product_series.sold_flg', '0')
+                        ->select('product.*', 'product_type.prd_type_flg', 'brand.brd_name')
+                        ->selectRaw("GROUP_CONCAT(product_series.serial_no SEPARATOR ', ') as serial_no_list")
+                        ->groupBy('product.prd_id')
+                        ->where('product.delete_flg', '0')
+                        ->when($prdName, function ($query) use ($prdName) {
+                            if ($prdName) {
+                                return $query->where('product.prd_name', $prdName);
+                            }
+                        })
+                        ->when($brdName, function ($query) use ($brdName) {
+                            if ($brdName) {
+                                return $query->where('brand.brd_name', $brdName);
+                            }
+                        })
+                        ->whereRaw('product_series.export_date is null OR product_series.export_date > ?', [$prdToDate])
                         ->orderBy($field_name, $order_by)
                         ->offset($page * $rows_per_page)
                         ->limit($rows_per_page)
                         ->get();
+            
+            $data->total_start_time_cnt = 0;
+            $data->total_end_time_cnt = 0;
+            foreach ($data as $key => $item) {
+                $importCount = DB::table('product')
+                                    ->leftJoin('product_series', 'product.prd_id', '=', 'product_series.prd_id')
+                                    ->where('product.prd_id', $item->prd_id)
+                                    ->whereRaw('product_series.inp_date between ? AND ?', [$prdFromDate, $prdToDate])
+                                    ->where('product.delete_flg', '0')
+                                    ->count();
+                $exportCount = DB::table('product')
+                                    ->leftJoin('product_series', 'product.prd_id', '=', 'product_series.prd_id')
+                                    ->where('product.prd_id', $item->prd_id)
+                                    ->whereRaw('product_series.export_date between ? AND ?', [$prdFromDate, $prdToDate])
+                                    ->where('product.delete_flg', '0')
+                                    ->count();
+                $startTimePrdCnt = DB::table('product_series')
+                                    ->where('product_series.prd_id', $item->prd_id)
+                                    ->whereRaw('product_series.export_date is null OR product_series.export_date > ?', [$prdFromDate])
+                                    ->count();
+                $endTimePrdCnt = DB::table('product_series')
+                                    ->where('product_series.prd_id', $item->prd_id)
+                                    ->whereRaw('product_series.export_date is null OR product_series.export_date > ?', [$prdToDate])
+                                    ->count();
+                $keepPrdCnt = DB::table('product_series')
+                                    ->where('product_series.prd_id', $item->prd_id)
+                                    ->where('product_series.serial_sts', '1')
+                                    ->whereRaw('product_series.serial_expired_date > now()')
+                                    ->whereRaw('product_series.export_date is null OR product_series.export_date > ?', [$prdToDate])
+                                    ->count();
+
+                $data[$key]->import_cnt = $importCount;
+                $data[$key]->export_cnt = $exportCount;
+                $data[$key]->start_time_cnt = $startTimePrdCnt;
+                $data[$key]->end_time_cnt = $endTimePrdCnt;
+                $data->total_start_time_cnt += $startTimePrdCnt;
+                $data->total_end_time_cnt += $endTimePrdCnt;
+                $data[$key]->keep_prd_cnt = $keepPrdCnt;
+            }
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -157,12 +211,22 @@ class Report implements JWTSubject
         return $data;
     }
 
-    public function countPrdSerials()
+    public function countPrd($prdName, $brdName)
     {
         try {
-            $count = DB::table('product_series')
-                ->where('delete_flg', '0')
-                ->where('sold_flg', '0')
+            $count = DB::table('product')
+                ->leftjoin('brand', 'product.brd_id', '=', 'brand.brd_id')
+                ->when($prdName, function ($query) use ($prdName) {
+                    if ($prdName) {
+                        return $query->where('product.prd_name', $prdName);
+                    }
+                })
+                ->when($brdName, function ($query) use ($brdName) {
+                    if ($brdName) {
+                        return $query->where('brand.brd_name', $brdName);
+                    }
+                })
+                ->where('product.delete_flg', '0')
                 ->count();
         } catch (\Throwable $e) {
             throw $e;
@@ -279,11 +343,11 @@ class Report implements JWTSubject
         return $sum;
     }
 
-    public function getPagingInfoRep()
+    public function getPagingInfoRep($prdName, $brdName)
     {
         try {
             $rows_per_page = env('ROWS_PER_PAGE', 10);
-            $rows_num = $this->countPrdSerials();
+            $rows_num = $this->countPrd($prdName, $brdName);
         } catch (\Throwable $e) {
             throw $e;
         }

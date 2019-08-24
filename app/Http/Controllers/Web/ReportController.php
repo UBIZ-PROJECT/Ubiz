@@ -19,10 +19,6 @@ class ReportController extends Controller
             $sum = 0;
 
             switch ($request->type) {
-                case "repository":
-                    $viewName = "report-rep";
-                    $paging = $reportModel->getPagingInfoRep();
-                    break;
                 case "revenue":
                     $viewName = "report-rev";
                     $request->order_from_date = date('Y/m') . "/01";
@@ -39,13 +35,14 @@ class ReportController extends Controller
                     break;
                 default:
                     $viewName = "report-rep";
-                    $paging = $reportModel->getPagingInfoRep();
+                    $sum = 0;
+                    $paging = $reportModel->getPagingInfoRep($request->get('prd_name',''), $request->get('brd_name',''));
                     break;
                 
             }
             $report = $reportModel->getReportData(0, '', $request);
             $report->sum = $sum;
-			$paging['page'] = 0;
+            $paging['page'] = 0;
             
 			return view($viewName, [
                 'report' => $report,
