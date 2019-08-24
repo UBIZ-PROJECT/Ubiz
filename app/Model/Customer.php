@@ -138,7 +138,6 @@ class Customer
             $user_id = Auth::user()->id;
             $data = DB::table('customer')
                 ->leftJoin('m_customer_type', 'customer.cus_type', '=', 'm_customer_type.id')
-                ->leftJoin('m_customer_type', 'customer.cus_type', '=', 'm_customer_type.id')
                 ->where([
                     ['customer.delete_flg', '=', '0'],
                     ['customer.cus_id', '=', $cus_id],
