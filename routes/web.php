@@ -16,7 +16,7 @@ Route::middleware(['api', 'cors'])->group(function () {
         Route::redirect('/', '/events')->name('/');
         Route::get('login', ['as' => 'login', 'uses' => 'Web\UsersController@login']);
         Route::get('suppliers', ['as' => 'supplier', 'uses' => 'Web\SupplierController@suppliers']);
-        Route::get('customers', ['as' => 'customer', 'uses' => 'Web\CustomerController@customer']);
+        Route::get('customers', ['as' => 'customer', 'uses' => 'Web\CustomerController@index']);
         Route::get('products', ['as' => 'products', 'uses' => 'Web\AccessoryController@accessories']);
         Route::get('products/{brd_id}', ['as' => 'products', 'uses' => 'Web\ProductController@productByBrand'])->where('brd_id', '[0-9]+');
         Route::get('brands', ['as' => 'brands', 'uses' => 'Web\BrandController@brands']);

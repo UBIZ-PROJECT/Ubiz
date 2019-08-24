@@ -44,9 +44,14 @@ class QuotepriceController extends Controller
 
             $cusAddress = new CustomerAddress();
             $cusAddressData = $cusAddress->getAddressByCusId($qpData->cus_id);
+
+            $cusModel = new Customer();
+            $contactData = $cusModel->getCustomerContact($qpData->cus_id);
+
             return view('quoteprice_detail', [
                 'quoteprice' => $qpData,
                 'quotepriceDetail' => $qpDetailData,
+                'contacts' => $contactData,
                 'prdStatus' => convertDataToDropdownOptions($prdStatusData, 'id', 'title'),
                 'cusAddress' => convertDataToDropdownOptions($cusAddressData, 'cad_id', 'cad_address'),
             ]);
@@ -75,10 +80,15 @@ class QuotepriceController extends Controller
 
             $cusAddress = new CustomerAddress();
             $cusAddressData = $cusAddress->getAddressByCusId($cus_id);
+
+            $cusModel = new Customer();
+            $contactData = $cusModel->getCustomerContact($cus_id);
+
             return view('quoteprice_create', [
                 'qp_no' => $qp_no,
                 'user' => $userData,
                 'customer' => $cusData,
+                'contacts' => $contactData,
                 'prdStatus' => convertDataToDropdownOptions($prdStatusData, 'id', 'title'),
                 'cusAddress' => convertDataToDropdownOptions($cusAddressData, 'cad_id', 'cad_address'),
             ]);

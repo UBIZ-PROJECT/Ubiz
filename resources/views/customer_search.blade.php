@@ -3,7 +3,7 @@
         <div class="cyo">
             <input id="fuzzy" spellcheck="false" autocomplete="off" placeholder="Tìm kiếm khách hàng" value="" type="text" onkeypress="jQuery.UbizOIWidget.w_fuzzy_search_handle_enter(event)">
         </div>
-        <button class="dyo" onclick="show_searh_form()">
+        <button class="dyo">
             <svg focusable="false" height="24px" viewBox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg">
                 <path d="M7 10l5 5 5-5z"></path>
                 <path d="M0 0h24v24H0z" fill="none"></path>
@@ -21,87 +21,5 @@
                 <path d="M0 0h24v24H0z" fill="none"></path>
             </svg>
         </button>
-    </div>
-    <div id="search-form" class="eyo">
-        <div class="hvo">
-            <div class="gvo">
-                <div class="rvo">
-                    <span class="yvo">
-                        <label for="code">Mã khách hàng</label>
-                    </span>
-                    <span class="avo">
-                        <input type="text" spellcheck="false" id="cus_code" value="" autocomplete="off">
-                    </span>
-                </div>
-                <div class="rvo">
-                    <span class="yvo">
-                        <label for="name">Tên khách hàng<label>
-                    </span>
-                    <span class="avo">
-                        <input type="text" spellcheck="false" id="cus_name" value="" autocomplete="off">
-                    </span>
-                </div>
-				<div class="rvo">
-                    <span class="yvo">
-                        <label for="name">Loại khách hàng<label>
-                    </span>
-                    <span class="avo">
-                        <input type="text" spellcheck="false" id="cus_type" value="" autocomplete="off">
-                    </span>
-                </div>
-				<div class="rvo">
-                    <span class="yvo">
-                        <label for="phone">Điện thoại</label>
-                    </span>
-                    <span class="avo">
-                        <input type="text" spellcheck="false" id="cus_phone" value="" autocomplete="off">
-                    </span>
-                </div>
-				<div class="rvo">
-                    <span class="yvo">
-                        <label for="dep_name">Fax</label>
-                    </span>
-                    <span class="avo">
-                        <input type="text" spellcheck="false" id="cus_fax" value="" autocomplete="off">
-                    </span>
-                </div>
-                <div class="rvo">
-                    <span class="yvo">
-                        <label for="email">E-mail</label>
-                    </span>
-                    <span class="avo">
-                        <input type="text" id="cus_mail" value="" autocomplete="off">
-                    </span>
-                </div>
-                <div class="rvo">
-                    <span class="yvo">
-                        <label for="address">Địa chỉ</label>
-                    </span>
-                    <span class="avo">
-                        <input type="text" spellcheck="false" id="cus_address" value="" autocomplete="off">
-                    </span>
-                </div>
-                <div class="rvo">
-                    <span class="yvo">
-                        <label for="contain">Chứa các từ</label>
-                    </span>
-                    <span class="avo">
-                        <input type="text" spellcheck="false" spellcheck="false" id="contain" value="" autocomplete="off">
-                    </span>
-                </div>
-                <div class="rvo">
-                    <span class="yvo">
-                        <label for="notcontain">Không có</label>
-                    </span>
-                    <span class="avo">
-                        <input type="text" spellcheck="false" id="notcontain" value="" autocomplete="off">
-                    </span>
-                </div>
-                <div class="rvo fvo">
-                    <button type="button" class="btn btn-primary btn-sm" onclick="jQuery.UbizOIWidget.w_search()">Tìm kiếm</button>
-                    <button type="button" class="btn btn-link btn-sm text-secondary" onclick="jQuery.UbizOIWidget.w_clear_search_form()">Xóa bộ lọc</button>
-                </div>
-            </div>
-        </div>
     </div>
 </div>

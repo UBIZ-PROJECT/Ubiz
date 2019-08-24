@@ -1,3 +1,5 @@
+var deafult_profile = '../../images/deafult-profile.png';
+
 function showProgress() {
     var progress = jQuery('.ubiz-progress');
     if (progress.length == 0) {
@@ -442,6 +444,13 @@ function html_escape(s) {
         .replace(/'/g, '&#039;')
         .replace(/"/g, '&quot;')
         .replace(/\n/g, '<br />')
+}
+
+function fnc_is_image(file) {
+    if (file.type.match('image.*')) {
+        return true;
+    }
+    return false;
 }
 
 moment.locale('vi', {

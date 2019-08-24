@@ -90,24 +90,21 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="GNi" onclick="qp_send()">
-                                    <div class="ax7 poK utooltip" title="{{ __("Send QP to customer") }}">
-                                        <div class="asA">
-                                            <div class="arF"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="GNi" onclick="qp_download()">
-                                    <div class="ax7 poK utooltip" title="{{ __("Download") }}">
-                                        <div class="asA">
-                                            <div class="dlF"></div>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div id="btn-delete" class="GNi" onclick="qp_delete()">
                                     <div class="ax7 poK utooltip" title="{{ __("Delete") }}">
                                         <div class="asA">
                                             <div class="asX"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="GNi">
+                                    <div class="ax7 poK dropdown">
+                                        <div class="asA" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <div class="asY"></div>
+                                        </div>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                            <a class="dropdown-item" href="#" onclick="qp_send()">{{ __("Send QP to customer") }}</a>
+                                            <a class="dropdown-item" href="#" onclick="qp_download()">Tải xuống báo giá.</a>
                                         </div>
                                     </div>
                                 </div>
@@ -186,7 +183,8 @@
                                     <div class="col-md-auto">
                                         <div class="row">
                                             <div class="col-md-auto">
-                                                @include('components.input',['control_id'=>'qp_contact_name', 'value'=> $quoteprice->contact_name, 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Contact person'), 'i_focus'=>'', 'i_blur'=>''])
+                                                <input type="hidden" id="qp_contact_id" name="qp_contact_id" value="{{ $quoteprice->contact_id }}">
+                                                @include('components.input',['control_id'=>'qp_contact_name', 'value'=> $quoteprice->contact_name, 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Contact person'), 'select'=>true, 'i_focus'=>'', 'i_blur'=>''])
                                             </div>
                                             <div class="col-md-auto">
                                                 @include('components.input',['control_id'=>'qp_contact_rank', 'value'=> $quoteprice->contact_rank, 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Duty'), 'i_focus'=>'', 'i_blur'=>''])
@@ -453,4 +451,7 @@
 @endsection
 @section('end-javascript')
     <script type="text/javascript" src="{{ asset('js/quoteprice_detail.js') }}"></script>
+    <script>
+        var con_list = {!! json_encode($contacts) !!};
+    </script>
 @endsection
