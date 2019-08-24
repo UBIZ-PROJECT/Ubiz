@@ -241,11 +241,11 @@ function prod_row_validate_data(data) {
         && data.dt_prod_specs == ""
         && data.dt_note == ""
         && data.dt_unit == ""
-        && (data.dt_quantity == "" || data.dt_quantity == "0")
+        && (data.dt_quantity == "" || data.dt_quantity == null || data.dt_quantity == "0")
         && data.dt_delivery_time == ""
         && (data.dt_status == "1" || data.dt_status == "")
-        && (data.dt_price == "" || data.dt_price == "0")
-        && (data.dt_amount == "" || data.dt_amount == "0")
+        && (data.dt_price == "" || data.dt_price == null || data.dt_price == "0")
+        && (data.dt_amount == "" || data.dt_amount == null || data.dt_amount == "0")
     ) return false;
     return true;
 }
@@ -410,11 +410,11 @@ function acce_row_validate_data(data) {
         && data.dt_acce_name == ""
         && data.dt_note == ""
         && data.dt_unit == ""
-        && data.dt_quantity == ""
+        && (data.dt_quantity == "" || data.dt_quantity == null || data.dt_quantity == "0")
         && data.dt_delivery_time == ""
         && (data.dt_status == "1" || data.dt_status == "")
-        && data.dt_price == ""
-        && data.dt_amount == ""
+        && (data.dt_price == "" || data.dt_price == null || data.dt_price == "0")
+        && (data.dt_amount == "" || data.dt_amount == null || data.dt_amount == "0")
     ) return false;
     return true;
 }
