@@ -226,7 +226,7 @@
   "Customer name is too long.": "Tên khách hàng quá dài.",
   "Customer mail is wrong format.": "Mail khách hàng không đúng.",
   "Customer mail is too long.": "Mail khách hàng quá dài.",
-  "Do you want to create a new quoteprices.": "Bạn có muốn tạo báo giá không.",
+  "Do you want to create a new quoteprices.?": "Bạn có muốn tạo báo giá không.",
   "User code is required.": "Mã nhân viên không được trống.",
   "User code is too long.": "Mã nhân viên quá dài.",
   "User name is required.": "Tên nhân viên không được trống.",
