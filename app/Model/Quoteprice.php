@@ -69,7 +69,6 @@ class Quoteprice
                     'customer.cus_phone',
                     'customer.cus_fax',
                     'customer.cus_mail',
-                    'customer.cus_sex',
                     'customer.cus_avatar',
                     'customer_address.cad_address as cus_addr',
                     'm_customer_type.title as cus_type',
@@ -544,7 +543,6 @@ class Quoteprice
             $curUser = $user->getCurrentUser();
 
             $data = [
-                'cus_sex' => $quoteprice->cus_sex == '0' ? 'chị' : 'anh',
                 'company' => $curUser->com_nm_shot,
                 'cus_name' => $quoteprice->cus_name,
                 'user_name' => $quoteprice->sale_name
