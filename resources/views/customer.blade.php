@@ -419,6 +419,16 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="GNi" id="quoteprice-create">
+                                        <div class="ax7 poK dropdown">
+                                            <div class="asA" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <div class="asY"></div>
+                                            </div>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                <a class="dropdown-item" href="#" onclick="jQuery.UbizOIWidget.w_add_quoteprice(event)">Tạo báo giá</a>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="aqJ">

@@ -126,7 +126,8 @@
             if (id == 0 || pos == 0) {
                 ubizapis('v1', '/customers/generate-cus-code', 'get', null, null, jQuery.UbizOIWidget.w_go_to_input_page_callback);
             } else {
-                jQuery("#btn-delete").show();
+                $("#btn-delete").show();
+                $("#quoteprice-create").show();
                 $("input[name=cus-code]").attr('disabled', true);
                 $("input[name=cus-code]").closest('div.root_textfield').addClass('rootIsDisabled');
                 ubizapis('v1', '/customers/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
@@ -144,6 +145,7 @@
                 jQuery("#i-paging-label").hide();
                 jQuery("#i-paging-older").hide();
                 jQuery("#i-paging-newer").hide();
+                $("#quoteprice-create").hide();
                 jQuery.UbizOIWidget.w_clean_input_page();
 
                 jQuery.UbizOIWidget.w_sleep_scrollbars(jQuery.UbizOIWidget.output_scrollbars);
@@ -803,6 +805,24 @@
             form.find('input[name=dt-con-avatar-base64]').val(data.con_avatar_base64);
             form.find('img[name=dt-con-avatar-view]').attr('src', data.con_avatar_base64);
             form.find('span[name=dt-con-name-view]').text(data.con_name);
+        },
+        w_add_quoteprice: function (event) {
+            event.preventDefault();
+            swal({
+                title: i18next.t('Do you want to create a new quoteprices.?'),
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: i18next.t('No'),
+                confirmButtonText: i18next.t('Yes'),
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    var cus_id = jQuery("input[name=cus-id]").val();
+                    window.location.href = 'quoteprices/' + cus_id + '/create';
+                }
+            })
         }
     });
 })(jQuery);
