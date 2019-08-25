@@ -4,6 +4,7 @@ namespace App\Model;
 
 use Mail;
 use App\User;
+use App\Jobs\SendQuotepriceEmail;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -69,7 +70,6 @@ class Quoteprice
                     'customer.cus_phone',
                     'customer.cus_fax',
                     'customer.cus_mail',
-                    'customer.cus_sex',
                     'customer.cus_avatar',
                     'customer_address.cad_address as cus_addr',
                     'm_customer_type.title as cus_type',
@@ -531,20 +531,78 @@ class Quoteprice
         }
     }
 
-    public function sendQuoteprice($quoteprice, $quoteprices_detail)
+    public function sendQuoteprice($quoteprice, $quoteprices_detail, $extra_data)
     {
         DB::beginTransaction();
         try {
 
-            $file = $this->makeFilePDF($quoteprice, $quoteprices_detail);
+            $file = $this->makeFilePDF($quoteprice, $quoteprices_detail, $extra_data);
             if ($file == false)
                 return false;
 
             $user = new User();
             $curUser = $user->getCurrentUser();
 
+            DB::table('quoteprice_file')
+                ->insert([
+                    'qp_id' => $quoteprice->qp_id,
+                    'uniqid' => $file['uniqid'],
+                    'file_name' => $file['file_name'],
+                    'upd_user' => $curUser->id,
+                    'upd_date' => now(),
+                    'inp_user' => $curUser->id,
+                    'inp_date' => now()
+                ]);
+
+            DB::table('quoteprice_mail')
+                ->insert([
+                    'qp_id' => $quoteprice->qp_id,
+                    'uniqid' => $file['uniqid'],
+                    'file_name' => $file['file_name'],
+                    'upd_user' => $curUser->id,
+                    'upd_date' => now(),
+                    'inp_user' => $curUser->id,
+                    'inp_date' => now()
+                ]);
+
+            //add mail queue
+            $mail_data = [];
+            $mail_data['qp_id'] = $quoteprice->qp_id;
+            $mail_data['uniqid'] = $file['uniqid'];
+            $mail_data['user_id'] = $curUser->id;
+            $mail_data['subject'] = 'Báo giá';
+            $mail_data['com_name'] = $curUser->com_nm_shot;
+            $mail_data['cus_name'] = $quoteprice->contact_name;
+            $mail_data['cus_mail'] = $quoteprice->contact_email;
+            $mail_data['sale_name'] = $quoteprice->sale_name;
+            $mail_data['file_path'] = $file['file_path'];
+            $mail_data['file_name'] = $file['file_name'] . ".pdf";
+            dispatch(new SendQuotepriceEmail($mail_data));
+
+            DB::commit();
+            return $file['uniqid'];
+        } catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    public function sendMail()
+    {
+        DB::beginTransaction();
+        try {
+
+            $mail_queues = DB::table('quoteprice_mail')
+                ->where([
+                    ['qp_id', '=', $qp_id],
+                    ['uniqid', '=', $uniqid]
+                ])
+                ->get();
+
+            $user = new User();
+            $curUser = $user->getCurrentUser();
+
             $data = [
-                'cus_sex' => $quoteprice->cus_sex == '0' ? 'chị' : 'anh',
                 'company' => $curUser->com_nm_shot,
                 'cus_name' => $quoteprice->cus_name,
                 'user_name' => $quoteprice->sale_name
@@ -560,17 +618,20 @@ class Quoteprice
             if (Mail::failures())
                 return false;
 
-            DB::table('quoteprice_file')
-                ->insert([
-                    'qp_id' => $quoteprice->qp_id,
+            DB::table('quoteprice_mail')
+                ->where([
+                    ['qp_id', '=', $qp_id],
+                    ['uniqid', '=', $uniqid]
+                ])
+                ->update([
+                    'send' => '1',
+                    'action' => '1',
                     'uniqid' => $file['uniqid'],
-                    'file_name' => $file['file_name'],
                     'upd_user' => Auth::user()->id,
-                    'inp_user' => Auth::user()->id
+                    'upd_date' => now(),
                 ]);
 
             DB::commit();
-            return $file['uniqid'];
         } catch (\Throwable $e) {
             DB::rollback();
             throw $e;
@@ -604,7 +665,7 @@ class Quoteprice
         }
     }
 
-    public function makeFilePDF($quoteprice, $quoteprices_detail)
+    public function makeFilePDF($quoteprice, $quoteprices_detail, $extra_data)
     {
         try {
             $user = new User();
@@ -619,11 +680,23 @@ class Quoteprice
                 $tmp_quoteprices_detail[$item->type][] = $item;
             }
 
+            $company = presentValidator($extra_data['md_company']) == true ? ($extra_data['md_company'] == '1' ? 'tk' : 'ht') : 'tk';
+            $language = presentValidator($extra_data['md_language']) == true ? $extra_data['md_language'] : 'vn';
+
             $uniqid = uniqid();
-            $file_name = '[TKP] ' . date('d.m.Y') . '_' . $quoteprice->qp_no . '_' . $quoteprice->cus_code;
-            $pdf = PDF::loadView('quoteprice_pdf', [
+            if ($company == 'tk') {
+                $file_name = '[TKT]' . strtoupper($language) . date('d.m.Y') . '_' . $quoteprice->qp_no . '_' . $quoteprice->cus_code;
+            } else {
+                $file_name = '[HT]' . strtoupper($language) . date('d.m.Y') . '_' . $quoteprice->qp_no . '_' . $quoteprice->cus_code;
+            }
+
+
+            $view_name = "quoteprice_pdf_{$company}_{$language}";
+
+            $pdf = PDF::loadView($view_name, [
                 'user' => $userData,
                 'title' => $file_name,
+                'extra_data' => $extra_data,
                 'quoteprice' => $quoteprice,
                 'quoteprices_detail' => $tmp_quoteprices_detail
             ])->setPaper('a4');

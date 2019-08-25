@@ -287,5 +287,6 @@
   "Customer address location 2 is not exists.": "Xin vui lòng nhập [Địa điểm - Địa chỉ 2].",
   "Customer address location 3 is not exists.": "Xin vui lòng nhập [Địa điểm - Địa chỉ 3].",
   "Customer type is not exists.": "Xin vui lòng nhập [Loại khách hàng].",
-  "Customer pic is not exists.": "Xin vui lòng nhập [Người phụ trách]."
+  "Customer pic is not exists.": "Xin vui lòng nhập [Người phụ trách].",
+  "Language": "Ngôn ngữ"
 }

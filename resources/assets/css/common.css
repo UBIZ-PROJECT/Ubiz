@@ -1489,7 +1489,7 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
 }
 
 .mgt-10 {
-    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .mgt-20 {
@@ -1518,6 +1518,38 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
 
 .mgt-80 {
     margin-top: 80px;
+}
+
+.mgb-10 {
+    margin-bottom: 10px;
+}
+
+.mgb-20 {
+    margin-bottom: 20px;
+}
+
+.mgb-30 {
+    margin-bottom: 30px;
+}
+
+.mgb-40 {
+    margin-bottom: 40px;
+}
+
+.mgb-50 {
+    margin-bottom: 50px;
+}
+
+.mgb-60 {
+    margin-bottom: 60px;
+}
+
+.mgb-70 {
+    margin-bottom: 70px;
+}
+
+.mgb-80 {
+    margin-bottom: 80px;
 }
 
 .pdt-5 {
