@@ -112,6 +112,8 @@ class QuotepriceController extends Controller
     {
         try {
 
+            $extra_data = $request->get('data', null);
+
             $qpModel = new Quoteprice();
             $qpData = $qpModel->getQuoteprice($qp_id);
             if (empty($qpData) == true || $qpData == null) {
@@ -134,7 +136,7 @@ class QuotepriceController extends Controller
             }
 
             //send quoteprice
-            $uniqid = $qpModel->sendQuoteprice($qpData, $qpDetailData);
+            $uniqid = $qpModel->sendQuoteprice($qpData, $qpDetailData, $extra_data);
             if ($uniqid == false) {
                 return response()->json(['success' => false, 'message' => __('Send quoteprices fail.')], 200);
             }
@@ -149,7 +151,7 @@ class QuotepriceController extends Controller
     {
         try {
 
-            $extra_data = $request->get('data', null);;
+            $extra_data = $request->get('data', null);
 
             $qpModel = new Quoteprice();
             $qpData = $qpModel->getQuoteprice($qp_id);

@@ -530,14 +530,51 @@ class Quoteprice
         }
     }
 
-    public function sendQuoteprice($quoteprice, $quoteprices_detail)
+    public function sendQuoteprice($quoteprice, $quoteprices_detail, $extra_data)
     {
         DB::beginTransaction();
         try {
 
-            $file = $this->makeFilePDF($quoteprice, $quoteprices_detail);
+            $file = $this->makeFilePDF($quoteprice, $quoteprices_detail, $extra_data);
             if ($file == false)
                 return false;
+
+            $user_id = Auth::user()->id;
+
+            DB::table('quoteprice_file')
+                ->insert([
+                    'qp_id' => $quoteprice->qp_id,
+                    'uniqid' => $file['uniqid'],
+                    'file_name' => $file['file_name'],
+                    'upd_user' => $user_id,
+                    'upd_date' => now(),
+                    'inp_user' => $user_id,
+                    'inp_date' => now()
+                ]);
+
+            DB::table('quoteprice_mail')
+                ->insert([
+                    'qp_id' => $quoteprice->qp_id,
+                    'uniqid' => $file['uniqid'],
+                    'file_name' => $file['file_name'],
+                    'upd_user' => $user_id,
+                    'upd_date' => now(),
+                    'inp_user' => $user_id,
+                    'inp_date' => now()
+                ]);
+
+            DB::commit();
+            return $file['uniqid'];
+        } catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    public function sendMail()
+    {
+        DB::beginTransaction();
+        try {
 
             $user = new User();
             $curUser = $user->getCurrentUser();
@@ -558,17 +595,20 @@ class Quoteprice
             if (Mail::failures())
                 return false;
 
-            DB::table('quoteprice_file')
-                ->insert([
-                    'qp_id' => $quoteprice->qp_id,
+            DB::table('quoteprice_mail')
+                ->where([
+                    ['qp_id', '=', $qp_id],
+                    ['uniqid', '=', $uniqid]
+                ])
+                ->update([
+                    'send' => '1',
+                    'action' => '1',
                     'uniqid' => $file['uniqid'],
-                    'file_name' => $file['file_name'],
                     'upd_user' => Auth::user()->id,
-                    'inp_user' => Auth::user()->id
+                    'upd_date' => now(),
                 ]);
 
             DB::commit();
-            return $file['uniqid'];
         } catch (\Throwable $e) {
             DB::rollback();
             throw $e;
