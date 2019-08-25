@@ -602,7 +602,7 @@ class Quoteprice
         }
     }
 
-    public function makeFilePDF($quoteprice, $quoteprices_detail)
+    public function makeFilePDF($quoteprice, $quoteprices_detail, $extra_data)
     {
         try {
             $user = new User();
@@ -617,11 +617,23 @@ class Quoteprice
                 $tmp_quoteprices_detail[$item->type][] = $item;
             }
 
+            $company = presentValidator($extra_data['md_company']) == true ? ($extra_data['md_company'] == '1' ? 'tk' : 'ht') : 'tk';
+            $language = presentValidator($extra_data['md_language']) == true ? $extra_data['md_language'] : 'vn';
+
             $uniqid = uniqid();
-            $file_name = '[TKP] ' . date('d.m.Y') . '_' . $quoteprice->qp_no . '_' . $quoteprice->cus_code;
-            $pdf = PDF::loadView('quoteprice_pdf', [
+            if ($company == 'tk') {
+                $file_name = '[TKT]' . strtoupper($language) . date('d.m.Y') . '_' . $quoteprice->qp_no . '_' . $quoteprice->cus_code;
+            } else {
+                $file_name = '[HT]' . strtoupper($language) . date('d.m.Y') . '_' . $quoteprice->qp_no . '_' . $quoteprice->cus_code;
+            }
+
+
+            $view_name = "quoteprice_pdf_{$company}_{$language}";
+
+            $pdf = PDF::loadView($view_name, [
                 'user' => $userData,
                 'title' => $file_name,
+                'extra_data' => $extra_data,
                 'quoteprice' => $quoteprice,
                 'quoteprices_detail' => $tmp_quoteprices_detail
             ])->setPaper('a4');

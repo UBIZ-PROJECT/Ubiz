@@ -128,7 +128,7 @@ class QuotepriceController extends Controller
         }
     }
 
-    public function download(Request $request, $qp_id, $uniqid)
+    public function download(Request $request, $qp_id, $uniqid, $file_name)
     {
         try {
             $qpModel = new Quoteprice();
@@ -142,14 +142,13 @@ class QuotepriceController extends Controller
                 return response()->view('errors.404', [], 404);
             }
 
-            $file_name = '[TKP] ' . date('d.m.Y') . '_' . $qpData->qp_no . '_' . $qpData->cus_code . ".pdf";
             $file_path = Storage::disk('quoteprices')->path("$uniqid.pdf");
 
             $headers = [
                 'Content-Type' => 'application/pdf',
             ];
 
-            return response()->download($file_path, $file_name, $headers);
+            return response()->download($file_path, "$file_name.pdf", $headers);
         } catch (\Throwable $e) {
             throw $e;
         }
