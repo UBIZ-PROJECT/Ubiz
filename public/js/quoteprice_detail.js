@@ -1011,6 +1011,7 @@ function qp_send_callback(response) {
             type: 'success',
             title: response.data.message,
             onClose: () => {
+                $("#confirm-modal").modal('hide');
                 var qp_id = $("input[name=qp_id]").val();
                 window.open('/quoteprices/' + qp_id + '/pdf/' + response.data.uniqid);
             }
@@ -1068,6 +1069,7 @@ function qp_get_bussiness_conditions(company, language) {
 
 function qp_download_callback(response) {
     if (response.data.success == true) {
+        $("#confirm-modal").modal('hide');
         var qp_id = $("input[name=qp_id]").val();
         window.open('/quoteprices/' + qp_id + '/download/' + response.data.uniqid + '/' + response.data.file_name);
     } else {

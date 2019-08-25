@@ -422,8 +422,8 @@ class Event
         try {
             $data = [
                 'event_id' => $id,
-                'send' => '0',
-                'action' => $action
+                'action' => $action,
+                'send' => '0'
             ];
 
             DB::table('m_event_mail')->insert($data);

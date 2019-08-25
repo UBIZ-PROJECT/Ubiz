@@ -4,6 +4,7 @@ namespace App\Model;
 
 use Mail;
 use App\User;
+use App\Jobs\SendQuotepriceEmail;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -539,16 +540,17 @@ class Quoteprice
             if ($file == false)
                 return false;
 
-            $user_id = Auth::user()->id;
+            $user = new User();
+            $curUser = $user->getCurrentUser();
 
             DB::table('quoteprice_file')
                 ->insert([
                     'qp_id' => $quoteprice->qp_id,
                     'uniqid' => $file['uniqid'],
                     'file_name' => $file['file_name'],
-                    'upd_user' => $user_id,
+                    'upd_user' => $curUser->id,
                     'upd_date' => now(),
-                    'inp_user' => $user_id,
+                    'inp_user' => $curUser->id,
                     'inp_date' => now()
                 ]);
 
@@ -557,11 +559,25 @@ class Quoteprice
                     'qp_id' => $quoteprice->qp_id,
                     'uniqid' => $file['uniqid'],
                     'file_name' => $file['file_name'],
-                    'upd_user' => $user_id,
+                    'upd_user' => $curUser->id,
                     'upd_date' => now(),
-                    'inp_user' => $user_id,
+                    'inp_user' => $curUser->id,
                     'inp_date' => now()
                 ]);
+
+            //add mail queue
+            $mail_data = [];
+            $mail_data['qp_id'] = $quoteprice->qp_id;
+            $mail_data['uniqid'] = $file['uniqid'];
+            $mail_data['user_id'] = $curUser->id;
+            $mail_data['subject'] = 'Báo giá';
+            $mail_data['com_name'] = $curUser->com_nm_shot;
+            $mail_data['cus_name'] = $quoteprice->contact_name;
+            $mail_data['cus_mail'] = $quoteprice->contact_email;
+            $mail_data['sale_name'] = $quoteprice->sale_name;
+            $mail_data['file_path'] = $file['file_path'];
+            $mail_data['file_name'] = $file['file_name'] . ".pdf";
+            dispatch(new SendQuotepriceEmail($mail_data));
 
             DB::commit();
             return $file['uniqid'];
@@ -575,6 +591,13 @@ class Quoteprice
     {
         DB::beginTransaction();
         try {
+
+            $mail_queues = DB::table('quoteprice_mail')
+                ->where([
+                    ['qp_id', '=', $qp_id],
+                    ['uniqid', '=', $uniqid]
+                ])
+                ->get();
 
             $user = new User();
             $curUser = $user->getCurrentUser();
