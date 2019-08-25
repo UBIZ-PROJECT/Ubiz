@@ -183,13 +183,16 @@
 
                         rows.push(jQuery.UbizOIWidget.w_make_row_html(report[i].qp_id, cols));
                     } else {
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].prd_id, 1));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].brd_name, 1));
                         cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].prd_name, 2));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].prd_type_name, 3));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].brd_name, 4));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].serial_no, 5));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].serial_sts, 6));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].serial_note, 7));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].prd_unit, 3));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].start_time_cnt, 4));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].import_cnt, 5));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].export_cnt, 6));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].end_time_cnt, 7));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].keep_prd_cnt, 8));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].serial_no_list, 9));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].prd_note, 10));
 
                         rows.push(jQuery.UbizOIWidget.w_make_row_html(report[i].prd_id, cols));
                     }
@@ -244,6 +247,8 @@
             params.report_to_date = jQuery("#report_to_date").val();
             params.cus_name = jQuery("#cus_name").val();
             params.sale_name = jQuery("#sale_name").val();
+            params.prd_name = jQuery("#prd_name").val();
+            params.brd_name = jQuery("#brd_name").val();
 
             ubizapis('v1', current_path, 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
