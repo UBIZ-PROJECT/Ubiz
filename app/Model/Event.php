@@ -380,6 +380,23 @@ class Event
                     ])
                     ->update(['delete_flg' => '1']);
             }
+
+            //add mail queue
+            $mail_data = [
+                'user_id' => Auth::user()->id,
+                'subject' => "Thư mời: " . $event['title'],
+                'event_id' => $id,
+                'event_date_day' => date("d", strtotime($event['start'])),
+                'event_date_month' => "Tháng " . date("n", strtotime($event['start'])),
+                'event_title_1' => $event['title'],
+                'event_title_2' => date("gA", strtotime($event['start'])) . " - " . $event['title'],
+                'event_day' => $this->data['event_time'],
+                'event_time_' => $this->data['event_time'],
+                'event_mail' => $this->data['event_mail'],
+                'event_pic' => $this->data['event_pic'],
+                'event_link' => $this->data['event_link']
+            ];
+
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollback();

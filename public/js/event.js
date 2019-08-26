@@ -429,6 +429,30 @@ function main_set_assigned_list() {
     main_render_assigned_dropdown_list(assigned_list);
 }
 
+function main_check_changed_assigned_list() {
+    var selected_list = main_get_list_of_selected_pic();
+    var assigned_list = event_get_list_of_assigned_pic();
+
+    if (selected_list.length == 0
+        && assigned_list.length == 0
+    ) {
+        return false;
+    }
+
+    if (selected_list.length > assigned_list.length
+        || selected_list.length < assigned_list.length
+    ) {
+        return true;
+    }
+
+    _.forEach(selected_list, function (pic) {
+        var idx = _.indexOf(assigned_list, pic);
+        if (idx == -1)
+            return true;
+    });
+    return false;
+}
+
 function main_render_assigned_dropdown_list(assigned_list) {
     var html = "";
     $.map(assigned_list, function (user, idx) {
@@ -821,7 +845,10 @@ document.addEventListener('DOMContentLoaded', function () {
     })
 
     $('.main-pic').on('hide.bs.dropdown', function () {
-        main_set_assigned_list();
-        calendar.refetchEvents();
+        var is_change = main_check_changed_assigned_list();
+        if(is_change == true){
+            main_set_assigned_list();
+            calendar.refetchEvents();
+        }
     })
 });
