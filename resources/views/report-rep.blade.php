@@ -53,18 +53,41 @@
                             <tr>
                                 <td style="padding: 10px">@include('components.input',['control_id'=>'report_from_date', 'value'=> date('Y/m')."/01", 'width'=> '150', 'lbl_width'=>'70', 'label'=>'Từ ngày', 'class'=>'datepicker z-pdl z-pdr', 'i_focus'=>'', 'i_blur'=>'', 'onchange'=>"qp_date_change(this)"])</td>
                                 <td style="padding: 10px">@include('components.input',['control_id'=>'brd_name', 'value'=> '', 'width'=> '250', 'lbl_width'=>'110', 'label'=>'Tên thương hiệu', 'length'=>'200'])</td>
+                                <td></td>
                             </tr>
                             <tr>
                                 <td style="padding: 10px">@include('components.input',['control_id'=>'report_to_date', 'value'=> date('Y/m/d'), 'width'=> '150', 'lbl_width'=>'70', 'label'=>'Đến ngày', 'class'=>'datepicker z-pdl z-pdr', 'i_focus'=>'', 'i_blur'=>'', 'onchange'=>"qp_date_change(this)"])</td>
-                                <td style="padding: 10px">@include('components.input',['control_id'=>'prd_name', 'value'=> '', 'width'=> '250', 'lbl_width'=>'100', 'label'=>'Tên sản phẩm', 'length'=>'200'])</td>
+                                <td style="padding: 10px">@include('components.input',['control_id'=>'prd_name', 'value'=> '', 'width'=> '250', 'lbl_width'=>'100', 'label'=>'Tên hàng hoá', 'length'=>'200'])</td>
+                                <td style="padding: 10px">
+                                    <div class="textfield  root_textfield rootIsUnderlined cus_type_container"
+                                         style="width: 200px">
+                                        <div class="wrapper">
+                                            <label for="user_id" class="ms-Label root-56 lbl-primary" style="">Loại
+                                                hàng hoá:&nbsp;&nbsp;&nbsp;</label>
+                                            <div class="fieldGroup">
+                                                <select class="dropdown_field" id="prd_query_type" name="prd_query_type">
+                                                    <option value="1">Bơm</option>
+                                                    <option value="2">Phụ tùng</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <span class="error_message hidden-content">
+                                           <div class="message-container">
+                                              <p class="label_errorMessage css-57 errorMessage">
+                                                  <span class="error-message-text"></span>
+                                              </p>
+                                           </div>
+                                        </span>
+                                    </div>
+                                </td>
                                 <td><span class="btn btn-info" id="statis-button" onclick="jQuery.UbizOIWidget.w_statis()"> Thống kê </span></td>
                             </tr>
                         </table>
                     </form>
-                    <p style="margin-top:10px; font-size:15px"><strong>Tổng số lượng tồn đầu kì:</strong> {{ $report->total_start_time_cnt }}</p>
-                    <p style="margin-top:10px; font-size:15px"><strong>Tổng số lượng tồn cuối kì:</strong> {{ $report->total_end_time_cnt }}</p>
+                    <p style="margin-top:10px; font-size:15px"><strong>Tổng số lượng tồn đầu kì:</strong> <span id="total_start_time_cnt">{{ $report->total_start_time_cnt }}</span></p>
+                    <p style="margin-top:10px; font-size:15px"><strong>Tổng số lượng tồn cuối kì:</strong> <span id="total_end_time_cnt">{{ $report->total_end_time_cnt }}</span></p>
                     <div class="export">
-                        <a href ="{{ url('/').'/report/repository/export' }}" class="btn btn-info export" id="export-button"> Xuất excel </a>
+                    <span class="btn btn-info export" id="rev-export-button" onclick="jQuery.UbizOIWidget.w_export('repository')"> Xuất excel </span>
                     </div>
                     <div class="aqH" role="presentation">
                         <div class="yTP" role="presentation">
@@ -394,7 +417,7 @@
                                         <div class="tcB col-2">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$row->serial_no_list}}">
-                                                    <span>{{$row->serial_no_list}}</span>
+                                                    <span>{{$row->serial_no_list??'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;–'}}</span>
                                                 </div>
                                             </div>
                                         </div>

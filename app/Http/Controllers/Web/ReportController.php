@@ -23,20 +23,20 @@ class ReportController extends Controller
                     $viewName = "report-rev";
                     $request->order_from_date = date('Y/m') . "/01";
                     $request->order_to_date = date('Y/m/d');
-                    $sum = $reportModel->sumOrders($request->order_from_date, $request->order_to_date, $request->get('cus_name',''), $request->get('sale_name',''));
-                    $paging = $reportModel->getPagingInfoRev($request->order_from_date, $request->order_to_date, $request->get('cus_name',''), $request->get('sale_name',''));
+                    $sum = $reportModel->sumOrders($request->order_from_date, $request->order_to_date, $request->get('cus_name', ''), $request->get('sale_name', ''));
+                    $paging = $reportModel->getPagingInfoRev($request->order_from_date, $request->order_to_date, $request->get('cus_name', ''), $request->get('sale_name', ''));
                     break;
                 case "quoteprice":
                     $viewName = "report-qp";
                     $request->qp_from_date = date('Y/m') . "/01";
                     $request->qp_to_date = date('Y/m/d');
-                    $sum = $reportModel->sumQPs($request->qp_from_date, $request->qp_to_date, $request->get('cus_name',''), $request->get('sale_name',''));
-                    $paging = $reportModel->getPagingInfoQP($request->qp_from_date, $request->qp_to_date, $request->get('cus_name',''), $request->get('sale_name',''));
+                    $sum = $reportModel->sumQPs($request->qp_from_date, $request->qp_to_date, $request->get('cus_name',''), $request->get('sale_name', ''));
+                    $paging = $reportModel->getPagingInfoQP($request->qp_from_date, $request->qp_to_date, $request->get('cus_name',''), $request->get('sale_name', ''));
                     break;
                 default:
                     $viewName = "report-rep";
                     $sum = 0;
-                    $paging = $reportModel->getPagingInfoRep($request->get('prd_name',''), $request->get('brd_name',''));
+                    $paging = $reportModel->getPagingInfoRep($request->get('prd_name', ''), $request->get('brd_name', ''), $request->get('prd_query_type', 1));
                     break;
                 
             }
