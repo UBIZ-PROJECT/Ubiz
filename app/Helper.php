@@ -557,3 +557,20 @@ function rebuild_date($format, $time = 0)
         throw $e;
     }
 }
+
+function makeMailConf($smtp_username, $smtp_password, $from_email, $from_name)
+{
+    try {
+        $mail_conf = [];
+        $mail_conf['smtp_host'] = 'smtp.gmail.com';
+        $mail_conf['smtp_port'] = '465';
+        $mail_conf['smtp_encryption'] = 'ssl';
+        $mail_conf['smtp_username'] = $smtp_username;
+        $mail_conf['smtp_password'] = $smtp_password;
+        $mail_conf['from_email'] = $from_email;
+        $mail_conf['from_name'] = $from_name;
+        return $mail_conf;
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}

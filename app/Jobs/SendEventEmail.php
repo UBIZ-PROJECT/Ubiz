@@ -17,15 +17,17 @@ class SendEventEmail implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $data;
+    protected $configuration;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($data)
+    public function __construct($data, $configuration)
     {
         $this->data = $data;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -54,9 +56,10 @@ class SendEventEmail implements ShouldQueue
             sleep(60);
 
             $email = new EventEmail($data);
-            Mail::to($data['event_mail'])->send($email);
+            $mailer = app()->makeWith('user.mailer', $this->configuration);
+            $mailer->to($data['event_mail'])->send($email);
 
-            if (!Mail::failures()) {
+            if (!$mailer->failures()) {
                 DB::table('m_event_mail')
                     ->where([
                         ['event_id', '=', $data['event_id']],
