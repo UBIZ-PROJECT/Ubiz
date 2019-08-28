@@ -65,6 +65,8 @@
                 'report_to_date': jQuery("#report_to_date").val(),
                 'cus_name': jQuery("#cus_name").val(),
                 'sale_name': jQuery("#sale_name").val(),
+                'prd_name': jQuery("#prd_name").val(),
+                'brd_name': jQuery("#brd_name").val(),
                 'prd_query_type': jQuery("#prd_query_type option:selected").val()
             }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
