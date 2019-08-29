@@ -577,61 +577,17 @@ class Quoteprice
             $mail_data['sale_name'] = $quoteprice->sale_name;
             $mail_data['file_path'] = $file['file_path'];
             $mail_data['file_name'] = $file['file_name'] . ".pdf";
-            dispatch(new SendQuotepriceEmail($mail_data));
+
+            $mail_conf = makeMailConf(
+                $curUser->email,
+                $curUser->app_pass,
+                $curUser->email,
+                $curUser->name
+            );
+            dispatch(new SendQuotepriceEmail($mail_data, $mail_conf));
 
             DB::commit();
             return $file['uniqid'];
-        } catch (\Throwable $e) {
-            DB::rollback();
-            throw $e;
-        }
-    }
-
-    public function sendMail()
-    {
-        DB::beginTransaction();
-        try {
-
-            $mail_queues = DB::table('quoteprice_mail')
-                ->where([
-                    ['qp_id', '=', $qp_id],
-                    ['uniqid', '=', $uniqid]
-                ])
-                ->get();
-
-            $user = new User();
-            $curUser = $user->getCurrentUser();
-
-            $data = [
-                'company' => $curUser->com_nm_shot,
-                'cus_name' => $quoteprice->cus_name,
-                'user_name' => $quoteprice->sale_name
-            ];
-
-            Mail::send('quoteprice_mail', $data, function ($message) use ($quoteprice, $file) {
-                $message->subject('[TKP] Báo giá');
-                $message->from($quoteprice->sale_email, $quoteprice->sale_name);
-                $message->to($quoteprice->cus_mail);
-                $message->attach($file['file_path'], ['as' => $file['file_name']]);
-            });
-
-            if (Mail::failures())
-                return false;
-
-            DB::table('quoteprice_mail')
-                ->where([
-                    ['qp_id', '=', $qp_id],
-                    ['uniqid', '=', $uniqid]
-                ])
-                ->update([
-                    'send' => '1',
-                    'action' => '1',
-                    'uniqid' => $file['uniqid'],
-                    'upd_user' => Auth::user()->id,
-                    'upd_date' => now(),
-                ]);
-
-            DB::commit();
         } catch (\Throwable $e) {
             DB::rollback();
             throw $e;

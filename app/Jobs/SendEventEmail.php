@@ -2,6 +2,9 @@
 
 namespace App\Jobs;
 
+use Swift_Mailer;
+use Swift_SmtpTransport;
+use Illuminate\Mail\Mailer;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Queue\SerializesModels;
@@ -9,7 +12,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-use Mail;
 use App\Mail\EventEmail;
 
 class SendEventEmail implements ShouldQueue
@@ -44,9 +46,12 @@ class SendEventEmail implements ShouldQueue
                 'user_id' => $this->data['user_id'],
                 'subject' => $this->data['subject'],
                 'event_id' => $this->data['event_id'],
-                'event_date' => $this->data['event_date'],
+                'event_date_day' => $this->data['event_date_day'],
+                'event_date_month' => $this->data['event_date_month'],
                 'event_title_1' => $this->data['event_title_1'],
                 'event_title_2' => $this->data['event_title_2'],
+                'event_location' => $this->data['event_location'],
+                'event_day' => $this->data['event_day'],
                 'event_time' => $this->data['event_time'],
                 'event_mail' => $this->data['event_mail'],
                 'event_pic' => $this->data['event_pic'],
@@ -55,9 +60,28 @@ class SendEventEmail implements ShouldQueue
 
             sleep(60);
 
+            $smtp_host = array_get($this->configuration, 'smtp_host');
+            $smtp_port = array_get($this->configuration, 'smtp_port');
+            $smtp_username = array_get($this->configuration, 'smtp_username');
+            $smtp_password = array_get($this->configuration, 'smtp_password');
+            $smtp_encryption = array_get($this->configuration, 'smtp_encryption');
+
+            $from_email = array_get($this->configuration, 'from_email');
+            $from_name = array_get($this->configuration, 'from_name');
+
+            $transport = new Swift_SmtpTransport($smtp_host, $smtp_port);
+            $transport->setUsername($smtp_username);
+            $transport->setPassword($smtp_password);
+            $transport->setEncryption($smtp_encryption);
+
+            $swift_mailer = new Swift_Mailer($transport);
+
+            $mailer = new Mailer(app()->get('view'), $swift_mailer, app()->get('events'));
+            $mailer->alwaysFrom($from_email, $from_name);
+            $mailer->alwaysReplyTo($from_email, $from_name);
+
             $email = new EventEmail($data);
-            $mailer = app()->makeWith('user.mailer', $this->configuration);
-            $mailer->to($data['event_mail'])->send($email);
+            $mailer->to($this->data['event_mail'])->send($email);
 
             if (!$mailer->failures()) {
                 DB::table('m_event_mail')

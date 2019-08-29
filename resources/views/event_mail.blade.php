@@ -8,10 +8,11 @@
     <tbody>
     <tr>
         <td style="height: 60px; width: 70px;;color: #fff; background-color: #4184f3; text-align: center">
-            {{ $data['event_date'] }}
+            {{--{{ $data['event_date_day'] }}<br>--}}
+            {{--{{ $data['event_date_month'] }}--}}
         </td>
         <td style="width: auto;background-color: #ddd;color: #666;padding-left: 20px">
-            {{ $data['event_title_1'] }}
+            {{--{{ $data['event_title_1'] }}--}}
         </td>
     </tr>
     </tbody>
@@ -27,7 +28,7 @@
             </svg>
         </td>
         <td style="width: auto;padding-left: 20px;color: #666;vertical-align: top">
-            {{ $data['event_time'] }}
+            {{--{{ $data['event_time'] }}--}}
         </td>
     </tr>
     <tr>
@@ -39,9 +40,9 @@
         </td>
         <td style="width: auto;padding-left: 20px;color: #666;vertical-align: top">
             <ul style="margin: 0;padding: 0; list-style: none">
-                @foreach($data['event_pic'] as $pic)
-                    <li>{{ $pic }}</li>
-                @endforeach
+{{--                @foreach($data['event_pic'] as $pic)--}}
+{{--                    <li><span>{{$pic['name']}}</span><span><</span>{{ $pic['email'] }}<span>></span>{{ $pic['organizer'] }}</li>--}}
+                {{--@endforeach--}}
             </ul>
         </td>
     </tr>
@@ -53,15 +54,26 @@
             </svg>
         </td>
         <td style="width: auto;padding-left: 20px;color: #666;vertical-align: top; font-weight: bold">
-            {{ $data['event_title_2'] }}
+            {{--{{ $data['event_title_2'] }}--}}
+        </td>
+    </tr>
+    <tr>
+        <td style="height: 40px; vertical-align: top; width: 70px;text-align: center;color: #666">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#666">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                <path d="M0 0h24v24H0z" fill="none"/>
+            </svg>
+        </td>
+        <td style="width: auto;padding-left: 20px;color: #666;vertical-align: top; font-weight: bold">
+            {{--{{ $data['event_location'] }}--}}
         </td>
     </tr>
     <tr>
         <td style="height: 50px; vertical-align: middle; width: auto">
-            <a href="{{ $data['event_link'] }}"
-               style="line-height: 16px;color: #ffffff;font-weight: 400;text-decoration: none;font-size: 14px;padding: 10px 24px;background-color: #4184f3;border-radius: 5px;min-width: 90px;">
-                Chi tiết
-            </a>
+{{--            <a href="{{ $data['event_link'] }}"--}}
+               {{--style="line-height: 16px;color: #ffffff;font-weight: 400;text-decoration: none;font-size: 14px;padding: 10px 24px;background-color: #4184f3;border-radius: 5px;min-width: 90px;">--}}
+                {{--Chi tiết--}}
+            {{--</a>--}}
         </td>
     </tr>
     </tbody>
