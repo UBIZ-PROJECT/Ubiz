@@ -34,6 +34,33 @@ var lst_image_delete = [];
                 side: 'top', theme: 'tooltipster-prd', animation: 'swing', delay: 100
             });
         },
+
+        w_open_upload_dialog: function() {
+            $("#acs_upload_file").click();
+        },
+
+        w_upload_file: function() {
+            const ALERT_TITLE = i18next.t("Do you want to upload it?");
+            const ALERT_ICON = "warning";
+            var formData = new FormData();
+            var file = $("#acs_upload_file").prop("files")[0];
+            formData.append("file", file);
+            $("#acs_upload_file").val("");
+            swal({
+                title:ALERT_TITLE,
+                type: ALERT_ICON,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: _NO,
+                confirmButtonText: _YES,
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    ubizapis('v1','/brands/upload', 'post', formData, null,jQuery.UbizOIWidget.w_process_callback);
+                }
+            });
+        },
         w_sort: function (self) {
             var sort_name = jQuery(self).attr('sort-name');
             var order_by = jQuery(self).attr('order-by') == '' ? 'asc' : (jQuery(self).attr('order-by') == 'asc' ? 'desc' : 'asc');
@@ -429,6 +456,10 @@ var lst_image_delete = [];
             ubizapis('v1', '/accessories', 'get', null, params, jQuery.UbizOIWidget.w_render_product_data_to_input);
         },
         w_process_callback: function (response) {
+            if (response.data['success'] == undefined) {
+                response.data = JSON.parse(response.data);
+            }
+
             if (response.data.success == true) {
                 if (response.data.method == "insert") {
                     swal({
@@ -1084,6 +1115,9 @@ var lst_image_delete = [];
             ubizapis('v1', '/accessories', 'get', null, params, jQuery.UbizOIWidgetPrd.w_render_data_to_ouput_page);
         },
         w_process_callback: function (response) {
+            if (response.data['success'] == undefined) {
+                response.data = JSON.parse(response.data);
+            }
             if (response.data.success == true) {
                 if (response.data.method == "insert") {
                     swal({
@@ -1153,22 +1187,8 @@ var lst_image_delete = [];
             if (isEmpty(data.images)) {
                 data.src = jQuery.UbizOIWidgetPrd.defaultImage;  // THY Fix image
             }
-            // var addrLength = addresses.length >= 3 ? addresses.length : 3;
-            // for(let i = 0; i < addrLength; i++) {
-            //     if (i <= 2) {
-            //         $($("#i-put #nicescroll-iput #txt_adr" + (i+1)).val(addresses[i] != undefined ? addresses[i].address : "" )).change(function() {
-            //             inputChange(this, addresses[i] != undefined ? addresses[i].address : "" );
-            //         }).attr("sad_id",addresses[i] != undefined ? addresses[i].id : "");
-            //     } else {
-            //         var address = $("#i-put #nicescroll-iput .txt_adr1_container").clone();
-            //         $(address).removeClass("txt_adr1_container").addClass("txt_adr"+(i+1)+"_container").addClass("clone-address");
-            //         $($(address).find("input").attr("id","txt_adr"+(i+1)).val(addresses[i].address)).change(function() {inputChange(this, addresses[i].address)}).attr("sad_id",addresses[i].id);
-            //         $(address).find("label.lbl-primary").html(i18next.t("Address") + " " + (i+1));
-            //         $(address).insertAfter("#i-put #nicescroll-iput .txt_adr"+i+"_container");
-            //     }
-            // }
+
             $("#i-put-2 #nicescroll-iput-2 .image-upload .img-show").attr("src", data.src);
-            // $("#i-put #nicescroll-iput .image-upload .img-show").attr("img-name", data.sup_avatar);
 
             jQuery.UbizOIWidgetPrd.w_set_paging_for_detail_page(response.data.paging.page, response.data.paging.rows_num);
             getKeeper();
@@ -1437,8 +1457,8 @@ function copyKeeper(row) {
     $(cloneNewRow).find(".inp_date").html(today);
     var quantity =$(cloneNewRow).find(".quantity").html();
     if (ACS_QUANTITY_DEFAULT - (countQuantityAcs() + Number(quantity)) < 0) {
-         var quantity_remain = ACS_QUANTITY_DEFAULT - countQuantityAcs();
-         swal(i18next.t("Not enough quantity!", {"quantity": quantity_remain}), {
+        var quantity_remain = ACS_QUANTITY_DEFAULT - countQuantityAcs();
+        swal(i18next.t("Not enough quantity!", {"quantity": quantity_remain}), {
             type: "warning",
         }).then(function(){
 

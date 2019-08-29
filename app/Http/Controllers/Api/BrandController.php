@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Common\ProductUpload;
 use App\Http\Controllers\Controller;
 use App\Model\Accessory;
 use App\Model\Brand;
@@ -165,6 +166,23 @@ class BrandController extends Controller
                 $params['images']['insert'][$index]['temp_name'] = $imageUpload->getRealPath();
             }
         }
+    }
+
+    public function uploadFile(Request $request) {
+        $files = $request->file('file');
+        $prdUpload = new ProductUpload($files->getClientOriginalExtension());
+        $file = [];
+        $file['file'] = ["name"=>$files->getClientOriginalName(),
+            "tmp_name"=>$files->getRealPath(),
+            "size"=>$files->getSize()];
+        $message = $prdUpload->uploadFile($file, "file");
+        if (empty($message)) {
+            return response()->json(['message'=>$message, "success"=>false], 500);
+        }
+        $prdUpload->analyzeFile();
+        $listPathFiles = $prdUpload->getAllFilePathAfterExtract();
+        $prdUpload->saveToDatabase($listPathFiles, array("pump", "accessory"));
+        return response()->json(['message'=>"Upload file successfully!", "success"=>true], 200);
     }
 
     private function getPageSortSearch($request) {

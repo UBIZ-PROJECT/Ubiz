@@ -165,7 +165,7 @@ class Accessory implements JWTSubject
                 if ($element === "delete") continue;
                 $this->insertAccessoryImage($id,$image['extension'], $image['temp_name']);
             }
-            if ($param['keeper']) {
+            if (!empty($param['keeper'])) {
                 $keeper = new Keeper();
                 foreach ($param['keeper'] as $item) {
                     $item['acs_id'] = $id;
