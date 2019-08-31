@@ -59,7 +59,8 @@ class SendEventEmail implements ShouldQueue
                 'event_time' => $this->data['event_time'],
                 'event_mail' => $this->data['event_mail'],
                 'event_pic' => $this->data['event_pic'],
-                'event_link' => $this->data['event_link']
+                'event_link' => $this->data['event_link'],
+                'event_action' => $this->data['event_action']
             ];
 
             sleep(60);

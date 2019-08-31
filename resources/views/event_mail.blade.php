@@ -84,7 +84,6 @@
     </tr>
     </tbody>
 </table>
-<div style="margin-top: 5px;">&nbsp;</div>
 <table style="width:100%" border="0" cellpadding="0" cellspacing="0">
     <tbody>
     <tr>
@@ -111,17 +110,19 @@
     </tbody>
 </table>
 <div style="margin-top: 5px;">&nbsp;</div>
-<table style="width:100%" border="0" cellpadding="0" cellspacing="0">
-    <tbody>
-    <tr>
-        <td style="vertical-align: middle; width: auto">
-            <a href="{{ $data['event_link'] }}" style="line-height: 16px;color: #ffffff;font-weight: 400;text-decoration: none;font-size: 14px;padding: 10px 24px;background-color: #4184f3;border-radius: 5px;min-width: 90px;">
-                Chi tiết
-            </a>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<div style="margin-top: 5px">&nbsp;</div>
+@if($data['event_action'] != 'delete')
+    <table style="width:100%" border="0" cellpadding="0" cellspacing="0">
+        <tbody>
+        <tr>
+            <td style="vertical-align: middle; width: auto">
+                <a href="{{ $data['event_link'] }}" style="line-height: 16px;color: #ffffff;font-weight: 400;text-decoration: none;font-size: 14px;padding: 10px 24px;background-color: #4184f3;border-radius: 5px;min-width: 90px;">
+                    Chi tiết
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div style="margin-top: 5px">&nbsp;</div>
+@endif
 </body>
 </html>
