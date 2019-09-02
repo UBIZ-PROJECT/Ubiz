@@ -241,7 +241,8 @@ function event_render_pic_dropdown_list(users, checked_list) {
     $.map(users, function (user, idx) {
 
         var assigned_class = 'assigned';
-        if (typeof checked_list[user.id] === "undefined") {
+        var idx = _.indexOf(checked_list, user.id);
+        if (idx == -1) {
             assigned_class = '';
         }
 
@@ -297,6 +298,16 @@ function event_get_list_of_selected_pic() {
         }
     });
     return selected_list;
+}
+
+function event_get_list_of_assigned_pic() {
+
+    var assigned_list = new Array();
+    $(".assigned-list").find('li.list-group-item').each(function (idx, ele) {
+        var pic = $(ele).attr('pic');
+        assigned_list.push(numeral(pic).value());
+    });
+    return assigned_list;
 }
 
 function event_set_assigned_list() {
@@ -356,7 +367,8 @@ function main_render_pic_dropdown_list(users, checked_list) {
     $.map(users, function (user, idx) {
 
         var assigned_class = 'assigned';
-        if (typeof checked_list[user.id] === "undefined") {
+        var idx = _.indexOf(checked_list, user.id);
+        if (idx == -1) {
             assigned_class = '';
         }
 
@@ -382,20 +394,10 @@ function main_render_pic_dropdown_list(users, checked_list) {
 
 function main_get_list_of_assigned_pic() {
 
-    var assigned_list = {};
-    $(".main-pic-sel").find('li.list-group-item').each(function (idx, ele) {
-        var pic = $(ele).attr('pic');
-        assigned_list[pic] = pic;
-    });
-    return assigned_list;
-}
-
-function event_get_list_of_assigned_pic() {
-
     var assigned_list = new Array();
     $(".main-pic-sel").find('li.list-group-item').each(function (idx, ele) {
         var pic = $(ele).attr('pic');
-        assigned_list.push(pic);
+        assigned_list.push(numeral(pic).value());
     });
     return assigned_list;
 }
@@ -427,6 +429,30 @@ function main_get_list_of_selected_pic() {
 function main_set_assigned_list() {
     var assigned_list = main_get_list_of_selected_pic();
     main_render_assigned_dropdown_list(assigned_list);
+}
+
+function main_check_changed_assigned_list() {
+    var selected_list = main_get_list_of_selected_pic();
+    var assigned_list = main_get_list_of_assigned_pic();
+
+    if (selected_list.length == 0
+        && assigned_list.length == 0
+    ) {
+        return false;
+    }
+
+    if (selected_list.length > assigned_list.length
+        || selected_list.length < assigned_list.length
+    ) {
+        return true;
+    }
+
+    _.forEach(selected_list, function (pic) {
+        var idx = _.indexOf(assigned_list, pic);
+        if (idx == -1)
+            return true;
+    });
+    return false;
 }
 
 function main_render_assigned_dropdown_list(assigned_list) {
@@ -821,7 +847,10 @@ document.addEventListener('DOMContentLoaded', function () {
     })
 
     $('.main-pic').on('hide.bs.dropdown', function () {
-        main_set_assigned_list();
-        calendar.refetchEvents();
+        var is_change = main_check_changed_assigned_list();
+        if (is_change == true) {
+            main_set_assigned_list();
+            calendar.refetchEvents();
+        }
     })
 });

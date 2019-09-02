@@ -12,10 +12,9 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-use App\Mail\QuotepriceEmail;
+use App\Mail\EventEmail;
 
-
-class SendQuotepriceEmail implements ShouldQueue
+class SendEventEmail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -44,12 +43,24 @@ class SendQuotepriceEmail implements ShouldQueue
         try {
 
             $data = [
+                'user_id' => $this->data['user_id'],
                 'subject' => $this->data['subject'],
-                'com_name' => $this->data['com_name'],
-                'cus_name' => $this->data['cus_name'],
-                'sale_name' => $this->data['sale_name'],
-                'file_path' => $this->data['file_path'],
-                'file_name' => $this->data['file_name']
+                'event_id' => $this->data['event_id'],
+                'event_date_day' => $this->data['event_date_day'],
+                'event_date_month' => $this->data['event_date_month'],
+                'event_title_1' => $this->data['event_title_1'],
+                'event_title_2' => $this->data['event_title_2'],
+                'event_fee' => $this->data['event_fee'],
+                'event_desc' => $this->data['event_desc'],
+                'event_result' => $this->data['event_result'],
+                'event_pic_see_list' => $this->data['event_pic_see_list'],
+                'event_location' => $this->data['event_location'],
+                'event_day' => $this->data['event_day'],
+                'event_time' => $this->data['event_time'],
+                'event_mail' => $this->data['event_mail'],
+                'event_pic' => $this->data['event_pic'],
+                'event_link' => $this->data['event_link'],
+                'event_action' => $this->data['event_action']
             ];
 
             sleep(60);
@@ -74,21 +85,20 @@ class SendQuotepriceEmail implements ShouldQueue
             $mailer->alwaysFrom($from_email, $from_name);
             $mailer->alwaysReplyTo($from_email, $from_name);
 
-            $email = new QuotepriceEmail($data);
-            $mailer->to($this->data['cus_mail'])->send($email);
+            $email = new EventEmail($data);
+            $mailer->to($this->data['event_mail'])->send($email);
 
-            if (!$mailer->failures()){
-                DB::table('quoteprice_mail')
+            if (!$mailer->failures()) {
+                DB::table('m_event_mail')
                     ->where([
-                        ['qp_id', '=', $this->data['qp_id']],
-                        ['uniqid', '=', $this->data['uniqid']],
+                        ['event_id', '=', $data['event_id']],
                         ['delete_flg', '=', '0']
                     ])
                     ->update([
                         'send' => '1',
                         'send_time' => now(),
-                        'upd_user' => $this->data['user_id'],
-                        'upd_date' => now(),
+                        'upd_user' => $data['user_id'],
+                        'upd_date' => now()
                     ]);
             }
 

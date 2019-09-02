@@ -2,7 +2,8 @@
 
 namespace App\Model;
 
-use Mail;
+use App\User;
+use App\Jobs\SendEventEmail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -283,6 +284,14 @@ class Event
         DB::beginTransaction();
         try {
 
+            $event = $this->getEvent($id);
+            $event_pic = DB::table('m_event_pic')
+                ->where([
+                    ['event_id', '=', $id],
+                    ['delete_flg', '=', '0']
+                ])
+                ->get();
+
             DB::table('m_event')
                 ->where('id', $id)
                 ->update(['delete_flg' => '1']);
@@ -294,6 +303,109 @@ class Event
             DB::table('m_event_att')
                 ->where('event_id', $id)
                 ->update(['delete_flg' => '1']);
+
+            foreach ($event_pic as $pic) {
+                $pic_ids[] = $pic->user_id;
+            }
+
+            $user = new User();
+            $curUser = $user->getCurrentUser();
+            $picUsers = $user->getListOfUserByIds($pic_ids);
+
+            $event_pic = [];
+            $event_mail = [];
+
+            foreach ($picUsers as $pic) {
+
+                $organizer = '';
+                if ($pic->id == $curUser->id) {
+                    $organizer = '(người tổ chức)';
+                }
+
+                $event_pic[] = [
+                    'name' => $pic->name,
+                    'email' => $pic->email,
+                    'organizer' => $organizer,
+                ];
+
+                if ($pic->id == $curUser->id)
+                    continue;
+
+                $event_mail[] = $pic->email;
+            }
+
+            if (sizeof($event_pic) > 0 && sizeof($event_mail) > 0) {
+
+                $event_day = '';
+                $event_time = '';
+                $event_title_2 = '';
+                $subject = "Thư mời: 【Xóa】" . $event['title'] . "@";
+
+                $start_day = date("Y-m-d", strtotime($event['start']));
+                $end_day = date("Y-m-d", strtotime($event['end']));
+
+                if ($event['allDay'] == '0') {
+
+                    $start_time = date("gA", strtotime($event['start']));
+                    $end_time = date("gA", strtotime($event['end']));
+                    $event_time = "$start_time - $end_time";
+
+                    $event_title_2 = $start_time . " - " . $event['title'];
+
+                    if ($start_day == $end_day) {
+                        $subject .= "$start_day $start_time - $end_time";
+                        $event_day = date("d", strtotime($event['start'])) . " Tháng " . date("n, Y", strtotime($event['start']));
+                    } else {
+
+                        $subject .= "$start_day $start_time - $end_day $end_time";
+
+                        $event_day .= date("d", strtotime($event['start'])) . " Tháng " . date("n, Y", strtotime($event['start']));
+                        $event_day .= " - ";
+                        $event_day .= date("d", strtotime($event['end'])) . " Tháng " . date("n, Y", strtotime($event['end']));
+                    }
+                } else {
+
+                    $event_title_2 = $start_day . " - " . $event['title'];
+                    if ($start_day == $end_day) {
+
+                        $subject .= $start_day;
+                        $event_day = $start_day;
+                    } else {
+                        $subject .= "$start_day - $end_day";
+                        $event_day = "$start_day - $end_day";
+                    }
+                }
+                $subject .= "({$curUser->email})";
+
+                //add mail queue
+                $mail_data = [
+                    'user_id' => $curUser->id,
+                    'subject' => $subject,
+                    'event_id' => $id,
+                    'event_date_day' => date("d", strtotime($event['start'])),
+                    'event_date_month' => "Tháng " . date("n", strtotime($event['start'])),
+                    'event_title_1' => $event['title'],
+                    'event_title_2' => $event_title_2,
+                    'event_location' => $event['location'],
+                    'event_desc' => $event['desc'],
+                    'event_result' => $event['result'],
+                    'event_pic_see_list' => $event['pic_see_list'],
+                    'event_fee' => number_format($event['fee']),
+                    'event_day' => $event_day,
+                    'event_time' => $event_time,
+                    'event_mail' => $event_mail,
+                    'event_pic' => $event_pic,
+                    'event_link' => env('APP_URL') . "/event/$id",
+                    'event_action' => 'delete'
+                ];
+                $mail_conf = makeMailConf(
+                    $curUser->email,
+                    $curUser->app_pass,
+                    $curUser->email,
+                    $curUser->name
+                );
+                dispatch(new SendEventEmail($mail_data, $mail_conf));
+            }
 
             DB::commit();
         } catch (\Throwable $e) {
@@ -313,6 +425,8 @@ class Event
             $this->insertMailQueue($id, '1');
 
             //Update Event Pic
+            $pic_ids = [];
+            $new_event_pic_ids = [];
             $new_event_pic = $data['event_pic'];
             if (sizeof($new_event_pic) > 0) {
 
@@ -322,6 +436,8 @@ class Event
 
                 if (count($old_event_pic) == 0) {
                     foreach ($new_event_pic as &$item) {
+                        $pic_ids[] = $item['user_id'];
+                        $new_event_pic_ids[] = $item['user_id'];
                         $item['event_id'] = $id;
                         $item['upd_user'] = Auth::user()->id;
                         $item['inp_user'] = Auth::user()->id;
@@ -331,7 +447,11 @@ class Event
 
                     $old_event_pic_ids = [];
                     foreach ($old_event_pic as $item) {
+
                         $old_event_pic_ids[] = $item->user_id;
+                        if ($item->delete_flg == '0') {
+                            $pic_ids[] = $item->user_id;
+                        }
                     }
 
                     $inp_event_pic = [];
@@ -339,6 +459,11 @@ class Event
                     foreach ($new_event_pic as $item) {
 
                         $upd_event_pic[] = $item['user_id'];
+                        $new_event_pic_ids[] = $item['user_id'];
+
+                        if (!in_array($item['user_id'], $pic_ids)) {
+                            $pic_ids[] = $item['user_id'];
+                        }
 
                         if (in_array($item['user_id'], $old_event_pic_ids))
                             continue;
@@ -380,6 +505,108 @@ class Event
                     ])
                     ->update(['delete_flg' => '1']);
             }
+
+            $user = new User();
+            $curUser = $user->getCurrentUser();
+            $picUsers = $user->getListOfUserByIds($pic_ids);
+
+            $event_pic = [];
+            $event_mail = [];
+
+            foreach ($picUsers as $pic) {
+
+                $organizer = '';
+                if ($pic->id == $curUser->id) {
+                    $organizer = '(người tổ chức)';
+                }
+
+                if (inArrayValidator($pic->id, $new_event_pic_ids) == true) {
+                    $event_pic[] = [
+                        'name' => $pic->name,
+                        'email' => $pic->email,
+                        'organizer' => $organizer,
+                    ];
+                }
+
+                if ($pic->id == $curUser->id)
+                    continue;
+
+                $event_mail[] = $pic->email;
+            }
+
+            if (sizeof($event_pic) > 0 && sizeof($event_mail) > 0) {
+
+                $event_day = '';
+                $event_time = '';
+                $event_title_2 = '';
+                $subject = "Thư mời: 【Chỉnh sửa】" . $event['title'] . "@";
+
+                $start_day = date("Y-m-d", strtotime($event['start']));
+                $end_day = date("Y-m-d", strtotime($event['end']));
+
+                if ($event['all_day'] == '0') {
+
+                    $start_time = date("gA", strtotime($event['start']));
+                    $end_time = date("gA", strtotime($event['end']));
+                    $event_time = "$start_time - $end_time";
+
+                    $event_title_2 = $start_time . " - " . $event['title'];
+
+                    if ($start_day == $end_day) {
+                        $subject .= "$start_day $start_time - $end_time";
+                        $event_day = date("d", strtotime($event['start'])) . " Tháng " . date("n, Y", strtotime($event['start']));
+                    } else {
+
+                        $subject .= "$start_day $start_time - $end_day $end_time";
+
+                        $event_day .= date("d", strtotime($event['start'])) . " Tháng " . date("n, Y", strtotime($event['start']));
+                        $event_day .= " - ";
+                        $event_day .= date("d", strtotime($event['end'])) . " Tháng " . date("n, Y", strtotime($event['end']));
+                    }
+                } else {
+
+                    $event_title_2 = $start_day . " - " . $event['title'];
+                    if ($start_day == $end_day) {
+
+                        $subject .= $start_day;
+                        $event_day = $start_day;
+                    } else {
+                        $subject .= "$start_day - $end_day";
+                        $event_day = "$start_day - $end_day";
+                    }
+                }
+                $subject .= "({$curUser->email})";
+
+                //add mail queue
+                $mail_data = [
+                    'user_id' => $curUser->id,
+                    'subject' => $subject,
+                    'event_id' => $id,
+                    'event_date_day' => date("d", strtotime($event['start'])),
+                    'event_date_month' => "Tháng " . date("n", strtotime($event['start'])),
+                    'event_title_1' => $event['title'],
+                    'event_title_2' => $event_title_2,
+                    'event_location' => $event['location'],
+                    'event_desc' => $event['desc'],
+                    'event_result' => $event['result'],
+                    'event_pic_see_list' => $event['pic_see_list'],
+                    'event_fee' => number_format($event['fee']),
+                    'event_day' => $event_day,
+                    'event_time' => $event_time,
+                    'event_mail' => $event_mail,
+                    'event_pic' => $event_pic,
+                    'event_link' => env('APP_URL') . "/event/$id",
+                    'event_action' => 'update'
+                ];
+                $mail_conf = makeMailConf(
+                    $curUser->email,
+                    $curUser->app_pass,
+                    $curUser->email,
+                    $curUser->name
+                );
+                dispatch(new SendEventEmail($mail_data, $mail_conf));
+            }
+
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollback();
@@ -399,15 +626,117 @@ class Event
             $event['upd_user'] = Auth::user()->id;
             $event['inp_user'] = Auth::user()->id;
             $event_id = DB::table('m_event')->insertGetId($event);
-            $this->insertMailQueue($event_id, '0');
 
-            //Insert Event Pic
-            foreach ($event_pic as &$item) {
-                $item['event_id'] = $event_id;
-                $item['upd_user'] = Auth::user()->id;
-                $item['inp_user'] = Auth::user()->id;
+            if (sizeof($event_pic) > 0) {
+
+                //Insert Event Pic
+                $pic_ids = [];
+                foreach ($event_pic as &$item) {
+                    $item['event_id'] = $event_id;
+                    $item['upd_user'] = Auth::user()->id;
+                    $item['inp_user'] = Auth::user()->id;
+                    $pic_ids[] = $item['user_id'];
+                }
+                DB::table('m_event_pic')->insert($event_pic);
+
+                $user = new User();
+                $curUser = $user->getCurrentUser();
+                $picUsers = $user->getListOfUserByIds($pic_ids);
+
+                $event_pic = [];
+                $event_mail = [];
+
+                foreach ($picUsers as $pic) {
+
+                    $organizer = '';
+                    if ($pic->id == $curUser->id) {
+                        $organizer = '(người tổ chức)';
+                    }
+                    $event_pic[] = [
+                        'name' => $pic->name,
+                        'email' => $pic->email,
+                        'organizer' => $organizer,
+                    ];
+
+                    if ($pic->id == $curUser->id)
+                        continue;
+
+                    $event_mail[] = $pic->email;
+                }
+
+                if (sizeof($event_pic) > 0 && sizeof($event_mail) > 0) {
+
+                    $event_day = '';
+                    $event_time = '';
+                    $event_title_2 = '';
+                    $subject = "Thư mời: 【Thêm mới】" . $event['title'] . "@";
+
+                    $start_day = date("Y-m-d", strtotime($event['start']));
+                    $end_day = date("Y-m-d", strtotime($event['end']));
+
+                    if ($event['all_day'] == '0') {
+
+                        $start_time = date("gA", strtotime($event['start']));
+                        $end_time = date("gA", strtotime($event['end']));
+                        $event_time = "$start_time - $end_time";
+
+                        $event_title_2 = $start_time . " - " . $event['title'];
+
+                        if ($start_day == $end_day) {
+                            $subject .= "$start_day $start_time - $end_time";
+                            $event_day = date("d", strtotime($event['start'])) . " Tháng " . date("n, Y", strtotime($event['start']));
+                        } else {
+
+                            $subject .= "$start_day $start_time - $end_day $end_time";
+
+                            $event_day .= date("d", strtotime($event['start'])) . " Tháng " . date("n, Y", strtotime($event['start']));
+                            $event_day .= " - ";
+                            $event_day .= date("d", strtotime($event['end'])) . " Tháng " . date("n, Y", strtotime($event['end']));
+                        }
+                    } else {
+
+                        $event_title_2 = $start_day . " - " . $event['title'];
+                        if ($start_day == $end_day) {
+
+                            $subject .= $start_day;
+                            $event_day = $start_day;
+                        } else {
+                            $subject .= "$start_day - $end_day";
+                            $event_day = "$start_day - $end_day";
+                        }
+                    }
+                    $subject .= "({$curUser->email})";
+
+                    //add mail queue
+                    $mail_data = [
+                        'user_id' => $curUser->id,
+                        'subject' => $subject,
+                        'event_id' => $event_id,
+                        'event_date_day' => date("d", strtotime($event['start'])),
+                        'event_date_month' => "Tháng " . date("n", strtotime($event['start'])),
+                        'event_title_1' => $event['title'],
+                        'event_title_2' => $event_title_2,
+                        'event_location' => $event['location'],
+                        'event_desc' => $event['desc'],
+                        'event_result' => $event['result'],
+                        'event_pic_see_list' => $event['pic_see_list'],
+                        'event_fee' => number_format($event['fee']),
+                        'event_day' => $event_day,
+                        'event_time' => $event_time,
+                        'event_mail' => $event_mail,
+                        'event_pic' => $event_pic,
+                        'event_link' => env('APP_URL') . "/event/$event_id",
+                        'event_action' => 'create'
+                    ];
+                    $mail_conf = makeMailConf(
+                        $curUser->email,
+                        $curUser->app_pass,
+                        $curUser->email,
+                        $curUser->name
+                    );
+                    dispatch(new SendEventEmail($mail_data, $mail_conf));
+                }
             }
-            DB::table('m_event_pic')->insert($event_pic);
 
             DB::commit();
             return $event_id;
@@ -428,48 +757,6 @@ class Event
 
             DB::table('m_event_mail')->insert($data);
         } catch (\Throwable $e) {
-            throw $e;
-        }
-    }
-
-    public function sendEmail($id)
-    {
-        try {
-
-            $event_pic = DB::table('m_event_pic')
-                ->join('users', 'm_event_pic.user_id', '=', 'users.id')
-                ->select(
-                    'users.*'
-                )
-                ->where(
-                    [
-                        ['m_event_pic.event_id', '=', $id],
-                        ['m_event_pic.delete_flg', '=', '0']
-                    ]
-                )
-                ->orderBy('users.id', 'asc')
-                ->get();
-
-            $app_url = env('APP_URL', 'http://103.1.238.140');
-            foreach ($event_pic as $pic) {
-
-                $data = [
-                    'name' => $pic->name,
-                    'event' => "$app_url/events/$id"
-                ];
-                Mail::send('event_mail', $data, function ($message) use ($pic) {
-                    $message->subject('[TKP] Lịch làm việc');
-                    $message->from('tkpteams@gmail.com', 'TKP');
-                    $message->to('itnomichi@gmail.com');
-                });
-
-                if (Mail::failures())
-                    return false;
-            }
-
-            return true;
-        } catch (\Throwable $e) {
-            DB::rollback();
             throw $e;
         }
     }
