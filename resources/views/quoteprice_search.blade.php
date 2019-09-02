@@ -1,14 +1,66 @@
 <div class="search">
     <div class="tyo" role="search">
         <div class="cyo">
-            <input id="fuzzy" spellcheck="false" autocomplete="off" placeholder="Tìm kiếm báo giá" value="" type="text" onkeypress="jQuery.UbizOIWidget.w_fuzzy_search_handle_enter(event)">
+            <input id="fuzzy" spellcheck="false" autocomplete="off" placeholder="Tìm kiếm báo giá" value="" type="text"
+                   onkeypress="jQuery.UbizOIWidget.w_fuzzy_search_handle_enter(event)">
         </div>
-        <button class="dyo" onclick="show_searh_form()">
-            <svg focusable="false" height="24px" viewBox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7 10l5 5 5-5z"></path>
-                <path d="M0 0h24v24H0z" fill="none"></path>
-            </svg>
-        </button>
+        <button class="dyo dropdown-toggle" id="search-form" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+        <div class="dropdown">
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="search-form">
+                <div class="search-form">
+                    <div class="row z-mgr z-mgl">
+                        <div class="col-12">
+                            <div class="row justify-content-start mgb-10">
+                                <div class="col-auto">
+                                    <label style="min-width: 80px" class="text-primary">Mã báo giá</label>
+                                </div>
+                                <div class="col-auto">
+                                    <textarea style="resize: none"
+                                              is-change="false" placeholder="" id="s-qp-code"
+                                              class="input-textarea "></textarea>
+                                </div>
+                                <div class="col-auto">
+                                    <select class="s-drd">
+                                        <option value="1">Bằng</option>
+                                        <option value="1">Không bằng</option>
+                                        <option value="1">Chứa</option>
+                                        <option value="1">Không chứa</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row justify-content-start mgb-10">
+                                <div class="col-auto">
+                                    <label style="min-width: 80px" class="text-primary">Ngày tạo</label>
+                                </div>
+                                <div class="col-auto">
+                                    <input type="text" style="width: 100px" class="form-control light-color custom-form-control" value="2019/08/10">
+                                </div>
+                                <div class="col-auto z-pdl z-pdr">
+                                    <label>~</label>
+                                </div>
+                                <div class="col-auto">
+                                    <input type="text" style="width: 100px" class="form-control light-color custom-form-control" value="2019/08/10">
+                                </div>
+                            </div>
+                            <div class="row justify-content-start mgb-10">
+                                <div class="col-auto">
+                                    <label style="min-width: 80px" class="text-primary">Hết hạn</label>
+                                </div>
+                                <div class="col-auto">
+                                    <input type="text" style="width: 100px" class="form-control light-color custom-form-control" value="2019/08/10">
+                                </div>
+                                <div class="col-auto z-pdl z-pdr">
+                                    <label>~</label>
+                                </div>
+                                <div class="col-auto">
+                                    <input type="text" style="width: 100px" class="form-control light-color custom-form-control" value="2019/08/10">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <button class="jyo">
             <svg focusable="false" height="24px" viewBox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg">
                 <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>

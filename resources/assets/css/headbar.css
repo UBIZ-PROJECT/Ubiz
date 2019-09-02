@@ -303,6 +303,11 @@
     height: 48px;
 }
 
+.headbar .search .dropdown-menu{
+    top: -47px !important;
+    left: 2px !important;
+}
+
 .headbar .search .tyo {
     margin-left: 0;
     margin-right: 0;
@@ -343,8 +348,8 @@
     border: none;
     cursor: pointer;
     outline: none;
-    padding: 0 4px;
-    line-height: 0;
+    padding: 0 10px;
+    height: 46px;
     position: absolute;
     right: 0;
     top: 0;
@@ -410,6 +415,10 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     border: 1px solid #ccc;
     border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.headbar .search .search-form {
+    width: 650px;
 }
 
 .headbar .search .gvo {
