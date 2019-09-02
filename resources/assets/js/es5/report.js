@@ -64,7 +64,10 @@
                 'report_from_date': jQuery("#report_from_date").val(),
                 'report_to_date': jQuery("#report_to_date").val(),
                 'cus_name': jQuery("#cus_name").val(),
-                'sale_name': jQuery("#sale_name").val()
+                'sale_name': jQuery("#sale_name").val(),
+                'prd_name': jQuery("#prd_name").val(),
+                'brd_name': jQuery("#brd_name").val(),
+                'prd_query_type': jQuery("#prd_query_type option:selected").val()
             }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_paging: function (page, rows_num, rows_per_page) {
@@ -153,7 +156,7 @@
         w_render_data_to_ouput_page: function (response) {
             var table_html = "";
             var report = response.data.report;
-            // console.log(report)
+            // console.log(response)
             if (report.length > 0) {
                 var rows = [];
                 for (let i = 0; i < report.length; i++) {
@@ -161,12 +164,13 @@
                     if (response.data.type == "revenue") {
                         cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].ord_no, 1));
                         cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].ord_date, 2));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].ord_amount_tax + ' ₫', 3));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].cus_name, 4));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_name, 5));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_phone, 6));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_email, 7));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].sale_name, 8));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].ord_rel_fee + ' ₫', 3));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].ord_amount + ' ₫', 4));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].cus_name, 5));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_name, 6));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_phone, 7));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_email, 8));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].sale_name, 9));
 
                         rows.push(jQuery.UbizOIWidget.w_make_row_html(report[i].ord_id, cols));
                     } else if (response.data.type == "quoteprice") {
@@ -182,13 +186,20 @@
 
                         rows.push(jQuery.UbizOIWidget.w_make_row_html(report[i].qp_id, cols));
                     } else {
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].prd_id, 1));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].brd_name, 1));
                         cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].prd_name, 2));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].prd_type_name, 3));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].brd_name, 4));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].serial_no, 5));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].serial_sts, 6));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].serial_note, 7));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].prd_unit, 3));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].start_time_cnt, 4));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].import_cnt, 5));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].export_cnt, 6));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].end_time_cnt, 7));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].keep_prd_cnt, 8));
+                        if (report[i].serial_no_list) {
+                            cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].serial_no_list, 9));
+                        } else {
+                            cols.push(jQuery.UbizOIWidget.w_make_col_html('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;–', 9));
+                        }
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].prd_note, 10));
 
                         rows.push(jQuery.UbizOIWidget.w_make_row_html(report[i].prd_id, cols));
                     }
@@ -202,6 +213,8 @@
 
             jQuery("#report_count").text(response.data.paging.rows_num);
             jQuery("#report_sum").text(response.data.report_sum);
+            jQuery("#total_start_time_cnt").text(response.data.total_start_time_cnt);
+            jQuery("#total_end_time_cnt").text(response.data.total_end_time_cnt);
         },
         w_make_row_html: function (id, cols) {
             var row_html = '';
@@ -243,6 +256,9 @@
             params.report_to_date = jQuery("#report_to_date").val();
             params.cus_name = jQuery("#cus_name").val();
             params.sale_name = jQuery("#sale_name").val();
+            params.prd_name = jQuery("#prd_name").val();
+            params.brd_name = jQuery("#brd_name").val();
+            params.prd_query_type = jQuery("#prd_query_type option:selected").val();
 
             ubizapis('v1', current_path, 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
