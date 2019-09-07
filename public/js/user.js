@@ -46,9 +46,11 @@
             ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_save: function () {
+            var html = "<input type='checkbox' id='keep_info'> Giữ lại thông tin cho đơn hàng.";
             swal({
                 title: i18next.t('Do you want to save the data.?'),
                 type: 'question',
+                html: jQuery("#txt_id").val() == "0" ? "" : html ,
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
@@ -90,6 +92,7 @@
                             }
                         });
                     } else {
+                        form_data.append("keep_info", $("#keep_info").prop("checked"));
                         ubizapis('v1', '/users/' + id + '/update', 'post', form_data, null, jQuery.UbizOIWidget.w_save_callback);
                     }
                 }
