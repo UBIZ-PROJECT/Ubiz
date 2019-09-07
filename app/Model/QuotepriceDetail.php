@@ -12,13 +12,13 @@ class QuotepriceDetail
     {
         try {
             $data = DB::table('quoteprice_detail')
-                ->select('quoteprice_detail.*')
+                ->select('*')
                 ->where([
                     ['qp_id', '=', $qp_id],
+                    ['delete_flg', '=', '0'],
                     ['owner_id', '=', Auth::user()->id]
                 ])
-                ->where('quoteprice_detail.delete_flg', '0')
-                ->orderBy('quoteprice_detail.sort_no')
+                ->orderBy('sort_no')
                 ->get();
             return $data;
         } catch (\Throwable $e) {

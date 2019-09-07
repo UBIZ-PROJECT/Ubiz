@@ -190,6 +190,7 @@
                                     <div class="col-md-auto">
                                         <div class="row">
                                             <div class="col-md-auto">
+                                                <input type="hidden" id="ord_contact_id" name="ord_contact_id" value="{{ $order->contact_id }}">
                                                 @include('components.input',['control_id'=>'ord_contact_name', 'value'=> $order->contact_name, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Contact person'), 'i_focus'=>'', 'i_blur'=>''])
                                             </div>
                                             <div class="col-md-auto">

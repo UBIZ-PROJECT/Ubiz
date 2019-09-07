@@ -28,9 +28,19 @@
             </div>
             <div id="nicescroll-sidebar" class="zX nicescroll">
                 <div class="my-datepicker"></div>
-
                 <div class="tag">
-
+                    <div id="main-pic-body" class="main-pic-body dropup">
+                        <div class="dropdown main-pic row z-mgl z-mgr">
+                            <div class="col-sm-8 col-md-8 col-lg-8 col-xs-8 text-left z-pdl z-pdr">
+                                <h5>{{ __('Person in charge') }}</h5>
+                            </div>
+                            <div class="col-sm-4 dropup col-md-4 col-lg-4 col-xs-4 text-right z-pdl z-pdr">
+                                <i id="btn-assign" class="fas fa-cog float-right" style="padding-top: 5px" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                                <div class="dropdown-menu dropdown-menu-right z-pdt z-pdb margin-bottom-15 mgt-10"></div>
+                            </div>
+                        </div>
+                        <ul class="list-group main-pic-sel w-100 list-group-flush margin-bottom-30"></ul>
+                    </div>
                     <div id="event-tag-head" class="tag-head row z-mgl z-mgr tag-show">
                         <div class="col text-left z-pdl z-pdr">
                             <h5>{{ __('Tag') }}</h5>

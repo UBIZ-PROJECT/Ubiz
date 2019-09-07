@@ -148,7 +148,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-auto">
-                                                @include('components.input',['control_id'=>'cus_type', 'value'=> $customer->cus_type, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Type'), 'i_focus'=>'', 'i_blur'=>''])
+                                                @include('components.input',['control_id'=>'cus_type', 'value'=> $customer->cus_type_name, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Type'), 'i_focus'=>'', 'i_blur'=>''])
                                             </div>
                                         </div>
                                     </div>
@@ -165,7 +165,8 @@
                                     <div class="col-md-auto">
                                         <div class="row">
                                             <div class="col-md-auto">
-                                                @include('components.input',['control_id'=>'qp_contact_name', 'value'=> '', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Contact person'), 'i_focus'=>'', 'i_blur'=>''])
+                                                <input type="hidden" id="qp_contact_id" name="qp_contact_id" value="0">
+                                                @include('components.input',['control_id'=>'qp_contact_name', 'select'=>true, 'value'=> '', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Contact person'), 'i_focus'=>'', 'i_blur'=>''])
                                             </div>
                                             <div class="col-md-auto">
                                                 @include('components.input',['control_id'=>'qp_contact_rank', 'value'=> '', 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Duty'), 'i_focus'=>'', 'i_blur'=>''])
@@ -338,4 +339,7 @@
 @endsection
 @section('end-javascript')
     <script type="text/javascript" src="{{ asset('js/quoteprice_create.js') }}"></script>
+    <script>
+        var con_list = {!! json_encode($contacts) !!};
+    </script>
 @endsection

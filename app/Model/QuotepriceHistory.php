@@ -69,7 +69,6 @@ class QuotepriceHistory
                     'customer.cus_phone',
                     'customer.cus_fax',
                     'customer.cus_mail',
-                    'customer.cus_sex',
                     'customer.cus_avatar',
                     'customer_address.cad_address as cus_addr',
                     'm_customer_type.title as cus_type',

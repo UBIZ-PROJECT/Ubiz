@@ -2,64 +2,26 @@
 
 namespace App\Exports;
 
-use App\Model\Report;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithEvents;
-use Maatwebsite\Excel\Events\AfterSheet;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
+use App\Exports\ReportRepositoryExport\pumpSheet;
+use App\Exports\ReportRepositoryExport\pumpKeepSheet;
 
-class ReportRepositoryExport implements FromCollection, WithHeadings, WithEvents, ShouldAutoSize
+class ReportRepositoryExport implements WithMultipleSheets
 {
-    protected $request;
+    private $request;
 
-    function __construct($request)
+    public function __construct($request)
     {
         $this->request = $request;
     }
 
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    public function collection()
+    public function sheets(): array
     {
-        $reportModel = new Report();
-        $report = $reportModel->getReportData(0, '', $this->request);
+        $prdQueryType = $this->request->prd_query_type == 2 ? $this->request->prd_query_type : 1;
 
-        foreach ($report as $row) {
-            $reportExportData[] = array(
-                '0' => $row->prd_id,
-                '1' => $row->prd_name,
-                '2' => $row->prd_type_name,
-                '3' => $row->brd_name,
-                '4' => $row->serial_no,
-                '5' => $row->serial_sts,
-                '6' => $row->serial_note,
-            );
-        }
-
-        return (collect($reportExportData));
-    }
-
-    public function headings(): array
-    {
         return [
-            'Mã Sản Phẩm',
-            'Tên Sản Phẩm',
-            'Loại Sản Phẩm',
-            'Thương Hiệu',
-            'Số Seri',
-            'Trạng Thái',
-            'Ghi chú',
-        ];
-    }
-
-    public function registerEvents(): array
-    {
-        return [
-            AfterSheet::class => function (AfterSheet $event) {
-                $event->sheet->getDelegate()->getStyle('A1:G1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('A2C4C9');;
-            },
+            new pumpSheet($this->request, $prdQueryType),
+            new pumpKeepSheet($this->request, $prdQueryType),
         ];
     }
 }

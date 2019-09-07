@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\User;
+use App\Model\Company;
 use App\Model\Customer;
 use App\Model\Quoteprice;
 use App\Model\QuotepriceDetail;
@@ -44,9 +45,24 @@ class QuotepriceController extends Controller
 
             $cusAddress = new CustomerAddress();
             $cusAddressData = $cusAddress->getAddressByCusId($qpData->cus_id);
+
+            $cusModel = new Customer();
+            $contactData = $cusModel->getCustomerContact($qpData->cus_id);
+
+            $comModel = new Company();
+            $comData = $comModel->getAllCompany();
+
+            $languages = [
+                'en' => 'Tiếng Anh',
+                'vn' => 'Tiếng Việt',
+            ];
+
             return view('quoteprice_detail', [
                 'quoteprice' => $qpData,
                 'quotepriceDetail' => $qpDetailData,
+                'contacts' => $contactData,
+                'languages' => $languages,
+                'company' => convertDataToDropdownOptions($comData, 'com_id', 'com_nm_shot'),
                 'prdStatus' => convertDataToDropdownOptions($prdStatusData, 'id', 'title'),
                 'cusAddress' => convertDataToDropdownOptions($cusAddressData, 'cad_id', 'cad_address'),
             ]);
@@ -75,10 +91,15 @@ class QuotepriceController extends Controller
 
             $cusAddress = new CustomerAddress();
             $cusAddressData = $cusAddress->getAddressByCusId($cus_id);
+
+            $cusModel = new Customer();
+            $contactData = $cusModel->getCustomerContact($cus_id);
+
             return view('quoteprice_create', [
                 'qp_no' => $qp_no,
                 'user' => $userData,
                 'customer' => $cusData,
+                'contacts' => $contactData,
                 'prdStatus' => convertDataToDropdownOptions($prdStatusData, 'id', 'title'),
                 'cusAddress' => convertDataToDropdownOptions($cusAddressData, 'cad_id', 'cad_address'),
             ]);
@@ -107,7 +128,7 @@ class QuotepriceController extends Controller
         }
     }
 
-    public function download(Request $request, $qp_id, $uniqid)
+    public function download(Request $request, $qp_id, $uniqid, $file_name)
     {
         try {
             $qpModel = new Quoteprice();
@@ -121,14 +142,13 @@ class QuotepriceController extends Controller
                 return response()->view('errors.404', [], 404);
             }
 
-            $file_name = '[TKP] ' . date('d.m.Y') . '_' . $qpData->qp_no . '_' . $qpData->cus_code . ".pdf";
             $file_path = Storage::disk('quoteprices')->path("$uniqid.pdf");
 
             $headers = [
                 'Content-Type' => 'application/pdf',
             ];
 
-            return response()->download($file_path, $file_name, $headers);
+            return response()->download($file_path, "$file_name.pdf", $headers);
         } catch (\Throwable $e) {
             throw $e;
         }

@@ -111,7 +111,7 @@
                         </div>
                         <hr style="margin-top: 7px; margin-bottom: 7px">
                         <div class="row margin-bottom-15 z-pdr z-pdl z-mgr">
-                            <div class="col-12 z-pdr">
+                            <div class="col-md-8 col-lg-8">
                                 <input type="text" readonly style="width: 140px" class="form-control event-form-control light-color d-inline-flex text-center start-date" id="event-start-date">
                                 <select readonly class="form-control event-form-control light-color d-inline-flex justify-content-center w-auto"
                                         id="event-start-time">
@@ -215,12 +215,8 @@
                                     <option value="11:00pm">11:00CH</option>
                                     <option value="11:30pm">11:30CH</option>
                                 </select>
-                                <input type="text" readonly style="width: 140px" class="form-control event-form-control light-color d-inline-flex text-center end-date" id="event-end-date">
-                            </div>
-                        </div>
-                        <div class="row margin-bottom-15 z-pdr z-pdl z-mgr">
-                            <div class="col-12">
-                                <table>
+                                <input type="text" readonly style="width: 140px" class="form-control margin-bottom-15 event-form-control light-color d-inline-flex text-center end-date" id="event-end-date">
+                                <table class="margin-bottom-15">
                                     <tbody>
                                     <tr style="line-height: 1px">
                                         <td>
@@ -240,121 +236,136 @@
                                     </tr>
                                     </tbody>
                                 </table>
-                            </div>
-                        </div>
-                        <div class="row margin-bottom-15 z-pdr z-pdl z-mgr">
-                            <div class="col-md-8 col-lg-8">
                                 <span class="text-primary">{{ __('Detail') }}</span>
                                 <hr class="z-mgt">
-                                <table>
-                                    <tbody>
-                                    <tr>
-                                        <td style="height: 30px">
-                                            <i class="fas fa-map-marker-alt text-primary mgr-10"></i>
-                                        </td>
-                                        <td>
-                                            <input type="text" style="width: 458px" class="form-control event-form-control light-color" id="event-location">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="height: 30px">
-                                            <i class="far fa-bell text-primary mgr-10"></i>
-                                        </td>
-                                        <td>
-                                            <select readonly class="form-control event-form-control light-color d-inline-flex justify-content-center w-auto">
-                                                <option>Email</option>
-                                            </select>
-                                            {{--<input type="number" style="width: 70px" class="form-control event-form-control light-color d-inline-flex" value="30">--}}
-                                            {{--<select readonly class="form-control event-form-control light-color d-inline-flex justify-content-center w-auto">--}}
-                                            {{--<option>{{ __('Minutes') }}</option>--}}
-                                            {{--<option>{{ __('Hours') }}</option>--}}
-                                            {{--<option>{{ __('Days') }}</option>--}}
-                                            {{--<option>{{ __('Weeks') }}</option>--}}
-                                            {{--</select>--}}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="height: 30px">
-                                            <i class="fas fa-tags text-primary mgr-10"></i>
-                                        </td>
-                                        <td>
-                                            <span class="d-inline-flex" id="event-email"></span>
-                                            <div id="event-tag-dropdown" class="btn-group">
-                                                <button class="btn btn-sm light-color" type="button">
-                                                    <i tag_id="" id="event-tag" class="fas fa-circle" title=""></i>
-                                                </button>
-                                                <button type="button" class="btn btn-sm light-color dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <span class="sr-only">Toggle Dropdown</span>
-                                                </button>
-                                                <div class="dropdown-menu z-pdt z-pdb">
-                                                    @foreach($tags as $key => $tag)
-                                                        <a tag_id="{{ $tag->id }}" tag_title="{{ $tag->title }}"
-                                                           tag_color="{{ $tag->color }}"
-                                                           class="dropdown-item media pdl-5"
-                                                           onclick="epic_select_tag(this)" href="#">
-                                                            <div style="width: 20px; height: 20px; line-height: 20px" class="mr-3">
-                                                                <i class="fas fa-circle {{ $tag->color }}"></i>
-                                                            </div>
-                                                            <div class="media-body" style="height: 20px; line-height: 20px">
-                                                                <h6 class="mt-0 mb-1">{{ $tag->title }}</h6>
-                                                            </div>
-                                                        </a>
-                                                        @if($key < (sizeof($tags) - 1))
-                                                            <div class="dropdown-divider z-mgt z-mgb"></div>
-                                                        @endif
-                                                    @endforeach
+                                <div id="detail-scroll-1" style="height: 350px;">
+                                    <table style="width: 95%">
+                                        <tbody>
+                                        <tr>
+                                            <td style="height: 30px">
+                                                <i class="fas fa-map-marker-alt text-primary mgr-10"></i>
+                                            </td>
+                                            <td>
+                                                <input type="text" style="width: 458px" class="form-control event-form-control light-color" id="event-location">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="height: 30px">
+                                                <i class="far fa-bell text-primary mgr-10"></i>
+                                            </td>
+                                            <td>
+                                                <select readonly class="form-control event-form-control light-color d-inline-flex justify-content-center w-auto">
+                                                    <option>Email</option>
+                                                </select>
+                                                {{--<input type="number" style="width: 70px" class="form-control event-form-control light-color d-inline-flex" value="30">--}}
+                                                {{--<select readonly class="form-control event-form-control light-color d-inline-flex justify-content-center w-auto">--}}
+                                                {{--<option>{{ __('Minutes') }}</option>--}}
+                                                {{--<option>{{ __('Hours') }}</option>--}}
+                                                {{--<option>{{ __('Days') }}</option>--}}
+                                                {{--<option>{{ __('Weeks') }}</option>--}}
+                                                {{--</select>--}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="height: 30px">
+                                                <i class="fas fa-tags text-primary mgr-10"></i>
+                                            </td>
+                                            <td>
+                                                <span class="d-inline-flex" id="event-email"></span>
+                                                <div id="event-tag-dropdown" class="btn-group">
+                                                    <button class="btn btn-sm light-color" type="button">
+                                                        <i tag_id="" id="event-tag" class="fas fa-circle" title=""></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-sm light-color dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <span class="sr-only">Toggle Dropdown</span>
+                                                    </button>
+                                                    <div class="dropdown-menu z-pdt z-pdb">
+                                                        @foreach($tags as $key => $tag)
+                                                            <a tag_id="{{ $tag->id }}" tag_title="{{ $tag->title }}"
+                                                               tag_color="{{ $tag->color }}"
+                                                               class="dropdown-item media pdl-5"
+                                                               onclick="epic_select_tag(this)" href="#">
+                                                                <div style="width: 20px; height: 20px; line-height: 20px" class="mr-3">
+                                                                    <i class="fas fa-circle {{ $tag->color }}"></i>
+                                                                </div>
+                                                                <div class="media-body" style="height: 20px; line-height: 20px">
+                                                                    <h6 class="mt-0 mb-1">{{ $tag->title }}</h6>
+                                                                </div>
+                                                            </a>
+                                                            @if($key < (sizeof($tags) - 1))
+                                                                <div class="dropdown-divider z-mgt z-mgb"></div>
+                                                            @endif
+                                                        @endforeach
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="vertical-align: top;">
-                                            <i class="fas fa-align-left text-primary mgr-10"></i>
-                                        </td>
-                                        <td>
-                                            <textarea id="event_desc" class="form-control event-form-control" name="txt_desc"></textarea>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: top;">
+                                                <i class="fas fa-align-left text-primary mgr-10"></i>
+                                            </td>
+                                            <td>
+                                                <textarea style="width: 100%; height: 200px; resize: vertical; overflow-x: hidden; overflow-y: auto"
+                                                          id="event_desc" class="form-control" name="txt_desc"></textarea>
+                                            </td>
+                                        </tr>
+                                        <tr><td colspan="2" style="height: 10px"></td></tr>
+                                        <tr>
+                                            <td style="vertical-align: top;">
+                                                <i class="fas fa-flag-checkered text-primary mgr-10"></i>
+                                            </td>
+                                            <td>
+                                                <textarea style="width: 100%; height: 200px; resize: vertical; overflow-x: hidden; overflow-y: auto"
+                                                          id="event_result" class="form-control" name="txt_result"></textarea>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                             <div class="col-md-4 col-lg-4">
+                                <span class="text-primary">{{ __('Fee') }}</span>
+                                <hr class="z-mgt margin-bottom-10">
+                                <input type="text" id="event_fee" style="width: 100%"  onfocus="num_focus(this)" onblur="num_blur(this)" onkeydown="num_keydown(event)" min="0" max="9999999999" placeholder="" spellcheck="false" type="text" maxlength="10" value="" class="form-control event-form-control light-color d-inline-flex text-right margin-bottom-15">
+
                                 <div class="dropdown event-pic">
                                     <span class="text-primary">{{ __('Person in charge') }}</span>
                                     <i id="btn-assign" class="fas fa-cog float-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
                                     <div class="dropdown-menu dropdown-menu-right z-pdt z-pdb margin-bottom-15 mgt-10"></div>
                                 </div>
                                 <hr class="z-mgt">
-                                <ul class="list-group assigned-list list-group-flush margin-bottom-30" style="width: 300px"></ul>
-                                <span>{{ __('Person in charge permission:') }}</span>
-                                <table>
-                                    <tbody>
-                                    <tr style="line-height: 1px">
-                                        <td style="height: 30px">
-                                            <input id="event_pic_edit" type="checkbox" class="mgr-10 light-color" style="width: 15px; height: 15px">
-                                        </td>
-                                        <td>
-                                            <span>{{ __('Edit') }}</span>
-                                        </td>
-                                    </tr>
-                                    <tr style="line-height: 1px">
-                                        <td style="height: 30px">
-                                            <input id="event_pic_assign" type="checkbox" class="mgr-10" style="width: 15px; height: 15px">
-                                        </td>
-                                        <td>
-                                            <span>{{ __('Add person in charge') }}</span>
-                                        </td>
-                                    </tr>
-                                    <tr style="line-height: 1px">
-                                        <td style="height: 30px">
-                                            <input id="event_pic_see_list" type="checkbox" class="mgr-10" style="width: 15px; height: 15px">
-                                        </td>
-                                        <td>
-                                            <span>{{ __('See the list of people in charge') }}</span>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                                <div id="detail-scroll-2" style="height: 350px;">
+                                    <ul class="list-group assigned-list list-group-flush margin-bottom-30" style="width: 300px"></ul>
+                                    <span>{{ __('Person in charge permission:') }}</span>
+                                    <table>
+                                        <tbody>
+                                        <tr style="line-height: 1px">
+                                            <td style="height: 30px">
+                                                <input id="event_pic_edit" type="checkbox" class="mgr-10 light-color" style="width: 15px; height: 15px">
+                                            </td>
+                                            <td>
+                                                <span>{{ __('Edit') }}</span>
+                                            </td>
+                                        </tr>
+                                        <tr style="line-height: 1px">
+                                            <td style="height: 30px">
+                                                <input id="event_pic_assign" type="checkbox" class="mgr-10" style="width: 15px; height: 15px">
+                                            </td>
+                                            <td>
+                                                <span>{{ __('Add person in charge') }}</span>
+                                            </td>
+                                        </tr>
+                                        <tr style="line-height: 1px">
+                                            <td style="height: 30px">
+                                                <input id="event_pic_see_list" type="checkbox" class="mgr-10" style="width: 15px; height: 15px">
+                                            </td>
+                                            <td>
+                                                <span>{{ __('See the list of people in charge') }}</span>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>

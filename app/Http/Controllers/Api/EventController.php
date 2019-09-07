@@ -20,25 +20,29 @@ class EventController extends Controller
             $start = $request->get('start', null);
             $end = $request->get('end', null);
             $tag = $request->get('tag', []);
+            $view = $request->get('view', 'dayGridMonth');
+            $user = $request->get('user', []);
 
             if (isArrayValidator($tag) == false
+                || isArrayValidator($user) == false
                 || requiredValidator($start) == false
                 || dateValidator($start) == false
                 || requiredValidator($end) == false
+                || requiredValidator($view) == false
                 || dateValidator($end) == false
             ) {
                 return response()->json(['success' => false, 'message' => __('Filter data is wrong.')], 200);
             }
 
             $start_dt = new \DateTime($start);
-            $start_fm = $start_dt->format('Y-m-d H:i:s');
+            $start_fm = $start_dt->format('Y-m-d');
 
             $end_dt = new \DateTime($end);
-            $end_fm = $end_dt->format('Y-m-d H:i:s');
+            $end_fm = $end_dt->format('Y-m-d');
 
 
             $event = new Event();
-            $events = $event->getEvents($start_fm, $end_fm, $tag);
+            $events = $event->getEvents($start_fm, $end_fm, $tag, $view, $user);
             return response()->json(['events' => $events, 'success' => true, 'message' => __("Successfully processed.")], 200);
         } catch (\Throwable $e) {
             throw $e;
@@ -157,6 +161,7 @@ class EventController extends Controller
             $start = $request->get('start', null);
             $end = $request->get('end', null);
             $tag = $request->get('tag', []);
+            $view = $request->get('view', 'dayGridMonth');
             $user = $request->get('user', []);
 
             if (isArrayValidator($tag) == false
@@ -164,6 +169,7 @@ class EventController extends Controller
                 || requiredValidator($start) == false
                 || dateValidator($start) == false
                 || requiredValidator($end) == false
+                || requiredValidator($view) == false
                 || dateValidator($end) == false
             ) {
                 return response()->json(['success' => false, 'message' => __('Filter data is wrong.')], 200);
@@ -178,7 +184,7 @@ class EventController extends Controller
             $file_name = "LLV-$start_fm-$end_fm.xlsx";
 
             // Store on a different disk with a defined writer type.
-            Excel::store(new ReportEventExport($request), "$uniqid.xlsx", 'event', Excel::XLSX);
+            Excel::store(new ReportEventExport($request), "$uniqid.xlsx", 'event');
             return response()->json(['uniqid' => $uniqid, 'file_name' => $file_name, 'success' => true, 'message' => __('Successfully processed.')], 200);
         } catch (\Throwable $e) {
             throw $e;
@@ -196,9 +202,7 @@ class EventController extends Controller
                 'title' => $data['event_title'],
                 'location' => $data['event_location'],
                 'desc' => $data['event_desc'],
-                'desc_origin' => $data['event_desc_origin'],
                 'result' => $data['event_result'],
-                'result_origin' => $data['event_result_origin'],
                 'fee' => $data['event_fee'],
                 'all_day' => $data['event_all_day'],
                 'tag_id' => $data['event_tag'],

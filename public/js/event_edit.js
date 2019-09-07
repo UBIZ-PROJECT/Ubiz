@@ -47,6 +47,8 @@ function event_edit(event) {
     $("#event-tag-dropdown").find("div.dropdown-menu").find("a.dropdown-item").removeClass('active');
     $("#event-tag-dropdown").find("div.dropdown-menu").find("a[tag_id=" + event.tag_id + "].dropdown-item").addClass('active');
 
+    $('#event_fee').val(numeral(event.fee).format('0,0'));
+
     if (event.pic_edit == '1') {
         $("#event_pic_edit").prop("checked", true);
     } else {
@@ -81,7 +83,8 @@ function event_edit(event) {
         $(".assigned-list").hide();
     }
 
-    tinyMCE.get('event_desc').setContent(event.desc);
+    $("#event_desc").val(event.desc);
+    $("#event_result").val(event.result);
 
     var assigned_list = new Array();
     $.map(event.pic, function (user, idx) {
@@ -294,7 +297,10 @@ function event_colect_data() {
 
     data.event_tag = $("#event-tag").attr('tag_id');
     data.event_location = $("#event-location").val();
-    data.event_desc = tinyMCE.get('event_desc').getContent();
+
+    data.event_desc = $("#event_desc").val();
+
+    data.event_fee = numeral($("#event_fee").val()).value();
 
     data.event_pic_edit = '0';
     if ($("#event_pic_edit").is(":checked") == true) {
@@ -316,6 +322,9 @@ function event_colect_data() {
         var pic = $(ele).attr('pic');
         data.event_pic_list.push(pic);
     });
+
+    data.event_result = $("#event_result").val();
+
     return data;
 }
 
@@ -419,11 +428,13 @@ function go_back_to_output() {
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    fnc_set_scrollbars("nicescroll-iput");
-
     $('.utooltip').tooltipster({
         side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
     });
+
+    fnc_set_scrollbars("nicescroll-iput");
+    fnc_set_scrollbars("detail-scroll-1");
+    fnc_set_scrollbars("detail-scroll-2");
 
     $.fn.datepicker.language['vi'] = {
         days: ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'],
@@ -464,22 +475,6 @@ document.addEventListener('DOMContentLoaded', function () {
         event_set_assigned_list();
     })
 
-    tinymce.init({
-        width: '100%',
-        min_height: 246,
-        max_height: 500,
-        menubar: false,
-        toolbar_drawer: 'floating',
-        selector: '#event_desc',
-        plugins: [
-            'advlist autolink lists link image charmap print preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code wordcount autoresize'
-        ],
-        toolbar: 'undo redo | bold italic forecolor backcolor | formatselect | fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat',
-        content_css: [
-            '/fonts/roboto/v18/roboto.css'
-        ],
-        init_instance_callback: function (editor) {
-            event_edit(event);
-        }
-    });
+    event_edit(event);
+
 });

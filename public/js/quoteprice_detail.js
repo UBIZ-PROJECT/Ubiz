@@ -241,11 +241,11 @@ function prod_row_validate_data(data) {
         && data.dt_prod_specs == ""
         && data.dt_note == ""
         && data.dt_unit == ""
-        && (data.dt_quantity == "" || data.dt_quantity == "0")
+        && (data.dt_quantity == "" || data.dt_quantity == null || data.dt_quantity == "0")
         && data.dt_delivery_time == ""
         && (data.dt_status == "1" || data.dt_status == "")
-        && (data.dt_price == "" || data.dt_price == "0")
-        && (data.dt_amount == "" || data.dt_amount == "0")
+        && (data.dt_price == "" || data.dt_price == null || data.dt_price == "0")
+        && (data.dt_amount == "" || data.dt_amount == null || data.dt_amount == "0")
     ) return false;
     return true;
 }
@@ -410,11 +410,11 @@ function acce_row_validate_data(data) {
         && data.dt_acce_name == ""
         && data.dt_note == ""
         && data.dt_unit == ""
-        && data.dt_quantity == ""
+        && (data.dt_quantity == "" || data.dt_quantity == null || data.dt_quantity == "0")
         && data.dt_delivery_time == ""
         && (data.dt_status == "1" || data.dt_status == "")
-        && data.dt_price == ""
-        && data.dt_amount == ""
+        && (data.dt_price == "" || data.dt_price == null || data.dt_price == "0")
+        && (data.dt_amount == "" || data.dt_amount == null || data.dt_amount == "0")
     ) return false;
     return true;
 }
@@ -863,6 +863,7 @@ function qp_colect_data() {
     data.qp_exp_date = $("input[name=qp_exp_date]").val();
     data.qp_note = $("textarea[name=qp_note]").val();
     data.cad_id = $("select[name=qp_cad_id]").val();
+    data.contact_id = $("input[name=qp_contact_id]").val();
     data.contact_name = $("input[name=qp_contact_name]").val();
     data.contact_rank = $("input[name=qp_contact_rank]").val();
     data.contact_phone = $("input[name=qp_contact_phone]").val();
@@ -977,21 +978,31 @@ function qp_refresh() {
 }
 
 function qp_send() {
-    swal({
-        title: i18next.t('Do you want to send quoteprice to the customer.?'),
-        type: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        cancelButtonText: i18next.t('No'),
-        confirmButtonText: i18next.t('Yes'),
-        reverseButtons: true
-    }).then((result) => {
-        if (result.value) {
-            var qp_id = $("input[name=qp_id]").val();
-            ubizapis('v1', '/quoteprices/' + qp_id + '/send', 'post', null, null, qp_send_callback);
+    $("#confirm-btn").text('Gửi báo giá');
+    $("#confirm-btn").unbind('click');
+    $("#confirm-btn").bind('click', function () {
+
+        var md_company = $("#md_company").val();
+        var md_language = $("#md_language").val();
+        if (md_company == "" || md_language == "") {
+            swal.fire({
+                type: 'error',
+                title: "Xin vui lòng chọn [Công ty] và [Ngôn ngữ].",
+                onClose: () => {
+                    return false;
+                }
+            })
+            return false;
         }
-    })
+
+        var data = qp_get_bussiness_conditions(md_company, md_language);
+        data.md_company = md_company;
+        data.md_language = md_language;
+
+        var qp_id = $("input[name=qp_id]").val();
+        ubizapis('v1', '/quoteprices/' + qp_id + '/send', 'post', {'data': data}, null, qp_send_callback);
+    });
+    $("#confirm-modal").modal('show');
 }
 
 function qp_send_callback(response) {
@@ -1000,6 +1011,7 @@ function qp_send_callback(response) {
             type: 'success',
             title: response.data.message,
             onClose: () => {
+                $("#confirm-modal").modal('hide');
                 var qp_id = $("input[name=qp_id]").val();
                 window.open('/quoteprices/' + qp_id + '/pdf/' + response.data.uniqid);
             }
@@ -1014,14 +1026,52 @@ function qp_send_callback(response) {
 }
 
 function qp_download() {
-    var qp_id = $("input[name=qp_id]").val();
-    ubizapis('v1', '/quoteprices/' + qp_id + '/download', 'post', null, null, qp_download_callback);
+    $("#confirm-btn").text('Tải xuống');
+    $("#confirm-btn").unbind('click');
+    $("#confirm-btn").bind('click', function () {
+
+        var md_company = $("#md_company").val();
+        var md_language = $("#md_language").val();
+        if (md_company == "" || md_language == "") {
+            swal.fire({
+                type: 'error',
+                title: "Xin vui lòng chọn [Công ty] và [Ngôn ngữ].",
+                onClose: () => {
+                    return false;
+                }
+            })
+            return false;
+        }
+
+        var data = qp_get_bussiness_conditions(md_company, md_language);
+        data.md_company = md_company;
+        data.md_language = md_language;
+
+        var qp_id = $("input[name=qp_id]").val();
+        ubizapis('v1', '/quoteprices/' + qp_id + '/download', 'post', {'data': data}, null, qp_download_callback);
+    });
+    $("#confirm-modal").modal('show');
+}
+
+function qp_get_bussiness_conditions(company, language) {
+    var data = {};
+
+    var company_nm = company == '1' ? 'tk' : 'ht';
+
+    data.md_project = $("#md_project_" + language).val();
+    data.md_value = $("#md_value_" + language).val();
+    data.md_warranty = $("#md_warranty_" + language).val();
+    data.md_payment = $("#md_payment_" + language).val();
+    data.md_delivery = $("#md_delivery_" + language).val();
+    data.md_account = $("#md_account_" + company_nm + "_" + language).val();
+    return data;
 }
 
 function qp_download_callback(response) {
     if (response.data.success == true) {
+        $("#confirm-modal").modal('hide');
         var qp_id = $("input[name=qp_id]").val();
-        window.open('/quoteprices/' + qp_id + '/download/' + response.data.uniqid);
+        window.open('/quoteprices/' + qp_id + '/download/' + response.data.uniqid + '/' + response.data.file_name);
     } else {
         swal.fire({
             type: 'error',
@@ -1065,6 +1115,68 @@ function qp_create_order_callback(response) {
             title: response.data.message
         })
     }
+}
+
+function qp_render_drd_contact() {
+    var drd_html = "";
+    if (con_list.length > 0) {
+
+        var qp_contact_id = $("input[name=qp_contact_id]").val();
+
+        $.map(con_list, function (contact, idx) {
+
+            var itm_active = "";
+            if (qp_contact_id == contact.con_id) {
+                itm_active = "active";
+            }
+
+            drd_html += '<a con_id="' + contact.con_id + '" class="dropdown-item ' + itm_active + ' media pdl-5" href="#" onClick="qp_drd_contact_select(this, event)">';
+            drd_html += '<div style="width: 30px; height: 30px" class="mr-3">';
+
+            if (contact.con_avatar_base64 == '') {
+                drd_html += '<img src="' + deafult_profile + '" class="img-fluid img-thumbnail" alt="">';
+            } else {
+                drd_html += '<img src="' + contact.con_avatar_base64 + '" class="img-fluid img-thumbnail" alt="">';
+            }
+
+            drd_html += '</div>';
+            drd_html += '<div class="media-body" style="height: 30px; line-height: 5px">';
+            drd_html += '<h6 class="mt-0 mb-1">' + html_escape(contact.con_name) + '</h6>';
+            drd_html += '<small>' + html_escape(contact.con_rank) + '</small>';
+            drd_html += '</div>';
+            drd_html += '</a>';
+        });
+    } else {
+        drd_html = '<div style="margin: 10px 15px"><h5>Không có người liên hệ.</h5></div>';
+    }
+
+    $("#qp_contact_name_drd_menu").empty();
+    $("#qp_contact_name_drd_menu").html(drd_html);
+}
+
+function qp_drd_contact_select(self, event) {
+    var con_id = $(self).attr('con_id');
+    var contact = qp_get_selected_contact(con_id);
+    if (contact == null)
+        return false;
+    qp_set_contact_form(contact);
+}
+
+function qp_get_selected_contact(con_id) {
+    var contact = _.find(con_list, function (o) {
+        return o.con_id == con_id;
+    });
+    if (typeof contact === 'undefined')
+        return null;
+    return contact;
+}
+
+function qp_set_contact_form(contact) {
+    $("input[name=qp_contact_id]").val(contact.con_id);
+    $("input[name=qp_contact_name]").val(contact.con_name);
+    $("input[name=qp_contact_rank]").val(contact.con_rank);
+    $("input[name=qp_contact_phone]").val(contact.con_phone);
+    $("input[name=qp_contact_email]").val(contact.con_mail);
 }
 
 function w_sleep_scrollbars(instance) {
@@ -1117,6 +1229,58 @@ $(document).ready(function () {
         } else {
             qp_create_order();
         }
-
+    });
+    $("#md_company").on("change", function () {
+        var company = $(this).val() == '1' ? 'tk' : 'ht';
+        var lang = $("#md_language").val();
+        if (lang == 'vn') {
+            $("#md_content_vn").show();
+            $("#md_content_en").hide();
+            if (company == 'tk') {
+                $("#div_md_account_tk_vn").show();
+                $("#div_md_account_ht_vn").hide();
+            } else {
+                $("#div_md_account_tk_vn").hide();
+                $("#div_md_account_ht_vn").show();
+            }
+        } else {
+            $("#md_content_vn").hide();
+            $("#md_content_en").show();
+            if (company == 'tk') {
+                $("#div_md_account_tk_en").show();
+                $("#div_md_account_ht_en").hide();
+            } else {
+                $("#div_md_account_tk_en").hide();
+                $("#div_md_account_ht_en").show();
+            }
+        }
+    });
+    $("#md_language").on("change", function () {
+        var company = $("#md_company").val() == '1' ? 'tk' : 'ht';
+        var lang = $(this).val();
+        if (lang == 'vn') {
+            $("#md_content_vn").show();
+            $("#md_content_en").hide();
+            if (company == 'tk') {
+                $("#div_md_account_tk_vn").show();
+                $("#div_md_account_ht_vn").hide();
+            } else {
+                $("#div_md_account_tk_vn").hide();
+                $("#div_md_account_ht_vn").show();
+            }
+        } else {
+            $("#md_content_vn").hide();
+            $("#md_content_en").show();
+            if (company == 'tk') {
+                $("#div_md_account_tk_en").show();
+                $("#div_md_account_ht_en").hide();
+            } else {
+                $("#div_md_account_tk_en").hide();
+                $("#div_md_account_ht_en").show();
+            }
+        }
+    });
+    $('#qp_contact_name_drd').on('show.bs.dropdown', function () {
+        qp_render_drd_contact();
     });
 });
