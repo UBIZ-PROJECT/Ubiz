@@ -127,6 +127,7 @@
                                 <div class="col-6" role="presentation"></div>
                                 <div class="col-7" role="presentation"></div>
                                 <div class="col-8" role="presentation"></div>
+                                <div class="col-9" role="presentation"></div>
                             </div>
                             <div class="hdG">
                                 <div class="dcB col-1" role="presentation">
@@ -174,7 +175,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>	
+                                </div>
 								<div class="dcB col-3" role="presentation">
                                     <div class="dWB dWT" role="button" sort-name="sale_name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
@@ -197,7 +198,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>								
+                                </div>
                                 <div class="dcB col-4" role="presentation">
                                     <div class="dWB dWT" role="button" sort-name="cus_name" order-by="" onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
@@ -313,6 +314,29 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="dcB col-9" role="presentation">
+                                    <div class="dWB dWT" role="button" sort-name="ord_note" order-by="">
+                                        <div class="dvJ">
+                                            <div class="tDv">{{ __('Note') }}</div>
+                                            <div class="mhH">
+                                                <div class="acD">
+                                                    <div class="huK">
+                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
+                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                        </svg>
+                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
+                                                             height="18px" viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 						<input type="hidden" id="pageno" name="pageno" value="0">
@@ -321,7 +345,7 @@
                         <div class="yTP">
                             <div id="table-content" class="jFr">
                                 @foreach($orders as $order)
-                                    <div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page({{$order->ord_id}}, this)">
+                                    <div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page('{{$order->ord_id}}', this)">
                                         <div class="tcB col-1">
                                             <div class="cbo">
                                                 <div class="jgQ" onclick="jQuery.UbizOIWidget.w_c_checkbox_click(this)">
@@ -379,6 +403,13 @@
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$order->sale_step}}">
                                                     @include('components.badge_sale_step', ['sale_step'=>$order->sale_step])
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tcB col-9">
+                                            <div class="cbo">
+                                                <div class="nCj" title="{{$order->ord_note}}">
+                                                    <span>{{$order->ord_note}}</span>
                                                 </div>
                                             </div>
                                         </div>

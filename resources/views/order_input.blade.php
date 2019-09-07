@@ -484,29 +484,32 @@
                                     </div>
                                     <div class="row justify-content-end z-pdl z-pdr z-mgr z-mgl">
                                         <div class="col-md-auto text-right z-mgr z-mgl pdt-5">
-                                            <span>{{ __('Paid') }}</span>
+                                            <span>{{ __('Relate Fee') }}</span>
                                         </div>
                                         <div class="col-md-auto z-pdr z-pdl" style="width: 150px">
-                                            <input onchange="ord_paid_change(this)" onfocus="num_focus(this)" onblur="num_blur(this)" onkeydown="num_keydown(event)" spellcheck="false" type="text" maxlength="19" name="ord_paid" value="{{ number_format($order->ord_paid) }}" class="w-100 text-right">
-                                            <input type="hidden" value="{{ number_format($order->ord_paid) }}" name="ord_paid_old">
+                                            <input onfocus="num_focus(this)" onblur="num_blur(this)" {{--onkeydown="num_keydown(event)"--}} spellcheck="false" type="text" maxlength="19" name="ord_relate_fee" value="{{ number_format($order->ord_rel_fee) }}" class="w-100 text-right">
+                                            <input type="hidden" value="{{ number_format($order->ord_rel_fee) }}" name="ord_rel_fee">
                                         </div>
                                         <div class="col-md-auto z-mgr z-mgl">
                                             <span>VND</span>
                                         </div>
                                     </div>
-                                    <div class="row justify-content-end z-pdl z-pdr z-mgr z-mgl">
-                                        <div class="col-md-auto text-right z-mgr z-mgl pdt-5">
-                                            <span>{{ __('Debt') }}</span>
-                                        </div>
-                                        <div class="col-md-auto z-pdr z-pdl" style="width: 150px">
-                                            <input type="text" name="ord_debt" readonly class="w-100 text-right" value="{{ number_format($order->ord_debt) }}">
-                                            <input type="hidden" value="{{ number_format($order->ord_debt) }}" name="ord_debt_old">
-                                        </div>
-                                        <div class="col-md-auto z-mgr z-mgl">
-                                            <span>VND</span>
-                                        </div>
-                                    </div>
+                                    {{--<div class="row justify-content-end z-pdl z-pdr z-mgr z-mgl">--}}
+                                        {{--<div class="col-md-auto text-right z-mgr z-mgl pdt-5">--}}
+                                            {{--<span>{{ __('Debt') }}</span>--}}
+                                        {{--</div>--}}
+                                        {{--<div class="col-md-auto z-pdr z-pdl" style="width: 150px">--}}
+                                            {{--<input type="text" name="ord_debt" readonly class="w-100 text-right" value="{{ number_format($order->ord_debt) }}">--}}
+                                            {{--<input type="hidden" value="{{ number_format($order->ord_debt) }}" name="ord_debt_old">--}}
+                                        {{--</div>--}}
+                                        {{--<div class="col-md-auto z-mgr z-mgl">--}}
+                                            {{--<span>VND</span>--}}
+                                        {{--</div>--}}
+                                    {{--</div>--}}
                                 </div>
+                            </div>
+                            <div>
+                                @include('components.textarea',['width'=>'95%', 'height'=>'180', 'control_id'=>'ord_pay_met', 'label'=>__('Payment Method'), 'value'=>$order->ord_pay_met])
                             </div>
                         </div>
                     </div>

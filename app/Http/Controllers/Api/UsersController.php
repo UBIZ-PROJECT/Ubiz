@@ -47,15 +47,34 @@ class UsersController extends Controller
         try {
             $user = new User();
             list($page, $sort, $search, $user_data) = $this->getRequestData($request);
-
-            $validator = $user->validateData($user_data);
-            if ($validator['success'] == false) {
-                return response()->json(['success' => false, 'message' => $validator['message']], 200);
+            if ($user_data['keep_info'] == "true") {
+                $this->insertUserByUpdateKeepInfo($id, $user_data);
+                $this->deleteUsers($id, $request);
+            } else {
+                $validator = $user->validateData($user_data);
+                if ($validator['success'] == false) {
+                    return response()->json(['success' => false, 'message' => $validator['message']], 200);
+                }
+                unset($user_data['keep_info']);
+                $user->updateUser($id, $user_data);
             }
 
-            $user->updateUser($id, $user_data);
+
             return response()->json(['success' => true, 'message' => __("Successfully processed.")], 200);
         } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function insertUserByUpdateKeepInfo($id, $data) {
+        try {
+            $user = new User();
+            $userData = $user->getUserById($id);
+            $data['avatar'] = $userData->temp_avatar;
+            $data['app_pass'] = $userData->app_pass;
+            unset($data['keep_info']);
+            $user->insertUser($data);
+        } catch(\Throwable $e) {
             throw $e;
         }
     }
@@ -65,12 +84,10 @@ class UsersController extends Controller
         try {
             $user = new User();
             list($page, $sort, $search, $user_data) = $this->getRequestData($request);
-
             $validator = $user->validateData($user_data);
             if ($validator['success'] == false) {
                 return response()->json(['success' => false, 'message' => $validator['message']], 200);
             }
-
             $user->insertUser($user_data);
         } catch (\Throwable $e) {
             throw $e;
@@ -169,6 +186,9 @@ class UsersController extends Controller
         }
         if ($request->hasFile('avatar')) {
             $user['avatar'] = $request->avatar;
+        }
+        if ($request->has("keep_info")) {
+            $user['keep_info'] = $request->keep_info;
         }
 
         return [$page, $sort, $search, $user];

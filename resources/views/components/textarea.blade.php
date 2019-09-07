@@ -8,10 +8,16 @@ if (!isset($type)) {
 $html_width = "300px";
 if(isset($width)){
     $html_width = $width . "px";
+    if (strpos($width, "%") > -1) {
+        $html_width = $width;
+    }
 }
 $html_height = "150px";
 if(isset($height)) {
     $html_height = $height . "px";
+    if (strpos($height, "%") > -1) {
+        $html_height = $height;
+    }
 }
 $html_max_length = "";
 if(isset($length)){

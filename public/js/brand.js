@@ -6,6 +6,8 @@ var current_screen;
 var current_brd_id = 0;
 var is_image_delete = false;
 var lst_image_delete = [];
+
+
 (function ($) {
     UbizOIWidget = function () {
         this.page = 0;
@@ -35,6 +37,33 @@ var lst_image_delete = [];
                 side: 'top', theme: 'tooltipster-prd', animation: 'swing', delay: 100
             });
         },
+        w_open_upload_dialog: function() {
+            $("#prd_upload_file").click();
+        },
+        w_upload_file: function() {
+            const ALERT_TITLE = i18next.t("Do you want to upload it?");
+            const ALERT_ICON = "warning";
+            var formData = new FormData();
+            var file = $("#prd_upload_file").prop("files")[0];
+            formData.append("file", file);
+            $("#prd_upload_file").val("");
+            swal({
+                title:ALERT_TITLE,
+                type: ALERT_ICON,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: _NO,
+                confirmButtonText: _YES,
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    ubizapis('v1','/brands/upload', 'post', formData, null,jQuery.UbizOIWidget.w_process_callback);
+                }
+            });
+
+        },
+
         w_sort: function (self) {
             var sort_name = jQuery(self).attr('sort-name');
             var order_by = jQuery(self).attr('order-by') == '' ? 'asc' : (jQuery(self).attr('order-by') == 'asc' ? 'desc' : 'asc');
@@ -430,6 +459,9 @@ var lst_image_delete = [];
             ubizapis('v1', '/products', 'get', null, params, jQuery.UbizOIWidget.w_render_product_data_to_input);
         },
         w_process_callback: function (response) {
+            if (response.data['success'] == undefined) {
+                response.data = JSON.parse(response.data);
+            }
             if (response.data.success == true) {
                 if (response.data.method == "insert") {
                     swal({
@@ -1111,6 +1143,9 @@ var lst_image_delete = [];
             ubizapis('v1', '/products', 'get', null, params, jQuery.UbizOIWidgetPrd.w_render_data_to_ouput_page);
         },
         w_process_callback: function (response) {
+            if (response.data['success'] == undefined) {
+                response.data = JSON.parse(response.data);
+            }
             if (response.data.success == true) {
                 if (response.data.method == "insert") {
                     swal({

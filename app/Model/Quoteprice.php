@@ -420,7 +420,7 @@ class Quoteprice
                         ) {
                             $res['success'] = false;
                             $message[] = __('[Row : :line ] pump detail is wrong data.', ['line' => "No." + ($line_no + 1)]);
-                            continue;
+                            continue 2;
                         }
                         break;
                     case '2':
@@ -429,7 +429,7 @@ class Quoteprice
                         ) {
                             $res['success'] = false;
                             $message[] = __('[Row : :line ] accessory detail is wrong data.', ['line' => "No." + ($line_no + 1)]);
-                            continue;
+                            continue 2;
                         }
                         break;
                 }
