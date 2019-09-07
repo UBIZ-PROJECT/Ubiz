@@ -102,7 +102,7 @@
     color: #d65454;
 }
 
-.s-drd{
+.s-drd {
     background: #e9ecef;
     border-color: #e9ecef;
     min-width: 50px;
@@ -117,7 +117,149 @@
     border-color: #e9ecef;
 }
 
-.custom-form-control{
+.custom-form-control {
     padding: 0 0.75rem;
     height: 28px;
+}
+
+/* surrounding tag container */
+.multiple-select {
+    list-style-type: none;
+    padding: 0 5px 0 0;
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid #eee;
+    cursor: text;
+    font: normal 14px sans-serif;
+    color: #555;
+    background: #fff;
+    line-height: 20px;
+}
+
+/* core styles usually need no change */
+.multiple-select li {
+    display: block;
+    float: left;
+    overflow: hidden;
+    margin: 3px 0;
+}
+
+.multiple-select div {
+    float: left;
+    padding: 0 4px;
+}
+
+.multiple-select .placeholder {
+    padding: 0 8px;
+    color: #bbb;
+}
+
+.multiple-select .multiple-select-spacer {
+    padding: 0;
+    width: 8px;
+    overflow: hidden;
+    color: transparent;
+    background: none;
+}
+
+.multiple-select input {
+    vertical-align: inherit;
+    border: 0;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    cursor: text;
+    font-family: inherit;
+    font-weight: inherit;
+    font-size: inherit;
+    font-style: inherit;
+    box-shadow: none;
+    background: none;
+    color: #444;
+}
+
+/* hide original input field or textarea visually to allow tab navigation */
+.multiple-select-hidden-src {
+    position: absolute !important;
+    left: -99999px;
+}
+
+/* hide IE10 "clear field" X */
+.multiple-select ::-ms-clear {
+    display: none;
+}
+
+/* tag style */
+.multiple-select .multiple-select-tag {
+    padding-left: 5px;
+    color: #46799b;
+    background: #e0eaf1;
+    white-space: nowrap;
+    overflow: hidden;
+    cursor: pointer;
+    border-radius: 2px 0 0 2px;
+}
+
+/* delete icon */
+.multiple-select .multiple-select-delete {
+    background: #e0eaf1;
+    cursor: pointer;
+    border-radius: 0 2px 2px 0;
+    padding-left: 3px;
+    padding-right: 4px;
+}
+
+.multiple-select .multiple-select-delete i {
+    line-height: 18px;
+    display: inline-block;
+}
+
+.multiple-select .multiple-select-delete i:before {
+    font-size: 16px;
+    color: #8ba7ba;
+    content: "×";
+    font-style: normal;
+}
+
+.multiple-select .multiple-select-delete:hover i:before {
+    color: #d65454;
+}
+
+.multiple-select .multiple-select-tag.active + .multiple-select-delete, .multiple-select .multiple-select-tag.active + .multiple-select-delete i {
+    visibility: hidden;
+    cursor: text;
+}
+
+.multiple-select .multiple-select-tag.active {
+    background: none !important;
+}
+
+.sale-step.multiple-select {
+    cursor: pointer;
+    background: #e9ecef;
+    min-width: 200px !important;
+    max-width: 350px !important;
+    max-height: 100px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    border-color: #e9ecef !important;
+    border-radius: 0.25rem !important;
+}
+
+.sale-step.multiple-select .multiple-select-tag {
+    background: #17a2b8;
+    color: white;
+}
+
+.sale-step.multiple-select .multiple-select-delete {
+    background: #17a2b8;
+    border-left: 1px solid white;
+}
+
+.sale-step.multiple-select .multiple-select-delete i::before {
+    color: white;
+}
+
+.sale-step.multiple-select .multiple-select-delete:hover i::before {
+    color: #d65454;
 }
