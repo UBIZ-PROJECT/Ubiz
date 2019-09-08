@@ -28,24 +28,19 @@
     </div>
     <div id="search-form" class="eyo">
         <div class="hvo">
-            <div class="row z-mgr z-mgl pdt-20">
+            <div id="search-content" class="row z-mgr z-mgl pdt-20">
                 <div class="col-12">
                     <div class="row justify-content-start mgb-10">
                         <div class="col-auto">
                             <label style="min-width: 80px" class="text-primary">Mã báo giá</label>
                         </div>
                         <div class="col-auto">
-                                        <textarea style="resize: none"
-                                                  is-change="false" placeholder="" id="s-qp-code"
-                                                  class="input-textarea "></textarea>
+                            <textarea style="resize: none" class="input-textarea"
+                                      is-change="false" placeholder="" id="s-qp-code">
+                            </textarea>
                         </div>
                         <div class="col-auto">
-                            <select class="s-drd">
-                                <option value="1">Bằng</option>
-                                <option value="1">Không bằng</option>
-                                <option value="1">Chứa</option>
-                                <option value="1">Không chứa</option>
-                            </select>
+                            @include('components.search_operators_1')
                         </div>
                     </div>
                     <div class="row justify-content-start mgb-10">
@@ -53,15 +48,20 @@
                             <label style="min-width: 80px" class="text-primary">Ngày tạo</label>
                         </div>
                         <div class="col-auto">
-                            <input type="text" style="width: 100px" value="2019/08/10"
+                            <input type="text" style="width: 100px"
+                                   value="" name="s-f-qp-date" autocomplete="off"
                                    class="date-picker form-control light-color custom-form-control">
                         </div>
                         <div class="col-auto z-pdl z-pdr">
                             <label>~</label>
                         </div>
                         <div class="col-auto">
-                            <input type="text" style="width: 100px" value="2019/08/10"
+                            <input type="text" style="width: 100px"
+                                   value="" name="s-t-qp-date" autocomplete="off"
                                    class="date-picker form-control light-color custom-form-control">
+                        </div>
+                        <div class="col-auto">
+                            @include('components.search_operators_2')
                         </div>
                     </div>
                     <div class="row justify-content-start mgb-10">
@@ -69,57 +69,59 @@
                             <label style="min-width: 80px" class="text-primary">Hết hạn</label>
                         </div>
                         <div class="col-auto">
-                            <input type="text" style="width: 100px" value="2019/08/10"
+                            <input type="text" style="width: 100px"
+                                   value="" name="s-f-qp-exp-date" autocomplete="off"
                                    class="date-picker form-control light-color custom-form-control">
                         </div>
                         <div class="col-auto z-pdl z-pdr">
                             <label>~</label>
                         </div>
                         <div class="col-auto">
-                            <input type="text" style="width: 100px" value="2019/08/10"
+                            <input type="text" style="width: 100px"
+                                   value="" name="s-t-qp-exp-date" autocomplete="off"
                                    class="date-picker form-control light-color custom-form-control">
                         </div>
-                    </div>
-                    <div class="row justify-content-start mgb-10">
                         <div class="col-auto">
-                            <label style="min-width: 80px" class="text-primary">Nhân viên</label>
+                            @include('components.search_operators_2')
                         </div>
-                        <div id="drd-menu-user" class="col-auto dropdown">
-                            <select id="drd-user" style="display: none" multiple>
-                                <option value="1">Báo giá</option>
-                                <option value="2">Đơn hàng</option>
-                                <option value="3">Hợp đồng</option>
-                                <option value="4">Giao hàng</option>
-                            </select>
-                            <ul class="cst-select multiple-select"
-                                id="drd-menu-tags-user"
-                                data-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="false">
-                            </ul>
-                            <div id="drd-menu-items-user"
-                                 class="dropdown-menu multiple-select-menu"
-                                 onclick="stop_propagation(event)"
-                                 aria-labelledby="drd-menu-tags-user">
+                    </div>
+                    @if(sizeof($users) > 0)
+                        <div class="row justify-content-start mgb-10">
+                            <div class="col-auto">
+                                <label style="min-width: 80px" class="text-primary">Nhân viên</label>
+                            </div>
+                            <div id="drd-menu-user" class="col-auto dropdown">
+                                <select id="drd-user" name="s-sale-id" style="display: none" multiple>
+                                    @foreach($users as $item)
+                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    @endforeach
+                                </select>
+                                <ul class="cst-select multiple-select"
+                                    id="drd-menu-tags-user"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false">
+                                </ul>
+                                <div id="drd-menu-items-user"
+                                     class="dropdown-menu multiple-select-menu"
+                                     onclick="stop_propagation(event)"
+                                     aria-labelledby="drd-menu-tags-user">
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                @include('components.search_operators_3')
                             </div>
                         </div>
-                        <div class="col-auto">
-                            <select class="s-drd">
-                                <option value="1">Chứa</option>
-                                <option value="1">Không chứa</option>
-                            </select>
-                        </div>
-                    </div>
+                    @endif
                     <div class="row justify-content-start mgb-10">
                         <div class="col-auto">
                             <label style="min-width: 80px" class="text-primary">Khách hàng</label>
                         </div>
                         <div id="drd-menu-cus" class="col-auto dropdown">
-                            <select id="drd-cus" style="display: none" multiple>
-                                <option value="1">Báo giá</option>
-                                <option value="2">Đơn hàng</option>
-                                <option value="3">Hợp đồng</option>
-                                <option value="4">Giao hàng</option>
+                            <select id="drd-cus" name="s-cus-id" style="display: none" multiple>
+                                @foreach($customers as $item)
+                                    <option value="{{ $item->cus_id }}">{{ $item->cus_name }}</option>
+                                @endforeach
                             </select>
                             <ul class="cst-select multiple-select"
                                 id="drd-menu-tags-cus"
@@ -134,10 +136,7 @@
                             </div>
                         </div>
                         <div class="col-auto">
-                            <select class="s-drd">
-                                <option value="1">Chứa</option>
-                                <option value="1">Không chứa</option>
-                            </select>
+                            @include('components.search_operators_3')
                         </div>
                     </div>
                     <div class="row justify-content-start mgb-10">
@@ -145,18 +144,13 @@
                             <label style="min-width: 80px" class="text-primary">Tổng tiền</label>
                         </div>
                         <div class="col-auto">
-                            <input type="text" style="width: 200px" value=""
+                            <input type="text" style="width: 240px" value="" name="s-qp-amount-tax"
                                    onfocus="num_focus(this)" onblur="num_blur(this)"
                                    onkeydown="num_keydown(event)" min="0" max="9999999999"
                                    class="form-control light-color custom-form-control text-right">
                         </div>
                         <div class="col-auto">
-                            <select class="s-drd">
-                                <option value="1">Bằng</option>
-                                <option value="1">Không bằng</option>
-                                <option value="1">Nhỏ hơn</option>
-                                <option value="1">Lớn hơn</option>
-                            </select>
+                            @include('components.search_operators_4')
                         </div>
                     </div>
                     <div class="row justify-content-start mgb-10">
@@ -164,7 +158,7 @@
                             <label style="min-width: 80px" class="text-primary">Trạng thái</label>
                         </div>
                         <div id="drd-menu-sale-step" class="col-auto dropdown">
-                            <select id="drd-sale-step" style="display: none" multiple>
+                            <select id="drd-sale-step" name="s-sale-step" style="display: none" multiple>
                                 <option value="1">Báo giá</option>
                                 <option value="2">Đơn hàng</option>
                                 <option value="3">Hợp đồng</option>
@@ -183,10 +177,7 @@
                             </div>
                         </div>
                         <div class="col-auto">
-                            <select class="s-drd">
-                                <option value="1">Chứa</option>
-                                <option value="1">Không chứa</option>
-                            </select>
+                            @include('components.search_operators_3')
                         </div>
                     </div>
                 </div>
@@ -212,21 +203,40 @@
     }
 
     function show_advance_searh_form() {
-        jQuery("#search-form").fadeIn('fast', function () {
-            document.body.addEventListener('click', hide_advance_searh_form, false);
-        });
+        $("#search-form").fadeIn('fast');
     }
 
     function hide_advance_searh_form(e) {
-        var search_form = jQuery(e.target).closest("#search-form");
-        if (search_form.length == 0) {
-            document.body.removeEventListener('click', hide_advance_searh_form, false);
-            jQuery("#search-form").hide('fast');
-        }
+        $("#search-form").hide('fast');
     }
 
     function clear_advance_searh_form() {
-        jQuery("#search-form").hide('fast');
+        var tags = $('#s-qp-code').tagEditor('getTags')[0].tags;
+        for (i = 0; i < tags.length; i++) {
+            $('#s-qp-code').tagEditor('removeTag', tags[i]);
+        }
+        $(".s-drd").val("");
+        $("input[name=s-f-qp-date]").val("");
+        $("input[name=s-t-qp-date]").val("");
+        $("input[name=s-f-qp-exp-date]").val("");
+        $("input[name=s-t-qp-exp-date]").val("");
+
+        $("#drd-menu-tags-user").empty();
+        $("#drd-menu-items-user").empty();
+        var drd_user = $("#drd-user");
+        set_multiple_drd_val(drd_user, new Array());
+
+        $("#drd-menu-tags-cus").empty();
+        $("#drd-menu-items-cus").empty();
+        var drd_cus = $("#drd-cus");
+        set_multiple_drd_val(drd_cus, new Array());
+
+        $("input[name=s-qp-amount-tax]").val("");
+
+        $("#drd-menu-tags-sale-step").empty();
+        $("#drd-menu-items-sale-step").empty();
+        var drd_sale_step = $("#drd-sale-step");
+        set_multiple_drd_val(drd_sale_step, new Array());
     }
 
     function get_multiple_drd_items(drd) {
@@ -460,6 +470,8 @@
     //--end [user]--
 
     jQuery(document).ready(function () {
+
+        $("#s-qp-code").tagEditor();
 
         //--begin [sale-step]--
         $('#drd-menu-sale-step').on('hide.bs.dropdown', function () {

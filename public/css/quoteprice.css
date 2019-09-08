@@ -75,7 +75,7 @@
 
 #s-qp-code + .tag-editor {
     background: #e9ecef;
-    min-width: 200px !important;
+    min-width: 240px !important;
     max-width: 350px !important;
     max-height: 100px !important;
     overflow-y: auto !important;
@@ -105,7 +105,7 @@
 .s-drd {
     background: #e9ecef;
     border-color: #e9ecef;
-    min-width: 50px;
+    min-width: 115px;
     border-radius: 0.25rem;
     height: 28px;
     border: 1px solid #e9ecef;
@@ -238,7 +238,7 @@
 .cst-select.multiple-select {
     cursor: pointer;
     background: #e9ecef;
-    min-width: 200px !important;
+    min-width: 240px !important;
     max-width: 350px !important;
     max-height: 100px !important;
     overflow-y: auto !important;

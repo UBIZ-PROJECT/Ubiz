@@ -16,7 +16,6 @@
             jQuery('.utooltip').tooltipster({
                 side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
             });
-            jQuery("#s-qp-code").tagEditor();
             jQuery.UbizOIWidget.sort_default = jQuery.UbizOIWidget.w_get_sort_info();
         },
         w_sort: function (self) {
