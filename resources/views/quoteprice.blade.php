@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/common.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/quoteprice.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('dist/tageditor/jquery.tag-editor.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('dist/air-datepicker/css/datepicker.min.css') }}">
 @endsection
 @section('headbar')
 @section('search')
@@ -442,6 +443,7 @@
     </div>
 @endsection
 @section('end-javascript')
+    <script type="text/javascript" src="{{ asset('dist/air-datepicker/js/datepicker.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('dist/tageditor/jquery.tag-editor.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('dist/tageditor/jquery.caret.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/quoteprice.js') }}"></script>

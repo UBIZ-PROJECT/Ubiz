@@ -53,15 +53,15 @@
                             <label style="min-width: 80px" class="text-primary">Ngày tạo</label>
                         </div>
                         <div class="col-auto">
-                            <input type="text" style="width: 100px"
-                                   class="form-control light-color custom-form-control" value="2019/08/10">
+                            <input type="text" style="width: 100px" value="2019/08/10"
+                                   class="date-picker form-control light-color custom-form-control">
                         </div>
                         <div class="col-auto z-pdl z-pdr">
                             <label>~</label>
                         </div>
                         <div class="col-auto">
-                            <input type="text" style="width: 100px"
-                                   class="form-control light-color custom-form-control" value="2019/08/10">
+                            <input type="text" style="width: 100px" value="2019/08/10"
+                                   class="date-picker form-control light-color custom-form-control">
                         </div>
                     </div>
                     <div class="row justify-content-start mgb-10">
@@ -69,52 +69,38 @@
                             <label style="min-width: 80px" class="text-primary">Hết hạn</label>
                         </div>
                         <div class="col-auto">
-                            <input type="text" style="width: 100px"
-                                   class="form-control light-color custom-form-control" value="2019/08/10">
+                            <input type="text" style="width: 100px" value="2019/08/10"
+                                   class="date-picker form-control light-color custom-form-control">
                         </div>
                         <div class="col-auto z-pdl z-pdr">
                             <label>~</label>
                         </div>
                         <div class="col-auto">
-                            <input type="text" style="width: 100px"
-                                   class="form-control light-color custom-form-control" value="2019/08/10">
+                            <input type="text" style="width: 100px" value="2019/08/10"
+                                   class="date-picker form-control light-color custom-form-control">
                         </div>
                     </div>
                     <div class="row justify-content-start mgb-10">
                         <div class="col-auto">
                             <label style="min-width: 80px" class="text-primary">Nhân viên</label>
                         </div>
-                        <div class="col-auto dropdown">
-                            <ul class="sale-step multiple-select"
-                                id="dropdownMenuButton"
+                        <div id="drd-menu-user" class="col-auto dropdown">
+                            <select id="drd-user" style="display: none" multiple>
+                                <option value="1">Báo giá</option>
+                                <option value="2">Đơn hàng</option>
+                                <option value="3">Hợp đồng</option>
+                                <option value="4">Giao hàng</option>
+                            </select>
+                            <ul class="cst-select multiple-select"
+                                id="drd-menu-tags-user"
                                 data-toggle="dropdown"
                                 aria-haspopup="true"
                                 aria-expanded="false">
-                                <li>
-                                    <div class="multiple-select-spacer">&nbsp;,</div>
-                                    <div class="multiple-select-tag">Báo giá</div>
-                                    <div class="multiple-select-delete"><i></i></div>
-                                </li>
-                                <li>
-                                    <div class="multiple-select-spacer">&nbsp;,</div>
-                                    <div class="multiple-select-tag">Đơn hàng</div>
-                                    <div class="multiple-select-delete"><i></i></div>
-                                </li>
-                                <li>
-                                    <div class="multiple-select-spacer">&nbsp;,</div>
-                                    <div class="multiple-select-tag">Hợp đồng</div>
-                                    <div class="multiple-select-delete"><i></i></div>
-                                </li>
-                                <li>
-                                    <div class="multiple-select-spacer">&nbsp;,</div>
-                                    <div class="multiple-select-tag">Giao hàng</div>
-                                    <div class="multiple-select-delete"><i></i></div>
-                                </li>
                             </ul>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
+                            <div id="drd-menu-items-user"
+                                 class="dropdown-menu multiple-select-menu"
+                                 onclick="stop_propagation(event)"
+                                 aria-labelledby="drd-menu-tags-user">
                             </div>
                         </div>
                         <div class="col-auto">
@@ -128,37 +114,23 @@
                         <div class="col-auto">
                             <label style="min-width: 80px" class="text-primary">Khách hàng</label>
                         </div>
-                        <div class="col-auto dropdown">
-                            <ul class="sale-step multiple-select"
-                                id="dropdownMenuButton"
+                        <div id="drd-menu-cus" class="col-auto dropdown">
+                            <select id="drd-cus" style="display: none" multiple>
+                                <option value="1">Báo giá</option>
+                                <option value="2">Đơn hàng</option>
+                                <option value="3">Hợp đồng</option>
+                                <option value="4">Giao hàng</option>
+                            </select>
+                            <ul class="cst-select multiple-select"
+                                id="drd-menu-tags-cus"
                                 data-toggle="dropdown"
                                 aria-haspopup="true"
                                 aria-expanded="false">
-                                <li>
-                                    <div class="multiple-select-spacer">&nbsp;,</div>
-                                    <div class="multiple-select-tag">Báo giá</div>
-                                    <div class="multiple-select-delete"><i></i></div>
-                                </li>
-                                <li>
-                                    <div class="multiple-select-spacer">&nbsp;,</div>
-                                    <div class="multiple-select-tag">Đơn hàng</div>
-                                    <div class="multiple-select-delete"><i></i></div>
-                                </li>
-                                <li>
-                                    <div class="multiple-select-spacer">&nbsp;,</div>
-                                    <div class="multiple-select-tag">Hợp đồng</div>
-                                    <div class="multiple-select-delete"><i></i></div>
-                                </li>
-                                <li>
-                                    <div class="multiple-select-spacer">&nbsp;,</div>
-                                    <div class="multiple-select-tag">Giao hàng</div>
-                                    <div class="multiple-select-delete"><i></i></div>
-                                </li>
                             </ul>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
+                            <div id="drd-menu-items-cus"
+                                 class="dropdown-menu multiple-select-menu"
+                                 onclick="stop_propagation(event)"
+                                 aria-labelledby="drd-menu-tags-cus">
                             </div>
                         </div>
                         <div class="col-auto">
@@ -174,7 +146,9 @@
                         </div>
                         <div class="col-auto">
                             <input type="text" style="width: 200px" value=""
-                                   class="form-control light-color custom-form-control">
+                                   onfocus="num_focus(this)" onblur="num_blur(this)"
+                                   onkeydown="num_keydown(event)" min="0" max="9999999999"
+                                   class="form-control light-color custom-form-control text-right">
                         </div>
                         <div class="col-auto">
                             <select class="s-drd">
@@ -189,36 +163,23 @@
                         <div class="col-auto">
                             <label style="min-width: 80px" class="text-primary">Trạng thái</label>
                         </div>
-                        <div class="col-auto dropdown">
-                            <ul class="sale-step multiple-select"
-                                id="dropdownMenuButton"
+                        <div id="drd-menu-sale-step" class="col-auto dropdown">
+                            <select id="drd-sale-step" style="display: none" multiple>
+                                <option value="1">Báo giá</option>
+                                <option value="2">Đơn hàng</option>
+                                <option value="3">Hợp đồng</option>
+                                <option value="4">Giao hàng</option>
+                            </select>
+                            <ul class="cst-select multiple-select"
+                                id="drd-menu-tags-sale-step"
+                                data-toggle="dropdown"
                                 aria-haspopup="true"
                                 aria-expanded="false">
-                                <li>
-                                    <div class="multiple-select-spacer">&nbsp;,</div>
-                                    <div class="multiple-select-tag">Báo giá</div>
-                                    <div class="multiple-select-delete"><i></i></div>
-                                </li>
-                                <li>
-                                    <div class="multiple-select-spacer">&nbsp;,</div>
-                                    <div class="multiple-select-tag">Đơn hàng</div>
-                                    <div class="multiple-select-delete"><i></i></div>
-                                </li>
-                                <li>
-                                    <div class="multiple-select-spacer">&nbsp;,</div>
-                                    <div class="multiple-select-tag">Hợp đồng</div>
-                                    <div class="multiple-select-delete"><i></i></div>
-                                </li>
-                                <li>
-                                    <div class="multiple-select-spacer">&nbsp;,</div>
-                                    <div class="multiple-select-tag">Giao hàng</div>
-                                    <div class="multiple-select-delete"><i></i></div>
-                                </li>
                             </ul>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
+                            <div id="drd-menu-items-sale-step"
+                                 class="dropdown-menu multiple-select-menu"
+                                 onclick="stop_propagation(event)"
+                                 aria-labelledby="drd-menu-tags-sale-step">
                             </div>
                         </div>
                         <div class="col-auto">
@@ -246,6 +207,10 @@
 </div>
 <script>
 
+    function stop_propagation(e) {
+        e.stopPropagation();
+    }
+
     function show_advance_searh_form() {
         jQuery("#search-form").fadeIn('fast', function () {
             document.body.addEventListener('click', hide_advance_searh_form, false);
@@ -263,4 +228,308 @@
     function clear_advance_searh_form() {
         jQuery("#search-form").hide('fast');
     }
+
+    function get_multiple_drd_items(drd) {
+        var items = new Array();
+        var options = drd.find('option');
+        options.each(function (idx) {
+            var item = {};
+            item.opt_id = $(this).attr('value');
+            item.opt_nm = $(this).text();
+            item.opt_sl = $(this).is(':selected');
+            items.push(item);
+        });
+        return items;
+    }
+
+    function set_multiple_drd_val(drd, items) {
+        drd.find('option').attr('selected', false);
+        _.forEach(items, function (item) {
+            var option = drd.find('option[value=' + item.opt_id + "]");
+            if (option.length == 0)
+                return;
+            option.attr('selected', true);
+        });
+    }
+
+    function get_multiple_drd_val(drd) {
+        var selected_items = new Array();
+        var options = drd.find('option');
+        options.each(function (idx) {
+
+            if ($(this).is(':selected') == false)
+                return;
+
+            var item = {};
+            item.opt_id = $(this).attr('value');
+            item.opt_nm = $(this).text();
+            selected_items.push(item);
+        });
+        return selected_items;
+    }
+
+    function get_drd_menu_tag_list(ele) {
+
+        var tag_list = new Array();
+
+        var tags = ele.find('li');
+        if (tags.length == 0)
+            return tag_list;
+
+        tags.each(function (idx) {
+            var tag = {};
+            tag.opt_id = $(this).attr('opt-id');
+            tag.opt_nm = $(this).attr('opt-nm');
+            tag_list.push(tag);
+        });
+
+        return tag_list;
+    }
+
+    function get_drd_menu_checked_list(ele) {
+
+        var checked_list = new Array();
+
+        var dropdown_items = ele.find('a.dropdown-item');
+        if (dropdown_items.length == 0)
+            return checked_list;
+
+        dropdown_items.each(function (idx) {
+            if ($(this).find('input[type=checkbox]').is(':checked') == false)
+                return;
+            var item = {};
+            item.opt_id = $(this).attr('opt-id');
+            item.opt_nm = $(this).attr('opt-nm');
+            checked_list.push(item);
+        });
+
+        return checked_list;
+    }
+
+    //--begin [sale-step]--
+    function set_drd_menu_tags_sale_step(checked_list) {
+
+        var tags_html = "";
+        _.forEach(checked_list, function (item) {
+            tags_html += '<li opt-id="' + item.opt_id + '" opt-nm="' + item.opt_nm + '">';
+            tags_html += '<div class="multiple-select-spacer">&nbsp;,</div>';
+            tags_html += '<div class="multiple-select-tag">' + item.opt_nm + '</div>';
+            tags_html += '<div class="multiple-select-delete" onclick="tag_sale_step_remove(this, event)"><i></i></div>';
+            tags_html += '</li>';
+        });
+
+        $("#drd-menu-tags-sale-step").empty();
+        $("#drd-menu-tags-sale-step").html(tags_html);
+    }
+
+    function set_drd_menu_items_sale_step(items) {
+
+        var items_html = "";
+        _.forEach(items, function (item) {
+
+            var checked = '';
+            if (item.opt_sl == true) {
+                checked = ' checked';
+            }
+
+            items_html += '<a opt-id="' + item.opt_id + '" opt-nm="' + item.opt_nm + '" class="dropdown-item" href="#">';
+            items_html += '<div class="row justify-content-start">';
+            items_html += '<div class="col-auto z-pdr">';
+            items_html += '<input' + checked + ' type="checkbox">';
+            items_html += '</div>';
+            items_html += '<div class="col-auto">' + item.opt_nm + '</div>';
+            items_html += '</div>';
+            items_html += '</a>';
+        });
+
+        $("#drd-menu-items-sale-step").empty();
+        $("#drd-menu-items-sale-step").html(items_html);
+    }
+
+    function tag_sale_step_remove(self, e) {
+        e.stopPropagation();
+        $(self).closest('li').remove();
+        var drd_menu_tags = $("#drd-menu-tags-sale-step");
+        var tag_list = get_drd_menu_tag_list(drd_menu_tags);
+
+        var drd = $("#drd-sale-step");
+        set_multiple_drd_val(drd, tag_list);
+    }
+    //--end [sale-step]--
+
+    //--begin [cus]--
+    function set_drd_menu_tags_cus(checked_list) {
+
+        var tags_html = "";
+        _.forEach(checked_list, function (item) {
+            tags_html += '<li opt-id="' + item.opt_id + '" opt-nm="' + item.opt_nm + '">';
+            tags_html += '<div class="multiple-select-spacer">&nbsp;,</div>';
+            tags_html += '<div class="multiple-select-tag">' + item.opt_nm + '</div>';
+            tags_html += '<div class="multiple-select-delete" onclick="tag_cus_remove(this, event)"><i></i></div>';
+            tags_html += '</li>';
+        });
+
+        $("#drd-menu-tags-cus").empty();
+        $("#drd-menu-tags-cus").html(tags_html);
+    }
+
+    function set_drd_menu_items_cus(items) {
+
+        var items_html = "";
+        _.forEach(items, function (item) {
+
+            var checked = '';
+            if (item.opt_sl == true) {
+                checked = ' checked';
+            }
+
+            items_html += '<a opt-id="' + item.opt_id + '" opt-nm="' + item.opt_nm + '" class="dropdown-item" href="#">';
+            items_html += '<div class="row justify-content-start">';
+            items_html += '<div class="col-auto z-pdr">';
+            items_html += '<input' + checked + ' type="checkbox">';
+            items_html += '</div>';
+            items_html += '<div class="col-auto">' + item.opt_nm + '</div>';
+            items_html += '</div>';
+            items_html += '</a>';
+        });
+
+        $("#drd-menu-items-cus").empty();
+        $("#drd-menu-items-cus").html(items_html);
+    }
+
+    function tag_cus_remove(self, e) {
+        e.stopPropagation();
+        $(self).closest('li').remove();
+        var drd_menu_tags = $("#drd-menu-tags-cus");
+        var tag_list = get_drd_menu_tag_list(drd_menu_tags);
+
+        var drd = $("#drd-cus");
+        set_multiple_drd_val(drd, tag_list);
+    }
+    //--end [cus]--
+
+    //--begin [user]--
+    function set_drd_menu_tags_user(checked_list) {
+
+        var tags_html = "";
+        _.forEach(checked_list, function (item) {
+            tags_html += '<li opt-id="' + item.opt_id + '" opt-nm="' + item.opt_nm + '">';
+            tags_html += '<div class="multiple-select-spacer">&nbsp;,</div>';
+            tags_html += '<div class="multiple-select-tag">' + item.opt_nm + '</div>';
+            tags_html += '<div class="multiple-select-delete" onclick="tag_user_remove(this, event)"><i></i></div>';
+            tags_html += '</li>';
+        });
+
+        $("#drd-menu-tags-user").empty();
+        $("#drd-menu-tags-user").html(tags_html);
+    }
+
+    function set_drd_menu_items_user(items) {
+
+        var items_html = "";
+        _.forEach(items, function (item) {
+
+            var checked = '';
+            if (item.opt_sl == true) {
+                checked = ' checked';
+            }
+
+            items_html += '<a opt-id="' + item.opt_id + '" opt-nm="' + item.opt_nm + '" class="dropdown-item" href="#">';
+            items_html += '<div class="row justify-content-start">';
+            items_html += '<div class="col-auto z-pdr">';
+            items_html += '<input' + checked + ' type="checkbox">';
+            items_html += '</div>';
+            items_html += '<div class="col-auto">' + item.opt_nm + '</div>';
+            items_html += '</div>';
+            items_html += '</a>';
+        });
+
+        $("#drd-menu-items-user").empty();
+        $("#drd-menu-items-user").html(items_html);
+    }
+
+    function tag_user_remove(self, e) {
+        e.stopPropagation();
+        $(self).closest('li').remove();
+        var drd_menu_tags = $("#drd-menu-tags-user");
+        var tag_list = get_drd_menu_tag_list(drd_menu_tags);
+
+        var drd = $("#drd-user");
+        set_multiple_drd_val(drd, tag_list);
+    }
+    //--end [user]--
+
+    jQuery(document).ready(function () {
+
+        //--begin [sale-step]--
+        $('#drd-menu-sale-step').on('hide.bs.dropdown', function () {
+
+            var drd_menu_items = $("#drd-menu-items-sale-step");
+            var checked_list = get_drd_menu_checked_list(drd_menu_items);
+            set_drd_menu_tags_sale_step(checked_list);
+
+            var drd_sale_step = $("#drd-sale-step");
+            set_multiple_drd_val(drd_sale_step, checked_list);
+        })
+        $('#drd-menu-sale-step').on('show.bs.dropdown', function () {
+
+            var drd_sale_step = $("#drd-sale-step");
+            var drd_items = get_multiple_drd_items(drd_sale_step);
+            set_drd_menu_items_sale_step(drd_items);
+        })
+        //--end [sale-step]--
+
+        //--begin [cus]--
+        $('#drd-menu-cus').on('hide.bs.dropdown', function () {
+
+            var drd_menu_items = $("#drd-menu-items-cus");
+            var checked_list = get_drd_menu_checked_list(drd_menu_items);
+            set_drd_menu_tags_cus(checked_list);
+
+            var drd_cus = $("#drd-cus");
+            set_multiple_drd_val(drd_cus, checked_list);
+        })
+        $('#drd-menu-cus').on('show.bs.dropdown', function () {
+
+            var drd_cus = $("#drd-cus");
+            var drd_items = get_multiple_drd_items(drd_cus);
+            set_drd_menu_items_cus(drd_items);
+        })
+        //--end [cus]--
+
+        //--begin [user]--
+        $('#drd-menu-user').on('hide.bs.dropdown', function () {
+
+            var drd_menu_items = $("#drd-menu-items-user");
+            var checked_list = get_drd_menu_checked_list(drd_menu_items);
+            set_drd_menu_tags_user(checked_list);
+
+            var drd_user = $("#drd-user");
+            set_multiple_drd_val(drd_user, checked_list);
+        })
+        $('#drd-menu-user').on('show.bs.dropdown', function () {
+
+            var drd_user = $("#drd-user");
+            var drd_items = get_multiple_drd_items(drd_user);
+            set_drd_menu_items_user(drd_items);
+        })
+        //--end [user]--
+
+        $.fn.datepicker.language['vi'] = {
+            days: ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'],
+            daysShort: ['CN', 'Th 2', 'Th 3', 'Th 4', 'Th 5', 'Th 6', 'Th 7'],
+            daysMin: ['CN', 'Th 2', 'Th 3', 'Th 4', 'Th 5', 'Th 6', 'Th 7'],
+            months: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
+            monthsShort: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
+            today: 'Hôm nay',
+            clear: 'Xóa'
+        };
+
+        $('.date-picker').datepicker({
+            language: 'vi',
+            autoClose: true,
+            dateFormat: 'yyyy/mm/dd',
+            firstDay: 1
+        });
+    });
 </script>

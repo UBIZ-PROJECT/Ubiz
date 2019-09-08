@@ -134,6 +134,7 @@
     color: #555;
     background: #fff;
     line-height: 20px;
+    min-height: 28px;
 }
 
 /* core styles usually need no change */
@@ -234,7 +235,7 @@
     background: none !important;
 }
 
-.sale-step.multiple-select {
+.cst-select.multiple-select {
     cursor: pointer;
     background: #e9ecef;
     min-width: 200px !important;
@@ -246,20 +247,29 @@
     border-radius: 0.25rem !important;
 }
 
-.sale-step.multiple-select .multiple-select-tag {
+.cst-select.multiple-select .multiple-select-tag {
     background: #17a2b8;
     color: white;
 }
 
-.sale-step.multiple-select .multiple-select-delete {
+.cst-select.multiple-select .multiple-select-delete {
     background: #17a2b8;
     border-left: 1px solid white;
 }
 
-.sale-step.multiple-select .multiple-select-delete i::before {
+.cst-select.multiple-select .multiple-select-delete i::before {
     color: white;
 }
 
-.sale-step.multiple-select .multiple-select-delete:hover i::before {
+.cst-select.multiple-select .multiple-select-delete:hover i::before {
     color: #d65454;
+}
+
+.multiple-select-menu .dropdown-item .col-auto{
+    height: 25px;
+}
+
+.multiple-select-menu .dropdown-item input{
+    vertical-align: middle;
+    cursor: pointer;
 }
