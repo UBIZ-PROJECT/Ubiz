@@ -8,6 +8,7 @@ use App\Model\Report;
 use App\Exports\ReportRepositoryExport;
 use App\Exports\ReportRevenueExport;
 use App\Exports\ReportQuotePriceExport;
+use App\Imports\ReportRepositoryExImport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
@@ -63,6 +64,15 @@ class ReportController extends Controller
             default:
                 return Excel::download(new ReportRepositoryExport($request), 'reportRepository.xlsx');
         }
+    }
+
+    public function exportRep(Request $request)
+    {
+        $file = $request->fileExportRep;
+        //dd($file->getRealPath());
+        Excel::import(new ReportRepositoryExImport($request), $file->getRealPath());
+
+        return redirect('report/repository');
     }
 
 }

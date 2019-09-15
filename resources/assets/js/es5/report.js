@@ -265,11 +265,56 @@
         w_export: function (type) {
             jQuery("#f-export").attr("action", "/report/" + type + "/export");
             jQuery("#f-export").trigger("submit");
+        },
+        w_export_rep: function () {
+            jQuery("#f-export-rep").attr("action", "/report/repository/export-rep");
+            jQuery("#f-export-rep").trigger("submit");
+        },
+        w_import_rep: function () {
+            jQuery("#f-import-rep").attr("action", "/report/repository/import-rep");
+            jQuery("#f-import-rep").trigger("submit");
         }
     });
 })(jQuery);
 jQuery(document).ready(function () {
     jQuery.UbizOIWidget.w_init();
+    // Get the modal
+    var modal_export = document.getElementById("export-rep-modal");
+    var modal_import = document.getElementById("import-rep-modal");
+
+    // Get the button that opens the modal
+    var btn_export = document.getElementById("export-rep-btn");
+    var btn_import = document.getElementById("import-rep-btn");
+
+    // Get the <span> element that closes the modal
+    var close_modal_export = document.getElementsByClassName("close-modal-export")[0];
+    var close_modal_import = document.getElementsByClassName("close-modal-import")[0];
+
+    // When the user clicks on the button, open the modal
+    btn_export.onclick = function() {
+        modal_export.style.display = "block";
+    }
+    btn_import.onclick = function() {
+        modal_import.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    close_modal_export.onclick = function() {
+        modal_export.style.display = "none";
+    }
+    close_modal_import.onclick = function() {
+        modal_import.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal_export) {
+            modal_export.style.display = "none";
+        }
+        if (event.target == modal_import) {
+            modal_import.style.display = "none";
+        }
+    }
 });
 
 function qp_date_change(self) {
