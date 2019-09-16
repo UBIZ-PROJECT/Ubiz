@@ -574,3 +574,246 @@ function makeMailConf($smtp_username, $smtp_password, $from_email, $from_name)
         throw $e;
     }
 }
+
+/**
+ * @param $search_name | String
+ * @param $search_value | String | Array
+ * @param $search_operator | [1,..,10]
+ * @return array
+ * @throws Throwable
+ */
+function buildSearchCond($search_name, $search_value, $search_operator)
+{
+
+    $params = [];
+    $where_raw = [];
+    $search_cond = [];
+    switch ($search_operator) {
+        case env('EQUAL_TO'):
+            if (is_array($search_value)) {
+                foreach ($search_value as $value) {
+                    $params[] = $value;
+                    $where_raw[] = buildEqualToSearchCond($search_name);
+                }
+            }
+
+            if (is_string($search_value)) {
+                $params[] = $search_value;
+                $where_raw[] = buildEqualToSearchCond($search_name);
+            }
+
+            $search_cond['params'] = $params;
+            $search_cond['where_raw'] = " ( " . implode('OR', $where_raw) . " ) ";
+            break;
+        case env('NOT_EQUAL_TO'):
+            if (is_array($search_value)) {
+                foreach ($search_value as $value) {
+                    $params[] = $value;
+                    $where_raw[] = buildNotEqualToSearchCond($search_name);
+                }
+            }
+
+            if (is_string($search_value)) {
+                $params[] = $search_value;
+                $where_raw[] = buildNotEqualToSearchCond($search_name);
+            }
+
+            $search_cond['params'] = $params;
+            $search_cond['where_raw'] = " ( " . implode('AND', $where_raw) . " ) ";
+            break;
+        case env('GREATER_THAN'):
+            $params[] = $search_value;
+            $where_raw[] = buildGreaterThanSearchCond($search_name);
+            $search_cond['params'] = $params;
+            $search_cond['where_raw'] = " ( " . implode('AND', $where_raw) . " ) ";
+            break;
+        case env('LESS_THAN'):
+            $params[] = $search_value;
+            $where_raw[] = buildLessThanSearchCond($search_name);
+            $search_cond['params'] = $params;
+            $search_cond['where_raw'] = " ( " . implode('AND', $where_raw) . " ) ";
+            break;
+        case env('GREATER_THAN_OR_EQUAL_TO'):
+            $params[] = $search_value;
+            $where_raw[] = buildGreaterThanOrEqualToSearchCond($search_name);
+            $search_cond['params'] = $params;
+            $search_cond['where_raw'] = " ( " . implode('AND', $where_raw) . " ) ";
+            break;
+        case env('LESS_THAN_OR_EQUAL_TO'):
+            $params[] = $search_value;
+            $where_raw[] = buildLessThanOrEqualToSearchCond($search_name);
+            $search_cond['params'] = $params;
+            $search_cond['where_raw'] = " ( " . implode('AND', $where_raw) . " ) ";
+            break;
+        case env('CONTAIN'):
+            if (is_array($search_value)) {
+                foreach ($search_value as $value) {
+                    $params[] = $value;
+                    $where_raw[] = buildContainSearchCond($search_name);
+                }
+            }
+
+            if (is_string($search_value)) {
+                $params[] = $search_value;
+                $where_raw[] = buildContainSearchCond($search_name);
+            }
+
+            $search_cond['params'] = $params;
+            $search_cond['where_raw'] = " ( " . implode('OR', $where_raw) . " ) ";
+            break;
+        case env('NOT_CONTAIN'):
+            if (is_array($search_value)) {
+                foreach ($search_value as $value) {
+                    $params[] = $value;
+                    $where_raw[] = buildNotContainSearchCond($search_name);
+                }
+            }
+
+            if (is_string($search_value)) {
+                $params[] = $search_value;
+                $where_raw[] = buildNotContainSearchCond($search_name);
+            }
+
+            $search_cond['params'] = $params;
+            $search_cond['where_raw'] = " ( " . implode('AND', $where_raw) . " ) ";
+            break;
+        case env('BETWEEN'):
+
+            if($search_value['from'] == '' && $search_value['to'] !=''){
+                $params[] = $search_value['to'];
+                $where_raw[] = buildLessThanOrEqualToSearchCond($search_name);
+            }
+            elseif($search_value['from'] != '' && $search_value['to'] ==''){
+                $params[] = $search_value['from'];
+                $where_raw[] = buildGreaterThanOrEqualToSearchCond($search_name);
+            }
+            elseif($search_value['from'] != '' && $search_value['to'] !=''){
+                $params[] = $search_value['from'];
+                $params[] = $search_value['to'];
+                $where_raw[] = buildBetweenSearchCond($search_name);
+            }
+
+            $search_cond['params'] = $params;
+            $search_cond['where_raw'] = " ( " . implode('', $where_raw) . " ) ";
+            break;
+        case env('NOT_BETWEEN'):
+            if($search_value['from'] == '' && $search_value['to'] !=''){
+                $params[] = $search_value['to'];
+                $where_raw[] = buildGreaterThanOrEqualToSearchCond($search_name);
+            }
+            elseif($search_value['from'] != '' && $search_value['to'] ==''){
+                $params[] = $search_value['from'];
+                $where_raw[] = buildLessThanOrEqualToSearchCond($search_name);
+            }
+            elseif($search_value['from'] != '' && $search_value['to'] !=''){
+                $params[] = $search_value['from'];
+                $params[] = $search_value['to'];
+                $where_raw[] = buildNotBetweenSearchCond($search_name);
+            }
+
+            $search_cond['params'] = $params;
+            $search_cond['where_raw'] = " ( " . implode('', $where_raw) . " ) ";
+            break;
+    }
+    return $search_cond;
+}
+
+function buildEqualToSearchCond($search_name)
+{
+    try {
+        $search_cond = " $search_name = ? ";
+        return $search_cond;
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function buildNotEqualToSearchCond($search_name)
+{
+    try {
+        $search_cond = " $search_name != ? ";
+        return $search_cond;
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function buildGreaterThanSearchCond($search_name)
+{
+    try {
+        $search_cond = " $search_name > ? ";
+        return $search_cond;
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function buildGreaterThanOrEqualToSearchCond($search_name)
+{
+    try {
+        $search_cond = " $search_name >= ?  ";
+        return $search_cond;
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function buildLessThanSearchCond($search_name)
+{
+    try {
+        $search_cond = " $search_name < ? ";
+        return $search_cond;
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function buildLessThanOrEqualToSearchCond($search_name)
+{
+    try {
+        $search_cond = " $search_name <= ? ";
+        return $search_cond;
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function buildContainSearchCond($search_name)
+{
+    try {
+        $search_cond = " $search_name like ? ";
+        return $search_cond;
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function buildNotContainSearchCond($search_name)
+{
+    try {
+        $search_cond = " $search_name NOT LIKE ? ";
+        return $search_cond;
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function buildBetweenSearchCond($search_name)
+{
+    try {
+        $search_cond = " $search_name BETWEEN ? AND ? ";
+        return $search_cond;
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function buildNotBetweenSearchCond($search_name)
+{
+    try {
+        $search_cond = " $search_name NOT BETWEEN ? AND ? ";
+        return $search_cond;
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}

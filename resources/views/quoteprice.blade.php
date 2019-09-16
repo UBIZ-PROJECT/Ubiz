@@ -363,7 +363,7 @@
                                         </div>
                                         <div class="tcB col-7">
                                             <div class="cbo">
-                                                <div class="nCj" title="{{$quoteprice->sale_step}}">
+                                                <div class="nCj"">
                                                     @include('components.badge_sale_step', ['sale_step'=>$quoteprice->sale_step])
                                                 </div>
                                             </div>

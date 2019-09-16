@@ -26,171 +26,173 @@
             </svg>
         </button>
     </div>
-    <div id="search-form" class="eyo">
-        <div class="hvo">
-            <div id="search-content" class="row z-mgr z-mgl pdt-20">
-                <div class="col-12">
-                    <div class="row justify-content-start mgb-10">
-                        <div class="col-auto">
-                            <label style="min-width: 80px" class="text-primary">Mã báo giá</label>
-                        </div>
-                        <div class="col-auto">
-                            <textarea style="resize: none" class="input-textarea"
-                                      is-change="false" placeholder="" id="s-qp-code">
-                            </textarea>
-                        </div>
-                        <div class="col-auto">
-                            @include('components.search_operators_1')
-                        </div>
-                    </div>
-                    <div class="row justify-content-start mgb-10">
-                        <div class="col-auto">
-                            <label style="min-width: 80px" class="text-primary">Ngày tạo</label>
-                        </div>
-                        <div class="col-auto">
-                            <input type="text" style="width: 100px"
-                                   value="" name="s-f-qp-date" autocomplete="off"
-                                   class="date-picker form-control light-color custom-form-control">
-                        </div>
-                        <div class="col-auto z-pdl z-pdr">
-                            <label>~</label>
-                        </div>
-                        <div class="col-auto">
-                            <input type="text" style="width: 100px"
-                                   value="" name="s-t-qp-date" autocomplete="off"
-                                   class="date-picker form-control light-color custom-form-control">
-                        </div>
-                        <div class="col-auto">
-                            @include('components.search_operators_2')
-                        </div>
-                    </div>
-                    <div class="row justify-content-start mgb-10">
-                        <div class="col-auto">
-                            <label style="min-width: 80px" class="text-primary">Hết hạn</label>
-                        </div>
-                        <div class="col-auto">
-                            <input type="text" style="width: 100px"
-                                   value="" name="s-f-qp-exp-date" autocomplete="off"
-                                   class="date-picker form-control light-color custom-form-control">
-                        </div>
-                        <div class="col-auto z-pdl z-pdr">
-                            <label>~</label>
-                        </div>
-                        <div class="col-auto">
-                            <input type="text" style="width: 100px"
-                                   value="" name="s-t-qp-exp-date" autocomplete="off"
-                                   class="date-picker form-control light-color custom-form-control">
-                        </div>
-                        <div class="col-auto">
-                            @include('components.search_operators_2')
-                        </div>
-                    </div>
-                    @if(sizeof($users) > 0)
+    <div id="search-form" class="search-container" onclick="search_container_click(event)">
+        <div class="eyo">
+            <div class="hvo">
+                <div id="search-content" class="row z-mgr z-mgl pdt-20">
+                    <div class="col-12">
                         <div class="row justify-content-start mgb-10">
                             <div class="col-auto">
-                                <label style="min-width: 80px" class="text-primary">Nhân viên</label>
+                                <label style="min-width: 80px" class="text-primary">Mã báo giá</label>
                             </div>
-                            <div id="drd-menu-user" class="col-auto dropdown">
-                                <select id="drd-user" name="s-sale-id" style="display: none" multiple>
-                                    @foreach($users as $item)
-                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                            <div class="col-auto">
+                                @include('components.search_operators_1',['name'=>'so-qp-code'])
+                            </div>
+                            <div class="col-auto">
+                                <textarea style="resize: none" class="input-textarea"
+                                          is-change="false" placeholder="" id="sv-qp-code">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="row justify-content-start mgb-10">
+                            <div class="col-auto">
+                                <label style="min-width: 80px" class="text-primary">Ngày tạo</label>
+                            </div>
+                            <div class="col-auto">
+                                @include('components.search_operators_2',['name'=>'so-qp-date'])
+                            </div>
+                            <div class="col-auto">
+                                <input type="text" style="width: 100px"
+                                       value="" name="sv-f-qp-date" autocomplete="off"
+                                       class="date-picker form-control light-color custom-form-control">
+                            </div>
+                            <div class="col-auto z-pdl z-pdr">
+                                <label>~</label>
+                            </div>
+                            <div class="col-auto">
+                                <input type="text" style="width: 100px"
+                                       value="" name="sv-t-qp-date" autocomplete="off"
+                                       class="date-picker form-control light-color custom-form-control">
+                            </div>
+                        </div>
+                        <div class="row justify-content-start mgb-10">
+                            <div class="col-auto">
+                                <label style="min-width: 80px" class="text-primary">Hết hạn</label>
+                            </div>
+                            <div class="col-auto">
+                                @include('components.search_operators_2',['name'=>'so-qp-exp-date'])
+                            </div>
+                            <div class="col-auto">
+                                <input type="text" style="width: 100px"
+                                       value="" name="sv-f-qp-exp-date" autocomplete="off"
+                                       class="date-picker form-control light-color custom-form-control">
+                            </div>
+                            <div class="col-auto z-pdl z-pdr">
+                                <label>~</label>
+                            </div>
+                            <div class="col-auto">
+                                <input type="text" style="width: 100px"
+                                       value="" name="sv-t-qp-exp-date" autocomplete="off"
+                                       class="date-picker form-control light-color custom-form-control">
+                            </div>
+                        </div>
+                        @if(sizeof($users) > 0)
+                            <div class="row justify-content-start mgb-10">
+                                <div class="col-auto">
+                                    <label style="min-width: 80px" class="text-primary">Nhân viên</label>
+                                </div>
+                                <div class="col-auto">
+                                    @include('components.search_operators_3',['name'=>'so-sale-id'])
+                                </div>
+                                <div id="drd-menu-user" class="col-auto dropdown">
+                                    <select id="drd-user" name="sv-sale-id" style="display: none" multiple>
+                                        @foreach($users as $item)
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <ul class="cst-select multiple-select"
+                                        id="drd-menu-tags-user"
+                                        data-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false">
+                                    </ul>
+                                    <div id="drd-menu-items-user"
+                                         class="dropdown-menu multiple-select-menu"
+                                         onclick="stop_propagation(event)"
+                                         aria-labelledby="drd-menu-tags-user">
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        <div class="row justify-content-start mgb-10">
+                            <div class="col-auto">
+                                <label style="min-width: 80px" class="text-primary">Khách hàng</label>
+                            </div>
+                            <div class="col-auto">
+                                @include('components.search_operators_3',['name'=>'so-cus-id'])
+                            </div>
+                            <div id="drd-menu-cus" class="col-auto dropdown">
+                                <select id="drd-cus" name="sv-cus-id" style="display: none" multiple>
+                                    @foreach($customers as $item)
+                                        <option value="{{ $item->cus_id }}">{{ $item->cus_name }}</option>
                                     @endforeach
                                 </select>
                                 <ul class="cst-select multiple-select"
-                                    id="drd-menu-tags-user"
+                                    id="drd-menu-tags-cus"
                                     data-toggle="dropdown"
                                     aria-haspopup="true"
                                     aria-expanded="false">
                                 </ul>
-                                <div id="drd-menu-items-user"
+                                <div id="drd-menu-items-cus"
                                      class="dropdown-menu multiple-select-menu"
                                      onclick="stop_propagation(event)"
-                                     aria-labelledby="drd-menu-tags-user">
+                                     aria-labelledby="drd-menu-tags-cus">
                                 </div>
                             </div>
+                        </div>
+                        <div class="row justify-content-start mgb-10">
                             <div class="col-auto">
-                                @include('components.search_operators_3')
+                                <label style="min-width: 80px" class="text-primary">Tổng tiền</label>
+                            </div>
+                            <div class="col-auto">
+                                @include('components.search_operators_4',['name'=>'so-qp-amount-tax'])
+                            </div>
+                            <div class="col-auto">
+                                <input type="text" style="width: 240px" value="" name="sv-qp-amount-tax"
+                                       onfocus="num_focus(this, '')" onblur="num_blur(this, '')"
+                                       onkeydown="num_keydown(event)" min="0" max="9999999999"
+                                       class="form-control light-color custom-form-control text-right">
                             </div>
                         </div>
-                    @endif
-                    <div class="row justify-content-start mgb-10">
-                        <div class="col-auto">
-                            <label style="min-width: 80px" class="text-primary">Khách hàng</label>
-                        </div>
-                        <div id="drd-menu-cus" class="col-auto dropdown">
-                            <select id="drd-cus" name="s-cus-id" style="display: none" multiple>
-                                @foreach($customers as $item)
-                                    <option value="{{ $item->cus_id }}">{{ $item->cus_name }}</option>
-                                @endforeach
-                            </select>
-                            <ul class="cst-select multiple-select"
-                                id="drd-menu-tags-cus"
-                                data-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="false">
-                            </ul>
-                            <div id="drd-menu-items-cus"
-                                 class="dropdown-menu multiple-select-menu"
-                                 onclick="stop_propagation(event)"
-                                 aria-labelledby="drd-menu-tags-cus">
+                        <div class="row justify-content-start mgb-10">
+                            <div class="col-auto">
+                                <label style="min-width: 80px" class="text-primary">Trạng thái</label>
                             </div>
-                        </div>
-                        <div class="col-auto">
-                            @include('components.search_operators_3')
-                        </div>
-                    </div>
-                    <div class="row justify-content-start mgb-10">
-                        <div class="col-auto">
-                            <label style="min-width: 80px" class="text-primary">Tổng tiền</label>
-                        </div>
-                        <div class="col-auto">
-                            <input type="text" style="width: 240px" value="" name="s-qp-amount-tax"
-                                   onfocus="num_focus(this)" onblur="num_blur(this)"
-                                   onkeydown="num_keydown(event)" min="0" max="9999999999"
-                                   class="form-control light-color custom-form-control text-right">
-                        </div>
-                        <div class="col-auto">
-                            @include('components.search_operators_4')
-                        </div>
-                    </div>
-                    <div class="row justify-content-start mgb-10">
-                        <div class="col-auto">
-                            <label style="min-width: 80px" class="text-primary">Trạng thái</label>
-                        </div>
-                        <div id="drd-menu-sale-step" class="col-auto dropdown">
-                            <select id="drd-sale-step" name="s-sale-step" style="display: none" multiple>
-                                <option value="1">Báo giá</option>
-                                <option value="2">Đơn hàng</option>
-                                <option value="3">Hợp đồng</option>
-                                <option value="4">Giao hàng</option>
-                            </select>
-                            <ul class="cst-select multiple-select"
-                                id="drd-menu-tags-sale-step"
-                                data-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="false">
-                            </ul>
-                            <div id="drd-menu-items-sale-step"
-                                 class="dropdown-menu multiple-select-menu"
-                                 onclick="stop_propagation(event)"
-                                 aria-labelledby="drd-menu-tags-sale-step">
+                            <div class="col-auto">
+                                @include('components.search_operators_3',['name'=>'so-sale-step'])
                             </div>
-                        </div>
-                        <div class="col-auto">
-                            @include('components.search_operators_3')
+                            <div id="drd-menu-sale-step" class="col-auto dropdown">
+                                <select id="drd-sale-step" name="sv-sale-step" style="display: none" multiple>
+                                    <option value="1">Báo giá</option>
+                                    <option value="2">Đơn hàng</option>
+                                    <option value="3">Hợp đồng</option>
+                                    <option value="4">Giao hàng</option>
+                                </select>
+                                <ul class="cst-select multiple-select"
+                                    id="drd-menu-tags-sale-step"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false">
+                                </ul>
+                                <div id="drd-menu-items-sale-step"
+                                     class="dropdown-menu multiple-select-menu"
+                                     onclick="stop_propagation(event)"
+                                     aria-labelledby="drd-menu-tags-sale-step">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <hr>
-            <div class="row z-mgr z-mgl pdb-20">
-                <div class="col-12 text-right">
-                    <button type="button" class="btn btn-link btn-sm text-secondary"
-                            onclick="clear_advance_searh_form()">{{ __("Clear filter") }}</button>
-                    <button type="button" class="btn btn-primary btn-sm"
-                            onclick="jQuery.UbizOIWidget.w_search()">{{ __("Search") }}</button>
-                    <button type="button" class="btn btn-danger btn-sm"
-                            onclick="hide_advance_searh_form()">{{ __("Close") }}</button>
+                <hr>
+                <div class="row z-mgr z-mgl pdb-20">
+                    <div class="col-12 text-right">
+                        <button type="button" class="btn btn-link btn-sm text-secondary"
+                                onclick="clear_advance_searh_form()">{{ __("Clear filter") }}</button>
+                        <button type="button" class="btn btn-primary btn-sm"
+                                onclick="jQuery.UbizOIWidget.w_search()">{{ __("Search") }}</button>
+                        <button type="button" class="btn btn-danger btn-sm"
+                                onclick="hide_advance_searh_form()">{{ __("Close") }}</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -202,24 +204,30 @@
         e.stopPropagation();
     }
 
-    function show_advance_searh_form() {
-        $("#search-form").fadeIn('fast');
+    function search_container_click(e) {
+        if (event.target.id == 'search-form') {
+            hide_advance_searh_form();
+        }
     }
 
-    function hide_advance_searh_form(e) {
-        $("#search-form").hide('fast');
+    function show_advance_searh_form() {
+        $("#search-form").addClass('show');
+    }
+
+    function hide_advance_searh_form() {
+        $("#search-form").removeClass('show');
     }
 
     function clear_advance_searh_form() {
-        var tags = $('#s-qp-code').tagEditor('getTags')[0].tags;
+        var tags = $('#sv-qp-code').tagEditor('getTags')[0].tags;
         for (i = 0; i < tags.length; i++) {
-            $('#s-qp-code').tagEditor('removeTag', tags[i]);
+            $('#sv-qp-code').tagEditor('removeTag', tags[i]);
         }
-        $(".s-drd").val("");
-        $("input[name=s-f-qp-date]").val("");
-        $("input[name=s-t-qp-date]").val("");
-        $("input[name=s-f-qp-exp-date]").val("");
-        $("input[name=s-t-qp-exp-date]").val("");
+        $(".so-drd").val("");
+        $("input[name=sv-f-qp-date]").val("");
+        $("input[name=sv-t-qp-date]").val("");
+        $("input[name=sv-f-qp-exp-date]").val("");
+        $("input[name=sv-t-qp-exp-date]").val("");
 
         $("#drd-menu-tags-user").empty();
         $("#drd-menu-items-user").empty();
@@ -231,7 +239,7 @@
         var drd_cus = $("#drd-cus");
         set_multiple_drd_val(drd_cus, new Array());
 
-        $("input[name=s-qp-amount-tax]").val("");
+        $("input[name=sv-qp-amount-tax]").val("");
 
         $("#drd-menu-tags-sale-step").empty();
         $("#drd-menu-items-sale-step").empty();
@@ -365,6 +373,7 @@
         var drd = $("#drd-sale-step");
         set_multiple_drd_val(drd, tag_list);
     }
+
     //--end [sale-step]--
 
     //--begin [cus]--
@@ -416,6 +425,7 @@
         var drd = $("#drd-cus");
         set_multiple_drd_val(drd, tag_list);
     }
+
     //--end [cus]--
 
     //--begin [user]--
@@ -467,11 +477,90 @@
         var drd = $("#drd-user");
         set_multiple_drd_val(drd, tag_list);
     }
+
     //--end [user]--
+
+    function get_search_cond() {
+
+        var cond = {};
+        var search_cond = new Array();
+
+        //get qp-code search cond
+        cond.search_name = 'qp-code';
+        cond.search_value = $('#sv-qp-code').tagEditor('getTags')[0].tags;
+        cond.search_operator = $('select[name=so-qp-code]').val();
+        if (cond.search_operator != '' && cond.search_value.length > 0) {
+            search_cond.push(cond);
+        }
+
+        //get qp-date search cond
+        cond = {};
+        cond.search_name = 'qp-date';
+        cond.search_operator = $('select[name=so-qp-date]').val();
+        cond.search_value = {};
+        cond.search_value.from = $("input[name=sv-f-qp-date]").val();
+        cond.search_value.to = $("input[name=sv-t-qp-date]").val();
+        if (cond.search_operator != ''
+            && (cond.search_value.from != '' || cond.search_value.to != '')
+        ) {
+            search_cond.push(cond);
+        }
+
+        //get qp-exp-date search cond
+        cond = {};
+        cond.search_name = 'qp-exp-date';
+        cond.search_operator = $('select[name=so-qp-exp-date]').val();
+        cond.search_value = {};
+        cond.search_value.from = $("input[name=sv-f-qp-exp-date]").val();
+        cond.search_value.to = $("input[name=sv-t-qp-exp-date]").val();
+        if (cond.search_operator != ''
+            && (cond.search_value.from != '' || cond.search_value.to != '')
+        ) {
+            search_cond.push(cond);
+        }
+
+        //get sale-id search cond
+        cond = {};
+        cond.search_name = 'sale-id';
+        cond.search_value = $('select[name=sv-sale-id]').val();
+        cond.search_operator = $('select[name=so-sale-id]').val();
+        if (cond.search_operator != '' && cond.search_value.length > 0) {
+            search_cond.push(cond);
+        }
+
+        //get cus-id search cond
+        cond = {};
+        cond.search_name = 'cus-id';
+        cond.search_value = $('select[name=sv-cus-id]').val();
+        cond.search_operator = $('select[name=so-cus-id]').val();
+        if (cond.search_operator != '' && cond.search_value.length > 0) {
+            search_cond.push(cond);
+        }
+
+        //get qp-amount-tax search cond
+        cond = {};
+        cond.search_name = 'qp-amount-tax';
+        cond.search_value = numeral($('input[name=sv-qp-amount-tax]').val()).format('0');
+        cond.search_operator = $('select[name=so-qp-amount-tax]').val();
+        if (cond.search_operator != '' && cond.search_value != '') {
+            search_cond.push(cond);
+        }
+
+        //get sale-step search cond
+        cond = {};
+        cond.search_name = 'sale-step';
+        cond.search_value = $('select[name=sv-sale-step]').val();
+        cond.search_operator = $('select[name=so-sale-step]').val();
+        if (cond.search_operator != '' && cond.search_value.length > 0) {
+            search_cond.push(cond);
+        }
+
+        return search_cond;
+    }
 
     jQuery(document).ready(function () {
 
-        $("#s-qp-code").tagEditor();
+        $("#sv-qp-code").tagEditor({forceLowercase: false});
 
         //--begin [sale-step]--
         $('#drd-menu-sale-step').on('hide.bs.dropdown', function () {

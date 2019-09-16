@@ -10,4 +10,4 @@ $operators = [
     ]
 ];
 ?>
-@include('components.search_operators',['operators'=>$operators])
+@include('components.search_operators',['operators'=>$operators, 'name'=>$name])
