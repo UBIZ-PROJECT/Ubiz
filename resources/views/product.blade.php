@@ -176,6 +176,14 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="upload" onclick="jQuery.UbizOIWidget.w_open_upload_dialog()">
+                                        <div class="ax7 poK utooltip" title="{{ __("Upload") }}">
+                                            <div class="asA">
+                                                <i class="fas fa-file-upload" style="font-size: 16px;color: #767676;position: relative;top: 1px;left: 2px;"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input type="file" accept="application/zip" onchange="jQuery.UbizOIWidget.w_upload_file()" name="acs_upload_file" id="acs_upload_file" style="display: none">
                                     <div class="GNi">
                                         <div class="ax7 poK">
                                             <div class="asA">

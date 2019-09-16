@@ -272,6 +272,8 @@
   "Fee": "Chi phí",
   "Result": "Kết quả",
   "Event fee is not number.": "Chi phí công việc không đúng.",
+  "Relate Fee": "Chi phí liên quan",
+  "Payment Method": "Phương thức thanh toán",
   "Customer fax is missing.": "Xin vui lòng nhập [Fax]",
   "Customer fax is too long.": "[Fax] quá dài (tối đa 250 ký tự).",
   "Customer mail is missing.": "Xin vui lòng nhập [Mail]",

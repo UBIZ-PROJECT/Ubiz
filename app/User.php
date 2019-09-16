@@ -156,7 +156,7 @@ class User extends Authenticatable implements JWTSubject
         try {
 
             $id = DB::table('users')->max('id') + 1;
-            if (isset($data['avatar'])) {
+            if (!gettype($data['avatar'])) {
                 $avatar = $data['avatar'];
                 $path = $avatar->path();
                 $extension = $avatar->extension();
@@ -237,6 +237,7 @@ class User extends Authenticatable implements JWTSubject
                 ->first();
 
             if ($user != null && !empty($user->avatar)) {
+                $user->temp_avatar = $user->avatar;
                 $user->avatar = readImage($user->avatar, 'usr');
             }
             return $user;
