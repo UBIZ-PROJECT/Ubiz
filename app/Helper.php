@@ -588,6 +588,9 @@ function buildSearchCond($search_name, $search_value, $search_operator)
     $params = [];
     $where_raw = [];
     $search_cond = [];
+
+    $search_value = $search_value == null ? '' : $search_value;
+
     switch ($search_operator) {
         case env('EQUAL_TO'):
             if (is_array($search_value)) {
@@ -649,13 +652,13 @@ function buildSearchCond($search_name, $search_value, $search_operator)
             if (is_array($search_value)) {
                 foreach ($search_value as $value) {
                     $params[] = $value;
-                    $where_raw[] = buildContainSearchCond($search_name);
+                    $where_raw[] = buildContainSearchCond($search_name, $search_value);
                 }
             }
 
             if (is_string($search_value)) {
                 $params[] = $search_value;
-                $where_raw[] = buildContainSearchCond($search_name);
+                $where_raw[] = buildContainSearchCond($search_name, $search_value);
             }
 
             $search_cond['params'] = $params;
@@ -665,13 +668,13 @@ function buildSearchCond($search_name, $search_value, $search_operator)
             if (is_array($search_value)) {
                 foreach ($search_value as $value) {
                     $params[] = $value;
-                    $where_raw[] = buildNotContainSearchCond($search_name);
+                    $where_raw[] = buildNotContainSearchCond($search_name, $search_value);
                 }
             }
 
             if (is_string($search_value)) {
                 $params[] = $search_value;
-                $where_raw[] = buildNotContainSearchCond($search_name);
+                $where_raw[] = buildNotContainSearchCond($search_name, $search_value);
             }
 
             $search_cond['params'] = $params;
@@ -679,15 +682,13 @@ function buildSearchCond($search_name, $search_value, $search_operator)
             break;
         case env('BETWEEN'):
 
-            if($search_value['from'] == '' && $search_value['to'] !=''){
+            if ($search_value['from'] == '' && $search_value['to'] != '') {
                 $params[] = $search_value['to'];
                 $where_raw[] = buildLessThanOrEqualToSearchCond($search_name);
-            }
-            elseif($search_value['from'] != '' && $search_value['to'] ==''){
+            } elseif ($search_value['from'] != '' && $search_value['to'] == '') {
                 $params[] = $search_value['from'];
                 $where_raw[] = buildGreaterThanOrEqualToSearchCond($search_name);
-            }
-            elseif($search_value['from'] != '' && $search_value['to'] !=''){
+            } elseif ($search_value['from'] != '' && $search_value['to'] != '') {
                 $params[] = $search_value['from'];
                 $params[] = $search_value['to'];
                 $where_raw[] = buildBetweenSearchCond($search_name);
@@ -697,15 +698,13 @@ function buildSearchCond($search_name, $search_value, $search_operator)
             $search_cond['where_raw'] = " ( " . implode('', $where_raw) . " ) ";
             break;
         case env('NOT_BETWEEN'):
-            if($search_value['from'] == '' && $search_value['to'] !=''){
+            if ($search_value['from'] == '' && $search_value['to'] != '') {
                 $params[] = $search_value['to'];
                 $where_raw[] = buildGreaterThanOrEqualToSearchCond($search_name);
-            }
-            elseif($search_value['from'] != '' && $search_value['to'] ==''){
+            } elseif ($search_value['from'] != '' && $search_value['to'] == '') {
                 $params[] = $search_value['from'];
                 $where_raw[] = buildLessThanOrEqualToSearchCond($search_name);
-            }
-            elseif($search_value['from'] != '' && $search_value['to'] !=''){
+            } elseif ($search_value['from'] != '' && $search_value['to'] != '') {
                 $params[] = $search_value['from'];
                 $params[] = $search_value['to'];
                 $where_raw[] = buildNotBetweenSearchCond($search_name);
@@ -778,21 +777,33 @@ function buildLessThanOrEqualToSearchCond($search_name)
     }
 }
 
-function buildContainSearchCond($search_name)
+function buildContainSearchCond($search_name, $search_value)
 {
     try {
-        $search_cond = " $search_name like ? ";
+        if ($search_value == '') {
+            $search_cond = " COALESCE($search_name,'') = ? ";
+        } else {
+            $search_cond = " COALESCE($search_name,'') REGEXP ? ";
+        }
         return $search_cond;
     } catch (\Throwable $e) {
         throw $e;
     }
 }
 
-function buildNotContainSearchCond($search_name)
+function buildNotContainSearchCond($search_name, $search_value)
 {
     try {
-        $search_cond = " $search_name NOT LIKE ? ";
-        return $search_cond;
+        try {
+            if ($search_value == '') {
+                $search_cond = " COALESCE($search_name,'') != ? ";
+            } else {
+                $search_cond = " COALESCE($search_name,'') NOT REGEXP ? ";
+            }
+            return $search_cond;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
     } catch (\Throwable $e) {
         throw $e;
     }

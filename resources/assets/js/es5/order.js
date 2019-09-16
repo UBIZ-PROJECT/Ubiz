@@ -87,6 +87,24 @@
                 })
             }
         },
+        w_search: function () {
+
+            jQuery.UbizOIWidget.page = '0';
+
+            var search = get_search_cond();
+            if (search.length == 0)
+                search = '';
+
+            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
+            var sort = sort_info.sort_name + "_" + sort_info.order_by;
+
+            var params = {};
+            params.page = '0';
+            params.search = search;
+            params.sort = sort;
+            hide_advance_searh_form();
+            ubizapis('v1', '/orders', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+        },
         w_fuzzy_search: function () {
 
             jQuery.UbizOIWidget.page = '0';
@@ -152,12 +170,11 @@
                     var cols = [];
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, orders[i].ord_no, 1));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, moment(orders[i].ord_date).format('YYYY/MM/DD'), 2));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, orders[i].sale_name, 3));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, orders[i].cus_name, 4));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, (orders[i].sale_name == null ? '' : orders[i].sale_name), 3));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, (orders[i].cus_name == null ? '' : orders[i].cus_name), 4));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, numeral(orders[i].ord_amount_tax).format('0,0'), 5));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, numeral(orders[i].ord_paid).format('0,0'), 6));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, numeral(orders[i].ord_debt).format('0,0'), 7));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_status_html(jQuery.UbizOIWidget.w_render_sale_step(orders[i].sale_step), 8));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(orders[i].ord_id, (orders[i].ord_note == null ? '' : orders[i].ord_note), 6));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_status_html(jQuery.UbizOIWidget.w_render_sale_step(orders[i].sale_step), 7));
                     rows.push(jQuery.UbizOIWidget.w_make_row_html(orders[i].ord_id, cols));
                 }
                 table_html += rows.join("");
@@ -174,17 +191,17 @@
                 case '1':
                     sale_step_name = i18next.t('QP');
                     break;
-                case '1':
+                case '2':
                     sale_step_name = i18next.t('Order');
                     break;
-                case '1':
+                case '3':
                     sale_step_name = i18next.t('Contract');
                     break;
-                case '1':
+                case '4':
                     sale_step_name = i18next.t('Delivery');
                     break;
             }
-            return '<span className="badge badge-success">' + sale_step_name + '</span>';
+            return '<span class="badge badge-success">' + sale_step_name + '</span>';
         },
         w_go_to_input_page: function (id) {
             window.location.href = '/orders/' + id;
