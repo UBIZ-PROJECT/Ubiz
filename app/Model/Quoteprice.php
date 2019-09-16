@@ -700,6 +700,9 @@ class Quoteprice
                     case 'qp-amount-tax'://qp-amount-tax
                         $search_name = 'quoteprice.qp_amount_tax';
                         break;
+                    case 'qp-note'://qp-note
+                        $search_name = 'quoteprice.qp_note';
+                        break;
                     case 'sale-step'://qp-amount-tax
                         $search_name = 'quoteprice.sale_step';
                         break;

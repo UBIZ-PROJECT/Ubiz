@@ -156,6 +156,18 @@
                         </div>
                         <div class="row justify-content-start mgb-10">
                             <div class="col-auto">
+                                <label style="min-width: 80px" class="text-primary">Ghi chú</label>
+                            </div>
+                            <div class="col-auto">
+                                @include('components.search_operators_5',['name'=>'so-qp-note'])
+                            </div>
+                            <div class="col-auto">
+                                <textarea style="width: 240px" value="" name="sv-qp-note"
+                                          class="form-control light-color custom-form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="row justify-content-start mgb-10">
+                            <div class="col-auto">
                                 <label style="min-width: 80px" class="text-primary">Trạng thái</label>
                             </div>
                             <div class="col-auto">
@@ -240,6 +252,7 @@
         set_multiple_drd_val(drd_cus, new Array());
 
         $("input[name=sv-qp-amount-tax]").val("");
+        $("textarea[name=sv-qp-note]").val("");
 
         $("#drd-menu-tags-sale-step").empty();
         $("#drd-menu-items-sale-step").empty();
@@ -543,6 +556,15 @@
         cond.search_value = numeral($('input[name=sv-qp-amount-tax]').val()).format('0');
         cond.search_operator = $('select[name=so-qp-amount-tax]').val();
         if (cond.search_operator != '' && cond.search_value != '') {
+            search_cond.push(cond);
+        }
+
+        //get qp-note search cond
+        cond = {};
+        cond.search_name = 'qp-note';
+        cond.search_value = $('textarea[name=sv-qp-note]').val();
+        cond.search_operator = $('select[name=so-qp-note]').val();
+        if (cond.search_operator != '') {
             search_cond.push(cond);
         }
 
