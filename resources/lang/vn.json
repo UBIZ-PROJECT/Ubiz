@@ -290,5 +290,15 @@
   "Customer address location 3 is not exists.": "Xin vui lòng nhập [Địa điểm - Địa chỉ 3].",
   "Customer type is not exists.": "Xin vui lòng nhập [Loại khách hàng].",
   "Customer pic is not exists.": "Xin vui lòng nhập [Người phụ trách].",
-  "Language": "Ngôn ngữ"
+  "Language": "Ngôn ngữ",
+  "Equal To": "Bằng",
+  "Not Equal To": "Không bằng",
+  "Greater Than": "Lớn hơn",
+  "Less Than": "Nhỏ hơn",
+  "Greater Than Or Equal To": "Lớn hơn, bằng",
+  "Less Than Or Equal To": "Nhỏ hơn, bằng",
+  "Contain": "Chứa",
+  "Not Contain": "Không chứa",
+  "Between": "Trong khoảng",
+  "Not Between": "Ngoài khoảng"
 }

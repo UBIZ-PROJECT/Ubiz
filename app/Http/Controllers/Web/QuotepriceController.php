@@ -22,7 +22,23 @@ class QuotepriceController extends Controller
             $qpData = $qpModel->getQuoteprices();
             $pagingData = $qpModel->getPagingInfo();
             $pagingData['page'] = 0;
-            return view('quoteprice', ['quoteprices' => $qpData, 'paging' => $pagingData]);
+
+            $userData = [];
+            $userModel = new User();
+            $curUser = $userModel->getCurrentUser();
+            if ($curUser->role == '1' || $curUser->role == '2') {
+                $userData = $userModel->getAllUsers();
+            }
+
+            $cusModel = new Customer();
+            $cusData = $cusModel->getAllCustomers();
+
+            return view('quoteprice', [
+                'quoteprices' => $qpData,
+                'customers' => $cusData,
+                'users' => $userData,
+                'paging' => $pagingData
+            ]);
         } catch (\Throwable $e) {
             throw $e;
         }

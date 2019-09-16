@@ -87,6 +87,24 @@
                 })
             }
         },
+        w_search: function () {
+
+            jQuery.UbizOIWidget.page = '0';
+
+            var search = get_search_cond();
+            if (search.length == 0)
+                search = '';
+
+            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
+            var sort = sort_info.sort_name + "_" + sort_info.order_by;
+
+            var params = {};
+            params.page = '0';
+            params.search = search;
+            params.sort = sort;
+            hide_advance_searh_form();
+            ubizapis('v1', '/quoteprices', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+        },
         w_fuzzy_search: function () {
 
             jQuery.UbizOIWidget.page = '0';
@@ -173,17 +191,17 @@
                 case '1':
                     sale_step_name = i18next.t('QP');
                     break;
-                case '1':
+                case '2':
                     sale_step_name = i18next.t('Order');
                     break;
-                case '1':
+                case '3':
                     sale_step_name = i18next.t('Contract');
                     break;
-                case '1':
+                case '4':
                     sale_step_name = i18next.t('Delivery');
                     break;
             }
-            return '<span className="badge badge-success">' + sale_step_name + '</span>';
+            return '<span class="badge badge-success">' + sale_step_name + '</span>';
         },
         w_go_to_input_page: function (id) {
             window.location.href = '/quoteprices/' + id;

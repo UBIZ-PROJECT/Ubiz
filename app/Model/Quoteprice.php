@@ -677,7 +677,48 @@ class Quoteprice
         $params[] = Auth::user()->id;
         $where_raw .= ' AND quoteprice.owner_id = ? ';
 
-        if ($search != '') {
+        //advance search
+        if (is_array($search) == true) {
+            foreach ($search as $item) {
+                $search_name = '';
+                switch ($item['search_name']) {
+                    case 'qp-code'://qp-code
+                        $search_name = 'quoteprice.qp_no';
+                        break;
+                    case 'qp-date'://qp-date
+                        $search_name = 'quoteprice.qp_date';
+                        break;
+                    case 'qp-exp-date'://qp-exp-date
+                        $search_name = 'quoteprice.qp_exp_date';
+                        break;
+                    case 'sale-id'://sale-id
+                        $search_name = 'quoteprice.sale_id';
+                        break;
+                    case 'cus-id'://cus-id
+                        $search_name = 'quoteprice.cus_id';
+                        break;
+                    case 'qp-amount-tax'://qp-amount-tax
+                        $search_name = 'quoteprice.qp_amount_tax';
+                        break;
+                    case 'sale-step'://qp-amount-tax
+                        $search_name = 'quoteprice.sale_step';
+                        break;
+                }
+
+                if ($search_name == '')
+                    continue;
+
+                $search_cond = buildSearchCond($search_name, $item['search_value'], $item['search_operator']);
+                if (sizeof($search_cond) == 0)
+                    continue;
+
+                $params = array_merge($params, $search_cond['params']);
+                $where_raw .= " AND " . $search_cond['where_raw'];
+            }
+        }
+
+        //fuzzy search
+        if (is_string($search) && $search != '') {
             $search_val = "%" . $search . "%";
             $where_raw .= " AND ( ";
             $where_raw .= " quoteprice.qp_no like ? ";
