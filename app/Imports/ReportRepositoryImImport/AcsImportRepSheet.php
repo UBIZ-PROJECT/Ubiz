@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Imports\ReportRepositoryExImport;
+namespace App\Imports\ReportRepositoryImImport;
 
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use App\Model\Report;
 
-class AcsExportRepSheet implements ToCollection
+class AcsImportRepSheet implements ToCollection
 {
     public function collection(Collection $rows)
     {
@@ -21,8 +21,8 @@ class AcsExportRepSheet implements ToCollection
                 break;
             }
 
-            $reportModel->exportAcsRep(['brd_name' => $row[1], 'prd_name' => $row[2], 'quantity' => (integer) $row[5]]);
+            $reportModel->importAcsRep(['brd_name' => $row[1], 'prd_name' => $row[2], 'quantity' => (integer) $row[4]]);
         }
-        
+
     }
 }

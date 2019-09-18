@@ -571,16 +571,16 @@ class Report implements JWTSubject
     public function exportPumpRep($data)
     {
         try {
-        DB::table('product_series')
-            ->leftJoin('product', function ($join) {
-                $join->on('product.prd_id', '=', 'product_series.prd_id')
-                    ->where('product.delete_flg', '0');
-            })
-            ->leftJoin('brand', 'product.brd_id', '=', 'brand.brd_id')
-            ->where('brand.brd_name', $data['brd_name'])
-            ->where('product.prd_name', $data['prd_name'])
-            ->whereIn('product_series.serial_no', $data['series'])
-            ->update(['product_series.delete_flg' => 1, 'product_series.export_date' => now()]);
+            DB::table('product_series')
+                ->leftJoin('product', function ($join) {
+                    $join->on('product.prd_id', '=', 'product_series.prd_id')
+                        ->where('product.delete_flg', '0');
+                })
+                ->leftJoin('brand', 'product.brd_id', '=', 'brand.brd_id')
+                ->where('brand.brd_name', $data['brd_name'])
+                ->where('product.prd_name', $data['prd_name'])
+                ->whereIn('product_series.serial_no', $data['series'])
+                ->update(['product_series.delete_flg' => 1, 'product_series.export_date' => now()]);
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -596,23 +596,78 @@ class Report implements JWTSubject
             ->where('accessory.acs_name', $data['prd_name'])
             ->get()->first();
             
-            DB::table('accessory')
+            if ($acs->acs_id) {
+                DB::table('accessory')
+                    ->leftJoin('brand', 'accessory.brd_id', '=', 'brand.brd_id')
+                    ->where('brand.brd_name', $data['brd_name'])
+                    ->where('accessory.acs_name', $data['prd_name'])
+                    ->update(['accessory.acs_quantity' => ($acs->acs_quantity - $data['quantity']), 'accessory.upd_date' => now()]);
+
+                DB::table('accessory_in_out')->insert(
+                    [
+                        'acs_id' => $acs->acs_id,
+                        'acs_io_quantity' => $data['quantity'],
+                        'acs_io_type' => 2,
+                        'inp_date' => now(),
+                        'inp_user' => '1',
+                    ]
+                );
+            }
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function importPumpRep($data)
+    {
+        try {
+            $product = DB::table('product')
+                ->leftJoin('brand', 'product.brd_id', '=', 'brand.brd_id')
+                ->select('product.prd_id')
+                ->where('brand.brd_name', $data['brd_name'])
+                ->where('product.prd_name', $data['prd_name'])
+                ->get()->first();
+            if ($product->prd_id) {
+                foreach ($data['series'] as $series) {
+                    DB::table('product_series')->insert(
+                        ['prd_id' => $product->prd_id, 'serial_no' => $series, 'serial_sts' => 0, 'serial_note' => $data['serial_note'], 'inp_user' => 1, 'upd_user' => 1]
+                    );
+                }
+            }
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function importAcsRep($data)
+    {
+        try {
+            $acs = DB::table('accessory')
+                ->leftJoin('brand', 'accessory.brd_id', '=', 'brand.brd_id')
+                ->select('accessory.*')
+                ->where('brand.brd_name', $data['brd_name'])
+                ->where('accessory.acs_name', $data['prd_name'])
+                ->get()->first();
+
+            if ($acs->acs_id) {
+                DB::table('accessory')
                 ->leftJoin('brand', 'accessory.brd_id', '=', 'brand.brd_id')
                 ->where('brand.brd_name', $data['brd_name'])
                 ->where('accessory.acs_name', $data['prd_name'])
-                ->update(['accessory.acs_quantity' => ($acs->acs_quantity - $data['quantity']), 'accessory.upd_date' => now()]);
+                ->update(['accessory.acs_quantity' => ($acs->acs_quantity + $data['quantity']), 'accessory.upd_date' => now()]);
 
-            DB::table('accessory_in_out')->insert(
-                [
-                    'acs_id' => $acs->acs_id,
-                    'acs_io_quantity' => $data['quantity'],
-                    'acs_io_type' => 2,
-                    'inp_date' => now(),
-                    'inp_user' => '1',
-                ]
-            );
-            } catch (\Throwable $e) {
-                throw $e;
+                DB::table('accessory_in_out')->insert(
+                    [
+                        'acs_id' => $acs->acs_id,
+                        'acs_io_quantity' => $data['quantity'],
+                        'acs_io_type' => 1,
+                        'inp_date' => now(),
+                        'inp_user' => '1',
+                    ]
+                );
             }
+        } catch (\Throwable $e) {
+            throw $e;
+        }
     }
 }

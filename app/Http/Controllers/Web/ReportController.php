@@ -9,6 +9,7 @@ use App\Exports\ReportRepositoryExport;
 use App\Exports\ReportRevenueExport;
 use App\Exports\ReportQuotePriceExport;
 use App\Imports\ReportRepositoryExImport;
+use App\Imports\ReportRepositoryImImport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
@@ -69,8 +70,15 @@ class ReportController extends Controller
     public function exportRep(Request $request)
     {
         $file = $request->fileExportRep;
-        //dd($file->getRealPath());
         Excel::import(new ReportRepositoryExImport($request), $file->getRealPath());
+
+        return redirect('report/repository');
+    }
+
+    public function importRep(Request $request)
+    {
+        $file = $request->fileImportRep;
+        Excel::import(new ReportRepositoryImImport($request), $file->getRealPath());
 
         return redirect('report/repository');
     }

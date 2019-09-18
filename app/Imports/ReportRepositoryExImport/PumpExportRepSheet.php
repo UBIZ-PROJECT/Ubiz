@@ -17,7 +17,7 @@ class PumpExportRepSheet implements ToCollection
                 continue;
             }
 
-            if ($row[0] == "" && $row[1] == "") {
+            if (trim($row[0]) == "" && trim($row[1]) == "") {
                 break;
             }
 
