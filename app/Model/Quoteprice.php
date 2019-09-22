@@ -243,7 +243,6 @@ class Quoteprice
 
             //insert quoteprice
             $data['quoteprice']['cus_id'] = $cus_id;
-            $data['quoteprice']['sale_id'] = Auth::user()->id;
             $data['quoteprice']['owner_id'] = Auth::user()->id;
             $data['quoteprice']['inp_user'] = Auth::user()->id;
             $data['quoteprice']['upd_user'] = Auth::user()->id;
@@ -339,6 +338,10 @@ class Quoteprice
             if (requiredValidator($quoteprice['qp_exp_date']) == true && dateValidator($quoteprice['qp_exp_date']) == false) {
                 $res['success'] = false;
                 $message[] = __('QP Exp Date is wrong format YYYY/MM/DD.');
+            }
+            if (requiredValidator($quoteprice['sale_id']) == false || existsInDBValidator($quoteprice['sale_id'], 'users', 'id') == false) {
+                $res['success'] = false;
+                $message[] = __('User is not exists.');
             }
 
             $amount_check = true;
@@ -655,7 +658,7 @@ class Quoteprice
                 'extra_data' => $extra_data,
                 'quoteprice' => $quoteprice,
                 'quoteprices_detail' => $tmp_quoteprices_detail
-            ])->setPaper('a4');
+            ]);
             $is_put = Storage::disk('quoteprices')->put("$uniqid.pdf", $pdf->output());
             if ($is_put == false)
                 return false;
@@ -765,4 +768,5 @@ class Quoteprice
         }
         return [$field_name, $order_by];
     }
+
 }
