@@ -267,12 +267,56 @@
             jQuery("#f-export").trigger("submit");
         },
         w_export_rep: function () {
-            jQuery("#f-export-rep").attr("action", "/report/repository/export-rep");
-            jQuery("#f-export-rep").trigger("submit");
+            swal({
+                title: i18next.t('Are you sure you want to update repository?'),
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: i18next.t('No'),
+                confirmButtonText: i18next.t('Yes'),
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    jQuery(".close-modal-btn").click();
+                    formData = new FormData(jQuery("#f-export-rep")[0]);
+                    ubizapis('v1','report/export-rep', 'post', formData, null,jQuery.UbizOIWidget.w_process_callback);
+                }
+            });
         },
         w_import_rep: function () {
-            jQuery("#f-import-rep").attr("action", "/report/repository/import-rep");
-            jQuery("#f-import-rep").trigger("submit");
+            swal({
+                title: i18next.t('Are you sure you want to update repository?'),
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: i18next.t('No'),
+                confirmButtonText: i18next.t('Yes'),
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    jQuery(".close-modal-btn").click();
+                    formData = new FormData(jQuery("#f-import-rep")[0]);
+                    ubizapis('v1','report/import-rep', 'post', formData, null,jQuery.UbizOIWidget.w_process_callback);
+                }
+            });
+        },
+        w_process_callback: function (response) {
+            if (response.data.success == true) {
+                swal.fire({
+                    type: 'success',
+                    title: response.data.message,
+                    onClose: () => {
+                        jQuery.UbizOIWidget.w_statis();
+                    }
+                });
+            } else {
+                swal.fire({
+                    type: 'error',
+                    title: response.data.message
+                });
+            }
         }
     });
 })(jQuery);

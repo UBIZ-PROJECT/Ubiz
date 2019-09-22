@@ -272,5 +272,6 @@
   "Do you want to confirm delivery status.?": "Bạn có muốn chuyển đơn hàng sang trạng thái giao hàng không?",
   "Fee": "Chi phí",
   "Result": "Kết quả",
-  "Event fee is not number.": "Chi phí công việc không đúng."
+  "Event fee is not number.": "Chi phí công việc không đúng.",
+  "Are you sure you want to update repository?" : "Bạn có chắc chắn muốn cập nhật lại kho?"
 }

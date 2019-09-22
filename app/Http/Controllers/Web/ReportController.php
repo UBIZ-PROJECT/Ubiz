@@ -8,8 +8,6 @@ use App\Model\Report;
 use App\Exports\ReportRepositoryExport;
 use App\Exports\ReportRevenueExport;
 use App\Exports\ReportQuotePriceExport;
-use App\Imports\ReportRepositoryExImport;
-use App\Imports\ReportRepositoryImImport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
@@ -45,6 +43,7 @@ class ReportController extends Controller
             $report = $reportModel->getReportData(0, '', $request);
             $report->sum = $sum;
             $paging['page'] = 0;
+            $report->status = $request->status;
             
 			return view($viewName, [
                 'report' => $report,
@@ -66,21 +65,4 @@ class ReportController extends Controller
                 return Excel::download(new ReportRepositoryExport($request), 'reportRepository.xlsx');
         }
     }
-
-    public function exportRep(Request $request)
-    {
-        $file = $request->fileExportRep;
-        Excel::import(new ReportRepositoryExImport($request), $file->getRealPath());
-
-        return redirect('report/repository');
-    }
-
-    public function importRep(Request $request)
-    {
-        $file = $request->fileImportRep;
-        Excel::import(new ReportRepositoryImImport($request), $file->getRealPath());
-
-        return redirect('report/repository');
-    }
-
 }
