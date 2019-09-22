@@ -69,6 +69,7 @@ class Report implements JWTSubject
     public function getRepReport($page, $sort, $prdFromDate, $prdToDate, $prdName, $brdName, $exportFlg)
     {
         try {
+            $prdToDate .= ' 23:59:59';
             $rows_per_page = env('ROWS_PER_PAGE', 10);
             list($field_name, $order_by) = $this->makeOrderBy($sort, 'prd_id');
             $data = DB::table('product')
@@ -144,6 +145,7 @@ class Report implements JWTSubject
     public function getRepReportAcs($page, $sort, $prdFromDate, $prdToDate, $prdName, $brdName, $exportFlg)
     {
         try {
+            $prdToDate .= ' 23:59:59';
             $rows_per_page = env('ROWS_PER_PAGE', 10);
             list($field_name, $order_by) = $this->makeOrderBy($sort, 'acs_id');
             $data = DB::table('accessory')
@@ -608,6 +610,7 @@ class Report implements JWTSubject
                         'acs_id' => $acs->acs_id,
                         'acs_io_quantity' => $data['quantity'],
                         'acs_io_type' => 2,
+                        'acs_io_date' => now(),
                         'inp_date' => now(),
                         'inp_user' => '1',
                     ]
@@ -661,6 +664,7 @@ class Report implements JWTSubject
                         'acs_id' => $acs->acs_id,
                         'acs_io_quantity' => $data['quantity'],
                         'acs_io_type' => 1,
+                        'acs_io_date' => now(),
                         'inp_date' => now(),
                         'inp_user' => '1',
                     ]
