@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Model\QuotepriceDetail;
+use \PhpOffice\PhpSpreadsheet\IOFactory;
 
 class Quoteprice
 {
@@ -668,6 +669,77 @@ class Quoteprice
                 'file_path' => Storage::disk('quoteprices')->path("$uniqid.pdf"),
                 'file_name' => $file_name
             ];
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function makeExcelFile($quoteprice, $quoteprices_detail, $extra_data)
+    {
+        try {
+            $spreadsheet = IOFactory::load("/sync/Ubiz/app/Exports/QuotepricesTemplate/QP-ThaiKhuong-EN.xlsx");
+
+            $worksheet = $spreadsheet->getActiveSheet();
+
+            $worksheet->getCell('A9')->setValue("No: " . $quoteprice->qp_no);
+            $worksheet->getCell('E10')->setValue($extra_data['md_project']);
+            $worksheet->getCell('E11')->setValue($quoteprice->cus_name);
+            $worksheet->getCell('E12')->setValue($quoteprice->cus_addr);
+            $worksheet->getCell('E13')->setValue($quoteprice->cus_phone);
+            $worksheet->getCell('E14')->setValue($quoteprice->contact_name);
+            $worksheet->getCell('N14')->setValue($quoteprice->sale_name);
+            $worksheet->getCell('E15')->setValue($quoteprice->contact_rank);
+            $worksheet->getCell('N15')->setValue($quoteprice->sale_rank);
+            $worksheet->getCell('E16')->setValue($quoteprice->contact_phone);
+            $worksheet->getCell('N16')->setValue($quoteprice->sale_phone);
+            $worksheet->getCell('E17')->setValue($quoteprice->contact_email);
+            $worksheet->getCell('N17')->setValue($quoteprice->sale_email);
+
+            $pumps = [];
+            $accessary = [];
+
+            foreach ($quoteprices_detail as $type => $quoteprice_detail) {
+                switch ($type) {
+                    case '1':
+                        $pumps[] = $quoteprice_detail;
+                        break;
+                    case '2':
+                        $accessary[] = $quoteprice_detail;
+                        break;
+                }
+            }
+
+            $noStyleArray = [
+                'font' => [
+                    'bold' => true,
+                ],
+                'alignment' => [
+                    'wrapText' => true,
+                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                ]
+            ];
+
+            if (sizeof($pumps) == 1) {
+                $worksheet->removeRow(22);
+            }
+
+            if (sizeof($pumps) > 2) {
+
+                for ($i = 0; $i < sizeof($pumps) - 2; $i++) {
+
+                    $worksheet->insertNewRowBefore(23);
+
+                    $worksheet->mergeCellsByColumnAndRow(2, 23, 8, 23);
+                    $worksheet->mergeCellsByColumnAndRow(11, 23, 13, 23);
+                    $worksheet->mergeCellsByColumnAndRow(14, 23, 16, 23);
+                    $worksheet->mergeCellsByColumnAndRow(17, 23, 18, 23);
+
+                }
+            }
+
+            $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+            $writer->save("/sync/Ubiz/app/Exports/QuotepricesTemplate/05featuredemo.xlsx");
         } catch (\Throwable $e) {
             throw $e;
         }

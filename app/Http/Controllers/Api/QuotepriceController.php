@@ -186,10 +186,13 @@ class QuotepriceController extends Controller
             }
 
             //send quoteprice
-            $file = $qpModel->makeFilePDF($qpData, $qpDetailData, $extra_data);
-            if ($file == false) {
-                return response()->json(['success' => false, 'message' => __('Download quoteprices fail.')], 200);
-            }
+//            $file = $qpModel->makeFilePDF($qpData, $qpDetailData, $extra_data);
+//            if ($file == false) {
+//                return response()->json(['success' => false, 'message' => __('Download quoteprices fail.')], 200);
+//            }
+
+            $qpModel->makeExcelFile($qpData, $qpDetailData, $extra_data);
+            return response()->json(['success' => false, 'message' => __('Download quoteprices fail.')], 200);
 
             return response()->json(['uniqid' => $file['uniqid'], 'file_name' => $file['file_name'], 'success' => true, 'message' => __('Successfully processed.')], 200);
         } catch (\Throwable $e) {
