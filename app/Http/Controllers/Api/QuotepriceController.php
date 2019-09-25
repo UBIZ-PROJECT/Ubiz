@@ -191,7 +191,7 @@ class QuotepriceController extends Controller
 //                return response()->json(['success' => false, 'message' => __('Download quoteprices fail.')], 200);
 //            }
 
-            $qpModel->makeExcelFile($qpData, $qpDetailData, $extra_data);
+            $file = $qpModel->writeExcelFile($qpData, $qpDetailData, $extra_data);
             return response()->json(['success' => false, 'message' => __('Download quoteprices fail.')], 200);
 
             return response()->json(['uniqid' => $file['uniqid'], 'file_name' => $file['file_name'], 'success' => true, 'message' => __('Successfully processed.')], 200);

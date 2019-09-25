@@ -674,11 +674,11 @@ class Quoteprice
         }
     }
 
-    public function makeExcelFile($quoteprice, $quoteprices_detail, $extra_data)
+    public function writeExcelSpreadsheet($quoteprice, $quoteprices_detail, $extra_data)
     {
         try {
-            $spreadsheet = IOFactory::load("/sync/Ubiz/app/Exports/QuotepricesTemplate/QP-ThaiKhuong-EN.xlsx");
 
+            $spreadsheet = IOFactory::load("/sync/Ubiz/app/Exports/QuotepricesTemplate/QP-ThaiKhuong-EN.xlsx");
             $worksheet = $spreadsheet->getActiveSheet();
 
             $worksheet->getCell('A9')->setValue("No: " . $quoteprice->qp_no);
@@ -758,7 +758,7 @@ class Quoteprice
                 }
             }
 
-            $pump_row_no = 23;
+            $pump_row_no = 21;
             foreach ($pumps as $item) {
                 $worksheet->getCell("A{$pump_row_no}")->setValue();
                 $worksheet->getCell("B{$pump_row_no}")->setValue();
@@ -767,10 +767,53 @@ class Quoteprice
                 $worksheet->getCell("K{$pump_row_no}")->setValue();
                 $worksheet->getCell("N{$pump_row_no}")->setValue();
                 $worksheet->getCell("Q{$pump_row_no}")->setValue();
-                $acc_row_no++;
+                $pump_row_no++;
             }
 
+            return $spreadsheet;
+
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function writeExcelFile($quoteprice, $quoteprices_detail, $extra_data)
+    {
+        try {
+
+            $spreadsheet = $this->writeExcelSpreadsheet($quoteprice, $quoteprices_detail, $extra_data);
+            $qp_file_name = $this->writeExcelFileName();
+
             $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+            $writer->save("/sync/Ubiz/app/Exports/QuotepricesTemplate/05featuredemo.xlsx");
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function writeQpFileName($quoteprice, $extra_data)
+    {
+        try {
+
+            $company = presentValidator($extra_data['md_company']) == true ? ($extra_data['md_company'] == '1' ? 'tk' : 'ht') : 'tk';
+            $language = presentValidator($extra_data['md_language']) == true ? $extra_data['md_language'] : 'vn';
+
+            $uniqid = uniqid();
+            if ($company == 'tk') {
+                $file_name = '[TKT]' . strtoupper($language) . date('d.m.Y') . '_' . $quoteprice->qp_no . '_' . $quoteprice->cus_code;
+            } else {
+                $file_name = '[HT]' . strtoupper($language) . date('d.m.Y') . '_' . $quoteprice->qp_no . '_' . $quoteprice->cus_code;
+            }
+
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function writePdfFile($spreadsheet)
+    {
+        try {
+            $writer = \PhpOffice\PhpSpreadsheet\Writer\Pdf\Mpdf($spreadsheet);
             $writer->save("/sync/Ubiz/app/Exports/QuotepricesTemplate/05featuredemo.xlsx");
         } catch (\Throwable $e) {
             throw $e;
