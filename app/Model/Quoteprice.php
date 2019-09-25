@@ -696,7 +696,7 @@ class Quoteprice
             $worksheet->getCell('N17')->setValue($quoteprice->sale_email);
 
             $pumps = [];
-            $accessary = [];
+            $accessaries = [];
 
             foreach ($quoteprices_detail as $type => $quoteprice_detail) {
                 switch ($type) {
@@ -704,29 +704,19 @@ class Quoteprice
                         $pumps[] = $quoteprice_detail;
                         break;
                     case '2':
-                        $accessary[] = $quoteprice_detail;
+                        $accessaries[] = $quoteprice_detail;
                         break;
                 }
             }
 
-            $noStyleArray = [
-                'font' => [
-                    'bold' => true,
-                ],
-                'alignment' => [
-                    'wrapText' => true,
-                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-                ]
-            ];
-
-            if (sizeof($pumps) == 1) {
+            if (sizeof($accessaries) == 0) {
                 $worksheet->removeRow(22);
+                $worksheet->removeRow(23);
             }
 
-            if (sizeof($pumps) > 2) {
+            if (sizeof($accessaries) > 1) {
 
-                for ($i = 0; $i < sizeof($pumps) - 2; $i++) {
+                for ($i = 0; $i < sizeof($accessaries) - 1; $i++) {
 
                     $worksheet->insertNewRowBefore(23);
 
@@ -734,8 +724,50 @@ class Quoteprice
                     $worksheet->mergeCellsByColumnAndRow(11, 23, 13, 23);
                     $worksheet->mergeCellsByColumnAndRow(14, 23, 16, 23);
                     $worksheet->mergeCellsByColumnAndRow(17, 23, 18, 23);
-
                 }
+            }
+
+            $acc_row_no = 23;
+            foreach ($accessaries as $item) {
+                $worksheet->getCell("A{$acc_row_no}")->setValue();
+                $worksheet->getCell("B{$acc_row_no}")->setValue();
+                $worksheet->getCell("D{$acc_row_no}")->setValue();
+                $worksheet->getCell("I{$acc_row_no}")->setValue();
+                $worksheet->getCell("J{$acc_row_no}")->setValue();
+                $worksheet->getCell("K{$acc_row_no}")->setValue();
+                $worksheet->getCell("N{$acc_row_no}")->setValue();
+                $worksheet->getCell("Q{$acc_row_no}")->setValue();
+                $acc_row_no++;
+            }
+
+            if (sizeof($pumps) == 0 && sizeof($accessaries) > 0) {
+                $worksheet->removeRow(20);
+                $worksheet->removeRow(21);
+            }
+
+            if (sizeof($pumps) > 1) {
+
+                for ($i = 0; $i < sizeof($pumps) - 1; $i++) {
+
+                    $worksheet->insertNewRowBefore(22);
+
+                    $worksheet->mergeCellsByColumnAndRow(2, 22, 8, 22);
+                    $worksheet->mergeCellsByColumnAndRow(11, 22, 13, 22);
+                    $worksheet->mergeCellsByColumnAndRow(14, 22, 16, 22);
+                    $worksheet->mergeCellsByColumnAndRow(17, 22, 18, 22);
+                }
+            }
+
+            $pump_row_no = 23;
+            foreach ($pumps as $item) {
+                $worksheet->getCell("A{$pump_row_no}")->setValue();
+                $worksheet->getCell("B{$pump_row_no}")->setValue();
+                $worksheet->getCell("I{$pump_row_no}")->setValue();
+                $worksheet->getCell("J{$pump_row_no}")->setValue();
+                $worksheet->getCell("K{$pump_row_no}")->setValue();
+                $worksheet->getCell("N{$pump_row_no}")->setValue();
+                $worksheet->getCell("Q{$pump_row_no}")->setValue();
+                $acc_row_no++;
             }
 
             $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
