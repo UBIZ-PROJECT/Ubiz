@@ -694,6 +694,14 @@ class Quoteprice
             $worksheet->getCell('N16')->setValue($quoteprice->sale_phone);
             $worksheet->getCell('E17')->setValue($quoteprice->contact_email);
             $worksheet->getCell('N17')->setValue($quoteprice->sale_email);
+            $worksheet->getCell('Q24')->setValue($quoteprice->qp_amount);
+            $worksheet->getCell('Q25')->setValue($quoteprice->qp_amount_tax - $quoteprice->qp_amount);
+            $worksheet->getCell('Q26')->setValue($quoteprice->qp_amount_tax);
+            $worksheet->getCell('E28')->setValue($extra_data['md_value']);
+            $worksheet->getCell('E29')->setValue($extra_data['md_warranty']);
+            $worksheet->getCell('E30')->setValue($extra_data['md_payment']);
+            $worksheet->getCell('E21')->setValue($extra_data['md_delivery']);
+            $worksheet->getCell('E32')->setValue($extra_data['md_account']);
 
             $pumps = [];
             $accessaries = [];
@@ -728,16 +736,19 @@ class Quoteprice
             }
 
             $acc_row_no = 23;
+            $acc_row_idx = 1;
             foreach ($accessaries as $item) {
-                $worksheet->getCell("A{$acc_row_no}")->setValue();
-                $worksheet->getCell("B{$acc_row_no}")->setValue();
-                $worksheet->getCell("D{$acc_row_no}")->setValue();
-                $worksheet->getCell("I{$acc_row_no}")->setValue();
-                $worksheet->getCell("J{$acc_row_no}")->setValue();
-                $worksheet->getCell("K{$acc_row_no}")->setValue();
-                $worksheet->getCell("N{$acc_row_no}")->setValue();
-                $worksheet->getCell("Q{$acc_row_no}")->setValue();
+                $worksheet->getCell("A{$acc_row_no}")->setValue($acc_row_idx);
+                $worksheet->getCell("B{$acc_row_no}")->setValue($item->acce_code);
+                $worksheet->getCell("D{$acc_row_no}")->setValue($item->acce_name);
+                $worksheet->getCell("I{$acc_row_no}")->setValue($item->unit);
+                $worksheet->getCell("J{$acc_row_no}")->setValue($item->quantity);
+                $worksheet->getCell("K{$acc_row_no}")->setValue($item->delivery_time);
+                $worksheet->getCell("N{$acc_row_no}")->setValue($item->price);
+                $worksheet->getCell("Q{$acc_row_no}")->setValue($item->amount);
+
                 $acc_row_no++;
+                $acc_row_idx++;
             }
 
             if (sizeof($pumps) == 0 && sizeof($accessaries) > 0) {
@@ -759,15 +770,23 @@ class Quoteprice
             }
 
             $pump_row_no = 21;
+            $pump_row_idx = 1;
             foreach ($pumps as $item) {
-                $worksheet->getCell("A{$pump_row_no}")->setValue();
-                $worksheet->getCell("B{$pump_row_no}")->setValue();
-                $worksheet->getCell("I{$pump_row_no}")->setValue();
-                $worksheet->getCell("J{$pump_row_no}")->setValue();
-                $worksheet->getCell("K{$pump_row_no}")->setValue();
-                $worksheet->getCell("N{$pump_row_no}")->setValue();
-                $worksheet->getCell("Q{$pump_row_no}")->setValue();
+                $worksheet->getCell("A{$pump_row_no}")->setValue($pump_row_idx);
+
+                if ($item->prod_specs_mce != '' && $item->prod_specs_mce != null) {
+                    $item->prod_specs_mce = htmlToRichText($item->prod_specs_mce);
+                }
+                $worksheet->getCell("B{$pump_row_no}")->setValue($item->prod_specs_mce);
+
+                $worksheet->getCell("I{$pump_row_no}")->setValue($item->unit);
+                $worksheet->getCell("J{$pump_row_no}")->setValue($item->quantity);
+                $worksheet->getCell("K{$pump_row_no}")->setValue($item->delivery_time);
+                $worksheet->getCell("N{$pump_row_no}")->setValue($item->price);
+                $worksheet->getCell("Q{$pump_row_no}")->setValue($item->amount);
+
                 $pump_row_no++;
+                $pump_row_idx++;
             }
 
             return $spreadsheet;
