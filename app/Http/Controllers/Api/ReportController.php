@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Imports\ReportRepositoryExImport;
+use App\Imports\ReportRepositoryImImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 use App\Model\Report;
 
@@ -60,5 +63,21 @@ class ReportController extends Controller
         }
 
         return [$page, $sort];
+    }
+
+    public function exportRep(Request $request)
+    {
+        $file = $request->fileExportRep;
+        Excel::import(new ReportRepositoryExImport($request), $file->getRealPath());
+
+        return response()->json(['success' => true, 'message' => __('Successfully processed.')], 200);
+    }
+
+    public function importRep(Request $request)
+    {
+        $file = $request->fileImportRep;
+        Excel::import(new ReportRepositoryImImport($request), $file->getRealPath());
+
+        return response()->json(['success' => true, 'message' => __('Successfully processed.')], 200);
     }
 }

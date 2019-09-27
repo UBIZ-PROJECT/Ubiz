@@ -69,6 +69,7 @@ class Report implements JWTSubject
     public function getRepReport($page, $sort, $prdFromDate, $prdToDate, $prdName, $brdName, $exportFlg)
     {
         try {
+            $prdToDate .= ' 23:59:59';
             $rows_per_page = env('ROWS_PER_PAGE', 10);
             list($field_name, $order_by) = $this->makeOrderBy($sort, 'prd_id');
             $data = DB::table('product')
@@ -144,6 +145,7 @@ class Report implements JWTSubject
     public function getRepReportAcs($page, $sort, $prdFromDate, $prdToDate, $prdName, $brdName, $exportFlg)
     {
         try {
+            $prdToDate .= ' 23:59:59';
             $rows_per_page = env('ROWS_PER_PAGE', 10);
             list($field_name, $order_by) = $this->makeOrderBy($sort, 'acs_id');
             $data = DB::table('accessory')
@@ -566,5 +568,110 @@ class Report implements JWTSubject
             $field_name = implode('_', $sort_info);
         }
         return [$field_name, $order_by];
+    }
+
+    public function exportPumpRep($data)
+    {
+        try {
+            DB::table('product_series')
+                ->leftJoin('product', function ($join) {
+                    $join->on('product.prd_id', '=', 'product_series.prd_id')
+                        ->where('product.delete_flg', '0');
+                })
+                ->leftJoin('brand', 'product.brd_id', '=', 'brand.brd_id')
+                ->where('brand.brd_name', $data['brd_name'])
+                ->where('product.prd_name', $data['prd_name'])
+                ->whereIn('product_series.serial_no', $data['series'])
+                ->update(['product_series.delete_flg' => 1, 'product_series.export_date' => now()]);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function exportAcsRep($data)
+    {
+        try {
+            $acs = DB::table('accessory')
+            ->leftJoin('brand', 'accessory.brd_id', '=', 'brand.brd_id')
+            ->select('accessory.*')
+            ->where('brand.brd_name', $data['brd_name'])
+            ->where('accessory.acs_name', $data['prd_name'])
+            ->get()->first();
+            
+            if ($acs->acs_id) {
+                DB::table('accessory')
+                    ->leftJoin('brand', 'accessory.brd_id', '=', 'brand.brd_id')
+                    ->where('brand.brd_name', $data['brd_name'])
+                    ->where('accessory.acs_name', $data['prd_name'])
+                    ->update(['accessory.acs_quantity' => ($acs->acs_quantity - $data['quantity']), 'accessory.upd_date' => now()]);
+
+                DB::table('accessory_in_out')->insert(
+                    [
+                        'acs_id' => $acs->acs_id,
+                        'acs_io_quantity' => $data['quantity'],
+                        'acs_io_type' => 2,
+                        'acs_io_date' => now(),
+                        'inp_date' => now(),
+                        'inp_user' => '1',
+                    ]
+                );
+            }
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function importPumpRep($data)
+    {
+        try {
+            $product = DB::table('product')
+                ->leftJoin('brand', 'product.brd_id', '=', 'brand.brd_id')
+                ->select('product.prd_id')
+                ->where('brand.brd_name', $data['brd_name'])
+                ->where('product.prd_name', $data['prd_name'])
+                ->get()->first();
+            if ($product->prd_id) {
+                foreach ($data['series'] as $series) {
+                    DB::table('product_series')->insert(
+                        ['prd_id' => $product->prd_id, 'serial_no' => $series, 'serial_sts' => 0, 'serial_note' => $data['serial_note'], 'inp_user' => 1, 'upd_user' => 1]
+                    );
+                }
+            }
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function importAcsRep($data)
+    {
+        try {
+            $acs = DB::table('accessory')
+                ->leftJoin('brand', 'accessory.brd_id', '=', 'brand.brd_id')
+                ->select('accessory.*')
+                ->where('brand.brd_name', $data['brd_name'])
+                ->where('accessory.acs_name', $data['prd_name'])
+                ->get()->first();
+
+            if ($acs->acs_id) {
+                DB::table('accessory')
+                ->leftJoin('brand', 'accessory.brd_id', '=', 'brand.brd_id')
+                ->where('brand.brd_name', $data['brd_name'])
+                ->where('accessory.acs_name', $data['prd_name'])
+                ->update(['accessory.acs_quantity' => ($acs->acs_quantity + $data['quantity']), 'accessory.upd_date' => now()]);
+
+                DB::table('accessory_in_out')->insert(
+                    [
+                        'acs_id' => $acs->acs_id,
+                        'acs_io_quantity' => $data['quantity'],
+                        'acs_io_type' => 1,
+                        'acs_io_date' => now(),
+                        'inp_date' => now(),
+                        'inp_user' => '1',
+                    ]
+                );
+            }
+        } catch (\Throwable $e) {
+            throw $e;
+        }
     }
 }

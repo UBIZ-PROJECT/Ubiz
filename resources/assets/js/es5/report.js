@@ -265,11 +265,100 @@
         w_export: function (type) {
             jQuery("#f-export").attr("action", "/report/" + type + "/export");
             jQuery("#f-export").trigger("submit");
+        },
+        w_export_rep: function () {
+            swal({
+                title: i18next.t('Are you sure you want to update repository?'),
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: i18next.t('No'),
+                confirmButtonText: i18next.t('Yes'),
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    jQuery(".close-modal-btn").click();
+                    formData = new FormData(jQuery("#f-export-rep")[0]);
+                    ubizapis('v1','report/export-rep', 'post', formData, null,jQuery.UbizOIWidget.w_process_callback);
+                }
+            });
+        },
+        w_import_rep: function () {
+            swal({
+                title: i18next.t('Are you sure you want to update repository?'),
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: i18next.t('No'),
+                confirmButtonText: i18next.t('Yes'),
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    jQuery(".close-modal-btn").click();
+                    formData = new FormData(jQuery("#f-import-rep")[0]);
+                    ubizapis('v1','report/import-rep', 'post', formData, null,jQuery.UbizOIWidget.w_process_callback);
+                }
+            });
+        },
+        w_process_callback: function (response) {
+            if (response.data.success == true) {
+                swal.fire({
+                    type: 'success',
+                    title: response.data.message,
+                    onClose: () => {
+                        jQuery.UbizOIWidget.w_statis();
+                    }
+                });
+            } else {
+                swal.fire({
+                    type: 'error',
+                    title: response.data.message
+                });
+            }
         }
     });
 })(jQuery);
 jQuery(document).ready(function () {
     jQuery.UbizOIWidget.w_init();
+    // Get the modal
+    var modal_export = document.getElementById("export-rep-modal");
+    var modal_import = document.getElementById("import-rep-modal");
+
+    // Get the button that opens the modal
+    var btn_export = document.getElementById("export-rep-btn");
+    var btn_import = document.getElementById("import-rep-btn");
+
+    // Get the <span> element that closes the modal
+    var close_modal_export = document.getElementsByClassName("close-modal-export")[0];
+    var close_modal_import = document.getElementsByClassName("close-modal-import")[0];
+
+    // When the user clicks on the button, open the modal
+    btn_export.onclick = function() {
+        modal_export.style.display = "block";
+    }
+    btn_import.onclick = function() {
+        modal_import.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    close_modal_export.onclick = function() {
+        modal_export.style.display = "none";
+    }
+    close_modal_import.onclick = function() {
+        modal_import.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal_export) {
+            modal_export.style.display = "none";
+        }
+        if (event.target == modal_import) {
+            modal_import.style.display = "none";
+        }
+    }
 });
 
 function qp_date_change(self) {
