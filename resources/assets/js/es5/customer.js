@@ -2,11 +2,16 @@
     UbizOIWidget = function () {
         this.page = 0;
         this.sort = {};
+        this.sort_default = {};
+        this.pos = 0;
+        this.rows_num = 0;
         this.o_page = null;
         this.i_page = null;
+        this.con_summary_detail = null;
         this.sidebar_scrollbars = null;
         this.output_scrollbars = null;
         this.input_scrollbars = null;
+        this.none_img = '../images/avatar.png';
     };
 
     jQuery.UbizOIWidget = new UbizOIWidget();
@@ -20,6 +25,7 @@
             jQuery('.utooltip').tooltipster({
                 side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
             });
+            jQuery.UbizOIWidget.sort_default = jQuery.UbizOIWidget.w_get_sort_info();
         },
         w_sort: function (self) {
             var sort_name = jQuery(self).attr('sort-name');
@@ -37,10 +43,8 @@
                 'sort': sort
             }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
-        w_delete: function (ids) {
-            if (ids == 0) {
-                var ids = jQuery.UbizOIWidget.w_get_checked_rows();
-            }
+        w_o_delete: function () {
+            var ids = jQuery.UbizOIWidget.w_get_checked_rows();
             if (ids.length == 0)
                 return false;
 
@@ -55,93 +59,58 @@
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
-                    ubizapis('v1', '/customers/' + ids.join(',') + '/delete', 'delete', null, null, jQuery.UbizOIWidget.w_delete_callback);
+                    ubizapis('v1', '/customers/' + ids.join(',') + '/delete', 'delete', null, null, jQuery.UbizOIWidget.w_o_delete_callback);
                 }
-            });
+            })
+        },
+        w_i_delete: function () {
+            var cus_id = jQuery("input[name=cus-id]").val();
+            swal({
+                title: i18next.t('Do you want to delete the data?'),
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: i18next.t('No'),
+                confirmButtonText: i18next.t('Yes'),
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    ubizapis('v1', '/customers/' + cus_id + '/delete', 'delete', null, null, jQuery.UbizOIWidget.w_i_delete_callback);
+                }
+            })
+        },
+        w_i_delete_callback: function (response) {
+            if (response.data.success == true) {
+                swal.fire({
+                    type: 'success',
+                    title: response.data.message,
+                    onClose: () => {
+                        jQuery.UbizOIWidget.w_go_back_to_output_page();
+                        jQuery.UbizOIWidget.w_refresh_output_page();
+                    }
+                });
+            } else {
+                swal.fire({
+                    type: 'error',
+                    title: response.data.message,
+                });
+            }
         },
         w_create: function () {
-            jQuery.UbizOIWidget.w_go_to_input_page(0);
-        },
-        w_search: function () {
-            var params = {};
-            params.page = '0';
-
-            if (jQuery('#cus_code').val().replace(/\s/g, '') != '') {
-                params.cus_code = jQuery('#cus_code').val();
-            }
-
-
-            if (jQuery('#cus_type').val().replace(/\s/g, '') != '') {
-                params.cus_type = jQuery('#cus_type').val();
-            }
-
-            if (jQuery('#cus_name').val().replace(/\s/g, '') != '') {
-                params.cus_name = jQuery('#cus_name').val();
-            }
-
-            if (jQuery('#cus_phone').val().replace(/\s/g, '') != '') {
-                params.cus_phone = jQuery('#cus_phone').val();
-            }
-
-            if (jQuery('#cus_fax').val().replace(/\s/g, '') != '') {
-                params.cus_fax = jQuery('#cus_fax').val();
-            }
-
-            if (jQuery('#cus_mail').val().replace(/\s/g, '') != '') {
-                params.cus_mail = jQuery('#cus_mail').val();
-            }
-
-            if (jQuery('#cus_address').val().replace(/\s/g, '') != '') {
-                params.cus_address = jQuery('#cus_address').val();
-            }
-
-            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-            params.sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/customers', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
-        },
-        w_clear_search_form: function () {
-            jQuery('#cus_code').val("");
-            jQuery('#cus_type').val("");
-            jQuery('#cus_name').val("");
-            jQuery('#cus_phone').val("");
-            jQuery('#cus_fax').val("");
-            jQuery('#cus_mail').val("");
-            jQuery('#cus_address').val("");
-            jQuery.UbizOIWidget.page = '0';
-            jQuery.UbizOIWidget.w_search();
-        },
-        w_update_search_form: function (search_info) {
-            jQuery.UbizOIWidget.w_clear_advance_search_form();
-            jQuery.each(search_info, function (key, val) {
-                var search_item = jQuery('#' + key);
-                if (search_item.length == 1) {
-                    search_item.val(val);
-                }
-            });
-        },
-        w_clear_advance_search_form: function () {
-            jQuery('#cus_code').val("");
-            jQuery('#cus_type').val("");
-            jQuery('#cus_name').val("");
-            jQuery('#cus_phone').val("");
-            jQuery('#cus_fax').val("");
-            jQuery('#cus_mail').val("");
-            jQuery('#cus_address').val("");
-            jQuery('#contain').val("");
-            jQuery('#notcontain').val("");
+            jQuery.UbizOIWidget.w_go_to_input_page(0, 0);
         },
         w_fuzzy_search: function () {
-            var params = {};
-            params.page = '0';
+
             jQuery.UbizOIWidget.page = '0';
 
-            var fuzzy = jQuery('#fuzzy').val();
-            var search_info = jQuery.UbizOIWidget.w_convert_fuzzy_to_search_info(fuzzy);
-            jQuery.UbizOIWidget.w_update_search_form(search_info);
-            Object.assign(params, search_info);
-
+            var search = jQuery('#fuzzy').val();
             var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
             var sort = sort_info.sort_name + "_" + sort_info.order_by;
+
+            var params = {};
+            params.page = '0';
+            params.search = search;
             params.sort = sort;
 
             ubizapis('v1', '/customers', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
@@ -152,107 +121,72 @@
                 jQuery.UbizOIWidget.w_fuzzy_search();
             }
         },
-        w_convert_search_info_to_fuzzy: function (search_info) {
-            var fuzzy = JSON.stringify(search_info);
-            return fuzzy;
-        },
-        w_convert_fuzzy_to_search_info: function (fuzzy) {
-            var search_info = {};
-            try {
-                search_info = JSON.parse(fuzzy);
-            } catch (e) {
-                var fuzzy_info = fuzzy.split('-');
-                if (fuzzy_info.length == 1) {
-                    search_info.contain = fuzzy;
-                } else {
-                    fuzzy_info.shift();
-                    search_info.notcontain = fuzzy_info.join('-');
-                }
-            }
-            return search_info;
-        },
-        w_go_to_input_page: function (id, ele) {
-            if (id != 0) {
-                var index = jQuery('input[name="pageno"]').val() * 10 + jQuery(ele).index();
-                var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-                ubizapis('v1', '/customer-edit', 'get', null, {'cus_id': id}, jQuery.UbizOIWidget.w_render_data_to_input_page);
-                jQuery('.curindex').text(index + 1);
-                jQuery('.prev').attr('onclick', 'jQuery.UbizOIWidget.w_go_to_input_page_paging(' + (index - 1) + ')');
-                jQuery('.next').attr('onclick', 'jQuery.UbizOIWidget.w_go_to_input_page_paging(' + (index + 1) + ')');
-                if (index == 0) {
-                    jQuery('.prev').removeAttr('onclick');
-                    jQuery('.prev').addClass('adS');
-                } else {
-                    jQuery('.prev').removeClass('adS');
-                }
-
-                if ((index + 1) == parseInt($('.totalindex').text())) {
-                    jQuery('.next').removeAttr('onclick');
-                    jQuery('.next').addClass('adS');
-                } else {
-                    jQuery('.next').removeClass('adS');
-                }
-                $(".price-report").show();
-                $("input[name=cus_code]").attr('disabled', true);
-                $("input[name=cus_code]").closest('div.root_textfield').addClass('rootIsDisabled');
-                $(".Di").show();
+        w_go_to_input_page: function (pos, id) {
+            jQuery.UbizOIWidget.pos = pos;
+            if (id == 0 || pos == 0) {
+                ubizapis('v1', '/customers/generate-cus-code', 'get', null, null, jQuery.UbizOIWidget.w_go_to_input_page_callback);
             } else {
-                $(".Di").hide();
-                ubizapis('v1', '/customers/cuscode', 'get', null, null, jQuery.UbizOIWidget.w_go_to_input_page_callback);
+                $("#btn-delete").show();
+                $("#quoteprice-create").show();
+                $("input[name=cus-code]").attr('disabled', true);
+                $("input[name=cus-code]").closest('div.root_textfield').addClass('rootIsDisabled');
+                ubizapis('v1', '/customers/' + id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
             }
-            jQuery.UbizOIWidget.w_sleep_scrollbars(jQuery.UbizOIWidget.output_scrollbars);
-            jQuery.UbizOIWidget.w_update_scrollbars(jQuery.UbizOIWidget.input_scrollbars);
-            jQuery.UbizOIWidget.o_page.hide();
-            jQuery.UbizOIWidget.i_page.fadeIn("slow");
-
-            $(".save").click(function () {
-                jQuery.UbizOIWidget.w_save();
-            });
-            $(".delete").click(function () {
-                var id = $('input[name="cus_id"]').val();
-                var ids = [];
-                ids.push(id);
-                jQuery.UbizOIWidget.w_delete(ids);
-            });
         },
         w_go_to_input_page_callback: function (response) {
 
-            var cus_code = '';
             if (response.data.success == true) {
-                cus_code = response.data.cus_code;
-            }
+                var cus_code = '';
+                if (response.data.success == true) {
+                    cus_code = response.data.cus_code;
+                }
 
-            $(".price-report").hide();
-            $('#f-input input').val('');
-            $('#avt_img').attr('src', '../images/avatar.png');
-            $("input[name=cus_code]").attr('disabled', false);
-            $("input[name=cus_code]").closest('div.root_textfield').removeClass('rootIsDisabled');
-            $("input[name=cus_code]").val(cus_code);
+                jQuery("#btn-delete").hide();
+                jQuery("#i-paging-label").hide();
+                jQuery("#i-paging-older").hide();
+                jQuery("#i-paging-newer").hide();
+                $("#quoteprice-create").hide();
+                jQuery.UbizOIWidget.w_clean_input_page();
+
+                jQuery.UbizOIWidget.w_sleep_scrollbars(jQuery.UbizOIWidget.output_scrollbars);
+                jQuery.UbizOIWidget.w_update_scrollbars(jQuery.UbizOIWidget.input_scrollbars);
+
+                jQuery.UbizOIWidget.o_page.hide();
+                jQuery.UbizOIWidget.i_page.fadeIn("slow");
+                $("input[name=cus-code]").attr('disabled', false);
+                $("input[name=cus-code]").closest('div.root_textfield').removeClass('rootIsDisabled');
+                $("input[name=cus-code]").val(cus_code);
+            } else {
+                swal.fire({
+                    type: 'error',
+                    title: response.data.message
+                })
+            }
         },
-        w_go_to_input_page_paging: function (index) {
-            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-            ubizapis('v1', '/customer-edit', 'get', null, {
-                'cus_id': 0,
-                'index': index,
-                'sort': sort_info.sort_name,
-                'order': sort_info.order_by
-            }, jQuery.UbizOIWidget.w_render_data_to_input_page);
-            jQuery('.curindex').text(index + 1);
-            jQuery('.prev').attr('onclick', 'jQuery.UbizOIWidget.w_go_to_input_page_paging(' + (index - 1) + ')');
-            jQuery('.next').attr('onclick', 'jQuery.UbizOIWidget.w_go_to_input_page_paging(' + (index + 1) + ')');
-            if (index == 0) {
-                jQuery('.prev').removeAttr('onclick');
-                jQuery('.prev').addClass('adS');
-            } else {
-                jQuery('.prev').removeClass('adS');
-            }
-
-            if ((index + 1) == parseInt($('.totalindex').text())) {
-                jQuery('.next').removeAttr('onclick');
-                jQuery('.next').addClass('adS');
-            } else {
-                jQuery('.next').removeClass('adS');
-            }
+        w_clean_input_page: function () {
+            $('input[name="cus-id"]').val('0');
+            $('input[name="cus-code"]').val('');
+            $('input[name="cus-name"]').val('');
+            $('input[name="cus-fax"]').val('');
+            $('input[name="cus-mail"]').val('');
+            $('input[name="cus-phone"]').val('');
+            $('input[name="cus-field"]').val('');
+            $('input[name="cus-avatar"]').val('');
+            $('input[name="cus-avatar-base64"]').val('');
+            $('input[name="cad-id-1"]').val('0');
+            $('input[name="cus-address-1"]').val('');
+            $('select[name="lct-location-1"]').val('1');
+            $('input[name="cad-id-2"]').val('0');
+            $('input[name="cus-address-2"]').val('');
+            $('select[name="lct-location-2"]').val('1');
+            $('input[name="cad-id-3"]').val('0');
+            $('input[name="cus-address-3"]').val('');
+            $('select[name="lct-location-3"]').val('1');
+            $('select[name="cus-type"]').val($('select[name="cus-type"] option:first').val()).change();
+            $('select[name="cus-pic"]').val($('select[name="cus-pic"] option:first').val()).change();
+            $('input[name="cus-file"]').val('');
+            $("#con-summary-container").empty();
+            $('img[name="cus-img"]').attr('src', jQuery.UbizOIWidget.none_img);
         },
         w_go_back_to_output_page: function (self) {
             jQuery.UbizOIWidget.o_page.fadeIn("slow");
@@ -260,13 +194,43 @@
             jQuery.UbizOIWidget.w_sleep_scrollbars(jQuery.UbizOIWidget.input_scrollbars);
             jQuery.UbizOIWidget.w_update_scrollbars(jQuery.UbizOIWidget.output_scrollbars);
         },
+        w_i_refresh: function () {
+            swal({
+                title: i18next.t('Do you want to refresh the data.?'),
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: i18next.t('No'),
+                confirmButtonText: i18next.t('Yes'),
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    var cus_id = jQuery("input[name=cus-id]").val();
+                    if (cus_id == '0') {
+                        jQuery.UbizOIWidget.w_clean_input_page();
+                    } else {
+                        ubizapis('v1', '/customers/' + cus_id, 'get', null, null, jQuery.UbizOIWidget.w_render_data_to_input_page);
+                    }
+                }
+            })
+        },
         w_refresh_output_page: function () {
-            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
-            var sort = sort_info.sort_name + "_" + sort_info.order_by;
-            ubizapis('v1', '/customers', 'get', null, {
-                'page': jQuery.UbizOIWidget.page,
-                'sort': sort
-            }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
+            jQuery('#fuzzy').val('');
+            jQuery.UbizOIWidget.w_sort_reset();
+            jQuery.UbizOIWidget.w_fuzzy_search();
+        },
+        w_sort_reset: function () {
+
+            var sort_name = jQuery.UbizOIWidget.sort_default.sort_name;
+            var order_by = jQuery.UbizOIWidget.sort_default.order_by;
+            var sort_default_obj = jQuery.UbizOIWidget.o_page.find('div.dcB').find('div[sort-name=' + sort_name + ']');
+
+            jQuery.UbizOIWidget.o_page.find('div.dcB').find('div.dWT').removeClass('dWT');
+            jQuery.UbizOIWidget.o_page.find('div.dcB').find('svg.sVGT').removeClass('sVGT');
+            sort_default_obj.attr('order-by', order_by);
+            sort_default_obj.addClass('dWT');
+            sort_default_obj.find('svg.' + order_by).addClass('sVGT');
         },
         w_get_sort_info: function () {
             var sort_obj = jQuery.UbizOIWidget.o_page.find('div.dWT');
@@ -294,14 +258,14 @@
                 'sort': sort
             }, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
-        w_delete_callback: function (response) {
+        w_o_delete_callback: function (response) {
             if (response.data.success == true) {
                 swal.fire({
                     type: 'success',
                     title: response.data.message,
                     onClose: () => {
-                        jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
                         jQuery.UbizOIWidget.w_go_back_to_output_page(this);
+                        jQuery.UbizOIWidget.w_fuzzy_search();
                     }
                 });
             } else {
@@ -313,21 +277,15 @@
         },
         w_render_data_to_ouput_page: function (response) {
             var table_html = "";
+            var paging = response.data.paging;
             var customer = response.data.customers;
             if (customer.length > 0) {
                 var rows = [];
                 for (let i = 0; i < customer.length; i++) {
-                    if (customer[i].cus_type == 1) {
-                        var cus_type_name = 'Khách hàng mới';
-                    } else if (customer[i].cus_type == 2) {
-                        var cus_type_name = 'Khách hàng cũ';
-                    } else {
-                        var cus_type_name = 'Khách hàng thân thiết';
-                    }
                     var cols = [];
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_code, 1));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_name, 2));
-                    cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, cus_type_name, 3));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_type_name, 2));
+                    cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_name, 3));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_phone, 4));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_fax, 5));
                     cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, customer[i].cus_mail, 6));
@@ -336,7 +294,7 @@
                     } else {
                         cols.push(jQuery.UbizOIWidget.w_make_col_html(customer[i].cus_id, '', 7));
                     }
-                    rows.push(jQuery.UbizOIWidget.w_make_row_html(customer[i].cus_id, cols));
+                    rows.push(jQuery.UbizOIWidget.w_make_row_html(customer[i].cus_id, cols, i, paging.page, paging.rows_per_page));
                 }
                 table_html += rows.join("");
             }
@@ -344,63 +302,35 @@
             jQuery.UbizOIWidget.o_page.find("#table-content").append(table_html);
             jQuery.UbizOIWidget.w_reset_f_checkbox_status();
             jQuery.UbizOIWidget.page = response.data.paging.page;
-            jQuery.UbizOIWidget.w_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
+            jQuery.UbizOIWidget.w_o_paging(response.data.paging.page, response.data.paging.rows_num, response.data.paging.rows_per_page);
+            jQuery.UbizOIWidget.rows_num = response.data.paging.rows_num;
         },
         w_render_data_to_input_page: function (response) {
-            var customer = response.data.customers[0];
-            $('.totalindex').text(response.data.totalCustomers);
+            if (response.data.success == true) {
+                var cus = response.data.cus;
+                var con = response.data.con;
+                jQuery.UbizOIWidget.w_clean_input_page();
+                jQuery.UbizOIWidget.w_set_input_page(cus, con);
+                jQuery.UbizOIWidget.w_i_paging();
 
-            $('input[name="cus_id"]').val(customer.cus_id);
-            $('input[name="cus_code"]').val(customer.cus_code);
-            $('input[name="cus_name"]').val(customer.cus_name);
-            if (customer.avt_src != '') {
-                $('#avt_img').attr("src", customer.avt_src);
+                jQuery.UbizOIWidget.o_page.hide();
+                jQuery.UbizOIWidget.i_page.fadeIn("slow");
             } else {
-                $('#avt_img').attr('src', '../images/avatar.png');
+                swal.fire({
+                    type: 'error',
+                    title: response.data.message
+                })
             }
-            $('select[name="cus_type"]').val(customer.cus_type);
-            $('input[name="cus_phone"]').val(customer.cus_phone);
-            $('input[name="cus_fax"]').val(customer.cus_fax);
-            $('input[name="cus_mail"]').val(customer.cus_mail);
-            $('select[name="user_id"]').val(customer.user_id);
-            $('select[name="cus_sex"]').val(customer.cus_sex);
-
-            if (customer.address.length > 0) {
-                $(".cus_address\\[\\]_container").remove();
-                for (var i = 0; i < 3; i++) {
-                    if (typeof customer.address[i] != "undefined") {
-                        var inp_address = customer.address[i].cad_address;
-                    } else {
-                        var inp_address = "";
-                    }
-                    var html = '<div class="textfield  root_textfield rootIsUnderlined cus_address[]_container"><div class="wrapper"><label for="cus_address[]" class="ms-Label root-56 lbl-primary">Địa chỉ ' + (i + 1) + ' :</label><div class="fieldGroup"><input type="text" name="cus_address[]" id="cus_address[]" value="' + inp_address + '" class="input_field" maxlength="250"></div></div><span class="error_message hidden-content"><div class="message-container"><p class="label_errorMessage css-57 errorMessage"><span class="error-message-text"></span></p></div></span></div>';
-                    $('.cus-part-2').append(html);
-                }
-            }
-
-            //go to create pricing page
-            $(".price-report").click(function () {
-                swal({
-                    title: i18next.t('Do you want to create a new quoteprices.'),
-                    type: 'question',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    cancelButtonText: i18next.t('No'),
-                    confirmButtonText: i18next.t('Yes'),
-                    reverseButtons: true
-                }).then((result) => {
-                    if (result.value) {
-                        var cus_id = $('input[name="cus_id"]').val();
-                        window.location.href = "/quoteprices/" + cus_id + "/create";
-                    }
-                });
-            });
         },
-        w_make_row_html: function (id, cols) {
+        w_set_input_page: function (cus, con) {
+            jQuery.UbizOIWidget.w_set_cus_form_data(cus);
+            jQuery.UbizOIWidget.w_set_con_form_data(con);
+        },
+        w_make_row_html: function (id, cols, row_no, page_no, rows_per_page) {
             var row_html = '';
             if (cols.length > 0) {
-                row_html = '<div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page(' + id + ',this)">';
+                var pos = rows_per_page * page_no + row_no + 1;
+                row_html = '<div class="jvD" ondblclick="jQuery.UbizOIWidget.w_go_to_input_page(' + pos + ',' + id + ')">';
                 row_html += cols.join("");
                 row_html += '</div>';
             }
@@ -519,15 +449,93 @@
             jQuery("#paging-newer").replaceWith(paging_newer);
             jQuery('input[name="pageno"]').val(page);
         },
-        w_get_data_input_form: function () {
-            //var data = $('form').getForm2obj();
-            $("input[name=cus_code]").attr('disabled', false);
-            var data = new FormData($('#f-input')[0]);
+        w_set_cus_form_data: function (data) {
+            jQuery('input[name="cus-id"]').val(data.cus_id);
+            jQuery('input[name="cus-code"]').val(data.cus_code);
+            jQuery('input[name="cus-name"]').val(data.cus_name);
+            jQuery('input[name="cus-fax"]').val(data.cus_fax);
+            jQuery('input[name="cus-mail"]').val(data.cus_mail);
+            jQuery('input[name="cus-phone"]').val(data.cus_phone);
+            jQuery('input[name="cus-field"]').val(data.cus_field);
+            if (data.address.length > 0) {
+                for (let i = 0; i < data.address.length; i++) {
+                    $('input[name="cad-id-' + (i + 1) + '"]').val(data.address[i].cad_id);
+                    $('input[name="cus-address-' + (i + 1) + '"]').val(data.address[i].cad_address);
+                    $('select[name="lct-location-' + (i + 1) + '"]').val(data.address[i].lct_id);
+                }
+            }
+            jQuery('select[name="cus-type"]').val(data.cus_type);
+            jQuery('select[name="cus-pic"]').val(data.cus_pic);
+            jQuery('input[name="cus-avatar"]').val(data.cus_avatar);
+            jQuery('input[name="cus-avatar-base64"]').val(data.cus_avatar_base64);
+            if (data.cus_avatar_base64 != "") {
+                jQuery('img[name="cus-img"]').attr('src', data.cus_avatar_base64);
+            }
+        },
+        w_get_cus_form_data: function () {
+            var data = {};
+            data.cus_id = $('input[name="cus-id"]').val();
+            data.cus_code = $('input[name="cus-code"]').val();
+            data.cus_name = $('input[name="cus-name"]').val();
+            data.cus_fax = $('input[name="cus-fax"]').val();
+            data.cus_mail = $('input[name="cus-mail"]').val();
+            data.cus_phone = $('input[name="cus-phone"]').val();
+            data.cus_field = $('input[name="cus-field"]').val();
+            data.cad_id_1 = $('input[name="cad-id-1"]').val();
+            data.cus_address_1 = $('input[name="cus-address-1"]').val();
+            data.lct_location_1 = $('select[name="lct-location-1"]').val();
+            data.cad_id_2 = $('input[name="cad-id-2"]').val();
+            data.cus_address_2 = $('input[name="cus-address-2"]').val();
+            data.lct_location_2 = $('select[name="lct-location-2"]').val();
+            data.cad_id_3 = $('input[name="cad-id-3"]').val();
+            data.cus_address_3 = $('input[name="cus-address-3"]').val();
+            data.lct_location_3 = $('select[name="lct-location-3"]').val();
+            data.cus_type = $('select[name="cus-type"]').val();
+            data.cus_pic = $('select[name="cus-pic"]').val();
+            data.cus_avatar = $('input[name="cus-avatar"]').val();
+            data.cus_avatar_base64 = $('input[name="cus-avatar-base64"]').val();
+            return data;
+        },
+        w_set_con_form_data: function (data) {
+            for (let i = 0; i < data.length; i++) {
+                let summary_data = data[i];
+                var summary_html = jQuery.UbizOIWidget.w_con_clone_summary_html();
+                var summary_detail = jQuery.UbizOIWidget.w_con_add_summary_html(summary_html);
+                jQuery.UbizOIWidget.w_con_set_summary_data(summary_detail, summary_data);
+            }
+        },
+        w_get_con_form_data: function () {
+            var data = new Array();
+            $("#con-summary-container").find("div[name=con-summary-detail]").each(function (index) {
+                var con_data = jQuery.UbizOIWidget.w_get_con_form_data_detail($(this));
+                data.push(con_data);
+            });
+            return data;
+        },
+        w_get_con_form_data_detail: function (form) {
+            var data = {};
+            data.con_id = form.find('input[name=dt-con-id]').val();
+            data.con_name = form.find('input[name=dt-con-name]').val();
+            data.con_mail = form.find('input[name=dt-con-mail]').val();
+            data.con_phone = form.find('input[name=dt-con-phone]').val();
+            data.con_rank = form.find('input[name=dt-con-rank]').val();
+            data.con_avatar = form.find('input[name=dt-con-avatar]').val();
+            data.con_avatar_base64 = form.find('input[name=dt-con-avatar-base64]').val();
+            data.con_action = "";
+            if (numeral(data.con_id).value() == 0) {
+                data.con_action = 'add';
+            } else if (numeral(data.con_id).value() > '0' && form.hasClass('deleted') == true) {
+                data.con_action = 'del';
+            } else if (numeral(data.con_id).value() > '0' && form.hasClass('deleted') == false) {
+                data.con_action = 'upd';
+            }
             return data;
         },
         w_save: function () {
-            var data = jQuery.UbizOIWidget.w_get_data_input_form();
-            var cus_id = jQuery('input[name="cus_id"]').val();
+
+            var data = {};
+            data.cus = jQuery.UbizOIWidget.w_get_cus_form_data();
+            data.con = jQuery.UbizOIWidget.w_get_con_form_data();
 
             swal({
                 title: i18next.t('Do you want to save the data.?'),
@@ -540,15 +548,13 @@
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
-                    if (cus_id != 0) {
-                        ubizapis('v1', '/customer-update', 'post', data, null, jQuery.UbizOIWidget.w_save_callback);
+                    if (data.cus.cus_id != 0) {
+                        ubizapis('v1', '/customers/' + data.cus.cus_id + '/update', 'post', {'data': data}, null, jQuery.UbizOIWidget.w_save_callback);
                     } else {
-                        ubizapis('v1', '/customer-create', 'post', data, null, jQuery.UbizOIWidget.w_save_callback);
+                        ubizapis('v1', '/customers', 'put', {'data': data}, null, jQuery.UbizOIWidget.w_save_callback);
                     }
                 }
             });
-
-            // jQuery.UbizOIWidget.w_go_back_to_output_page();
         },
         w_save_callback: function (response) {
             if (response.data.success == true) {
@@ -556,8 +562,8 @@
                     type: 'success',
                     title: response.data.message,
                     onClose: () => {
-                        jQuery.UbizOIWidget.w_render_data_to_ouput_page(response);
-                        jQuery.UbizOIWidget.w_go_back_to_output_page(this);
+                        jQuery.UbizOIWidget.w_go_back_to_output_page();
+                        jQuery.UbizOIWidget.w_refresh_output_page();
                     }
                 })
             } else {
@@ -567,20 +573,93 @@
                 })
             }
         },
-        w_preview_avatar: function (input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
+        w_i_paging: function () {
 
-                reader.onload = function (e) {
-                    $('#avt_img').attr('src', e.target.result);
-                }
+            var pos = jQuery.UbizOIWidget.pos;
+            var rows_num = jQuery.UbizOIWidget.rows_num;
+            var w_get_next_detail_data = '';
+            var w_get_prev_detail_data = '';
 
-                reader.readAsDataURL(input.files[0]);
+            var prev_css = 'adS';
+            if (pos > 1) {
+                prev_css = 'aaT';
+                w_get_prev_detail_data = 'onclick="jQuery.UbizOIWidget.w_get_detail_data(' + (pos - 1) + ')"';
             }
+
+            var next_css = 'adS';
+            if (pos < rows_num) {
+                next_css = 'aaT';
+                w_get_next_detail_data = 'onclick="jQuery.UbizOIWidget.w_get_detail_data(' + (pos + 1) + ')"';
+            }
+
+            var paging_label = '<div id="i-paging-label" class="amH" style="user-select: none"><span class="Dj"><span class="Dj"><span><span class="ts">' + pos + '</span></span> / <span class="ts">' + jQuery.UbizOIWidget.rows_num + '</span></span></div>';
+            var paging_older = '<div id="i-paging-older" ' + w_get_prev_detail_data + ' class="amD itooltip" title="' + i18next.t('Older') + '"><span class="amF">&nbsp;</span><img class="amI ' + prev_css + '" src="/images/cleardot.gif" alt=""></div>';
+            var paging_newer = '<div id="i-paging-newer" ' + w_get_next_detail_data + ' class="amD itooltip" title="' + i18next.t('Newer') + '"><span class="amF">&nbsp;</span><img class="amJ ' + next_css + '" src="/images/cleardot.gif" alt=""></div>';
+
+            jQuery("#i-paging-label").replaceWith(paging_label);
+            jQuery("#i-paging-older").replaceWith(paging_older);
+            jQuery("#i-paging-newer").replaceWith(paging_newer);
+            jQuery('.itooltip').tooltipster({
+                side: 'top', theme: 'tooltipster-ubiz', animation: 'swing', delay: 100
+            });
+        },
+        w_get_detail_data: function (pos) {
+
+            if (pos > jQuery.UbizOIWidget.rows_num || pos < 1)
+                return false;
+
+            var params = {};
+            params.pos = pos;
+            jQuery.UbizOIWidget.pos = pos;
+
+            var search = jQuery('#fuzzy').val();
+            var sort_info = jQuery.UbizOIWidget.w_get_sort_info();
+            var sort = sort_info.sort_name + "_" + sort_info.order_by;
+
+            params.search = search;
+            params.sort = sort;
+
+            var cus_id = jQuery.UbizOIWidget.i_page.find("input[name=cus-id]").val();
+
+            ubizapis('v1', '/customers/' + cus_id, 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_input_page);
+        },
+        w_o_paging: function (page, rows_num, rows_per_page) {
+            var page = parseInt(page);
+            var f_num = (page * rows_per_page) + 1;
+            var m_num = (page + 1) * rows_per_page;
+            if (m_num > rows_num) m_num = rows_num;
+            if (f_num > rows_num) f_num = rows_num;
+
+            var older_page = page - 1;
+            var newer_page = page + 1;
+
+            var max_page = Math.ceil(rows_num / rows_per_page);
+
+            var get_older_data_func = '';
+            var get_newer_data_func = '';
+
+            var older_css = 'adS';
+            if (older_page > -1) {
+                older_css = 'aaT';
+                get_older_data_func = 'onclick="jQuery.UbizOIWidget.w_get_older_data(' + older_page + ')"';
+            }
+
+            var newer_css = 'adS';
+            if (newer_page < max_page) {
+                newer_css = 'aaT';
+                get_newer_data_func = 'onclick="jQuery.UbizOIWidget.w_get_newer_data(' + newer_page + ')"';
+            }
+
+            var paging_label = '<div id="paging-label" class="amH" style="user-select: none"><span class="Dj"><span><span class="ts">' + f_num + '</span>–<span class="ts">' + m_num + '</span></span> / <span class="ts">' + rows_num + '</span></span></div>';
+            var paging_older = '<div id="paging-older" ' + get_older_data_func + ' class="amD utooltip" title="' + i18next.t('Older') + '"><span class="amF">&nbsp;</span><img class="amI ' + older_css + '" src="http://ubiz.local/images/cleardot.gif" alt=""></div>';
+            var paging_newer = '<div id="paging-newer" ' + get_newer_data_func + ' class="amD utooltip" title="' + i18next.t('Newer') + '"><span class="amF">&nbsp;</span><img class="amJ ' + newer_css + '" src="http://ubiz.local/images/cleardot.gif" alt=""></div>';
+
+            jQuery("#paging-label").replaceWith(paging_label);
+            jQuery("#paging-older").replaceWith(paging_older);
+            jQuery("#paging-newer").replaceWith(paging_newer);
         },
         w_callback_remove_image: function () {
-            $("#avatar").val("");
-            $("#avatar_flg").val(1);
+            $("#cus-file").val("")
         },
         w_sleep_scrollbars: function (instance) {
             if (typeof instance == "undefined")
@@ -592,52 +671,167 @@
             if (typeof instance == "undefined")
                 return false;
             instance.update();
+        },
+        w_cus_avatar_click: function () {
+            $('#cus-file').click();
+        },
+        w_cus_avatar_change: function (self) {
+            if (self.files && self.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#cus-img').attr('src', e.target.result);
+                    $('#cus-avatar-base64').val(e.target.result);
+                }
+                reader.readAsDataURL(self.files[0]);
+            }
+        },
+        w_con_avatar_change: function (self) {
+            if (self.files && self.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#m-con-img').attr('src', e.target.result);
+                    $('#m-con-avatar-base64').val(e.target.result);
+                }
+                reader.readAsDataURL(self.files[0]);
+            }
+        },
+        w_con_avatar_click: function () {
+            $('#m-con-file').click();
+        },
+        w_con_remove_image: function () {
+            $("#m-con-file").val("");
+            $("#m-con-avatar-base64").val("");
+        },
+        w_con_set_modal_data: function (data) {
+            $("#m-con-id").val(data.con_id);
+            $("#m-con-name").val(data.con_name);
+            $("#m-con-mail").val(data.con_mail);
+            $("#m-con-phone").val(data.con_phone);
+            $("#m-con-rank").val(data.con_rank);
+            $("#m-con-avatar").val(data.con_avatar);
+
+            if (data.con_avatar_base64 == '') {
+                $("#m-con-avatar-base64").val('');
+                $("#m-con-img").attr('src', jQuery.UbizOIWidget.none_img);
+            } else {
+                $("#m-con-avatar-base64").val(data.con_avatar_base64);
+                $("#m-con-img").attr('src', data.con_avatar_base64);
+            }
+        },
+        w_con_get_modal_data: function () {
+            var data = {};
+            data.con_id = $("#contact-modal").find('input[name=m-con-id]').val();
+            data.con_name = $("#contact-modal").find('input[name=m-con-name]').val();
+            data.con_mail = $("#contact-modal").find('input[name=m-con-mail]').val();
+            data.con_phone = $("#contact-modal").find('input[name=m-con-phone]').val();
+            data.con_rank = $("#contact-modal").find('input[name=m-con-rank]').val();
+            data.con_avatar = $("#contact-modal").find('input[name=m-con-avatar]').val();
+            data.con_avatar_base64 = $("#contact-modal").find('input[name=m-con-avatar-base64]').val();
+            return data;
+        },
+        w_con_modal_save: function () {
+            var summary_data = jQuery.UbizOIWidget.w_con_get_modal_data();
+            if (summary_data.con_name.replace(/ /g, '+') == '') {
+                swal.fire({
+                    type: 'error',
+                    title: 'Xin hãy nhập tên người liên hệ.'
+                })
+                return false;
+            } else {
+                var summary_html = jQuery.UbizOIWidget.w_con_clone_summary_html();
+                if (jQuery.UbizOIWidget.con_summary_detail == null) {
+                    jQuery.UbizOIWidget.con_summary_detail = jQuery.UbizOIWidget.w_con_add_summary_html(summary_html);
+                }
+                jQuery.UbizOIWidget.w_con_set_summary_data(jQuery.UbizOIWidget.con_summary_detail, summary_data);
+                $('#contact-modal').modal('hide');
+            }
+        },
+        w_con_add: function () {
+            var clean_data = {
+                con_id: '0',
+                con_name: '',
+                con_mail: '',
+                con_phone: '',
+                con_rank: '',
+                con_avatar: '',
+                con_avatar_base64: '',
+            };
+            jQuery.UbizOIWidget.con_summary_detail = null;
+            jQuery.UbizOIWidget.w_con_set_modal_data(clean_data);
+            $("#contact-modal").modal('show');
+        },
+        w_con_edit: function (self, event) {
+            jQuery.UbizOIWidget.con_summary_detail = $(self).closest('div[name=con-summary-detail]');
+            var data = jQuery.UbizOIWidget.w_get_con_form_data_detail(jQuery.UbizOIWidget.con_summary_detail);
+            jQuery.UbizOIWidget.w_con_set_modal_data(data);
+            $('#contact-modal').modal('show');
+        },
+        w_con_del: function (self, event) {
+            swal({
+                title: i18next.t('Do you want to delete the data?'),
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: i18next.t('No'),
+                confirmButtonText: i18next.t('Yes'),
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    var form = $(self).closest('div[name=con-summary-detail]');
+                    var con_id = form.find('input[name=dt-con-id]').val();
+                    if (con_id == '0') {
+                        form.remove();
+                    } else {
+                        form.addClass('deleted');
+                    }
+                }
+            });
+        },
+        w_con_clone_summary_html: function () {
+            return $("div[name=con-summary]").clone(true).html();
+        },
+        w_con_add_summary_html: function (summary_html) {
+            $("#con-summary-container").append(summary_html);
+            return $("#con-summary-container").find("div[name=con-summary-detail]:last-child");
+        },
+        w_con_set_summary_data: function (form, data) {
+            form.find('input[name=dt-con-id]').val(data.con_id);
+            form.find('input[name=dt-con-name]').val(data.con_name);
+            form.find('input[name=dt-con-mail]').val(data.con_mail);
+            form.find('input[name=dt-con-phone]').val(data.con_phone);
+            form.find('input[name=dt-con-rank]').val(data.con_rank);
+            form.find('input[name=dt-con-avatar]').val(data.con_avatar);
+            form.find('input[name=dt-con-avatar-base64]').val(data.con_avatar_base64);
+            form.find('img[name=dt-con-avatar-view]').attr('src', data.con_avatar_base64);
+            form.find('span[name=dt-con-name-view]').text(data.con_name);
+        },
+        w_add_quoteprice: function (event) {
+            event.preventDefault();
+            swal({
+                title: i18next.t('Do you want to create a new quoteprices.?'),
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: i18next.t('No'),
+                confirmButtonText: i18next.t('Yes'),
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    var cus_id = jQuery("input[name=cus-id]").val();
+                    window.location.href = 'quoteprices/' + cus_id + '/create';
+                }
+            })
         }
     });
 })(jQuery);
 jQuery(document).ready(function () {
     jQuery.UbizOIWidget.w_init();
-});
-
-(function ($) {
-    $.fn.getForm2obj = function () {
-        var _ = {}, _t = this;
-        this.c = function (k, v) {
-            eval("c = typeof " + k + ";");
-            if (c == 'undefined') _t.b(k, v);
-        }
-        this.b = function (k, v, a = 0) {
-            if (a) eval(k + ".push(" + v + ");"); else eval(k + "=" + v + ";");
-        };
-        $.map(this.serializeArray(), function (n) {
-            if (n.name.indexOf('[') > -1) {
-                var keys = n.name.match(/[a-zA-Z0-9_]+|(?=\[\])/g), le = Object.keys(keys).length, tmp = '_';
-                $.map(keys, function (key, i) {
-                    if (key == '') {
-                        eval("ale = Object.keys(" + tmp + ").length;");
-                        if (!ale) _t.b(tmp, '[]');
-                        if (le == (i + 1)) _t.b(tmp, "'" + n['value'] + "'", 1);
-                        else _t.b(tmp += "[" + ale + "]", '{}');
-                    } else {
-                        _t.c(tmp += "['" + key + "']", '{}');
-                        if (le == (i + 1)) _t.b(tmp, "'" + n['value'] + "'");
-                    }
-                });
-            } else _t.b("_['" + n['name'] + "']", "'" + n['value'] + "'");
-        });
-        return _;
-    }
-})(jQuery);
-
-$("#change_avt").click(function () {
-    $("#avatar").click();
-});
-
-$("#avt_img").click(function () {
-    $("#avatar").click();
-});
-
-$("#avatar").change(function () {
-    jQuery.UbizOIWidget.w_preview_avatar(this);
-    $("#avatar_flg").val(2);
+    $('#contact-modal').on('shown.bs.modal', function () {
+        $('#m-con-name').trigger('focus');
+    });
+    $('#contact-modal').on('hidden.bs.modal', function () {
+        $("img[name=ajax-loader]").hide();
+    })
 });

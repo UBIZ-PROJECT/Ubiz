@@ -4,6 +4,7 @@ namespace App\Model;
 
 use Mail;
 use App\User;
+use App\Jobs\SendQuotepriceEmail;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -69,7 +70,6 @@ class Quoteprice
                     'customer.cus_phone',
                     'customer.cus_fax',
                     'customer.cus_mail',
-                    'customer.cus_sex',
                     'customer.cus_avatar',
                     'customer_address.cad_address as cus_addr',
                     'm_customer_type.title as cus_type',
@@ -312,27 +312,31 @@ class Quoteprice
             }
 
             $quoteprice = $data['quoteprice'];
-            if (!array_key_exists('qp_no', $quoteprice) || $quoteprice['qp_no'] == '' || $quoteprice['qp_no'] == null) {
+            if (requiredValidator($quoteprice['qp_no']) == false) {
                 $res['success'] = false;
                 $message[] = __('QP No is required.');
             }
-            if (array_key_exists('qp_no', $quoteprice) && mb_strlen($quoteprice['qp_no'], "utf-8") > 30) {
+            if (requiredValidator($quoteprice['qp_no']) == true && maxlengthValidator($quoteprice['qp_no'], 30) == false) {
                 $res['success'] = false;
                 $message[] = __('QP No is too long.');
             }
-            if (!array_key_exists('qp_date', $quoteprice) || $quoteprice['qp_date'] == '' || $quoteprice['qp_date'] == null) {
+            if (requiredValidator($quoteprice['qp_date']) == false) {
                 $res['success'] = false;
                 $message[] = __('QP Date is required.');
             }
-            if (array_key_exists('qp_date', $quoteprice) && $this->dateValidator($quoteprice['qp_date']) == false) {
+            if (requiredValidator($quoteprice['qp_date']) == true && dateValidator($quoteprice['qp_date']) == false) {
                 $res['success'] = false;
                 $message[] = __('QP Date is wrong format YYYY/MM/DD.');
             }
-            if (!array_key_exists('qp_exp_date', $quoteprice) || $quoteprice['qp_exp_date'] == '' || $quoteprice['qp_exp_date'] == null) {
+            if (requiredValidator($quoteprice['qp_exp_date']) == false) {
                 $res['success'] = false;
                 $message[] = __('QP Exp Date is required.');
             }
-            if (array_key_exists('qp_exp_date', $quoteprice) && $this->dateValidator($quoteprice['qp_exp_date']) == false) {
+            if (array_key_exists('qp_exp_date', $quoteprice) && dateValidator($quoteprice['qp_exp_date']) == false) {
+                $res['success'] = false;
+                $message[] = __('QP Exp Date is wrong format YYYY/MM/DD.');
+            }
+            if (requiredValidator($quoteprice['qp_exp_date']) == true && dateValidator($quoteprice['qp_exp_date']) == false) {
                 $res['success'] = false;
                 $message[] = __('QP Exp Date is wrong format YYYY/MM/DD.');
             }
@@ -416,7 +420,7 @@ class Quoteprice
                         ) {
                             $res['success'] = false;
                             $message[] = __('[Row : :line ] pump detail is wrong data.', ['line' => "No." + ($line_no + 1)]);
-                            continue;
+                            continue 2;
                         }
                         break;
                     case '2':
@@ -425,7 +429,7 @@ class Quoteprice
                         ) {
                             $res['success'] = false;
                             $message[] = __('[Row : :line ] accessory detail is wrong data.', ['line' => "No." + ($line_no + 1)]);
-                            continue;
+                            continue 2;
                         }
                         break;
                 }
@@ -527,43 +531,60 @@ class Quoteprice
         }
     }
 
-    public function sendQuoteprice($quoteprice, $quoteprices_detail)
+    public function sendQuoteprice($quoteprice, $quoteprices_detail, $extra_data)
     {
         DB::beginTransaction();
         try {
 
-            $file = $this->makeFilePDF($quoteprice, $quoteprices_detail);
+            $file = $this->makeFilePDF($quoteprice, $quoteprices_detail, $extra_data);
             if ($file == false)
                 return false;
 
             $user = new User();
             $curUser = $user->getCurrentUser();
 
-            $data = [
-                'cus_sex' => $quoteprice->cus_sex == '0' ? 'chị' : 'anh',
-                'company' => $curUser->com_nm_shot,
-                'cus_name' => $quoteprice->cus_name,
-                'user_name' => $quoteprice->sale_name
-            ];
-
-            Mail::send('quoteprice_mail', $data, function ($message) use ($quoteprice, $file) {
-                $message->subject('[TKP] Báo giá');
-                $message->from($quoteprice->sale_email, $quoteprice->sale_name);
-                $message->to($quoteprice->cus_mail);
-                $message->attach($file['file_path'], ['as' => $file['file_name']]);
-            });
-
-            if (Mail::failures())
-                return false;
-
             DB::table('quoteprice_file')
                 ->insert([
                     'qp_id' => $quoteprice->qp_id,
                     'uniqid' => $file['uniqid'],
                     'file_name' => $file['file_name'],
-                    'upd_user' => Auth::user()->id,
-                    'inp_user' => Auth::user()->id
+                    'upd_user' => $curUser->id,
+                    'upd_date' => now(),
+                    'inp_user' => $curUser->id,
+                    'inp_date' => now()
                 ]);
+
+            DB::table('quoteprice_mail')
+                ->insert([
+                    'qp_id' => $quoteprice->qp_id,
+                    'uniqid' => $file['uniqid'],
+                    'file_name' => $file['file_name'],
+                    'upd_user' => $curUser->id,
+                    'upd_date' => now(),
+                    'inp_user' => $curUser->id,
+                    'inp_date' => now()
+                ]);
+
+            //add mail queue
+            $mail_data = [];
+            $mail_data['qp_id'] = $quoteprice->qp_id;
+            $mail_data['uniqid'] = $file['uniqid'];
+            $mail_data['user_id'] = $curUser->id;
+            $mail_data['subject'] = 'Báo giá';
+            $mail_data['com_name'] = $curUser->com_nm_shot;
+            $mail_data['cus_name'] = $quoteprice->contact_name;
+            $mail_data['cus_mail'] = $quoteprice->contact_email;
+            $mail_data['sale_name'] = $quoteprice->sale_name;
+            $mail_data['file_path'] = $file['file_path'];
+            $mail_data['file_name'] = $file['file_name'] . ".pdf";
+
+            $mail_conf = makeMailConf(
+                $curUser->email,
+                $curUser->app_pass,
+                $curUser->email,
+                $curUser->name
+            );
+            dispatch(new SendQuotepriceEmail($mail_data, $mail_conf));
 
             DB::commit();
             return $file['uniqid'];
@@ -571,23 +592,6 @@ class Quoteprice
             DB::rollback();
             throw $e;
         }
-    }
-
-    public function dateValidator($date)
-    {
-        $credential_name = "name";
-        $credential_data = $date;
-        $rules = [
-            $credential_name => 'date'
-        ];
-        $credentials = [
-            $credential_name => $credential_data
-        ];
-        $validator = Validator::make($credentials, $rules);
-        if ($validator->fails()) {
-            return false;
-        }
-        return true;
     }
 
     public function getPdfFile($qp_id, $uniqid)
@@ -617,7 +621,7 @@ class Quoteprice
         }
     }
 
-    public function makeFilePDF($quoteprice, $quoteprices_detail)
+    public function makeFilePDF($quoteprice, $quoteprices_detail, $extra_data)
     {
         try {
             $user = new User();
@@ -632,11 +636,23 @@ class Quoteprice
                 $tmp_quoteprices_detail[$item->type][] = $item;
             }
 
+            $company = presentValidator($extra_data['md_company']) == true ? ($extra_data['md_company'] == '1' ? 'tk' : 'ht') : 'tk';
+            $language = presentValidator($extra_data['md_language']) == true ? $extra_data['md_language'] : 'vn';
+
             $uniqid = uniqid();
-            $file_name = '[TKP] ' . date('d.m.Y') . '_' . $quoteprice->qp_no . '_' . $quoteprice->cus_code;
-            $pdf = PDF::loadView('quoteprice_pdf', [
+            if ($company == 'tk') {
+                $file_name = '[TKT]' . strtoupper($language) . date('d.m.Y') . '_' . $quoteprice->qp_no . '_' . $quoteprice->cus_code;
+            } else {
+                $file_name = '[HT]' . strtoupper($language) . date('d.m.Y') . '_' . $quoteprice->qp_no . '_' . $quoteprice->cus_code;
+            }
+
+
+            $view_name = "quoteprice_pdf_{$company}_{$language}";
+
+            $pdf = PDF::loadView($view_name, [
                 'user' => $userData,
                 'title' => $file_name,
+                'extra_data' => $extra_data,
                 'quoteprice' => $quoteprice,
                 'quoteprices_detail' => $tmp_quoteprices_detail
             ])->setPaper('a4');
@@ -661,12 +677,56 @@ class Quoteprice
         $params[] = Auth::user()->id;
         $where_raw .= ' AND quoteprice.owner_id = ? ';
 
-        if ($search != '') {
+        //advance search
+        if (is_array($search) == true) {
+            foreach ($search as $item) {
+                $search_name = '';
+                switch ($item['search_name']) {
+                    case 'qp-code'://qp-code
+                        $search_name = 'quoteprice.qp_no';
+                        break;
+                    case 'qp-date'://qp-date
+                        $search_name = 'quoteprice.qp_date';
+                        break;
+                    case 'qp-exp-date'://qp-exp-date
+                        $search_name = 'quoteprice.qp_exp_date';
+                        break;
+                    case 'sale-id'://sale-id
+                        $search_name = 'quoteprice.sale_id';
+                        break;
+                    case 'cus-id'://cus-id
+                        $search_name = 'quoteprice.cus_id';
+                        break;
+                    case 'qp-amount-tax'://qp-amount-tax
+                        $search_name = 'quoteprice.qp_amount_tax';
+                        break;
+                    case 'qp-note'://qp-note
+                        $search_name = 'quoteprice.qp_note';
+                        break;
+                    case 'sale-step'://qp-amount-tax
+                        $search_name = 'quoteprice.sale_step';
+                        break;
+                }
+
+                if ($search_name == '')
+                    continue;
+
+                $search_cond = buildSearchCond($search_name, $item['search_value'], $item['search_operator']);
+                if (sizeof($search_cond) == 0)
+                    continue;
+
+                $params = array_merge($params, $search_cond['params']);
+                $where_raw .= " AND " . $search_cond['where_raw'];
+            }
+        }
+
+        //fuzzy search
+        if (is_string($search) && $search != '') {
             $search_val = "%" . $search . "%";
             $where_raw .= " AND ( ";
             $where_raw .= " quoteprice.qp_no like ? ";
             $params[] = $search_val;
-            if ($this->dateValidator($search) == true) {
+            if (dateValidator($search) == true) {
                 $where_raw .= " OR quoteprice.qp_date = ? ";
                 $params[] = $search;
                 $where_raw .= " OR quoteprice.qp_exp_date = ? ";

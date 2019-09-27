@@ -958,8 +958,9 @@ function ord_colect_data() {
     data.ord_tax = numeral($("input[name=ord_tax]").val()).value();
     data.ord_amount = numeral($("input[name=ord_amount]").val()).value();
     data.ord_amount_tax = numeral($("input[name=ord_amount_tax]").val()).value();
-    data.ord_paid = numeral($("input[name=ord_paid]").val()).value();
+    data.ord_rel_fee = numeral($("input[name=ord_relate_fee]").val()).value();
     data.ord_debt = numeral($("input[name=ord_debt]").val()).value();
+    data.ord_pay_met = $("textarea[name=ord_pay_met]").val();
     return data;
 }
 

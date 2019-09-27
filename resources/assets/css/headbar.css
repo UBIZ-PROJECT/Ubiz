@@ -343,8 +343,8 @@
     border: none;
     cursor: pointer;
     outline: none;
-    padding: 0 4px;
-    line-height: 0;
+    padding: 0 10px;
+    height: 46px;
     position: absolute;
     right: 0;
     top: 0;
@@ -390,7 +390,7 @@
 .headbar .search .eyo {
     display: none;
     left: 256px;
-    top: 56px;
+    top: 59px;
     position: absolute;
     z-index: 14;
 }
@@ -403,6 +403,7 @@
     width: 650px;
     position: absolute;
     margin: -2px 0 0 0;
+    border-radius: 5px;
     background-color: #fff;
     padding: 0;
     -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -410,6 +411,10 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     border: 1px solid #ccc;
     border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.headbar .search .search-form {
+    width: 650px;
 }
 
 .headbar .search .gvo {

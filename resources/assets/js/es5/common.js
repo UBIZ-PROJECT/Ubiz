@@ -1,3 +1,5 @@
+var deafult_profile = '../../images/deafult-profile.png';
+
 function showProgress() {
     var progress = jQuery('.ubiz-progress');
     if (progress.length == 0) {
@@ -105,7 +107,10 @@ function ubizapis(api_version, api_url, api_method, api_data, api_params, api_ca
     var options = {
         baseURL: api_base_url,
         url: api_url,
-        method: api_method
+        method: api_method,
+        paramsSerializer: (params) => {
+            return qs.stringify(params)
+        },
     };
 
     if (typeof api_data === 'object') {
@@ -270,10 +275,25 @@ function num_keydown(event) {
         event.preventDefault();
 }
 
-function num_focus(self) {
+function num_focus(self, _default) {
     setTimeout(function () {
         var f_value = $(self).val();
         var uf_value = numeral(f_value).format('0');
+
+        if (typeof _default == 'undefined') {
+            _default = '0';
+        }
+
+        if (f_value == '') {
+            if (_default == '') {
+                uf_value = '';
+            } else {
+                uf_value = numeral(_default).format('0');
+            }
+        } else {
+            uf_value = numeral(f_value).format('0');
+        }
+
         $(self).val(uf_value).select();
     }, 10);
 }
@@ -305,10 +325,25 @@ function max_validator(num, max, mode) {
     return true;
 }
 
-function num_blur(self) {
+function num_blur(self, _default) {
     setTimeout(function () {
         var f_value = $(self).val();
         var uf_value = numeral(f_value).format('0,0');
+
+        if (typeof _default == 'undefined') {
+            _default = '0';
+        }
+
+        if (f_value == '') {
+            if (_default == '') {
+                uf_value = '';
+            } else {
+                uf_value = numeral(_default).format('0,0');
+            }
+        } else {
+            uf_value = numeral(f_value).format('0,0');
+        }
+
         $(self).val(uf_value);
     }, 10);
 }
@@ -442,6 +477,13 @@ function html_escape(s) {
         .replace(/'/g, '&#039;')
         .replace(/"/g, '&quot;')
         .replace(/\n/g, '<br />')
+}
+
+function fnc_is_image(file) {
+    if (file.type.match('image.*')) {
+        return true;
+    }
+    return false;
 }
 
 moment.locale('vi', {

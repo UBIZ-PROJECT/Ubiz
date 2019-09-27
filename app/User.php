@@ -156,7 +156,7 @@ class User extends Authenticatable implements JWTSubject
         try {
 
             $id = DB::table('users')->max('id') + 1;
-            if (isset($data['avatar'])) {
+            if (!gettype($data['avatar'])) {
                 $avatar = $data['avatar'];
                 $path = $avatar->path();
                 $extension = $avatar->extension();
@@ -237,9 +237,49 @@ class User extends Authenticatable implements JWTSubject
                 ->first();
 
             if ($user != null && !empty($user->avatar)) {
+                $user->temp_avatar = $user->avatar;
                 $user->avatar = readImage($user->avatar, 'usr');
             }
             return $user;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function getListOfUserByIds($id = [])
+    {
+        try {
+
+            $data = DB::table('users')
+                ->select(
+                    'users.*',
+                    'm_company.com_id',
+                    'm_company.com_nm',
+                    'm_company.com_nm_shot',
+                    'm_company.com_logo',
+                    'm_company.com_address',
+                    'm_company.com_phone',
+                    'm_company.com_fax',
+                    'm_company.com_web',
+                    'm_company.com_email',
+                    'm_company.com_hotline',
+                    'm_company.com_mst',
+                    'm_department.dep_name')
+                ->join('m_company', 'users.com_id', '=', 'm_company.com_id')
+                ->leftJoin('m_department', 'users.dep_id', '=', 'm_department.id')
+                ->where('users.delete_flg', '0')
+                ->whereIn('users.id', $id)
+                ->get();
+
+            foreach ($data as &$user) {
+
+                if (empty($user->avatar) == true)
+                    continue;
+
+                $user->avatar = readImage($user->avatar, 'usr');
+            }
+
+            return $data;
         } catch (\Throwable $e) {
             throw $e;
         }

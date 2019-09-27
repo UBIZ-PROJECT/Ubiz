@@ -89,8 +89,8 @@ function event_edit(info) {
         $(".assigned-list").hide();
     }
 
-    tinyMCE.get('event_desc').setContent(info.event.extendedProps.desc);
-    tinyMCE.get('event_result').setContent(info.event.extendedProps.result);
+    $("#event_desc").val(info.event.extendedProps.desc);
+    $("#event_result").val(info.event.extendedProps.result);
 
     var assigned_list = new Array();
     $.map(info.event.extendedProps.pic, function (user, idx) {
@@ -128,6 +128,16 @@ function epic_select_tag(self) {
 }
 
 function event_pic_select(self, event) {
+    event.stopPropagation();
+    var fa_check = $(self).find('div:first');
+    if (fa_check.hasClass('assigned')) {
+        fa_check.removeClass('assigned');
+    } else {
+        fa_check.addClass('assigned');
+    }
+}
+
+function main_pic_select(self, event) {
     event.stopPropagation();
     var fa_check = $(self).find('div:first');
     if (fa_check.hasClass('assigned')) {
@@ -175,8 +185,8 @@ function event_add(arg) {
     $("#event_pic_edit").prop("checked", false);
     $("#event_pic_assign").prop("checked", false);
     $("#event_pic_see_list").prop("checked", false);
-    tinyMCE.get('event_desc').setContent('');
-    tinyMCE.get('event_result').setContent('');
+    $("#event_desc").val('');
+    $("#event_result").val('');
     $(".assigned-list").empty();
 
     $("#btn-delete").hide();
@@ -231,7 +241,8 @@ function event_render_pic_dropdown_list(users, checked_list) {
     $.map(users, function (user, idx) {
 
         var assigned_class = 'assigned';
-        if (typeof checked_list[user.id] === "undefined") {
+        var idx = _.indexOf(checked_list, user.id);
+        if (idx == -1) {
             assigned_class = '';
         }
 
@@ -289,6 +300,16 @@ function event_get_list_of_selected_pic() {
     return selected_list;
 }
 
+function event_get_list_of_assigned_pic() {
+
+    var assigned_list = new Array();
+    $(".assigned-list").find('li.list-group-item').each(function (idx, ele) {
+        var pic = $(ele).attr('pic');
+        assigned_list.push(numeral(pic).value());
+    });
+    return assigned_list;
+}
+
 function event_set_assigned_list() {
     var assigned_list = event_get_list_of_selected_pic();
     event_render_assigned_dropdown_list(assigned_list);
@@ -316,6 +337,147 @@ function event_render_assigned_dropdown_list(assigned_list) {
 
 function event_delete_selected_pic(self) {
     $(self).closest('li.list-group-item').remove();
+}
+
+function main_load_pic() {
+    if (pic_list.length == 0) {
+        ubizapis('v1', 'events/pic', 'get', null, null, function (response) {
+            if (response.data.success == true) {
+                pic_list = response.data.users;
+                main_load_pic_callback(response.data.users);
+            } else {
+                swal.fire({
+                    type: 'error',
+                    title: response.data.message
+                });
+            }
+        });
+    } else {
+        main_load_pic_callback(pic_list);
+    }
+}
+
+function main_load_pic_callback(users) {
+    var assigned_list = main_get_list_of_assigned_pic();
+    main_render_pic_dropdown_list(users, assigned_list);
+}
+
+function main_render_pic_dropdown_list(users, checked_list) {
+    var html = "";
+    $.map(users, function (user, idx) {
+
+        var assigned_class = 'assigned';
+        var idx = _.indexOf(checked_list, user.id);
+        if (idx == -1) {
+            assigned_class = '';
+        }
+
+        html += '<a pic="' + user.id + '" class="dropdown-item media pdl-5" href="#" onclick="main_pic_select(this, event)">';
+        html += '<div class="' + assigned_class + '" style="height: 30px; width: 20px; line-height: 30px">';
+        html += '<i class="fas fa-check pdr-5"></i>';
+        html += '</div>';
+        html += '<div style="width: 30px; height: 30px" class="mr-3">';
+        html += '<img src="' + user.avatar + '" class="img-fluid img-thumbnail" alt="">';
+        html += '</div>';
+        html += '<div class="media-body" style="height: 30px; line-height: 5px">';
+        html += '<h6 class="mt-0 mb-1">' + user.name + '</h6>';
+        html += '<small>' + user.dep_name + '</small>';
+        html += '</div>';
+        html += '</a>';
+        if (idx < (users.length - 1)) {
+            html += '<div class="dropdown-divider z-mgt z-mgb"></div>';
+        }
+    });
+    $(".main-pic").find('.dropdown-menu').empty();
+    $(".main-pic").find('.dropdown-menu').html(html);
+}
+
+function main_get_list_of_assigned_pic() {
+
+    var assigned_list = new Array();
+    $(".main-pic-sel").find('li.list-group-item').each(function (idx, ele) {
+        var pic = $(ele).attr('pic');
+        assigned_list.push(numeral(pic).value());
+    });
+    return assigned_list;
+}
+
+function main_get_list_of_checked_dropdown_pic() {
+    var checked_list = {};
+    $(".main-pic").find('div.dropdown-menu').find('a').each(function (idx, ele) {
+        if ($(ele).find('div:first').hasClass('assigned')) {
+            var pic = $(ele).attr('pic');
+            checked_list[pic] = pic;
+        }
+    });
+    return checked_list;
+}
+
+function main_get_list_of_selected_pic() {
+
+    var selected_list = new Array();
+    var checked_list = main_get_list_of_checked_dropdown_pic();
+    $.map(pic_list, function (user, idx) {
+
+        if (typeof checked_list[user.id] !== "undefined") {
+            selected_list.push(user);
+        }
+    });
+    return selected_list;
+}
+
+function main_set_assigned_list() {
+    var assigned_list = main_get_list_of_selected_pic();
+    main_render_assigned_dropdown_list(assigned_list);
+}
+
+function main_check_changed_assigned_list() {
+    var selected_list = main_get_list_of_selected_pic();
+    var assigned_list = main_get_list_of_assigned_pic();
+
+    if (selected_list.length == 0
+        && assigned_list.length == 0
+    ) {
+        return false;
+    }
+
+    if (selected_list.length > assigned_list.length
+        || selected_list.length < assigned_list.length
+    ) {
+        return true;
+    }
+
+    _.forEach(selected_list, function (pic) {
+        var idx = _.indexOf(assigned_list, pic);
+        if (idx == -1)
+            return true;
+    });
+    return false;
+}
+
+function main_render_assigned_dropdown_list(assigned_list) {
+    var html = "";
+    $.map(assigned_list, function (user, idx) {
+        html += '<li pic="' + user.id + '" class="border-top-0  border-bottom-0 list-group-item z-pdl z-pdr z-pdb" style="display: flex; align-items: flex-start;">';
+        html += '<div style="width: 30px; height: 30px" class="mr-3">';
+        html += '<img src="' + user.avatar + '" class="img-fluid img-thumbnail" alt="">';
+        html += '</div>';
+        html += '<div class="media-body" style="height: 30px; line-height: 5px">';
+        html += '<h6 class="mt-0 mb-1">' + user.name + '</h6>';
+        html += '<small>' + user.dep_name + '</small>';
+        html += '</div>';
+        html += '<div style="height: 30px; line-height: 30px">';
+        html += '<i class="fas fa-times pdr-5" onclick="main_delete_selected_pic(this)"></i>';
+        html += '</div>';
+        html += '</li>';
+    });
+    $(".main-pic-sel").empty();
+    $(".main-pic-sel").html(html);
+}
+
+function main_delete_selected_pic(self) {
+    $(self).closest('li.list-group-item').remove();
+    calendar.refetchEvents();
 }
 
 function event_all_day_change(self) {
@@ -350,9 +512,7 @@ function event_colect_data() {
     data.event_tag = $("#event-tag").attr('tag_id');
     data.event_location = $("#event-location").val();
 
-    var desc_selector = $('textarea[name=txt_desc]').attr('id');
-    data.event_desc = tinyMCE.get(desc_selector).getContent();
-    data.event_desc_origin = tinyMCE.get(desc_selector).getContent({'format': 'text'});
+    data.event_desc = $("#event_desc").val();
 
     data.event_fee = numeral($("#event_fee").val()).value();
 
@@ -377,10 +537,7 @@ function event_colect_data() {
         data.event_pic_list.push(pic);
     });
 
-    var result_selector = $('textarea[name=txt_result]').attr('id');
-    data.event_result = tinyMCE.get(result_selector).getContent();
-    data.event_result_origin = tinyMCE.get(result_selector).getContent({'format': 'text'});
-
+    data.event_result = $("#event_result").val();
     return data;
 }
 
@@ -534,7 +691,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         fetchInfo.end = calendar.view.activeEnd;
                     }
                     fetchInfo.tag = event_get_filter_tag();
-                    fetchInfo.user = new Array();
+                    fetchInfo.user = event_get_list_of_assigned_pic();
                     ubizapis('v1', '/events/export', 'get', null, fetchInfo, function (response) {
                         if (response.data.success == true) {
                             downloadCallback(response);
@@ -577,6 +734,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 events: function (fetchInfo, successCallback, failureCallback) {
 
                     fetchInfo.tag = event_get_filter_tag();
+                    fetchInfo.user = event_get_list_of_assigned_pic();
                     if (calendar != null) {
                         fetchInfo.view = calendar.view.type;
                     }
@@ -619,6 +777,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     detail_scroll_1 = fnc_set_scrollbars("detail-scroll-1");
     detail_scroll_2 = fnc_set_scrollbars("detail-scroll-2");
+    fnc_set_scrollbars("nicescroll-sidebar");
 
     $.fn.datepicker.language['vi'] = {
         days: ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'],
@@ -683,35 +842,15 @@ document.addEventListener('DOMContentLoaded', function () {
         event_set_assigned_list();
     })
 
-    tinymce.init({
-        width: '100%',
-        min_height: 250,
-        max_height: 500,
-        menubar: false,
-        toolbar_drawer: 'floating',
-        selector: '#event_desc',
-        plugins: [
-            'advlist autolink lists link image charmap print preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code wordcount autoresize'
-        ],
-        toolbar: 'undo redo | bold italic forecolor backcolor | formatselect | fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat',
-        content_css: [
-            '/fonts/roboto/v18/roboto.css'
-        ]
-    });
+    $('.main-pic').on('show.bs.dropdown', function () {
+        main_load_pic();
+    })
 
-    tinymce.init({
-        width: '100%',
-        min_height: 250,
-        max_height: 500,
-        menubar: false,
-        toolbar_drawer: 'floating',
-        selector: '#event_result',
-        plugins: [
-            'advlist autolink lists link image charmap print preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code wordcount autoresize'
-        ],
-        toolbar: 'undo redo | bold italic forecolor backcolor | formatselect | fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat',
-        content_css: [
-            '/fonts/roboto/v18/roboto.css'
-        ]
-    });
+    $('.main-pic').on('hide.bs.dropdown', function () {
+        var is_change = main_check_changed_assigned_list();
+        if (is_change == true) {
+            main_set_assigned_list();
+            calendar.refetchEvents();
+        }
+    })
 });

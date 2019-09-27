@@ -112,6 +112,8 @@ class QuotepriceController extends Controller
     {
         try {
 
+            $extra_data = $request->get('data', null);
+
             $qpModel = new Quoteprice();
             $qpData = $qpModel->getQuoteprice($qp_id);
             if (empty($qpData) == true || $qpData == null) {
@@ -134,7 +136,7 @@ class QuotepriceController extends Controller
             }
 
             //send quoteprice
-            $uniqid = $qpModel->sendQuoteprice($qpData, $qpDetailData);
+            $uniqid = $qpModel->sendQuoteprice($qpData, $qpDetailData, $extra_data);
             if ($uniqid == false) {
                 return response()->json(['success' => false, 'message' => __('Send quoteprices fail.')], 200);
             }
@@ -149,6 +151,8 @@ class QuotepriceController extends Controller
     {
         try {
 
+            $extra_data = $request->get('data', null);
+
             $qpModel = new Quoteprice();
             $qpData = $qpModel->getQuoteprice($qp_id);
             if (empty($qpData) == true || $qpData == null) {
@@ -171,12 +175,12 @@ class QuotepriceController extends Controller
             }
 
             //send quoteprice
-            $file = $qpModel->makeFilePDF($qpData, $qpDetailData);
+            $file = $qpModel->makeFilePDF($qpData, $qpDetailData, $extra_data);
             if ($file == false) {
                 return response()->json(['success' => false, 'message' => __('Download quoteprices fail.')], 200);
             }
 
-            return response()->json(['uniqid' => $file['uniqid'], 'success' => true, 'message' => __('Successfully processed.')], 200);
+            return response()->json(['uniqid' => $file['uniqid'], 'file_name' => $file['file_name'], 'success' => true, 'message' => __('Successfully processed.')], 200);
         } catch (\Throwable $e) {
             throw $e;
         }

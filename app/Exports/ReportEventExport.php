@@ -3,10 +3,10 @@
 namespace App\Exports;
 
 use App\Model\Event;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
-use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
@@ -14,7 +14,12 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
-class ReportEventExport implements FromView, WithEvents, ShouldAutoSize, WithColumnFormatting, WithMapping
+class ReportEventExport implements FromCollection,
+    WithHeadings,
+    WithEvents,
+    ShouldAutoSize,
+    WithColumnFormatting,
+    WithMapping
 {
     protected $request;
 
@@ -23,7 +28,23 @@ class ReportEventExport implements FromView, WithEvents, ShouldAutoSize, WithCol
         $this->request = $request;
     }
 
-    public function view(): View
+    public function headings(): array
+    {
+        return [
+            'Tiêu đề',
+            'Bắt đầu',
+            'Kết thúc',
+            'Cả ngày',
+            'Địa điểm',
+            'Thẻ',
+            'Nội dung',
+            'Kết quả',
+            'Chi phí',
+            'Người phụ trách'
+        ];
+    }
+
+    public function collection()
     {
         $start = $this->request->get('start', null);
         $end = $this->request->get('end', null);
@@ -73,17 +94,16 @@ class ReportEventExport implements FromView, WithEvents, ShouldAutoSize, WithCol
             );
         }
 
-        return view('event_export', [
-            'events' => $eventExportData
-        ]);
+        return (collect($eventExportData));
     }
 
     public function map($event): array
     {
+        $a = 0;
         return [
             $event['title'],
-            Date::dateTimeToExcel($event['start']),
-            Date::dateTimeToExcel($event['end']),
+            $event['start'],
+            $event['end'],
             $event['allDay'],
             $event['location'],
             $event['tag_title'],
@@ -103,8 +123,8 @@ class ReportEventExport implements FromView, WithEvents, ShouldAutoSize, WithCol
             'D' => NumberFormat::FORMAT_TEXT,
             'E' => NumberFormat::FORMAT_TEXT,
             'F' => NumberFormat::FORMAT_TEXT,
-            'G' => NumberFormat::FORMAT_GENERAL,
-            'H' => NumberFormat::FORMAT_GENERAL,
+            'G' => NumberFormat::FORMAT_TEXT,
+            'H' => NumberFormat::FORMAT_TEXT,
             'I' => '#,##0',
             'J' => NumberFormat::FORMAT_TEXT
         ];
@@ -114,12 +134,38 @@ class ReportEventExport implements FromView, WithEvents, ShouldAutoSize, WithCol
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
+
                 $event->sheet
                     ->getDelegate()
                     ->getStyle('A1:J1')
                     ->getFill()
                     ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-                    ->getStartColor()->setARGB('A2C4C9');;
+                    ->getStartColor()
+                    ->setARGB('A2C4C9');
+
+                $event->sheet
+                    ->getDelegate()
+                    ->getStyle('B1:B' . $event->sheet->getDelegate()->getHighestDataRow())
+                    ->getAlignment()
+                    ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+
+                $event->sheet
+                    ->getDelegate()
+                    ->getStyle('C1:C' . $event->sheet->getDelegate()->getHighestDataRow())
+                    ->getAlignment()
+                    ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+
+                $event->sheet
+                    ->getDelegate()
+                    ->getStyle('D1:D' . $event->sheet->getDelegate()->getHighestDataRow())
+                    ->getAlignment()
+                    ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+                $event->sheet
+                    ->getDelegate()
+                    ->getStyle('I1:I' . $event->sheet->getDelegate()->getHighestDataRow())
+                    ->getAlignment()
+                    ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
             },
         ];
     }

@@ -1181,6 +1181,11 @@
     border-width: 0;
 }
 
+.root_textfield.rootIsUnderlined .fieldGroup svg{
+    margin-top: 5px;
+    cursor: pointer;
+}
+
 .fieldGroup {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -1412,43 +1417,43 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
 }
 
 .z-pdl {
-    padding-left: 0px;
+    padding-left: 0px !important;
 }
 
 .z-pdr {
-    padding-right: 0px;
+    padding-right: 0px !important;
 }
 
 .z-pdt {
-    padding-top: 0px;
+    padding-top: 0px !important;
 }
 
 .z-pdb {
-    padding-bottom: 0px;
+    padding-bottom: 0px !important;
 }
 
 .z-pd {
-    padding: 0px;
+    padding: 0px !important;
 }
 
 .z-mgl {
-    margin-left: 0px;
+    margin-left: 0px !important;
 }
 
 .z-mgr {
-    margin-right: 0px;
+    margin-right: 0px !important;
 }
 
 .z-mgt {
-    margin-top: 0px;
+    margin-top: 0px !important;
 }
 
 .z-mgb {
-    margin-bottom: 0px;
+    margin-bottom: 0px !important;
 }
 
 .z-mg {
-    margin: 0px;
+    margin: 0px !important;
 }
 
 .mgr-10 {
@@ -1484,7 +1489,7 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
 }
 
 .mgt-10 {
-    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .mgt-20 {
@@ -1513,6 +1518,38 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
 
 .mgt-80 {
     margin-top: 80px;
+}
+
+.mgb-10 {
+    margin-bottom: 10px;
+}
+
+.mgb-20 {
+    margin-bottom: 20px;
+}
+
+.mgb-30 {
+    margin-bottom: 30px;
+}
+
+.mgb-40 {
+    margin-bottom: 40px;
+}
+
+.mgb-50 {
+    margin-bottom: 50px;
+}
+
+.mgb-60 {
+    margin-bottom: 60px;
+}
+
+.mgb-70 {
+    margin-bottom: 70px;
+}
+
+.mgb-80 {
+    margin-bottom: 80px;
 }
 
 .pdt-5 {
@@ -1633,6 +1670,46 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
 
 .pdr-80 {
     padding-right: 80px !important;
+}
+
+.pdb-5 {
+    padding-bottom: 5px;
+}
+
+.pdb-7 {
+    padding-bottom: 7px;
+}
+
+.pdb-10 {
+    padding-bottom: 10px;
+}
+
+.pdb-20 {
+    padding-bottom: 20px;
+}
+
+.pdb-30 {
+    padding-top: 30px;
+}
+
+.pdb-40 {
+    padding-bottom: 40px;
+}
+
+.pdb-50 {
+    padding-bottom: 50px;
+}
+
+.pdb-60 {
+    padding-bottom: 60px;
+}
+
+.pdb-70 {
+    padding-bottom: 70px;
+}
+
+.pdb-80 {
+    padding-bottom: 80px;
 }
 
 .suc {

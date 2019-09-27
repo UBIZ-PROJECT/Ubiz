@@ -4,6 +4,7 @@ use App as App;
 use App\User as User;
 use Illuminate\Validation\Rule as Rule;
 use Illuminate\Support\Facades\DB as DB;
+use Illuminate\Http\Testing\MimeType as MimeType;
 use Illuminate\Support\Facades\Storage as Storage;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\Validator as Validator;
@@ -18,6 +19,26 @@ function resizeImage($img, $target_img, $new_img_width, $new_img_height, $img_ty
         $image = Image::make($img);
         $image->resize($new_img_width, $new_img_height);
         $image->save($target_file);
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function resizeImageBase64($img_base64, $img_uuid, $img_width, $img_height, $img_type)
+{
+    try {
+        $drive_path = getDrivePath();
+        $img_dir = $drive_path . '/images/' . $img_type;
+        makeDir($img_dir);
+
+        $image = Image::make($img_base64);
+        $image_ext = MimeType::search($image->mime());
+
+        $img_name = "$img_uuid.$image_ext";
+        $img_file = "$img_dir/$img_name";
+        $image->resize($img_width, $img_height);
+        $image->save($img_file);
+        return $img_name;
     } catch (\Throwable $e) {
         throw $e;
     }
@@ -301,6 +322,23 @@ function numericValidator($data)
     return true;
 }
 
+function mailValidator($mail)
+{
+    $credential_name = "name";
+    $credential_data = $mail;
+    $rules = [
+        $credential_name => 'email'
+    ];
+    $credentials = [
+        $credential_name => $credential_data
+    ];
+    $validator = Validator::make($credentials, $rules);
+    if ($validator->fails()) {
+        return false;
+    }
+    return true;
+}
+
 function existsInDBValidator($data, $table, $column)
 {
 
@@ -420,6 +458,372 @@ function makeDir($path)
 {
     try {
         return is_dir($path) || mkdir($path, 0777, true);
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function rebuild_date($format, $time = 0)
+{
+    try {
+        if (!$time) $time = time();
+
+        $lang = array();
+        $lang['sun'] = 'CN';
+        $lang['mon'] = 'T2';
+        $lang['tue'] = 'T3';
+        $lang['wed'] = 'T4';
+        $lang['thu'] = 'T5';
+        $lang['fri'] = 'T6';
+        $lang['sat'] = 'T7';
+        $lang['sunday'] = 'Chủ nhật';
+        $lang['monday'] = 'Thứ hai';
+        $lang['tuesday'] = 'Thứ ba';
+        $lang['wednesday'] = 'Thứ tư';
+        $lang['thursday'] = 'Thứ năm';
+        $lang['friday'] = 'Thứ sáu';
+        $lang['saturday'] = 'Thứ bảy';
+        $lang['january'] = 'Tháng Một';
+        $lang['february'] = 'Tháng Hai';
+        $lang['march'] = 'Tháng Ba';
+        $lang['april'] = 'Tháng Tư';
+        $lang['may'] = 'Tháng Năm';
+        $lang['june'] = 'Tháng Sáu';
+        $lang['july'] = 'Tháng Bảy';
+        $lang['august'] = 'Tháng Tám';
+        $lang['september'] = 'Tháng Chín';
+        $lang['october'] = 'Tháng Mười';
+        $lang['november'] = 'Tháng M. một';
+        $lang['december'] = 'Tháng M. hai';
+        $lang['jan'] = 'T01';
+        $lang['feb'] = 'T02';
+        $lang['mar'] = 'T03';
+        $lang['apr'] = 'T04';
+        $lang['may2'] = 'T05';
+        $lang['jun'] = 'T06';
+        $lang['jul'] = 'T07';
+        $lang['aug'] = 'T08';
+        $lang['sep'] = 'T09';
+        $lang['oct'] = 'T10';
+        $lang['nov'] = 'T11';
+        $lang['dec'] = 'T12';
+
+        $format = str_replace("r", "D, d M Y H:i:s O", $format);
+        $format = str_replace(array("D", "M"), array("[D]", "[M]"), $format);
+        $return = date($format, $time);
+
+        $replaces = array(
+            '/\[Sun\](\W|$)/' => $lang['sun'] . "$1",
+            '/\[Mon\](\W|$)/' => $lang['mon'] . "$1",
+            '/\[Tue\](\W|$)/' => $lang['tue'] . "$1",
+            '/\[Wed\](\W|$)/' => $lang['wed'] . "$1",
+            '/\[Thu\](\W|$)/' => $lang['thu'] . "$1",
+            '/\[Fri\](\W|$)/' => $lang['fri'] . "$1",
+            '/\[Sat\](\W|$)/' => $lang['sat'] . "$1",
+            '/\[Jan\](\W|$)/' => $lang['jan'] . "$1",
+            '/\[Feb\](\W|$)/' => $lang['feb'] . "$1",
+            '/\[Mar\](\W|$)/' => $lang['mar'] . "$1",
+            '/\[Apr\](\W|$)/' => $lang['apr'] . "$1",
+            '/\[May\](\W|$)/' => $lang['may2'] . "$1",
+            '/\[Jun\](\W|$)/' => $lang['jun'] . "$1",
+            '/\[Jul\](\W|$)/' => $lang['jul'] . "$1",
+            '/\[Aug\](\W|$)/' => $lang['aug'] . "$1",
+            '/\[Sep\](\W|$)/' => $lang['sep'] . "$1",
+            '/\[Oct\](\W|$)/' => $lang['oct'] . "$1",
+            '/\[Nov\](\W|$)/' => $lang['nov'] . "$1",
+            '/\[Dec\](\W|$)/' => $lang['dec'] . "$1",
+            '/Sunday(\W|$)/' => $lang['sunday'] . "$1",
+            '/Monday(\W|$)/' => $lang['monday'] . "$1",
+            '/Tuesday(\W|$)/' => $lang['tuesday'] . "$1",
+            '/Wednesday(\W|$)/' => $lang['wednesday'] . "$1",
+            '/Thursday(\W|$)/' => $lang['thursday'] . "$1",
+            '/Friday(\W|$)/' => $lang['friday'] . "$1",
+            '/Saturday(\W|$)/' => $lang['saturday'] . "$1",
+            '/January(\W|$)/' => $lang['january'] . "$1",
+            '/February(\W|$)/' => $lang['february'] . "$1",
+            '/March(\W|$)/' => $lang['march'] . "$1",
+            '/April(\W|$)/' => $lang['april'] . "$1",
+            '/May(\W|$)/' => $lang['may'] . "$1",
+            '/June(\W|$)/' => $lang['june'] . "$1",
+            '/July(\W|$)/' => $lang['july'] . "$1",
+            '/August(\W|$)/' => $lang['august'] . "$1",
+            '/September(\W|$)/' => $lang['september'] . "$1",
+            '/October(\W|$)/' => $lang['october'] . "$1",
+            '/November(\W|$)/' => $lang['november'] . "$1",
+            '/December(\W|$)/' => $lang['december'] . "$1");
+
+        return preg_replace(array_keys($replaces), array_values($replaces), $return);
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function makeMailConf($smtp_username, $smtp_password, $from_email, $from_name)
+{
+    try {
+        $mail_conf = [];
+        $mail_conf['smtp_host'] = 'smtp.gmail.com';
+        $mail_conf['smtp_port'] = '465';
+        $mail_conf['smtp_encryption'] = 'ssl';
+        $mail_conf['smtp_username'] = $smtp_username;
+        $mail_conf['smtp_password'] = $smtp_password;
+        $mail_conf['from_email'] = $from_email;
+        $mail_conf['from_name'] = $from_name;
+        return $mail_conf;
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+/**
+ * @param $search_name | String
+ * @param $search_value | String | Array
+ * @param $search_operator | [1,..,10]
+ * @return array
+ * @throws Throwable
+ */
+function buildSearchCond($search_name, $search_value, $search_operator)
+{
+
+    $params = [];
+    $where_raw = [];
+    $search_cond = [];
+
+    $search_value = $search_value == null ? '' : $search_value;
+
+    switch ($search_operator) {
+        case env('EQUAL_TO'):
+            if (is_array($search_value)) {
+                foreach ($search_value as $value) {
+                    $params[] = $value;
+                    $where_raw[] = buildEqualToSearchCond($search_name);
+                }
+            }
+
+            if (is_string($search_value)) {
+                $params[] = $search_value;
+                $where_raw[] = buildEqualToSearchCond($search_name);
+            }
+
+            $search_cond['params'] = $params;
+            $search_cond['where_raw'] = " ( " . implode('OR', $where_raw) . " ) ";
+            break;
+        case env('NOT_EQUAL_TO'):
+            if (is_array($search_value)) {
+                foreach ($search_value as $value) {
+                    $params[] = $value;
+                    $where_raw[] = buildNotEqualToSearchCond($search_name);
+                }
+            }
+
+            if (is_string($search_value)) {
+                $params[] = $search_value;
+                $where_raw[] = buildNotEqualToSearchCond($search_name);
+            }
+
+            $search_cond['params'] = $params;
+            $search_cond['where_raw'] = " ( " . implode('AND', $where_raw) . " ) ";
+            break;
+        case env('GREATER_THAN'):
+            $params[] = $search_value;
+            $where_raw[] = buildGreaterThanSearchCond($search_name);
+            $search_cond['params'] = $params;
+            $search_cond['where_raw'] = " ( " . implode('AND', $where_raw) . " ) ";
+            break;
+        case env('LESS_THAN'):
+            $params[] = $search_value;
+            $where_raw[] = buildLessThanSearchCond($search_name);
+            $search_cond['params'] = $params;
+            $search_cond['where_raw'] = " ( " . implode('AND', $where_raw) . " ) ";
+            break;
+        case env('GREATER_THAN_OR_EQUAL_TO'):
+            $params[] = $search_value;
+            $where_raw[] = buildGreaterThanOrEqualToSearchCond($search_name);
+            $search_cond['params'] = $params;
+            $search_cond['where_raw'] = " ( " . implode('AND', $where_raw) . " ) ";
+            break;
+        case env('LESS_THAN_OR_EQUAL_TO'):
+            $params[] = $search_value;
+            $where_raw[] = buildLessThanOrEqualToSearchCond($search_name);
+            $search_cond['params'] = $params;
+            $search_cond['where_raw'] = " ( " . implode('AND', $where_raw) . " ) ";
+            break;
+        case env('CONTAIN'):
+            if (is_array($search_value)) {
+                foreach ($search_value as $value) {
+                    $params[] = $value;
+                    $where_raw[] = buildContainSearchCond($search_name, $search_value);
+                }
+            }
+
+            if (is_string($search_value)) {
+                $params[] = $search_value;
+                $where_raw[] = buildContainSearchCond($search_name, $search_value);
+            }
+
+            $search_cond['params'] = $params;
+            $search_cond['where_raw'] = " ( " . implode('OR', $where_raw) . " ) ";
+            break;
+        case env('NOT_CONTAIN'):
+            if (is_array($search_value)) {
+                foreach ($search_value as $value) {
+                    $params[] = $value;
+                    $where_raw[] = buildNotContainSearchCond($search_name, $search_value);
+                }
+            }
+
+            if (is_string($search_value)) {
+                $params[] = $search_value;
+                $where_raw[] = buildNotContainSearchCond($search_name, $search_value);
+            }
+
+            $search_cond['params'] = $params;
+            $search_cond['where_raw'] = " ( " . implode('AND', $where_raw) . " ) ";
+            break;
+        case env('BETWEEN'):
+
+            if ($search_value['from'] == '' && $search_value['to'] != '') {
+                $params[] = $search_value['to'];
+                $where_raw[] = buildLessThanOrEqualToSearchCond($search_name);
+            } elseif ($search_value['from'] != '' && $search_value['to'] == '') {
+                $params[] = $search_value['from'];
+                $where_raw[] = buildGreaterThanOrEqualToSearchCond($search_name);
+            } elseif ($search_value['from'] != '' && $search_value['to'] != '') {
+                $params[] = $search_value['from'];
+                $params[] = $search_value['to'];
+                $where_raw[] = buildBetweenSearchCond($search_name);
+            }
+
+            $search_cond['params'] = $params;
+            $search_cond['where_raw'] = " ( " . implode('', $where_raw) . " ) ";
+            break;
+        case env('NOT_BETWEEN'):
+            if ($search_value['from'] == '' && $search_value['to'] != '') {
+                $params[] = $search_value['to'];
+                $where_raw[] = buildGreaterThanOrEqualToSearchCond($search_name);
+            } elseif ($search_value['from'] != '' && $search_value['to'] == '') {
+                $params[] = $search_value['from'];
+                $where_raw[] = buildLessThanOrEqualToSearchCond($search_name);
+            } elseif ($search_value['from'] != '' && $search_value['to'] != '') {
+                $params[] = $search_value['from'];
+                $params[] = $search_value['to'];
+                $where_raw[] = buildNotBetweenSearchCond($search_name);
+            }
+
+            $search_cond['params'] = $params;
+            $search_cond['where_raw'] = " ( " . implode('', $where_raw) . " ) ";
+            break;
+    }
+    return $search_cond;
+}
+
+function buildEqualToSearchCond($search_name)
+{
+    try {
+        $search_cond = " $search_name = ? ";
+        return $search_cond;
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function buildNotEqualToSearchCond($search_name)
+{
+    try {
+        $search_cond = " $search_name != ? ";
+        return $search_cond;
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function buildGreaterThanSearchCond($search_name)
+{
+    try {
+        $search_cond = " $search_name > ? ";
+        return $search_cond;
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function buildGreaterThanOrEqualToSearchCond($search_name)
+{
+    try {
+        $search_cond = " $search_name >= ?  ";
+        return $search_cond;
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function buildLessThanSearchCond($search_name)
+{
+    try {
+        $search_cond = " $search_name < ? ";
+        return $search_cond;
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function buildLessThanOrEqualToSearchCond($search_name)
+{
+    try {
+        $search_cond = " $search_name <= ? ";
+        return $search_cond;
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function buildContainSearchCond($search_name, $search_value)
+{
+    try {
+        if ($search_value == '') {
+            $search_cond = " COALESCE($search_name,'') = ? ";
+        } else {
+            $search_cond = " COALESCE($search_name,'') REGEXP ? ";
+        }
+        return $search_cond;
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function buildNotContainSearchCond($search_name, $search_value)
+{
+    try {
+        try {
+            if ($search_value == '') {
+                $search_cond = " COALESCE($search_name,'') != ? ";
+            } else {
+                $search_cond = " COALESCE($search_name,'') NOT REGEXP ? ";
+            }
+            return $search_cond;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function buildBetweenSearchCond($search_name)
+{
+    try {
+        $search_cond = " $search_name BETWEEN ? AND ? ";
+        return $search_cond;
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function buildNotBetweenSearchCond($search_name)
+{
+    try {
+        $search_cond = " $search_name NOT BETWEEN ? AND ? ";
+        return $search_cond;
     } catch (\Throwable $e) {
         throw $e;
     }

@@ -90,24 +90,21 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="GNi" onclick="qp_send()">
-                                    <div class="ax7 poK utooltip" title="{{ __("Send QP to customer") }}">
-                                        <div class="asA">
-                                            <div class="arF"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="GNi" onclick="qp_download()">
-                                    <div class="ax7 poK utooltip" title="{{ __("Download") }}">
-                                        <div class="asA">
-                                            <div class="dlF"></div>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div id="btn-delete" class="GNi" onclick="qp_delete()">
                                     <div class="ax7 poK utooltip" title="{{ __("Delete") }}">
                                         <div class="asA">
                                             <div class="asX"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="GNi">
+                                    <div class="ax7 poK dropdown">
+                                        <div class="asA" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <div class="asY"></div>
+                                        </div>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                            <a class="dropdown-item" href="#" onclick="qp_send()">{{ __("Send QP to customer") }}</a>
+                                            <a class="dropdown-item" href="#" onclick="qp_download()">Tải xuống báo giá.</a>
                                         </div>
                                     </div>
                                 </div>
@@ -186,7 +183,8 @@
                                     <div class="col-md-auto">
                                         <div class="row">
                                             <div class="col-md-auto">
-                                                @include('components.input',['control_id'=>'qp_contact_name', 'value'=> $quoteprice->contact_name, 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Contact person'), 'i_focus'=>'', 'i_blur'=>''])
+                                                <input type="hidden" id="qp_contact_id" name="qp_contact_id" value="{{ $quoteprice->contact_id }}">
+                                                @include('components.input',['control_id'=>'qp_contact_name', 'value'=> $quoteprice->contact_name, 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Contact person'), 'select'=>true, 'i_focus'=>'', 'i_blur'=>''])
                                             </div>
                                             <div class="col-md-auto">
                                                 @include('components.input',['control_id'=>'qp_contact_rank', 'value'=> $quoteprice->contact_rank, 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Duty'), 'i_focus'=>'', 'i_blur'=>''])
@@ -447,10 +445,94 @@
                         </div>
                     </div>
                 </div>
+                <!-- Quoteprices Modal -->
+                <div class="modal fade" id="confirm-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable" role="document" style="max-width: 750px">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Báo giá</h5>
+                                <img name="ajax-loader" src="{{ asset('images/ajax-loader.gif') }}"
+                                     style="display: none; height: 28px; margin-left: 10px">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        @include('components.dropdown',['value'=>'1', 'control_id'=>'md_company', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Company') ,'data'=> $company])
+                                        @include('components.dropdown',['value'=>'vn', 'control_id'=>'md_language', 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Language') ,'data'=> $languages])
+                                    </div>
+                                </div>
+                                <div id="md_content_vn">
+                                    <div class="row mgb-20">
+                                        <div class="col-12">
+                                            @include('components.input',['value'=>'', 'control_id'=>'md_project_vn', 'width'=> '700', 'lbl_width'=>'90', 'label'=>'Tên dự án', 'i_focus'=>'', 'i_blur'=>''])
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <span class="text-primary font-weight-bold">ĐIỀU KHOẢN THƯƠNG MẠI</span>
+                                        </div>
+                                    </div>
+                                    <hr class="z-pdt z-mgt">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            @include('components.input',['value'=>': 30 ngày tính từ ngày báo giá', 'control_id'=>'md_value_vn', 'width'=> '700', 'lbl_width'=>'170', 'label'=>'1/- Giá trị bảng chào giá', 'i_focus'=>'', 'i_blur'=>''])
+                                            @include('components.input',['value'=>': 12 tháng tính từ ngày giao hàng', 'control_id'=>'md_warranty_vn', 'width'=> '700', 'lbl_width'=>'170', 'label'=>'2/- Thời gian bảo hành', 'i_focus'=>'', 'i_blur'=>''])
+                                            @include('components.input',['value'=>': 100% trước khi giao hàng ', 'control_id'=>'md_payment_vn', 'width'=> '700', 'lbl_width'=>'170', 'label'=>'3/- Điều kiện thanh toán', 'i_focus'=>'', 'i_blur'=>''])
+                                            @include('components.input',['value'=>': tại nội thành TP. Hồ Chí Minh', 'control_id'=>'md_delivery_vn', 'width'=> '700', 'lbl_width'=>'170', 'label'=>'4/- Địa điểm giao hàng', 'i_focus'=>'', 'i_blur'=>''])
+                                            <div id="div_md_account_tk_vn">
+                                                @include('components.input',['value'=>': 249 88 789 tại Ngân hàng ACB – Hội sở Thành phố Hồ Chí Minh', 'control_id'=>'md_account_tk_vn', 'width'=> '700', 'lbl_width'=>'170', 'label'=>'5/- Thông tin tài khoản', 'i_focus'=>'', 'i_blur'=>''])
+                                            </div>
+                                            <div id="div_md_account_ht_vn" style="display: none">
+                                                @include('components.input',['value'=>': 208730159 tại Ngân hàng Á Châu (ACB) – PGD. Đa Kao, TP. HCM.', 'control_id'=>'md_account_ht_vn', 'width'=> '700', 'lbl_width'=>'170', 'label'=>'5/- Thông tin tài khoản', 'i_focus'=>'', 'i_blur'=>''])
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="md_content_en" style="display: none">
+                                    <div class="row mgb-20">
+                                        <div class="col-12">
+                                            @include('components.input',['value'=>'', 'control_id'=>'md_project_en', 'width'=> '700', 'lbl_width'=>'90', 'label'=>'Project Name', 'i_focus'=>'', 'i_blur'=>''])
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <span class="text-primary font-weight-bold">Bussiness conditions:</span>
+                                        </div>
+                                    </div>
+                                    <hr class="z-pdt z-mgt">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            @include('components.input',['value'=>": 30 days from quotation's issued", 'control_id'=>'md_value_en', 'width'=> '700', 'lbl_width'=>'170', 'label'=>'1/- Timeout Quotation', 'i_focus'=>'', 'i_blur'=>''])
+                                            @include('components.input',['value'=>': 12 months from delivery day (not warranty spare parts)', 'control_id'=>'md_warranty_en', 'width'=> '700', 'lbl_width'=>'170', 'label'=>'2/- Warranty Times', 'i_focus'=>'', 'i_blur'=>''])
+                                            @include('components.input',['value'=>': 100% before delivery day.', 'control_id'=>'md_payment_en', 'width'=> '700', 'lbl_width'=>'170', 'label'=>'3/- Payment Condition', 'i_focus'=>'', 'i_blur'=>''])
+                                            @include('components.input',['value'=>': Ho Chi Minh City', 'control_id'=>'md_delivery_en', 'width'=> '700', 'lbl_width'=>'170', 'label'=>'4/- Delivery Place', 'i_focus'=>'', 'i_blur'=>''])
+                                            <div id="div_md_account_tk_en" style="display: none">
+                                                @include('components.input',['value'=>': 249 88 789 in A Chau Bank (ACB) - Ho Chi Minh Brand', 'control_id'=>'md_account_tk_en', 'width'=> '700', 'lbl_width'=>'170', 'label'=>'5/- Payment Information', 'i_focus'=>'', 'i_blur'=>''])
+                                            </div>
+                                            <div id="div_md_account_ht_en" style="display: none">
+                                                @include('components.input',['value'=>': 208730159 in A Chau Bank (ACB) - Da Kao Brand, Ho Chi Minh City', 'control_id'=>'md_account_ht_en', 'width'=> '700', 'lbl_width'=>'170', 'label'=>'5/- Payment Information', 'i_focus'=>'', 'i_blur'=>''])
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+                                <button type="button" id="confirm-btn" class="btn btn-primary">Gửi</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 @endsection
 @section('end-javascript')
     <script type="text/javascript" src="{{ asset('js/quoteprice_detail.js') }}"></script>
+    <script>
+        var con_list = {!! json_encode($contacts) !!};
+    </script>
 @endsection

@@ -283,14 +283,16 @@ class Order
                 "ord_tax" => $quoteprice->qp_tax,
                 "ord_amount" => $quoteprice->qp_amount,
                 "ord_amount_tax" => $quoteprice->qp_amount_tax,
-                "ord_paid" => '0',
+                "ord_rel_fee" => $quoteprice->ord_rel_fee,
                 "ord_debt" => $quoteprice->qp_amount_tax,
                 "ord_note" => $quoteprice->qp_note,
+                "ord_pay_met"=> $quoteprice->ord_pay_met,
                 "qp_id" => $quoteprice->qp_id,
                 "cus_id" => $quoteprice->cus_id,
                 "cad_id" => $quoteprice->cad_id,
                 "sale_step" => '2',
                 "sale_id" => Auth::user()->id,
+                "contact_id" => $quoteprice->contact_id,
                 "contact_name" => $quoteprice->contact_name,
                 "contact_rank" => $quoteprice->contact_rank,
                 "contact_phone" => $quoteprice->contact_phone,
@@ -423,10 +425,10 @@ class Order
                 $res['success'] = false;
                 $message[] = __('Total value of orders (VAT included) is required.');
             }
-            if (!array_key_exists('ord_paid', $order)) {
+            if (!array_key_exists('ord_rel_fee', $order)) {
                 $amount_check = false;
                 $res['success'] = false;
-                $message[] = __('Paid is required.');
+                $message[] = __('Relate Fee is required.');
             }
             if (!array_key_exists('ord_debt', $order)) {
                 $res['success'] = false;
@@ -447,10 +449,10 @@ class Order
                 $res['success'] = false;
                 $message[] = __('Total value of orders (VAT included) is wrong.');
             }
-            if (array_key_exists('ord_paid', $order) && (is_numeric($order['ord_paid']) == false || floatval($order['ord_paid']) < 0 || floatval($order['ord_paid']) > 9223372036854775807)) {
+            if (array_key_exists('ord_rel_fee', $order) && (is_numeric($order['ord_rel_fee']) == false || floatval($order['ord_rel_fee']) < 0 || floatval($order['ord_rel_fee']) > 9223372036854775807)) {
                 $amount_check = false;
                 $res['success'] = false;
-                $message[] = __('Paid is wrong.');
+                $message[] = __('Relate fee is wrong.');
             }
             if (array_key_exists('ord_debt', $order) && (is_numeric($order['ord_debt']) == false || floatval($order['ord_debt']) < 0 || floatval($order['ord_debt']) > 9223372036854775807)) {
                 $amount_check = false;
@@ -463,7 +465,7 @@ class Order
                 $ord_tax = $order['ord_tax'] == null || $order['ord_tax'] == '' ? 0 : intval($order['ord_tax']);
                 $ord_amount = $order['ord_amount'] == null || $order['ord_amount'] == '' ? 0 : doubleval($order['ord_amount']);
                 $ord_amount_tax = $order['ord_amount_tax'] == null || $order['ord_amount_tax'] == '' ? 0 : doubleval($order['ord_amount_tax']);
-                $ord_paid = $order['ord_paid'] == null || $order['ord_paid'] == '' ? 0 : doubleval($order['ord_paid']);
+                $ord_paid = $order['ord_rel_fee'] == null || $order['ord_rel_fee'] == '' ? 0 : doubleval($order['ord_rel_fee']);
                 $ord_debt = $order['ord_debt'] == null || $order['ord_debt'] == '' ? 0 : doubleval($order['ord_debt']);
 
                 $chk_ord_amount_tax = $ord_amount + $ord_amount * $ord_tax / 100;
@@ -511,7 +513,7 @@ class Order
                         ) {
                             $res['success'] = false;
                             $message[] = __('[Row : :line ] pump detail is wrong data.', ['line' => "No." + ($line_no + 1)]);
-                            continue;
+                            continue 2;
                         }
                         break;
                     case '2':
@@ -520,7 +522,7 @@ class Order
                         ) {
                             $res['success'] = false;
                             $message[] = __('[Row : :line ] accessory detail is wrong data.', ['line' => "No." + ($line_no + 1)]);
-                            continue;
+                            continue 2;
                         }
                         break;
                 }
@@ -532,7 +534,7 @@ class Order
                     $is_exists = $prdModel->checkProductIsExistsByModel($item['dt_prod_model']);
                     if ($is_exists == false) {
                         $res['success'] = false;
-                        $message[] = __('[Row : :line ] model [ :model ] is not exists.', ['line' => "No." + ($line_no + 1), 'model' => $item['dt_prod_model']]);
+                        $message[] = __('[Row : :line ] model [ :model ] is not exists.', ['line' => "No." . ($line_no + 1), 'model' => $item['dt_prod_model']]);
                     }
                 }
 
@@ -554,7 +556,7 @@ class Order
 
                     if (sizeof($not_exists_series) > 0) {
                         $res['success'] = false;
-                        $message[] = __('[Row : :line ] series [ :series ] is not exists.', ['line' => "No." + ($line_no + 1), 'series' => implode(",", $not_exists_series)]);
+                        $message[] = __('[Row : :line ] series [ :series ] is not exists.', ['line' => "No." . ($line_no + 1), 'series' => implode(",", $not_exists_series)]);
                     }
                 }
 
@@ -636,7 +638,6 @@ class Order
         } catch (\Throwable $e) {
             throw $e;
         }
-        return $id;
     }
 
     public function updateOrder($order)
@@ -662,7 +663,51 @@ class Order
         $params[] = Auth::user()->id;
         $where_raw .= ' AND order.owner_id = ? ';
 
-        if ($search != '') {
+        //advance search
+        if (is_array($search) == true) {
+            foreach ($search as $item) {
+                $search_name = '';
+                switch ($item['search_name']) {
+                    case 'ord-no'://ord-no
+                        $search_name = 'order.ord_no';
+                        break;
+                    case 'ord-date'://ord-date
+                        $search_name = 'order.ord_date';
+                        break;
+                    case 'ord-exp-date'://ord-exp-date
+                        $search_name = 'order.ord_exp_date';
+                        break;
+                    case 'sale-id'://sale-id
+                        $search_name = 'order.sale_id';
+                        break;
+                    case 'cus-id'://cus-id
+                        $search_name = 'order.cus_id';
+                        break;
+                    case 'ord-amount-tax'://ord-amount-tax
+                        $search_name = 'order.ord_amount_tax';
+                        break;
+                    case 'ord-note'://ord-note
+                        $search_name = 'order.ord_note';
+                        break;
+                    case 'sale-step'://sale-step
+                        $search_name = 'order.sale_step';
+                        break;
+                }
+
+                if ($search_name == '')
+                    continue;
+
+                $search_cond = buildSearchCond($search_name, $item['search_value'], $item['search_operator']);
+                if (sizeof($search_cond) == 0)
+                    continue;
+
+                $params = array_merge($params, $search_cond['params']);
+                $where_raw .= " AND " . $search_cond['where_raw'];
+            }
+        }
+
+        //fuzzy search
+        if (is_string($search) && $search != '') {
             $search_val = "%" . $search . "%";
             $where_raw .= " AND ( ";
             $where_raw .= " order.ord_no like ? ";
@@ -683,12 +728,6 @@ class Order
                     $params[] = $search;
 
                     $where_raw .= " OR order.ord_amount_tax = ? ";
-                    $params[] = str_replace(',', '', $search);
-
-                    $where_raw .= " OR order.ord_paid = ? ";
-                    $params[] = str_replace(',', '', $search);
-
-                    $where_raw .= " OR order.ord_debt = ? ";
                     $params[] = str_replace(',', '', $search);
                 }
             }

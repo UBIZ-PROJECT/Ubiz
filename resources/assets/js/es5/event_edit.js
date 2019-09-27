@@ -83,8 +83,8 @@ function event_edit(event) {
         $(".assigned-list").hide();
     }
 
-    tinyMCE.get('event_desc').setContent(event.desc);
-    tinyMCE.get('event_result').setContent(event.result);
+    $("#event_desc").val(event.desc);
+    $("#event_result").val(event.result);
 
     var assigned_list = new Array();
     $.map(event.pic, function (user, idx) {
@@ -298,9 +298,7 @@ function event_colect_data() {
     data.event_tag = $("#event-tag").attr('tag_id');
     data.event_location = $("#event-location").val();
 
-    var desc_selector = $('textarea[name=txt_desc]').attr('id');
-    data.event_desc = tinyMCE.get(desc_selector).getContent();
-    data.event_desc_origin = tinyMCE.get(desc_selector).getContent({'format': 'text'});
+    data.event_desc = $("#event_desc").val();
 
     data.event_fee = numeral($("#event_fee").val()).value();
 
@@ -325,9 +323,7 @@ function event_colect_data() {
         data.event_pic_list.push(pic);
     });
 
-    var result_selector = $('textarea[name=txt_result]').attr('id');
-    data.event_result = tinyMCE.get(result_selector).getContent();
-    data.event_result_origin = tinyMCE.get(result_selector).getContent({'format': 'text'});
+    data.event_result = $("#event_result").val();
 
     return data;
 }
@@ -479,39 +475,6 @@ document.addEventListener('DOMContentLoaded', function () {
         event_set_assigned_list();
     })
 
-    tinymce.init({
-        width: '100%',
-        min_height: 250,
-        max_height: 500,
-        menubar: false,
-        toolbar_drawer: 'floating',
-        selector: '#event_desc',
-        plugins: [
-            'advlist autolink lists link image charmap print preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code wordcount autoresize'
-        ],
-        toolbar: 'undo redo | bold italic forecolor backcolor | formatselect | fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat',
-        content_css: [
-            '/fonts/roboto/v18/roboto.css'
-        ],
-        init_instance_callback: function (editor) {
-            event_edit(event);
-        }
-    });
-
-    tinymce.init({
-        width: '100%',
-        min_height: 250,
-        max_height: 500,
-        menubar: false,
-        toolbar_drawer: 'floating',
-        selector: '#event_result',
-        plugins: [
-            'advlist autolink lists link image charmap print preview anchor textcolor searchreplace visualblocks code fullscreen insertdatetime media table paste code wordcount autoresize'
-        ],
-        toolbar: 'undo redo | bold italic forecolor backcolor | formatselect | fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat',
-        content_css: [
-            '/fonts/roboto/v18/roboto.css'
-        ]
-    });
+    event_edit(event);
 
 });

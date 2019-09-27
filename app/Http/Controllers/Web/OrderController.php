@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\User;
+use App\Model\Customer;
 use App\Model\Order;
 use App\Model\OrderDetail;
 use App\Model\ProductStatus;
@@ -18,7 +20,23 @@ class OrderController extends Controller
             $orderData = $order->getOrders();
             $pagingData = $order->getPagingInfo();
             $pagingData['page'] = 0;
-            return view('order', ['orders' => $orderData, 'paging' => $pagingData]);
+
+            $userData = [];
+            $userModel = new User();
+            $curUser = $userModel->getCurrentUser();
+            if ($curUser->role == '1' || $curUser->role == '2') {
+                $userData = $userModel->getAllUsers();
+            }
+
+            $cusModel = new Customer();
+            $cusData = $cusModel->getAllCustomers();
+
+            return view('order', [
+                'orders' => $orderData,
+                'customers' => $cusData,
+                'users' => $userData,
+                'paging' => $pagingData,
+            ]);
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -29,7 +47,7 @@ class OrderController extends Controller
         $order = new Order();
         $orderData = $order->getOrder($ord_id);
 
-        if($orderData == null){
+        if ($orderData == null) {
             return response()->view('errors.404', [], 404);
         }
         $orderDetail = new OrderDetail();

@@ -16,7 +16,7 @@ Route::middleware(['api', 'cors'])->group(function () {
         Route::redirect('/', '/events')->name('/');
         Route::get('login', ['as' => 'login', 'uses' => 'Web\UsersController@login']);
         Route::get('suppliers', ['as' => 'supplier', 'uses' => 'Web\SupplierController@suppliers']);
-        Route::get('customers', ['as' => 'customer', 'uses' => 'Web\CustomerController@customer']);
+        Route::get('customers', ['as' => 'customer', 'uses' => 'Web\CustomerController@index']);
         Route::get('products', ['as' => 'products', 'uses' => 'Web\AccessoryController@accessories']);
         Route::get('products/{brd_id}', ['as' => 'products', 'uses' => 'Web\ProductController@productByBrand'])->where('brd_id', '[0-9]+');
         Route::get('brands', ['as' => 'brands', 'uses' => 'Web\BrandController@brands']);
@@ -31,7 +31,7 @@ Route::middleware(['api', 'cors'])->group(function () {
         Route::get('quoteprices', ['as' => 'quoteprices', 'uses' => 'Web\QuotepriceController@index']);
         Route::get('quoteprices/{qp_id}', ['as' => 'quoteprices-detai', 'uses' => 'Web\QuotepriceController@detail'])->where('qp_id', '[0-9]+');
         Route::get('quoteprices/{qp_id}/pdf/{uniqid}', ['as' => 'quoteprices-pdf', 'uses' => 'Web\QuotepriceController@pdf'])->where('qp_id', '[0-9]+');
-        Route::get('quoteprices/{qp_id}/download/{uniqid}', ['as' => 'quoteprices-pdf', 'uses' => 'Web\QuotepriceController@download'])->where('qp_id', '[0-9]+');
+        Route::get('quoteprices/{qp_id}/download/{uniqid}/{file_name}', ['as' => 'quoteprices-pdf', 'uses' => 'Web\QuotepriceController@download'])->where('qp_id', '[0-9]+');
         Route::get('quoteprices/{cus_id}/create', ['as' => 'quoteprices-create', 'uses' => 'Web\QuotepriceController@create'])->where('cus_id', '[0-9]+');
         Route::get('events', ['as' => 'events', 'uses' => 'Web\EventController@index']);
         Route::get('events/{id}', ['as' => 'event-detail', 'uses' => 'Web\EventController@detail'])->where('id', '[0-9]+');
