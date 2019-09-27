@@ -301,5 +301,6 @@
   "Not Contain": "Không chứa",
   "Between": "Trong khoảng",
   "Not Between": "Ngoài khoảng",
-  "Are you sure you want to update repository?" : "Bạn có chắc chắn muốn cập nhật lại kho?"
+  "Are you sure you want to update repository?" : "Bạn có chắc chắn muốn cập nhật lại kho?",
+  "Invalid file." : "File không hợp lệ."
 }

@@ -10,6 +10,10 @@ class PumpExportRepSheet implements ToCollection
 {
     public function collection(Collection $rows)
     {
+        if ($rows[2][0] != 'PHIẾU XUẤT KHO BƠM') {
+            abort(500, __('Invalid file.'));
+        }
+        
         $reportModel = new Report();
         
         foreach ($rows as $index => $row) {
