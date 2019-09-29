@@ -34,6 +34,8 @@ class ReportController extends Controller
                     $sum = $reportModel->sumQPs($qpFromDate, $qpToDate, $request->get('cus_name', ''), $request->get('sale_name', ''));
                     $totalStartTimeCnt = 0;
                     $totalEndTimeCnt = 0;
+                    $totalQPAmount = $report->total_qp_amount;
+                    $totalOrdAmount = $report->total_ord_amount;
                     break;
                 default:
                     $paging = $reportModel->getPagingInfoRep($request->get('prd_name', ''), $request->get('brd_name', ''), $request->get('prd_query_type', 1));
@@ -44,7 +46,7 @@ class ReportController extends Controller
             }
             $paging['page'] = $page;
 
-            return response()->json(['report' => $report, 'report_sum' => $sum, 'total_start_time_cnt' => $totalStartTimeCnt, 'total_end_time_cnt' => $totalEndTimeCnt, 'paging' => $paging, 'type' => $request->type, 'success' => true, 'message' => ''], 200);
+            return response()->json(['report' => $report, 'report_sum' => $sum, 'total_start_time_cnt' => $totalStartTimeCnt, 'total_end_time_cnt' => $totalEndTimeCnt, 'total_qp_amount' => $totalQPAmount??0, 'total_ord_amount' => $totalOrdAmount??0,'paging' => $paging, 'type' => $request->type, 'success' => true, 'message' => ''], 200);
         } catch (\Throwable $e) {
             throw $e;
         }

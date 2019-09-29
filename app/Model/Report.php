@@ -267,8 +267,10 @@ class Report implements JWTSubject
             $data = DB::table('quoteprice')
                 ->leftjoin('users', 'quoteprice.sale_id', '=', 'users.id')
                 ->leftjoin('customer', 'quoteprice.cus_id', '=', 'customer.cus_id')
+                ->leftjoin('order', 'order.qp_id', '=', 'quoteprice.qp_id')
                 ->select('quoteprice.*', 'users.name as sale_name', 'customer.cus_name')
-                ->selectRaw('FORMAT(quoteprice.qp_amount_tax, 0) as qp_amount_tax')
+                ->selectRaw('FORMAT(quoteprice.qp_amount, 0) as qp_amount')
+                ->selectRaw('FORMAT(order.ord_amount, "") as ord_amount')
                 ->selectRaw('DATE_FORMAT(quoteprice.qp_date, "%Y/%m/%d") as qp_date')
                 ->selectRaw('DATE_FORMAT(quoteprice.qp_exp_date, "%Y/%m/%d") as qp_exp_date')
                 ->where('quoteprice.delete_flg', '0')
@@ -288,6 +290,17 @@ class Report implements JWTSubject
                     return $query->limit($rows_per_page)->offset($page * $rows_per_page);
                 })
                 ->get();
+
+            $total = DB::table('quoteprice')
+            ->join('order', 'order.qp_id', '=', 'quoteprice.qp_id')
+            ->selectRaw('FORMAT(SUM(quoteprice.qp_amount), 0) as total_qp_amount')
+            ->selectRaw('FORMAT(SUM(order.ord_amount), 0) as total_ord_amount')
+            ->where('quoteprice.delete_flg', '0')
+            ->whereRaw('quoteprice.qp_date between ? AND ?', [$qpFromDate, $qpToDate])
+            ->get()->first();
+
+            $data->total_qp_amount = $total->total_qp_amount ?? 0;
+            $data->total_ord_amount = $total->total_ord_amount ?? 0;
         } catch (\Throwable $e) {
             throw $e;
         }

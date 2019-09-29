@@ -61,8 +61,18 @@
                             </tr>
                         </table>
                     </form>
-                    <p style="margin-top:10px; font-size:15px"><strong>Số lượng báo giá:</strong> <span id="report_count">{{ $paging['rows_num'] }}</span></p>
-                    <p style="margin-top:10px; font-size:15px"><strong>Tổng doanh thu dự kiến:</strong> <span id="report_sum">{{ $report->sum }}</span> ₫</p>
+                    <table>
+                        <tr>
+                            <td style="width: 280px"><p style="margin-top:10px; font-size:15px"><strong>Số lượng báo giá:</strong> <span id="report_count">{{ $paging['rows_num'] }}</span></p></td>
+                            <td style="width: 280px"><p style="margin-top:10px; font-size:15px"><strong>Tổng doanh thu dự kiến:</strong> <span id="report_sum">{{ $report->sum }}</span> ₫</p></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td style="width: 280px"><p style="margin-top:10px; font-size:15px"><strong>Tổng tiền báo giá:</strong> <span id="total_qp_amount">{{ $report->total_qp_amount }}</span> ₫</p></td>
+                            <td style="width: 280px"><p style="margin-top:10px; font-size:15px"><strong>Tổng doanh thu đạt được:</strong> <span id="total_ord_amount">{{ $report->total_ord_amount }}</span> ₫</p></td>
+                            <td style="width: 280px"><p style="margin-top:10px; font-size:15px"><strong>Tỉ lệ thành công:</strong> <span id="success_rate">{{ $report->total_qp_amount?($report->total_ord_amount / $report->total_qp_amount * 100) : 0 }}</span> %</p></td>
+                        </tr>
+                    </table>
                     <div class="export">
                         <span class="btn btn-info export" id="rev-export-button" onclick="jQuery.UbizOIWidget.w_export('quoteprice')"> Xuất excel </span>
                     </div>
@@ -160,7 +170,32 @@
                                     <div class="dWB" role="button" sort-name="qp_amount_tax" order-by=""
                                          onclick="jQuery.UbizOIWidget.w_sort(this)">
                                         <div class="dvJ">
-                                            <div class="tDv">Tổng tiền (cả thuế)</div>
+                                            <div class="tDv">Tổng tiền</div>
+                                            <div class="mhH">
+                                                <div class="acD">
+                                                    <div class="huK">
+                                                        <svg class="faH asc" x="0px" y="0px" width="18px" height="18px"
+                                                             viewBox="0 0 48 48" focusable="false" fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M8 24l2.83 2.83L22 15.66V40h4V15.66l11.17 11.17L40 24 24 8 8 24z"></path>
+                                                        </svg>
+                                                        <svg class="faH desc" x="0px" y="0px" width="18px"
+                                                             height="18px" viewBox="0 0 48 48" focusable="false"
+                                                             fill="#000000">
+                                                            <path fill="none" d="M0 0h48v48H0V0z"></path>
+                                                            <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dcB col-4" role="presentation">
+                                    <div class="dWB" role="button" sort-name="ord_amount" order-by=""
+                                         onclick="jQuery.UbizOIWidget.w_sort(this)">
+                                        <div class="dvJ">
+                                            <div class="tDv">Doanh thu</div>
                                             <div class="mhH">
                                                 <div class="acD">
                                                     <div class="huK">
@@ -339,8 +374,15 @@
                                         </div>
                                         <div class="tcB col-4">
                                             <div class="cbo">
-                                                <div class="nCj" title="{{$row->qp_amount_tax}}">
-                                                    <span>{{$row->qp_amount_tax}} ₫</span>
+                                                <div class="nCj" title="{{$row->qp_amount}}">
+                                                    <span>{{$row->qp_amount?$row->qp_amount.' ₫':''}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tcB col-4">
+                                            <div class="cbo">
+                                                <div class="nCj" title="{{$row->ord_amount}}">
+                                                    <span>{{$row->ord_amount?$row->ord_amount.' ₫':''}}</span>
                                                 </div>
                                             </div>
                                         </div>

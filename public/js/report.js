@@ -174,10 +174,14 @@
 
                         rows.push(jQuery.UbizOIWidget.w_make_row_html(report[i].ord_id, cols));
                     } else if (response.data.type == "quoteprice") {
+                        if (report[i].ord_amount) {
+                            report[i].ord_amount += ' ₫';
+                        }
                         cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].qp_no, 1));
                         cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].qp_date, 2));
                         cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].qp_exp_date, 3));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].qp_amount_tax + ' ₫', 4));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].qp_amount + ' ₫', 4));
+                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].ord_amount, 4));
                         cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].cus_name, 5));
                         cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_name, 6));
                         cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_phone, 7));
@@ -215,6 +219,13 @@
             jQuery("#report_sum").text(response.data.report_sum);
             jQuery("#total_start_time_cnt").text(response.data.total_start_time_cnt);
             jQuery("#total_end_time_cnt").text(response.data.total_end_time_cnt);
+            jQuery("#total_qp_amount").text(response.data.total_qp_amount);
+            jQuery("#total_ord_amount").text(response.data.total_ord_amount);
+            var success_rate = 0;
+            if (parseInt(response.data.total_qp_amount.replace(",", "")) > 0) {
+                success_rate = parseInt(response.data.total_ord_amount.replace(",", "")) / parseInt(response.data.total_qp_amount.replace(",", "")) * 100;
+            }
+            jQuery("#success_rate").text(success_rate.toFixed(2));
         },
         w_make_row_html: function (id, cols) {
             var row_html = '';
