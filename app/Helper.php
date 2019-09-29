@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage as Storage;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\Validator as Validator;
 use PhpOffice\PhpSpreadsheet\RichText\RichText as RichText;
+use PhpOffice\PhpSpreadsheet\Shared\Font as Font;
 
 function resizeImage($img, $target_img, $new_img_width, $new_img_height, $img_type)
 {
@@ -3250,7 +3251,7 @@ class simple_html_dom
     }
 }
 
-function htmlToRichText($html)
+function htmlToRichText($html, $colWidth)
 {
     try {
 
@@ -3281,14 +3282,19 @@ function htmlToRichText($html)
                     ];
                     break;
             }
+
+
         }
 
         if (sizeof($mceText) == 0)
             return null;
 
+        $rowCount = 0;
+        $fontStyle = new PhpOffice\PhpSpreadsheet\Style\Font();
+        $fontStyle->setName('Times New Roman');
+
         $richText = new RichText();
         $richText->createText('');
-
         foreach ($mceText as $text) {
 
             $textType = $text['type'];
@@ -3296,13 +3302,42 @@ function htmlToRichText($html)
 
             if ($textType == 'bold') {
                 $boldText = $richText->createTextRun($textValue);
+                $boldText->getFont()->setName('Times New Roman');
                 $boldText->getFont()->setBold(true);
+                $fontStyle->setBold(true);
             } else {
                 $richText->createText($textValue);
+                $fontStyle->setBold(false);
+            }
+
+            if ($textType == 'text' || $textType == 'bold') {
+                if ($textType == 'bold') {
+                    $fontStyle->setBold(true);
+                }
+                $textWidth = Font::getTextWidthPixelsExact($textValue, $fontStyle);
+                if ($textWidth > $colWidth) {
+                    $rowCount += ceil($textWidth / $colWidth);
+                } else {
+                    $rowCount += 1;
+                }
             }
         }
 
-        return $richText;
+        $richTextHeight = rowCountToHeight($fontStyle, $rowCount);
+        return [
+            'text' => $richText,
+            'height' => $richTextHeight
+        ];
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function rowCountToHeight($fontStyle, $rowCount)
+{
+    try {
+        $rowHeight = Font::getDefaultRowHeightByFont($fontStyle);
+        return $rowCount * $rowHeight;
     } catch (\Throwable $e) {
         throw $e;
     }

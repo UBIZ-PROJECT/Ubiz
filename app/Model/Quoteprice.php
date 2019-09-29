@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Model\QuotepriceDetail;
 use \PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Shared\Font;
 
 class Quoteprice
 {
@@ -631,15 +632,16 @@ class Quoteprice
 
             $app_path = app_path();
             $company = presentValidator($extra_data['md_company']) == true ? ($extra_data['md_company'] == '1' ? 'TK' : 'HT') : 'TK';
-            $language = presentValidator($extra_data['md_language']) == true ? $extra_data['md_language'] : 'VN';
+            $language = presentValidator($extra_data['md_language']) == true ? strtoupper($extra_data['md_language']) : 'VN';
 
             $uniqid = uniqid();
             $file_name = "[$company]" . $language . date('d.m.Y') . '_' . $quoteprice->qp_no . '_' . $quoteprice->cus_code;
 
-            $tpl_file = "$app_path/QuotepricesTemplate/QP-$company-$language.xlsx";
+            $tpl_file = "$app_path/Exports/QuotepricesExcelTemplate/QP-$company-$language.xlsx";
             if (file_exists($tpl_file) == false)
                 return false;
 
+            Font::setTrueTypeFontPath("/usr/share/fonts/truetype/msttcorefonts/");
             $spreadsheet = IOFactory::load($tpl_file);
             switch ("$company") {
                 case"TK":
@@ -656,9 +658,9 @@ class Quoteprice
             if ($spreadsheet == null)
                 return fasle;
 
-            $file_path = storage_path('quoteprices') . "/$uniqid.pdf";
+            $file_path = Storage::disk('quoteprices')->path('') . "$uniqid.xlsx";
 
-            $writer = \PhpOffice\PhpSpreadsheet\Writer\Pdf\Mpdf($spreadsheet);
+            $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
             $writer->save($file_path);
 
             return [
@@ -676,13 +678,13 @@ class Quoteprice
     {
         try {
 
-            $language = presentValidator($extra_data['md_language']) == true ? $extra_data['md_language'] : 'VN';
-            switch ($language){
+            $language = presentValidator($extra_data['md_language']) == true ? strtoupper($extra_data['md_language']) : 'VN';
+            switch ($language) {
                 case "EN":
-                    $this->writeQPTKENExcelFile(&$spreadsheet, $quoteprice, $quoteprices_detail, $extra_data);
+                    $this->writeQPTKENExcelFile($spreadsheet, $quoteprice, $quoteprices_detail, $extra_data);
                     break;
                 case "VN":
-                    $this->writeQPTKVNExcelFile(&$spreadsheet, $quoteprice, $quoteprices_detail, $extra_data);
+                    $this->writeQPTKVNExcelFile($spreadsheet, $quoteprice, $quoteprices_detail, $extra_data);
                     break;
             }
 
@@ -724,7 +726,9 @@ class Quoteprice
             $pumps = [];
             $accessaries = [];
 
-            foreach ($quoteprices_detail as $type => $quoteprice_detail) {
+            foreach ($quoteprices_detail as $quoteprice_detail) {
+
+                $type = $quoteprice_detail->type;
                 switch ($type) {
                     case '1':
                         $pumps[] = $quoteprice_detail;
@@ -793,7 +797,7 @@ class Quoteprice
                 $worksheet->getCell("A{$pump_row_no}")->setValue($pump_row_idx);
 
                 if ($item->prod_specs_mce != '' && $item->prod_specs_mce != null) {
-                    $item->prod_specs_mce = htmlToRichText($item->prod_specs_mce);
+                    $item->prod_specs_mce = htmlToRichText($item->prod_specs_mce, 515);
                 }
                 $worksheet->getCell("B{$pump_row_no}")->setValue($item->prod_specs_mce);
 
@@ -846,7 +850,9 @@ class Quoteprice
             $pumps = [];
             $accessaries = [];
 
-            foreach ($quoteprices_detail as $type => $quoteprice_detail) {
+            foreach ($quoteprices_detail as $quoteprice_detail) {
+
+                $type = $quoteprice_detail->type;
                 switch ($type) {
                     case '1':
                         $pumps[] = $quoteprice_detail;
@@ -866,12 +872,13 @@ class Quoteprice
 
                 for ($i = 0; $i < sizeof($accessaries) - 1; $i++) {
 
-                    $worksheet->insertNewRowBefore(23);
+                    $worksheet->insertNewRowBefore(24);
 
-                    $worksheet->mergeCellsByColumnAndRow(2, 23, 8, 23);
-                    $worksheet->mergeCellsByColumnAndRow(11, 23, 13, 23);
-                    $worksheet->mergeCellsByColumnAndRow(14, 23, 16, 23);
-                    $worksheet->mergeCellsByColumnAndRow(17, 23, 18, 23);
+                    $worksheet->mergeCellsByColumnAndRow(2, 24, 3, 24);
+                    $worksheet->mergeCellsByColumnAndRow(4, 24, 8, 24);
+                    $worksheet->mergeCellsByColumnAndRow(11, 24, 13, 24);
+                    $worksheet->mergeCellsByColumnAndRow(14, 24, 16, 24);
+                    $worksheet->mergeCellsByColumnAndRow(17, 24, 18, 24);
                 }
             }
 
@@ -912,18 +919,24 @@ class Quoteprice
             $pump_row_no = 21;
             $pump_row_idx = 1;
             foreach ($pumps as $item) {
-                $worksheet->getCell("A{$pump_row_no}")->setValue($pump_row_idx);
 
+                $row_height = 94;
+                $worksheet->getCell("A{$pump_row_no}")->setValue($pump_row_idx);
                 if ($item->prod_specs_mce != '' && $item->prod_specs_mce != null) {
-                    $item->prod_specs_mce = htmlToRichText($item->prod_specs_mce);
+                    $richText = htmlToRichText($item->prod_specs_mce, 515);
+                    $item->prod_specs_mce = $richText['text'];
+                    if ($row_height < $richText['height']) {
+                        $row_height = $richText['height'];
+                    }
                 }
                 $worksheet->getCell("B{$pump_row_no}")->setValue($item->prod_specs_mce);
-
                 $worksheet->getCell("I{$pump_row_no}")->setValue($item->unit);
                 $worksheet->getCell("J{$pump_row_no}")->setValue($item->quantity);
                 $worksheet->getCell("K{$pump_row_no}")->setValue($item->delivery_time);
                 $worksheet->getCell("N{$pump_row_no}")->setValue($item->price);
                 $worksheet->getCell("Q{$pump_row_no}")->setValue($item->amount);
+
+                $worksheet->getRowDimension($pump_row_no)->setRowHeight($row_height);
 
                 $pump_row_no++;
                 $pump_row_idx++;
@@ -939,12 +952,12 @@ class Quoteprice
     public function writeQPHTExcelFile(&$spreadsheet, $quoteprice, $quoteprices_detail, $extra_data)
     {
         $language = presentValidator($extra_data['md_language']) == true ? $extra_data['md_language'] : 'VN';
-        switch ($language){
+        switch ($language) {
             case "EN":
-                $this->writeQPHTENExcelFile(&$spreadsheet, $quoteprice, $quoteprices_detail, $extra_data);
+                $this->writeQPHTENExcelFile($spreadsheet, $quoteprice, $quoteprices_detail, $extra_data);
                 break;
             case "VN":
-                $this->writeQPHTVNExcelFile(&$spreadsheet, $quoteprice, $quoteprices_detail, $extra_data);
+                $this->writeQPHTVNExcelFile($spreadsheet, $quoteprice, $quoteprices_detail, $extra_data);
                 break;
         }
     }
@@ -980,7 +993,9 @@ class Quoteprice
             $pumps = [];
             $accessaries = [];
 
-            foreach ($quoteprices_detail as $type => $quoteprice_detail) {
+            foreach ($quoteprices_detail as $quoteprice_detail) {
+
+                $type = $quoteprice_detail->type;
                 switch ($type) {
                     case '1':
                         $pumps[] = $quoteprice_detail;
@@ -1086,8 +1101,7 @@ class Quoteprice
             $worksheet->getCell('N11')->setValue($quoteprice->cus_fax);
             $worksheet->getCell('C12')->setValue($quoteprice->contact_phone);
             $worksheet->getCell('G12')->setValue($quoteprice->contact_email);
-            $worksheet->getCell('N12')->setValue(date('Y/m/d',strtotime($quoteprice->qp_date)));
-
+            $worksheet->getCell('N12')->setValue(date('Y/m/d', strtotime($quoteprice->qp_date)));
             $worksheet->getCell('Q19')->setValue($quoteprice->qp_amount);
             $worksheet->getCell('Q20')->setValue($quoteprice->qp_amount_tax - $quoteprice->qp_amount);
             $worksheet->getCell('Q21')->setValue($quoteprice->qp_amount_tax);
@@ -1100,7 +1114,9 @@ class Quoteprice
             $pumps = [];
             $accessaries = [];
 
-            foreach ($quoteprices_detail as $type => $quoteprice_detail) {
+            foreach ($quoteprices_detail as $quoteprice_detail) {
+
+                $type = $quoteprice_detail->type;
                 switch ($type) {
                     case '1':
                         $pumps[] = $quoteprice_detail;

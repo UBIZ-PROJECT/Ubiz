@@ -209,15 +209,6 @@ class QuotepriceController extends Controller
             $qpDetailModel = new QuotepriceDetail();
             $qpDetailData = $qpDetailModel->getQuotepriceDetailsByQpId($qp_id);
 
-            $tmp_quoteprices_detail = [];
-            foreach ($qpDetailData as $idx => $item) {
-
-                if (array_key_exists($item->type, $tmp_quoteprices_detail) == false) {
-                    $tmp_quoteprices_detail[$item->type] = [];
-                }
-                $tmp_quoteprices_detail[$item->type][] = $item;
-            }
-
             //send quoteprice
             $file = $qpModel->makeFilePDF($qpData, $qpDetailData, $extra_data);
             if ($file == false) {
