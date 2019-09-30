@@ -61,8 +61,12 @@
                             </tr>
                         </table>
                     </form>
-                    <p style="margin-top:10px; font-size:15px"><strong>Số lượng đơn hàng:</strong> <span id="report_count">{{ $paging['rows_num'] }}</span></p>
-                    <p style="margin-top:10px; font-size:15px"><strong>Tổng doanh thu:</strong> <span id="report_sum">{{ $report->sum }}</span> ₫</p>
+                    <table>
+                        <tr>
+                            <td style="width: 280px"><p style="margin-top:10px; font-size:15px"><strong>Số lượng đơn hàng:</strong> <span id="report_count">{{ $paging['rows_num'] }}</span></p></td>
+                            <td style="width: 280px"><p style="margin-top:10px; font-size:15px"><strong>Tổng doanh thu:</strong> <span id="report_sum">{{ $report->sum }}</span> ₫</p></td>
+                        </tr>
+                    </table>
                     <div class="export">
                         <span class="btn btn-info export" id="rev-export-button" onclick="jQuery.UbizOIWidget.w_export('revenue')"> Xuất excel </span>
                     </div>

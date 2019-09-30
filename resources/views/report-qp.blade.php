@@ -68,9 +68,9 @@
                             <td></td>
                         </tr>
                         <tr>
-                            <td style="width: 280px"><p style="margin-top:10px; font-size:15px"><strong>Tổng tiền báo giá:</strong> <span id="total_qp_amount">{{ $report->total_qp_amount }}</span> ₫</p></td>
+                            <td style="width: 280px"><p style="margin-top:10px; font-size:15px"><strong>Tổng tiền đã báo giá:</strong> <span id="total_qp_amount">{{ $report->total_qp_amount }}</span> ₫</p></td>
                             <td style="width: 280px"><p style="margin-top:10px; font-size:15px"><strong>Tổng doanh thu đạt được:</strong> <span id="total_ord_amount">{{ $report->total_ord_amount }}</span> ₫</p></td>
-                            <td style="width: 280px"><p style="margin-top:10px; font-size:15px"><strong>Tỉ lệ thành công:</strong> <span id="success_rate">{{ $report->total_qp_amount?($report->total_ord_amount / $report->total_qp_amount * 100) : 0 }}</span> %</p></td>
+                            <td style="width: 280px"><p style="margin-top:10px; font-size:15px"><strong>Tỉ lệ thành công:</strong> <span id="success_rate">{{ (integer) str_replace(',', '', $report->total_qp_amount)?((integer) str_replace(',', '', $report->total_ord_amount) / (integer) str_replace(',', '', $report->total_qp_amount) * 100) : 0 }}</span> %</p></td>
                         </tr>
                     </table>
                     <div class="export">
