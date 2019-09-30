@@ -3342,3 +3342,12 @@ function rowCountToHeight($fontStyle, $rowCount)
         throw $e;
     }
 }
+
+function convertExcelToPdf($filePath)
+{
+    try {
+
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}

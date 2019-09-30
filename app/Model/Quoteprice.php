@@ -641,7 +641,7 @@ class Quoteprice
             if (file_exists($tpl_file) == false)
                 return false;
 
-            Font::setTrueTypeFontPath("/usr/share/fonts/truetype/msttcorefonts/");
+            Font::setTrueTypeFontPath(env("MS_TTF_DIR"));
             $spreadsheet = IOFactory::load($tpl_file);
             switch ("$company") {
                 case"TK":
@@ -705,7 +705,7 @@ class Quoteprice
             $worksheet->getCell('E12')->setValue($quoteprice->cus_name);
             $worksheet->getCell('E13')->setValue($quoteprice->cus_addr);
             $worksheet->getCell('E14')->setValue($quoteprice->cus_phone);
-            $worksheet->getCell('E14')->setValue($quoteprice->cus_phone);
+            $worksheet->getCell('N14')->setValue($quoteprice->cus_fax);
             $worksheet->getCell('E15')->setValue($quoteprice->contact_name);
             $worksheet->getCell('N15')->setValue($quoteprice->sale_name);
             $worksheet->getCell('E16')->setValue($quoteprice->contact_rank);
@@ -748,12 +748,13 @@ class Quoteprice
 
                 for ($i = 0; $i < sizeof($accessaries) - 1; $i++) {
 
-                    $worksheet->insertNewRowBefore(24);
+                    $worksheet->insertNewRowBefore(25);
 
-                    $worksheet->mergeCellsByColumnAndRow(2, 24, 8, 24);
-                    $worksheet->mergeCellsByColumnAndRow(11, 24, 13, 24);
-                    $worksheet->mergeCellsByColumnAndRow(14, 24, 16, 24);
-                    $worksheet->mergeCellsByColumnAndRow(17, 24, 18, 24);
+                    $worksheet->mergeCellsByColumnAndRow(2, 25, 4, 25);
+                    $worksheet->mergeCellsByColumnAndRow(5, 25, 8, 25);
+                    $worksheet->mergeCellsByColumnAndRow(11, 25, 13, 25);
+                    $worksheet->mergeCellsByColumnAndRow(14, 25, 16, 25);
+                    $worksheet->mergeCellsByColumnAndRow(17, 25, 18, 25);
                 }
             }
 
@@ -762,7 +763,7 @@ class Quoteprice
             foreach ($accessaries as $item) {
                 $worksheet->getCell("A{$acc_row_no}")->setValue($acc_row_idx);
                 $worksheet->getCell("B{$acc_row_no}")->setValue($item->acce_code);
-                $worksheet->getCell("D{$acc_row_no}")->setValue($item->acce_name);
+                $worksheet->getCell("E{$acc_row_no}")->setValue($item->acce_name);
                 $worksheet->getCell("I{$acc_row_no}")->setValue($item->unit);
                 $worksheet->getCell("J{$acc_row_no}")->setValue($item->quantity);
                 $worksheet->getCell("K{$acc_row_no}")->setValue($item->delivery_time);
@@ -782,25 +783,29 @@ class Quoteprice
 
                 for ($i = 0; $i < sizeof($pumps) - 1; $i++) {
 
-                    $worksheet->insertNewRowBefore(22);
+                    $worksheet->insertNewRowBefore(23);
 
-                    $worksheet->mergeCellsByColumnAndRow(2, 22, 8, 22);
-                    $worksheet->mergeCellsByColumnAndRow(11, 22, 13, 22);
-                    $worksheet->mergeCellsByColumnAndRow(14, 22, 16, 22);
-                    $worksheet->mergeCellsByColumnAndRow(17, 22, 18, 22);
+                    $worksheet->mergeCellsByColumnAndRow(2, 23, 8, 23);
+                    $worksheet->mergeCellsByColumnAndRow(11, 23, 13, 23);
+                    $worksheet->mergeCellsByColumnAndRow(14, 23, 16, 23);
+                    $worksheet->mergeCellsByColumnAndRow(17, 23, 18, 23);
                 }
             }
 
             $pump_row_no = 22;
             $pump_row_idx = 1;
             foreach ($pumps as $item) {
-                $worksheet->getCell("A{$pump_row_no}")->setValue($pump_row_idx);
 
+                $row_height = 94;
+                $worksheet->getCell("A{$pump_row_no}")->setValue($pump_row_idx);
                 if ($item->prod_specs_mce != '' && $item->prod_specs_mce != null) {
-                    $item->prod_specs_mce = htmlToRichText($item->prod_specs_mce, 515);
+                    $richText = htmlToRichText($item->prod_specs_mce, 515);
+                    $item->prod_specs_mce = $richText['text'];
+                    if ($row_height < $richText['height']) {
+                        $row_height = $richText['height'];
+                    }
                 }
                 $worksheet->getCell("B{$pump_row_no}")->setValue($item->prod_specs_mce);
-
                 $worksheet->getCell("I{$pump_row_no}")->setValue($item->unit);
                 $worksheet->getCell("J{$pump_row_no}")->setValue($item->quantity);
                 $worksheet->getCell("K{$pump_row_no}")->setValue($item->delivery_time);
@@ -828,7 +833,6 @@ class Quoteprice
             $worksheet->getCell('E10')->setValue($extra_data['md_project']);
             $worksheet->getCell('E11')->setValue($quoteprice->cus_name);
             $worksheet->getCell('E12')->setValue($quoteprice->cus_addr);
-            $worksheet->getCell('E13')->setValue($quoteprice->cus_phone);
             $worksheet->getCell('E13')->setValue($quoteprice->cus_phone);
             $worksheet->getCell('E14')->setValue($quoteprice->contact_name);
             $worksheet->getCell('N14')->setValue($quoteprice->sale_name);
@@ -874,8 +878,8 @@ class Quoteprice
 
                     $worksheet->insertNewRowBefore(24);
 
-                    $worksheet->mergeCellsByColumnAndRow(2, 24, 3, 24);
-                    $worksheet->mergeCellsByColumnAndRow(4, 24, 8, 24);
+                    $worksheet->mergeCellsByColumnAndRow(2, 24, 4, 24);
+                    $worksheet->mergeCellsByColumnAndRow(5, 24, 8, 24);
                     $worksheet->mergeCellsByColumnAndRow(11, 24, 13, 24);
                     $worksheet->mergeCellsByColumnAndRow(14, 24, 16, 24);
                     $worksheet->mergeCellsByColumnAndRow(17, 24, 18, 24);
@@ -887,7 +891,7 @@ class Quoteprice
             foreach ($accessaries as $item) {
                 $worksheet->getCell("A{$acc_row_no}")->setValue($acc_row_idx);
                 $worksheet->getCell("B{$acc_row_no}")->setValue($item->acce_code);
-                $worksheet->getCell("D{$acc_row_no}")->setValue($item->acce_name);
+                $worksheet->getCell("E{$acc_row_no}")->setValue($item->acce_name);
                 $worksheet->getCell("I{$acc_row_no}")->setValue($item->unit);
                 $worksheet->getCell("J{$acc_row_no}")->setValue($item->quantity);
                 $worksheet->getCell("K{$acc_row_no}")->setValue($item->delivery_time);
@@ -1017,7 +1021,8 @@ class Quoteprice
 
                     $worksheet->insertNewRowBefore(22);
 
-                    $worksheet->mergeCellsByColumnAndRow(2, 22, 8, 22);
+                    $worksheet->mergeCellsByColumnAndRow(2, 22, 4, 22);
+                    $worksheet->mergeCellsByColumnAndRow(5, 22, 8, 22);
                     $worksheet->mergeCellsByColumnAndRow(11, 22, 13, 22);
                     $worksheet->mergeCellsByColumnAndRow(14, 22, 16, 22);
                     $worksheet->mergeCellsByColumnAndRow(17, 22, 18, 22);
@@ -1027,9 +1032,10 @@ class Quoteprice
             $acc_row_no = 21;
             $acc_row_idx = 1;
             foreach ($accessaries as $item) {
+
                 $worksheet->getCell("A{$acc_row_no}")->setValue($acc_row_idx);
                 $worksheet->getCell("B{$acc_row_no}")->setValue($item->acce_code);
-                $worksheet->getCell("D{$acc_row_no}")->setValue($item->acce_name);
+                $worksheet->getCell("E{$acc_row_no}")->setValue($item->acce_name);
                 $worksheet->getCell("I{$acc_row_no}")->setValue($item->unit);
                 $worksheet->getCell("J{$acc_row_no}")->setValue($item->quantity);
                 $worksheet->getCell("K{$acc_row_no}")->setValue($item->delivery_time);
@@ -1049,25 +1055,29 @@ class Quoteprice
 
                 for ($i = 0; $i < sizeof($pumps) - 1; $i++) {
 
-                    $worksheet->insertNewRowBefore(22);
+                    $worksheet->insertNewRowBefore(20);
 
-                    $worksheet->mergeCellsByColumnAndRow(2, 22, 8, 22);
-                    $worksheet->mergeCellsByColumnAndRow(11, 22, 13, 22);
-                    $worksheet->mergeCellsByColumnAndRow(14, 22, 16, 22);
-                    $worksheet->mergeCellsByColumnAndRow(17, 22, 18, 22);
+                    $worksheet->mergeCellsByColumnAndRow(2, 20, 8, 20);
+                    $worksheet->mergeCellsByColumnAndRow(11, 20, 13, 20);
+                    $worksheet->mergeCellsByColumnAndRow(14, 20, 16, 20);
+                    $worksheet->mergeCellsByColumnAndRow(17, 20, 18, 20);
                 }
             }
 
             $pump_row_no = 19;
             $pump_row_idx = 1;
             foreach ($pumps as $item) {
-                $worksheet->getCell("A{$pump_row_no}")->setValue($pump_row_idx);
 
+                $row_height = 94;
+                $worksheet->getCell("A{$pump_row_no}")->setValue($pump_row_idx);
                 if ($item->prod_specs_mce != '' && $item->prod_specs_mce != null) {
-                    $item->prod_specs_mce = htmlToRichText($item->prod_specs_mce);
+                    $richText = htmlToRichText($item->prod_specs_mce, 515);
+                    $item->prod_specs_mce = $richText['text'];
+                    if ($row_height < $richText['height']) {
+                        $row_height = $richText['height'];
+                    }
                 }
                 $worksheet->getCell("B{$pump_row_no}")->setValue($item->prod_specs_mce);
-
                 $worksheet->getCell("I{$pump_row_no}")->setValue($item->unit);
                 $worksheet->getCell("J{$pump_row_no}")->setValue($item->quantity);
                 $worksheet->getCell("K{$pump_row_no}")->setValue($item->delivery_time);
@@ -1136,12 +1146,13 @@ class Quoteprice
 
                 for ($i = 0; $i < sizeof($accessaries) - 1; $i++) {
 
-                    $worksheet->insertNewRowBefore(22);
+                    $worksheet->insertNewRowBefore(19);
 
-                    $worksheet->mergeCellsByColumnAndRow(2, 22, 8, 22);
-                    $worksheet->mergeCellsByColumnAndRow(11, 22, 13, 22);
-                    $worksheet->mergeCellsByColumnAndRow(14, 22, 16, 22);
-                    $worksheet->mergeCellsByColumnAndRow(17, 22, 18, 22);
+                    $worksheet->mergeCellsByColumnAndRow(2, 19, 4, 19);
+                    $worksheet->mergeCellsByColumnAndRow(5, 19, 8, 19);
+                    $worksheet->mergeCellsByColumnAndRow(11, 19, 13, 19);
+                    $worksheet->mergeCellsByColumnAndRow(14, 19, 16, 19);
+                    $worksheet->mergeCellsByColumnAndRow(17, 19, 18, 19);
                 }
             }
 
@@ -1150,7 +1161,7 @@ class Quoteprice
             foreach ($accessaries as $item) {
                 $worksheet->getCell("A{$acc_row_no}")->setValue($acc_row_idx);
                 $worksheet->getCell("B{$acc_row_no}")->setValue($item->acce_code);
-                $worksheet->getCell("D{$acc_row_no}")->setValue($item->acce_name);
+                $worksheet->getCell("E{$acc_row_no}")->setValue($item->acce_name);
                 $worksheet->getCell("I{$acc_row_no}")->setValue($item->unit);
                 $worksheet->getCell("J{$acc_row_no}")->setValue($item->quantity);
                 $worksheet->getCell("K{$acc_row_no}")->setValue($item->delivery_time);
@@ -1170,25 +1181,29 @@ class Quoteprice
 
                 for ($i = 0; $i < sizeof($pumps) - 1; $i++) {
 
-                    $worksheet->insertNewRowBefore(22);
+                    $worksheet->insertNewRowBefore(17);
 
-                    $worksheet->mergeCellsByColumnAndRow(2, 22, 8, 22);
-                    $worksheet->mergeCellsByColumnAndRow(11, 22, 13, 22);
-                    $worksheet->mergeCellsByColumnAndRow(14, 22, 16, 22);
-                    $worksheet->mergeCellsByColumnAndRow(17, 22, 18, 22);
+                    $worksheet->mergeCellsByColumnAndRow(2, 17, 8, 17);
+                    $worksheet->mergeCellsByColumnAndRow(11, 17, 13, 17);
+                    $worksheet->mergeCellsByColumnAndRow(14, 17, 16, 17);
+                    $worksheet->mergeCellsByColumnAndRow(17, 17, 18, 17);
                 }
             }
 
             $pump_row_no = 16;
             $pump_row_idx = 1;
             foreach ($pumps as $item) {
-                $worksheet->getCell("A{$pump_row_no}")->setValue($pump_row_idx);
 
+                $row_height = 94;
+                $worksheet->getCell("A{$pump_row_no}")->setValue($pump_row_idx);
                 if ($item->prod_specs_mce != '' && $item->prod_specs_mce != null) {
-                    $item->prod_specs_mce = htmlToRichText($item->prod_specs_mce);
+                    $richText = htmlToRichText($item->prod_specs_mce, 515);
+                    $item->prod_specs_mce = $richText['text'];
+                    if ($row_height < $richText['height']) {
+                        $row_height = $richText['height'];
+                    }
                 }
                 $worksheet->getCell("B{$pump_row_no}")->setValue($item->prod_specs_mce);
-
                 $worksheet->getCell("I{$pump_row_no}")->setValue($item->unit);
                 $worksheet->getCell("J{$pump_row_no}")->setValue($item->quantity);
                 $worksheet->getCell("K{$pump_row_no}")->setValue($item->delivery_time);
