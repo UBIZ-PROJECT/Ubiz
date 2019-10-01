@@ -69,16 +69,20 @@ class ReportController extends Controller
 
     public function exportRep(Request $request)
     {
-        $file = $request->fileExportRep;
-        Excel::import(new ReportRepositoryExImport($request), $file->getRealPath());
+        // $file = $request->fileExportRep;
+		$tmpPath = $request->file('fileExportRep')->store('temp');
+		$path = storage_path('app') . '/' . $tmpPath;
+        Excel::import(new ReportRepositoryExImport($request), $path);
 
         return response()->json(['success' => true, 'message' => __('Successfully processed.')], 200);
     }
 
     public function importRep(Request $request)
     {
-        $file = $request->fileImportRep;
-        Excel::import(new ReportRepositoryImImport($request), $file->getRealPath());
+        // $file = $request->fileImportRep;
+		$tmpPath = $request->file('fileImportRep')->store('temp');
+		$path = storage_path('app') . '/' . $tmpPath;
+        Excel::import(new ReportRepositoryImImport($request), $path);
 
         return response()->json(['success' => true, 'message' => __('Successfully processed.')], 200);
     }
