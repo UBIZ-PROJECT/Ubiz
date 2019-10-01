@@ -85,8 +85,12 @@
                             </tr>
                         </table>
                     </form>
-                    <p style="margin-top:10px; font-size:15px"><strong>Tổng số lượng tồn đầu kì:</strong> <span id="total_start_time_cnt">{{ $report->total_start_time_cnt }}</span></p>
-                    <p style="margin-top:10px; font-size:15px"><strong>Tổng số lượng tồn cuối kì:</strong> <span id="total_end_time_cnt">{{ $report->total_end_time_cnt }}</span></p>
+                    <table>
+                        <tr>
+                            <td style="width: 280px"><p style="font-size:15px"><strong>Tổng số lượng tồn đầu kì:</strong> <span id="total_start_time_cnt">{{ $report->total_start_time_cnt }}</span></p></td>
+                            <td style="width: 280px"><p style="font-size:15px"><strong>Tổng số lượng tồn cuối kì:</strong> <span id="total_end_time_cnt">{{ $report->total_end_time_cnt }}</span></p></td>
+                        </tr>
+                    </table>
                     <div class="export">
                     <span class="btn btn-info export" id="rev-export-button" onclick="jQuery.UbizOIWidget.w_export('repository')"> Xuất excel </span>
                     <span class="btn btn-info export" id="export-rep-btn"> Xuất kho </span>
