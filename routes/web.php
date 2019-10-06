@@ -43,8 +43,8 @@ Route::middleware(['api', 'cors'])->group(function () {
         Route::get('quoteprices/{qp_id}/history/{his_qp_id}', ['as' => 'quoteprices-history-detai', 'uses' => 'Web\QuotepriceHistoryController@detail'])->where(['qp_id' => '[0-9]+', 'his_qp_id' => '[0-9]+']);
 
         Route::get('report', ['as'=>'report', 'uses'=>'Web\ReportController@index']);
-        Route::get('report/{type}', ['as'=>'report', 'uses'=>'Web\ReportController@index']);
-        Route::get('report/{type}/export', ['as'=>'report', 'uses'=>'Web\ReportController@exportExcel']);
+        Route::get('report/{type}', ['as'=>'report_with_type', 'uses'=>'Web\ReportController@index']);
+        Route::get('report/{type}/export', ['as'=>'export', 'uses'=>'Web\ReportController@exportExcel']);
 
         Route::get('drive', ['as' => 'api-get-drives', 'uses' => 'Web\DriveController@index']);
         Route::get('drive/{uniqid}', ['as' => 'api-get-report', 'uses' => 'Web\DriveController@index']);

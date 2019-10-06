@@ -58,14 +58,16 @@
                                 <td style="padding: 10px">@include('components.input',['control_id'=>'report_to_date', 'value'=> date('Y/m/d'), 'width'=> '150', 'lbl_width'=>'70', 'label'=>'Đến ngày', 'class'=>'datepicker z-pdl z-pdr', 'i_focus'=>'', 'i_blur'=>'', 'onchange'=>"qp_date_change(this)"])</td>
                                 <td style="padding: 10px">@include('components.input',['control_id'=>'sale_name', 'value'=> '', 'width'=> '250', 'lbl_width'=>'70', 'label'=>'Nhân viên', 'length'=>'100'])</td>
                                 <td><span class="btn btn-info" id="statis-button" onclick="jQuery.UbizOIWidget.w_statis()"> Thống kê </span></td>
+                                <td><span class="btn btn-info export" style="margin-left: 20px" id="rev-export-button" onclick="jQuery.UbizOIWidget.w_export('revenue')"> Xuất excel </span></td>
                             </tr>
                         </table>
                     </form>
-                    <p style="margin-top:10px; font-size:15px"><strong>Số lượng đơn hàng:</strong> <span id="report_count">{{ $paging['rows_num'] }}</span></p>
-                    <p style="margin-top:10px; font-size:15px"><strong>Tổng doanh thu:</strong> <span id="report_sum">{{ $report->sum }}</span> ₫</p>
-                    <div class="export">
-                        <span class="btn btn-info export" id="rev-export-button" onclick="jQuery.UbizOIWidget.w_export('revenue')"> Xuất excel </span>
-                    </div>
+                    <table>
+                        <tr>
+                            <td style="width: 280px"><p style="margin-top:10px; font-size:15px"><strong>Số lượng đơn hàng:</strong> <span id="report_count">{{ $paging['rows_num'] }}</span></p></td>
+                            <td style="width: 280px"><p style="margin-top:10px; font-size:15px"><strong>Tổng doanh thu:</strong> <span id="report_sum">{{ $report->sum }}</span> ₫</p></td>
+                        </tr>
+                    </table>
                     <div class="aqH" role="presentation">
                         <div class="yTP" role="presentation">
                             <div class="clG">

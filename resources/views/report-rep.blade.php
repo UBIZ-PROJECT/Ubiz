@@ -5,6 +5,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/headbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/common.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/report.css') }}">
 @endsection
 @section('headbar')
     @include('layouts/headbar')
@@ -84,10 +85,16 @@
                             </tr>
                         </table>
                     </form>
-                    <p style="margin-top:10px; font-size:15px"><strong>Tổng số lượng tồn đầu kì:</strong> <span id="total_start_time_cnt">{{ $report->total_start_time_cnt }}</span></p>
-                    <p style="margin-top:10px; font-size:15px"><strong>Tổng số lượng tồn cuối kì:</strong> <span id="total_end_time_cnt">{{ $report->total_end_time_cnt }}</span></p>
+                    <table>
+                        <tr>
+                            <td style="width: 280px"><p style="font-size:15px"><strong>Tổng số lượng tồn đầu kì:</strong> <span id="total_start_time_cnt">{{ $report->total_start_time_cnt }}</span></p></td>
+                            <td style="width: 280px"><p style="font-size:15px"><strong>Tổng số lượng tồn cuối kì:</strong> <span id="total_end_time_cnt">{{ $report->total_end_time_cnt }}</span></p></td>
+                        </tr>
+                    </table>
                     <div class="export">
                     <span class="btn btn-info export" id="rev-export-button" onclick="jQuery.UbizOIWidget.w_export('repository')"> Xuất excel </span>
+                    <span class="btn btn-info export" id="export-rep-btn"> Xuất kho </span>
+                    <span class="btn btn-info export" id="import-rep-btn"> Nhập kho </span>
                     </div>
                     <div class="aqH" role="presentation">
                         <div class="yTP" role="presentation">
@@ -436,6 +443,32 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div id="export-rep-modal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close-modal-export close-modal-btn">&times;</span>
+            <form id="f-export-rep" enctype="multipart/form-data" method="POST">
+            {{ csrf_field() }}
+            <p><input type="file" name="fileExportRep"></p>
+            </form>
+            <span class="btn btn-info export-rep" onclick="jQuery.UbizOIWidget.w_export_rep()"> Thực hiện </span>
+        </div>
+
+    </div>
+    <div id="import-rep-modal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close-modal-import close-modal-btn" style="float:right">&times;</span>
+            <form id="f-import-rep" enctype="multipart/form-data" method="POST">
+            {{ csrf_field() }}
+            <p><input type="file" name="fileImportRep"></p>
+            </form>
+            <span class="btn btn-info import-rep" onclick="jQuery.UbizOIWidget.w_import_rep()"> Thực hiện </span>
+        </div>
+
     </div>
 @endsection
 @section('end-javascript')
