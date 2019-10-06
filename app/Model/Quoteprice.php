@@ -643,10 +643,10 @@ class Quoteprice
 
             Font::setTrueTypeFontPath(env("MS_TTF_DIR"));
             $spreadsheet = IOFactory::load($tpl_file);
-            $spreadsheet->getSecurity()->setLockStructure(true);
-            $spreadsheet->getSecurity()->setWorkbookPassword("000000");
-            $spreadsheet->getActiveSheet()->getProtection()->setPassword('000000');
-            $spreadsheet->getActiveSheet()->getProtection()->setSheet(true);
+//            $spreadsheet->getSecurity()->setLockStructure(true);
+//            $spreadsheet->getSecurity()->setWorkbookPassword("000000");
+//            $spreadsheet->getActiveSheet()->getProtection()->setPassword('000000');
+//            $spreadsheet->getActiveSheet()->getProtection()->setSheet(true);
             switch ("$company") {
                 case"TK":
                     $this->writeQPTKExcelFile($spreadsheet, $quoteprice, $quoteprices_detail, $extra_data);
@@ -662,10 +662,14 @@ class Quoteprice
             if ($spreadsheet == null)
                 return fasle;
 
-            $file_path = Storage::disk('quoteprices')->path('') . "$uniqid.xlsx";
+            $disk_path = Storage::disk('quoteprices')->path('');
+            $file_path = "$disk_path$uniqid.pdf";
 
             $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-            $writer->save($file_path);
+            $writer->save("$disk_path$uniqid.xlsx");
+
+            $command = "sudo sh /home/drive/script/xlsx2pdf.sh $disk_path$uniqid.xlsx /home/drive/quoteprices";
+            exec($command, $res);
 
             return [
                 'uniqid' => $uniqid,
