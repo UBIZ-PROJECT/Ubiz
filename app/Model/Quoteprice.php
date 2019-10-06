@@ -629,7 +629,7 @@ class Quoteprice
     public function makeFilePDF($quoteprice, $quoteprices_detail, $extra_data)
     {
         try {
-
+			ini_set('memory_limit', -1);
             $app_path = app_path();
             $company = presentValidator($extra_data['md_company']) == true ? ($extra_data['md_company'] == '1' ? 'TK' : 'HT') : 'TK';
             $language = presentValidator($extra_data['md_language']) == true ? strtoupper($extra_data['md_language']) : 'VN';
@@ -658,9 +658,9 @@ class Quoteprice
             if ($spreadsheet == null)
                 return fasle;
 
-            $file_path = Storage::disk('quoteprices')->path('') . "$uniqid.xlsx";
+            $file_path = Storage::disk('quoteprices')->path('') . "$uniqid.pdf";
 
-            $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+            $writer = IOFactory::createWriter($spreadsheet, 'Dompdf');
             $writer->save($file_path);
 
             return [
@@ -812,6 +812,8 @@ class Quoteprice
                 $worksheet->getCell("N{$pump_row_no}")->setValue($item->price);
                 $worksheet->getCell("Q{$pump_row_no}")->setValue($item->amount);
 
+                $worksheet->getRowDimension($pump_row_no)->setRowHeight($row_height);
+
                 $pump_row_no++;
                 $pump_row_idx++;
             }
@@ -955,7 +957,7 @@ class Quoteprice
 
     public function writeQPHTExcelFile(&$spreadsheet, $quoteprice, $quoteprices_detail, $extra_data)
     {
-        $language = presentValidator($extra_data['md_language']) == true ? $extra_data['md_language'] : 'VN';
+        $language = presentValidator($extra_data['md_language']) == true ? strtoupper($extra_data['md_language']) : 'VN';
         switch ($language) {
             case "EN":
                 $this->writeQPHTENExcelFile($spreadsheet, $quoteprice, $quoteprices_detail, $extra_data);
@@ -1084,6 +1086,8 @@ class Quoteprice
                 $worksheet->getCell("N{$pump_row_no}")->setValue($item->price);
                 $worksheet->getCell("Q{$pump_row_no}")->setValue($item->amount);
 
+                $worksheet->getRowDimension($pump_row_no)->setRowHeight($row_height);
+
                 $pump_row_no++;
                 $pump_row_idx++;
             }
@@ -1209,6 +1213,8 @@ class Quoteprice
                 $worksheet->getCell("K{$pump_row_no}")->setValue($item->delivery_time);
                 $worksheet->getCell("N{$pump_row_no}")->setValue($item->price);
                 $worksheet->getCell("Q{$pump_row_no}")->setValue($item->amount);
+
+                $worksheet->getRowDimension($pump_row_no)->setRowHeight($row_height);
 
                 $pump_row_no++;
                 $pump_row_idx++;
