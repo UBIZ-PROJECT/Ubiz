@@ -101,9 +101,39 @@ class User extends Authenticatable implements JWTSubject
 
             foreach ($users as &$user) {
                 $user->avatar = readImage($user->avatar, 'usr');
-                if ($user->avatar == "") {
+                if ($user->avatar == '' || $user->avatar == null) {
+                    $data->avatar_base64 = '';
                     $user->avatar = readImage("no_avatar.png", 'gen');
+                    continue;
                 }
+                $user->avatar_base64 = readImage($user->avatar, 'usr');
+            }
+            return $users;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function getAllUserByRole($role)
+    {
+        try {
+            $cur_user = $this->getAuthUser();
+            $users = DB::table('users')
+                ->where([
+                    ['delete_flg', '=', '0'],
+                    ['role', '=', $role],
+                    ['com_id', '=', $cur_user->com_id]
+                ])
+                ->orderBy('id', 'asc')
+                ->get();
+
+            foreach ($users as &$user) {
+
+                if ($user->avatar == '' || $user->avatar == null) {
+                    $data->avatar_base64 = '';
+                    continue;
+                }
+                $user->avatar_base64 = readImage($user->avatar, 'usr');
             }
             return $users;
         } catch (\Throwable $e) {

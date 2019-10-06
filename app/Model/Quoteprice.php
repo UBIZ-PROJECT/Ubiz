@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Model\QuotepriceDetail;
+use \PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Shared\Font;
 
 class Quoteprice
 {
@@ -243,7 +245,6 @@ class Quoteprice
 
             //insert quoteprice
             $data['quoteprice']['cus_id'] = $cus_id;
-            $data['quoteprice']['sale_id'] = Auth::user()->id;
             $data['quoteprice']['owner_id'] = Auth::user()->id;
             $data['quoteprice']['inp_user'] = Auth::user()->id;
             $data['quoteprice']['upd_user'] = Auth::user()->id;
@@ -339,6 +340,10 @@ class Quoteprice
             if (requiredValidator($quoteprice['qp_exp_date']) == true && dateValidator($quoteprice['qp_exp_date']) == false) {
                 $res['success'] = false;
                 $message[] = __('QP Exp Date is wrong format YYYY/MM/DD.');
+            }
+            if (requiredValidator($quoteprice['sale_id']) == false || existsInDBValidator($quoteprice['sale_id'], 'users', 'id') == false) {
+                $res['success'] = false;
+                $message[] = __('User is not exists.');
             }
 
             $amount_check = true;
@@ -624,47 +629,599 @@ class Quoteprice
     public function makeFilePDF($quoteprice, $quoteprices_detail, $extra_data)
     {
         try {
-            $user = new User();
-            $userData = $user->getCurrentUser();
-
-            $tmp_quoteprices_detail = [];
-            foreach ($quoteprices_detail as $idx => $item) {
-
-                if (array_key_exists($item->type, $tmp_quoteprices_detail) == false) {
-                    $tmp_quoteprices_detail[$item->type] = [];
-                }
-                $tmp_quoteprices_detail[$item->type][] = $item;
-            }
-
-            $company = presentValidator($extra_data['md_company']) == true ? ($extra_data['md_company'] == '1' ? 'tk' : 'ht') : 'tk';
-            $language = presentValidator($extra_data['md_language']) == true ? $extra_data['md_language'] : 'vn';
+			ini_set('memory_limit', -1);
+            $app_path = app_path();
+            $company = presentValidator($extra_data['md_company']) == true ? ($extra_data['md_company'] == '1' ? 'TK' : 'HT') : 'TK';
+            $language = presentValidator($extra_data['md_language']) == true ? strtoupper($extra_data['md_language']) : 'VN';
 
             $uniqid = uniqid();
-            if ($company == 'tk') {
-                $file_name = '[TKT]' . strtoupper($language) . date('d.m.Y') . '_' . $quoteprice->qp_no . '_' . $quoteprice->cus_code;
-            } else {
-                $file_name = '[HT]' . strtoupper($language) . date('d.m.Y') . '_' . $quoteprice->qp_no . '_' . $quoteprice->cus_code;
+            $file_name = "[$company]" . $language . date('d.m.Y') . '_' . $quoteprice->qp_no . '_' . $quoteprice->cus_code;
+
+            $tpl_file = "$app_path/Exports/QuotepricesExcelTemplate/QP-$company-$language.xlsx";
+            if (file_exists($tpl_file) == false)
+                return false;
+
+            Font::setTrueTypeFontPath(env("MS_TTF_DIR"));
+            $spreadsheet = IOFactory::load($tpl_file);
+            switch ("$company") {
+                case"TK":
+                    $this->writeQPTKExcelFile($spreadsheet, $quoteprice, $quoteprices_detail, $extra_data);
+                    break;
+                case"HT":
+                    $this->writeQPHTExcelFile($spreadsheet, $quoteprice, $quoteprices_detail, $extra_data);
+                    break;
+                default:
+                    $spreadsheet = null;
+                    break;
             }
 
+            if ($spreadsheet == null)
+                return fasle;
 
-            $view_name = "quoteprice_pdf_{$company}_{$language}";
+            $file_path = Storage::disk('quoteprices')->path('') . "$uniqid.pdf";
 
-            $pdf = PDF::loadView($view_name, [
-                'user' => $userData,
-                'title' => $file_name,
-                'extra_data' => $extra_data,
-                'quoteprice' => $quoteprice,
-                'quoteprices_detail' => $tmp_quoteprices_detail
-            ])->setPaper('a4');
-            $is_put = Storage::disk('quoteprices')->put("$uniqid.pdf", $pdf->output());
-            if ($is_put == false)
-                return false;
+            $writer = IOFactory::createWriter($spreadsheet, 'Dompdf');
+            $writer->save($file_path);
 
             return [
                 'uniqid' => $uniqid,
-                'file_path' => Storage::disk('quoteprices')->path("$uniqid.pdf"),
+                'file_path' => $file_path,
                 'file_name' => $file_name
             ];
+
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function writeQPTKExcelFile(&$spreadsheet, $quoteprice, $quoteprices_detail, $extra_data)
+    {
+        try {
+
+            $language = presentValidator($extra_data['md_language']) == true ? strtoupper($extra_data['md_language']) : 'VN';
+            switch ($language) {
+                case "EN":
+                    $this->writeQPTKENExcelFile($spreadsheet, $quoteprice, $quoteprices_detail, $extra_data);
+                    break;
+                case "VN":
+                    $this->writeQPTKVNExcelFile($spreadsheet, $quoteprice, $quoteprices_detail, $extra_data);
+                    break;
+            }
+
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function writeQPTKVNExcelFile(&$spreadsheet, $quoteprice, $quoteprices_detail, $extra_data)
+    {
+        try {
+
+            $worksheet = $spreadsheet->getActiveSheet();
+
+            $worksheet->getCell('A10')->setValue("Số báo giá: " . $quoteprice->qp_no);
+            $worksheet->getCell('K10')->setValue("Ngày báo giá: " . date('Y/m/d', strtotime($quoteprice->qp_date)));
+            $worksheet->getCell('E11')->setValue($extra_data['md_project']);
+            $worksheet->getCell('E12')->setValue($quoteprice->cus_name);
+            $worksheet->getCell('E13')->setValue($quoteprice->cus_addr);
+            $worksheet->getCell('E14')->setValue($quoteprice->cus_phone);
+            $worksheet->getCell('N14')->setValue($quoteprice->cus_fax);
+            $worksheet->getCell('E15')->setValue($quoteprice->contact_name);
+            $worksheet->getCell('N15')->setValue($quoteprice->sale_name);
+            $worksheet->getCell('E16')->setValue($quoteprice->contact_rank);
+            $worksheet->getCell('N16')->setValue($quoteprice->sale_rank);
+            $worksheet->getCell('E17')->setValue($quoteprice->contact_phone);
+            $worksheet->getCell('N17')->setValue($quoteprice->sale_phone);
+            $worksheet->getCell('E18')->setValue($quoteprice->contact_email);
+            $worksheet->getCell('N18')->setValue($quoteprice->sale_email);
+            $worksheet->getCell('Q25')->setValue($quoteprice->qp_amount);
+            $worksheet->getCell('Q26')->setValue($quoteprice->qp_amount_tax - $quoteprice->qp_amount);
+            $worksheet->getCell('Q27')->setValue($quoteprice->qp_amount_tax);
+            $worksheet->getCell('E29')->setValue($extra_data['md_value']);
+            $worksheet->getCell('E30')->setValue($extra_data['md_warranty']);
+            $worksheet->getCell('E31')->setValue($extra_data['md_payment']);
+            $worksheet->getCell('E32')->setValue($extra_data['md_delivery']);
+            $worksheet->getCell('E33')->setValue($extra_data['md_account']);
+
+            $pumps = [];
+            $accessaries = [];
+
+            foreach ($quoteprices_detail as $quoteprice_detail) {
+
+                $type = $quoteprice_detail->type;
+                switch ($type) {
+                    case '1':
+                        $pumps[] = $quoteprice_detail;
+                        break;
+                    case '2':
+                        $accessaries[] = $quoteprice_detail;
+                        break;
+                }
+            }
+
+            if (sizeof($accessaries) == 0) {
+                $worksheet->removeRow(23);
+                $worksheet->removeRow(24);
+            }
+
+            if (sizeof($accessaries) > 1) {
+
+                for ($i = 0; $i < sizeof($accessaries) - 1; $i++) {
+
+                    $worksheet->insertNewRowBefore(25);
+
+                    $worksheet->mergeCellsByColumnAndRow(2, 25, 4, 25);
+                    $worksheet->mergeCellsByColumnAndRow(5, 25, 8, 25);
+                    $worksheet->mergeCellsByColumnAndRow(11, 25, 13, 25);
+                    $worksheet->mergeCellsByColumnAndRow(14, 25, 16, 25);
+                    $worksheet->mergeCellsByColumnAndRow(17, 25, 18, 25);
+                }
+            }
+
+            $acc_row_no = 24;
+            $acc_row_idx = 1;
+            foreach ($accessaries as $item) {
+                $worksheet->getCell("A{$acc_row_no}")->setValue($acc_row_idx);
+                $worksheet->getCell("B{$acc_row_no}")->setValue($item->acce_code);
+                $worksheet->getCell("E{$acc_row_no}")->setValue($item->acce_name);
+                $worksheet->getCell("I{$acc_row_no}")->setValue($item->unit);
+                $worksheet->getCell("J{$acc_row_no}")->setValue($item->quantity);
+                $worksheet->getCell("K{$acc_row_no}")->setValue($item->delivery_time);
+                $worksheet->getCell("N{$acc_row_no}")->setValue($item->price);
+                $worksheet->getCell("Q{$acc_row_no}")->setValue($item->amount);
+
+                $acc_row_no++;
+                $acc_row_idx++;
+            }
+
+            if (sizeof($pumps) == 0 && sizeof($accessaries) > 0) {
+                $worksheet->removeRow(20);
+                $worksheet->removeRow(21);
+            }
+
+            if (sizeof($pumps) > 1) {
+
+                for ($i = 0; $i < sizeof($pumps) - 1; $i++) {
+
+                    $worksheet->insertNewRowBefore(23);
+
+                    $worksheet->mergeCellsByColumnAndRow(2, 23, 8, 23);
+                    $worksheet->mergeCellsByColumnAndRow(11, 23, 13, 23);
+                    $worksheet->mergeCellsByColumnAndRow(14, 23, 16, 23);
+                    $worksheet->mergeCellsByColumnAndRow(17, 23, 18, 23);
+                }
+            }
+
+            $pump_row_no = 22;
+            $pump_row_idx = 1;
+            foreach ($pumps as $item) {
+
+                $row_height = 94;
+                $worksheet->getCell("A{$pump_row_no}")->setValue($pump_row_idx);
+                if ($item->prod_specs_mce != '' && $item->prod_specs_mce != null) {
+                    $richText = htmlToRichText($item->prod_specs_mce, 515);
+                    $item->prod_specs_mce = $richText['text'];
+                    if ($row_height < $richText['height']) {
+                        $row_height = $richText['height'];
+                    }
+                }
+                $worksheet->getCell("B{$pump_row_no}")->setValue($item->prod_specs_mce);
+                $worksheet->getCell("I{$pump_row_no}")->setValue($item->unit);
+                $worksheet->getCell("J{$pump_row_no}")->setValue($item->quantity);
+                $worksheet->getCell("K{$pump_row_no}")->setValue($item->delivery_time);
+                $worksheet->getCell("N{$pump_row_no}")->setValue($item->price);
+                $worksheet->getCell("Q{$pump_row_no}")->setValue($item->amount);
+
+                $worksheet->getRowDimension($pump_row_no)->setRowHeight($row_height);
+
+                $pump_row_no++;
+                $pump_row_idx++;
+            }
+
+            return $spreadsheet;
+
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function writeQPTKENExcelFile(&$spreadsheet, $quoteprice, $quoteprices_detail, $extra_data)
+    {
+        try {
+
+            $worksheet = $spreadsheet->getActiveSheet();
+
+            $worksheet->getCell('A9')->setValue("No: " . $quoteprice->qp_no);
+            $worksheet->getCell('E10')->setValue($extra_data['md_project']);
+            $worksheet->getCell('E11')->setValue($quoteprice->cus_name);
+            $worksheet->getCell('E12')->setValue($quoteprice->cus_addr);
+            $worksheet->getCell('E13')->setValue($quoteprice->cus_phone);
+            $worksheet->getCell('E14')->setValue($quoteprice->contact_name);
+            $worksheet->getCell('N14')->setValue($quoteprice->sale_name);
+            $worksheet->getCell('E15')->setValue($quoteprice->contact_rank);
+            $worksheet->getCell('N15')->setValue($quoteprice->sale_rank);
+            $worksheet->getCell('E16')->setValue($quoteprice->contact_phone);
+            $worksheet->getCell('N16')->setValue($quoteprice->sale_phone);
+            $worksheet->getCell('E17')->setValue($quoteprice->contact_email);
+            $worksheet->getCell('N17')->setValue($quoteprice->sale_email);
+            $worksheet->getCell('Q24')->setValue($quoteprice->qp_amount);
+            $worksheet->getCell('Q25')->setValue($quoteprice->qp_amount_tax - $quoteprice->qp_amount);
+            $worksheet->getCell('Q26')->setValue($quoteprice->qp_amount_tax);
+            $worksheet->getCell('E28')->setValue($extra_data['md_value']);
+            $worksheet->getCell('E29')->setValue($extra_data['md_warranty']);
+            $worksheet->getCell('E30')->setValue($extra_data['md_payment']);
+            $worksheet->getCell('E31')->setValue($extra_data['md_delivery']);
+            $worksheet->getCell('E32')->setValue($extra_data['md_account']);
+
+            $pumps = [];
+            $accessaries = [];
+
+            foreach ($quoteprices_detail as $quoteprice_detail) {
+
+                $type = $quoteprice_detail->type;
+                switch ($type) {
+                    case '1':
+                        $pumps[] = $quoteprice_detail;
+                        break;
+                    case '2':
+                        $accessaries[] = $quoteprice_detail;
+                        break;
+                }
+            }
+
+            if (sizeof($accessaries) == 0) {
+                $worksheet->removeRow(22);
+                $worksheet->removeRow(23);
+            }
+
+            if (sizeof($accessaries) > 1) {
+
+                for ($i = 0; $i < sizeof($accessaries) - 1; $i++) {
+
+                    $worksheet->insertNewRowBefore(24);
+
+                    $worksheet->mergeCellsByColumnAndRow(2, 24, 4, 24);
+                    $worksheet->mergeCellsByColumnAndRow(5, 24, 8, 24);
+                    $worksheet->mergeCellsByColumnAndRow(11, 24, 13, 24);
+                    $worksheet->mergeCellsByColumnAndRow(14, 24, 16, 24);
+                    $worksheet->mergeCellsByColumnAndRow(17, 24, 18, 24);
+                }
+            }
+
+            $acc_row_no = 23;
+            $acc_row_idx = 1;
+            foreach ($accessaries as $item) {
+                $worksheet->getCell("A{$acc_row_no}")->setValue($acc_row_idx);
+                $worksheet->getCell("B{$acc_row_no}")->setValue($item->acce_code);
+                $worksheet->getCell("E{$acc_row_no}")->setValue($item->acce_name);
+                $worksheet->getCell("I{$acc_row_no}")->setValue($item->unit);
+                $worksheet->getCell("J{$acc_row_no}")->setValue($item->quantity);
+                $worksheet->getCell("K{$acc_row_no}")->setValue($item->delivery_time);
+                $worksheet->getCell("N{$acc_row_no}")->setValue($item->price);
+                $worksheet->getCell("Q{$acc_row_no}")->setValue($item->amount);
+
+                $acc_row_no++;
+                $acc_row_idx++;
+            }
+
+            if (sizeof($pumps) == 0 && sizeof($accessaries) > 0) {
+                $worksheet->removeRow(20);
+                $worksheet->removeRow(21);
+            }
+
+            if (sizeof($pumps) > 1) {
+
+                for ($i = 0; $i < sizeof($pumps) - 1; $i++) {
+
+                    $worksheet->insertNewRowBefore(22);
+
+                    $worksheet->mergeCellsByColumnAndRow(2, 22, 8, 22);
+                    $worksheet->mergeCellsByColumnAndRow(11, 22, 13, 22);
+                    $worksheet->mergeCellsByColumnAndRow(14, 22, 16, 22);
+                    $worksheet->mergeCellsByColumnAndRow(17, 22, 18, 22);
+                }
+            }
+
+            $pump_row_no = 21;
+            $pump_row_idx = 1;
+            foreach ($pumps as $item) {
+
+                $row_height = 94;
+                $worksheet->getCell("A{$pump_row_no}")->setValue($pump_row_idx);
+                if ($item->prod_specs_mce != '' && $item->prod_specs_mce != null) {
+                    $richText = htmlToRichText($item->prod_specs_mce, 515);
+                    $item->prod_specs_mce = $richText['text'];
+                    if ($row_height < $richText['height']) {
+                        $row_height = $richText['height'];
+                    }
+                }
+                $worksheet->getCell("B{$pump_row_no}")->setValue($item->prod_specs_mce);
+                $worksheet->getCell("I{$pump_row_no}")->setValue($item->unit);
+                $worksheet->getCell("J{$pump_row_no}")->setValue($item->quantity);
+                $worksheet->getCell("K{$pump_row_no}")->setValue($item->delivery_time);
+                $worksheet->getCell("N{$pump_row_no}")->setValue($item->price);
+                $worksheet->getCell("Q{$pump_row_no}")->setValue($item->amount);
+
+                $worksheet->getRowDimension($pump_row_no)->setRowHeight($row_height);
+
+                $pump_row_no++;
+                $pump_row_idx++;
+            }
+
+            return $spreadsheet;
+
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function writeQPHTExcelFile(&$spreadsheet, $quoteprice, $quoteprices_detail, $extra_data)
+    {
+        $language = presentValidator($extra_data['md_language']) == true ? strtoupper($extra_data['md_language']) : 'VN';
+        switch ($language) {
+            case "EN":
+                $this->writeQPHTENExcelFile($spreadsheet, $quoteprice, $quoteprices_detail, $extra_data);
+                break;
+            case "VN":
+                $this->writeQPHTVNExcelFile($spreadsheet, $quoteprice, $quoteprices_detail, $extra_data);
+                break;
+        }
+    }
+
+    public function writeQPHTENExcelFile(&$spreadsheet, $quoteprice, $quoteprices_detail, $extra_data)
+    {
+        try {
+
+            $worksheet = $spreadsheet->getActiveSheet();
+
+            $worksheet->getCell('A7')->setValue("No: " . $quoteprice->qp_no);
+            $worksheet->getCell('E8')->setValue($extra_data['md_project']);
+            $worksheet->getCell('E9')->setValue($quoteprice->cus_name);
+            $worksheet->getCell('E10')->setValue($quoteprice->cus_addr);
+            $worksheet->getCell('E11')->setValue($quoteprice->cus_phone);
+            $worksheet->getCell('E12')->setValue($quoteprice->contact_name);
+            $worksheet->getCell('N12')->setValue($quoteprice->sale_name);
+            $worksheet->getCell('E13')->setValue($quoteprice->contact_rank);
+            $worksheet->getCell('N13')->setValue($quoteprice->sale_rank);
+            $worksheet->getCell('E14')->setValue($quoteprice->contact_phone);
+            $worksheet->getCell('N14')->setValue($quoteprice->sale_phone);
+            $worksheet->getCell('E15')->setValue($quoteprice->contact_email);
+            $worksheet->getCell('N15')->setValue($quoteprice->sale_email);
+            $worksheet->getCell('Q22')->setValue($quoteprice->qp_amount);
+            $worksheet->getCell('Q23')->setValue($quoteprice->qp_amount_tax - $quoteprice->qp_amount);
+            $worksheet->getCell('Q24')->setValue($quoteprice->qp_amount_tax);
+            $worksheet->getCell('E26')->setValue($extra_data['md_value']);
+            $worksheet->getCell('E27')->setValue($extra_data['md_warranty']);
+            $worksheet->getCell('E28')->setValue($extra_data['md_payment']);
+            $worksheet->getCell('E29')->setValue($extra_data['md_delivery']);
+            $worksheet->getCell('E30')->setValue($extra_data['md_account']);
+
+            $pumps = [];
+            $accessaries = [];
+
+            foreach ($quoteprices_detail as $quoteprice_detail) {
+
+                $type = $quoteprice_detail->type;
+                switch ($type) {
+                    case '1':
+                        $pumps[] = $quoteprice_detail;
+                        break;
+                    case '2':
+                        $accessaries[] = $quoteprice_detail;
+                        break;
+                }
+            }
+
+            if (sizeof($accessaries) == 0) {
+                $worksheet->removeRow(20);
+                $worksheet->removeRow(21);
+            }
+
+            if (sizeof($accessaries) > 1) {
+
+                for ($i = 0; $i < sizeof($accessaries) - 1; $i++) {
+
+                    $worksheet->insertNewRowBefore(22);
+
+                    $worksheet->mergeCellsByColumnAndRow(2, 22, 4, 22);
+                    $worksheet->mergeCellsByColumnAndRow(5, 22, 8, 22);
+                    $worksheet->mergeCellsByColumnAndRow(11, 22, 13, 22);
+                    $worksheet->mergeCellsByColumnAndRow(14, 22, 16, 22);
+                    $worksheet->mergeCellsByColumnAndRow(17, 22, 18, 22);
+                }
+            }
+
+            $acc_row_no = 21;
+            $acc_row_idx = 1;
+            foreach ($accessaries as $item) {
+
+                $worksheet->getCell("A{$acc_row_no}")->setValue($acc_row_idx);
+                $worksheet->getCell("B{$acc_row_no}")->setValue($item->acce_code);
+                $worksheet->getCell("E{$acc_row_no}")->setValue($item->acce_name);
+                $worksheet->getCell("I{$acc_row_no}")->setValue($item->unit);
+                $worksheet->getCell("J{$acc_row_no}")->setValue($item->quantity);
+                $worksheet->getCell("K{$acc_row_no}")->setValue($item->delivery_time);
+                $worksheet->getCell("N{$acc_row_no}")->setValue($item->price);
+                $worksheet->getCell("Q{$acc_row_no}")->setValue($item->amount);
+
+                $acc_row_no++;
+                $acc_row_idx++;
+            }
+
+            if (sizeof($pumps) == 0 && sizeof($accessaries) > 0) {
+                $worksheet->removeRow(20);
+                $worksheet->removeRow(21);
+            }
+
+            if (sizeof($pumps) > 1) {
+
+                for ($i = 0; $i < sizeof($pumps) - 1; $i++) {
+
+                    $worksheet->insertNewRowBefore(20);
+
+                    $worksheet->mergeCellsByColumnAndRow(2, 20, 8, 20);
+                    $worksheet->mergeCellsByColumnAndRow(11, 20, 13, 20);
+                    $worksheet->mergeCellsByColumnAndRow(14, 20, 16, 20);
+                    $worksheet->mergeCellsByColumnAndRow(17, 20, 18, 20);
+                }
+            }
+
+            $pump_row_no = 19;
+            $pump_row_idx = 1;
+            foreach ($pumps as $item) {
+
+                $row_height = 94;
+                $worksheet->getCell("A{$pump_row_no}")->setValue($pump_row_idx);
+                if ($item->prod_specs_mce != '' && $item->prod_specs_mce != null) {
+                    $richText = htmlToRichText($item->prod_specs_mce, 515);
+                    $item->prod_specs_mce = $richText['text'];
+                    if ($row_height < $richText['height']) {
+                        $row_height = $richText['height'];
+                    }
+                }
+                $worksheet->getCell("B{$pump_row_no}")->setValue($item->prod_specs_mce);
+                $worksheet->getCell("I{$pump_row_no}")->setValue($item->unit);
+                $worksheet->getCell("J{$pump_row_no}")->setValue($item->quantity);
+                $worksheet->getCell("K{$pump_row_no}")->setValue($item->delivery_time);
+                $worksheet->getCell("N{$pump_row_no}")->setValue($item->price);
+                $worksheet->getCell("Q{$pump_row_no}")->setValue($item->amount);
+
+                $worksheet->getRowDimension($pump_row_no)->setRowHeight($row_height);
+
+                $pump_row_no++;
+                $pump_row_idx++;
+            }
+
+            return $spreadsheet;
+
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function writeQPHTVNExcelFile(&$spreadsheet, $quoteprice, $quoteprices_detail, $extra_data)
+    {
+        try {
+
+            $worksheet = $spreadsheet->getActiveSheet();
+
+            $worksheet->getCell('A7')->setValue("Số báo giá: " . $quoteprice->qp_no);
+            $worksheet->getCell('C8')->setValue($extra_data['md_project']);
+            $worksheet->getCell('C9')->setValue($quoteprice->cus_name);
+            $worksheet->getCell('C10')->setValue($quoteprice->cus_addr);
+            $worksheet->getCell('N10')->setValue($quoteprice->cus_phone);
+            $worksheet->getCell('C11')->setValue($quoteprice->contact_name);
+            $worksheet->getCell('G11')->setValue($quoteprice->contact_rank);
+            $worksheet->getCell('N11')->setValue($quoteprice->cus_fax);
+            $worksheet->getCell('C12')->setValue($quoteprice->contact_phone);
+            $worksheet->getCell('G12')->setValue($quoteprice->contact_email);
+            $worksheet->getCell('N12')->setValue(date('Y/m/d', strtotime($quoteprice->qp_date)));
+            $worksheet->getCell('Q19')->setValue($quoteprice->qp_amount);
+            $worksheet->getCell('Q20')->setValue($quoteprice->qp_amount_tax - $quoteprice->qp_amount);
+            $worksheet->getCell('Q21')->setValue($quoteprice->qp_amount_tax);
+            $worksheet->getCell('E23')->setValue($extra_data['md_value']);
+            $worksheet->getCell('E24')->setValue($extra_data['md_warranty']);
+            $worksheet->getCell('E25')->setValue($extra_data['md_payment']);
+            $worksheet->getCell('E26')->setValue($extra_data['md_delivery']);
+            $worksheet->getCell('E27')->setValue($extra_data['md_account']);
+
+            $pumps = [];
+            $accessaries = [];
+
+            foreach ($quoteprices_detail as $quoteprice_detail) {
+
+                $type = $quoteprice_detail->type;
+                switch ($type) {
+                    case '1':
+                        $pumps[] = $quoteprice_detail;
+                        break;
+                    case '2':
+                        $accessaries[] = $quoteprice_detail;
+                        break;
+                }
+            }
+
+            if (sizeof($accessaries) == 0) {
+                $worksheet->removeRow(17);
+                $worksheet->removeRow(18);
+            }
+
+            if (sizeof($accessaries) > 1) {
+
+                for ($i = 0; $i < sizeof($accessaries) - 1; $i++) {
+
+                    $worksheet->insertNewRowBefore(19);
+
+                    $worksheet->mergeCellsByColumnAndRow(2, 19, 4, 19);
+                    $worksheet->mergeCellsByColumnAndRow(5, 19, 8, 19);
+                    $worksheet->mergeCellsByColumnAndRow(11, 19, 13, 19);
+                    $worksheet->mergeCellsByColumnAndRow(14, 19, 16, 19);
+                    $worksheet->mergeCellsByColumnAndRow(17, 19, 18, 19);
+                }
+            }
+
+            $acc_row_no = 18;
+            $acc_row_idx = 1;
+            foreach ($accessaries as $item) {
+                $worksheet->getCell("A{$acc_row_no}")->setValue($acc_row_idx);
+                $worksheet->getCell("B{$acc_row_no}")->setValue($item->acce_code);
+                $worksheet->getCell("E{$acc_row_no}")->setValue($item->acce_name);
+                $worksheet->getCell("I{$acc_row_no}")->setValue($item->unit);
+                $worksheet->getCell("J{$acc_row_no}")->setValue($item->quantity);
+                $worksheet->getCell("K{$acc_row_no}")->setValue($item->delivery_time);
+                $worksheet->getCell("N{$acc_row_no}")->setValue($item->price);
+                $worksheet->getCell("Q{$acc_row_no}")->setValue($item->amount);
+
+                $acc_row_no++;
+                $acc_row_idx++;
+            }
+
+            if (sizeof($pumps) == 0 && sizeof($accessaries) > 0) {
+                $worksheet->removeRow(20);
+                $worksheet->removeRow(21);
+            }
+
+            if (sizeof($pumps) > 1) {
+
+                for ($i = 0; $i < sizeof($pumps) - 1; $i++) {
+
+                    $worksheet->insertNewRowBefore(17);
+
+                    $worksheet->mergeCellsByColumnAndRow(2, 17, 8, 17);
+                    $worksheet->mergeCellsByColumnAndRow(11, 17, 13, 17);
+                    $worksheet->mergeCellsByColumnAndRow(14, 17, 16, 17);
+                    $worksheet->mergeCellsByColumnAndRow(17, 17, 18, 17);
+                }
+            }
+
+            $pump_row_no = 16;
+            $pump_row_idx = 1;
+            foreach ($pumps as $item) {
+
+                $row_height = 94;
+                $worksheet->getCell("A{$pump_row_no}")->setValue($pump_row_idx);
+                if ($item->prod_specs_mce != '' && $item->prod_specs_mce != null) {
+                    $richText = htmlToRichText($item->prod_specs_mce, 515);
+                    $item->prod_specs_mce = $richText['text'];
+                    if ($row_height < $richText['height']) {
+                        $row_height = $richText['height'];
+                    }
+                }
+                $worksheet->getCell("B{$pump_row_no}")->setValue($item->prod_specs_mce);
+                $worksheet->getCell("I{$pump_row_no}")->setValue($item->unit);
+                $worksheet->getCell("J{$pump_row_no}")->setValue($item->quantity);
+                $worksheet->getCell("K{$pump_row_no}")->setValue($item->delivery_time);
+                $worksheet->getCell("N{$pump_row_no}")->setValue($item->price);
+                $worksheet->getCell("Q{$pump_row_no}")->setValue($item->amount);
+
+                $worksheet->getRowDimension($pump_row_no)->setRowHeight($row_height);
+
+                $pump_row_no++;
+                $pump_row_idx++;
+            }
+
+            return $spreadsheet;
+
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -765,4 +1322,5 @@ class Quoteprice
         }
         return [$field_name, $order_by];
     }
+
 }

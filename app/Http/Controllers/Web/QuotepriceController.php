@@ -18,6 +18,9 @@ class QuotepriceController extends Controller
     public function index(Request $request)
     {
         try {
+
+            checkUserRight(11, 1);
+
             $qpModel = new Quoteprice();
             $qpData = $qpModel->getQuoteprices();
             $pagingData = $qpModel->getPagingInfo();
@@ -47,6 +50,9 @@ class QuotepriceController extends Controller
     public function detail(Request $request, $qp_id)
     {
         try {
+
+            checkUserRight(11, 1);
+
             $qpModel = new Quoteprice();
             $qpData = $qpModel->getQuoteprice($qp_id);
 
@@ -55,6 +61,10 @@ class QuotepriceController extends Controller
             }
             $qpDetail = new QuotepriceDetail();
             $qpDetailData = $qpDetail->getQuotepriceDetailsByQpId($qp_id);
+
+            $user = new User();
+            $userData = $user->getCurrentUser();
+            $saleData = $user->getAllUserByDepId('3');
 
             $prdStatus = new ProductStatus();
             $prdStatusData = $prdStatus->getAllStatus();
@@ -76,6 +86,8 @@ class QuotepriceController extends Controller
             return view('quoteprice_detail', [
                 'quoteprice' => $qpData,
                 'quotepriceDetail' => $qpDetailData,
+                'user' => $userData,
+                'sales' => $saleData,
                 'contacts' => $contactData,
                 'languages' => $languages,
                 'company' => convertDataToDropdownOptions($comData, 'com_id', 'com_nm_shot'),
@@ -90,6 +102,9 @@ class QuotepriceController extends Controller
     public function create(Request $request, $cus_id)
     {
         try {
+
+            checkUserRight(11, 4);
+
             $cus = new Customer();
             $cusData = $cus->getCustomerById($cus_id);
             if ($cusData == null) {
@@ -98,6 +113,7 @@ class QuotepriceController extends Controller
 
             $user = new User();
             $userData = $user->getCurrentUser();
+            $saleData = $user->getAllUserByDepId('3');
 
             $qpModel = new Quoteprice();
             $qp_no = $qpModel->generateQpNo();
@@ -114,6 +130,7 @@ class QuotepriceController extends Controller
             return view('quoteprice_create', [
                 'qp_no' => $qp_no,
                 'user' => $userData,
+                'sales' => $saleData,
                 'customer' => $cusData,
                 'contacts' => $contactData,
                 'prdStatus' => convertDataToDropdownOptions($prdStatusData, 'id', 'title'),

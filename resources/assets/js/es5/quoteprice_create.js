@@ -241,11 +241,11 @@ function prod_row_validate_data(data) {
         && data.dt_prod_specs == ""
         && data.dt_note == ""
         && data.dt_unit == ""
-        && (data.dt_quantity == "" || data.dt_quantity == "0")
+        && (data.dt_quantity == "" || data.dt_quantity == null || data.dt_quantity == "0")
         && data.dt_delivery_time == ""
         && (data.dt_status == "1" || data.dt_status == "")
-        && (data.dt_price == "" || data.dt_price == "0")
-        && (data.dt_amount == "" || data.dt_amount == "0")
+        && (data.dt_price == "" || data.dt_price == null || data.dt_price == "0")
+        && (data.dt_amount == "" || data.dt_amount == null || data.dt_amount == "0")
     ) return false;
     return true;
 }
@@ -410,11 +410,11 @@ function acce_row_validate_data(data) {
         && data.dt_acce_name == ""
         && data.dt_note == ""
         && data.dt_unit == ""
-        && data.dt_quantity == ""
+        && (data.dt_quantity == "" || data.dt_quantity == null || data.dt_quantity == "0")
         && data.dt_delivery_time == ""
         && (data.dt_status == "1" || data.dt_status == "")
-        && data.dt_price == ""
-        && data.dt_amount == ""
+        && (data.dt_price == "" || data.dt_price == null || data.dt_price == "0")
+        && (data.dt_amount == "" || data.dt_amount == null || data.dt_amount == "0")
     ) return false;
     return true;
 }
@@ -864,6 +864,7 @@ function qp_colect_data() {
     data.qp_note = $("textarea[name=qp_note]").val();
     data.cus_id = $("input[name=cus_id]").val();
     data.cad_id = $("select[name=qp_cad_id]").val();
+    data.sale_id = $("input[name=qp_sale_id]").val();
     data.contact_id = $("input[name=qp_contact_id]").val();
     data.contact_name = $("input[name=qp_contact_name]").val();
     data.contact_rank = $("input[name=qp_contact_rank]").val();
@@ -993,9 +994,13 @@ function qp_render_drd_contact() {
             drd_html += '</div>';
             drd_html += '</a>';
         });
-    }else{
+    } else {
         drd_html = '<div style="margin: 10px 15px"><h5>Không có người liên hệ.</h5></div>';
     }
+    drd_html += '<div class="dropdown-divider"></div>';
+    drd_html += '<div class="w-100 text-right">';
+    drd_html += '<button type="button" class="btn btn-link btn-sm text-primary text-right" onclick="qp_drd_contact_clear(event)">Xóa</button>';
+    drd_html += '</div>';
 
     $("#qp_contact_name_drd_menu").empty();
     $("#qp_contact_name_drd_menu").html(drd_html);
@@ -1004,9 +1009,19 @@ function qp_render_drd_contact() {
 function qp_drd_contact_select(self, event) {
     var con_id = $(self).attr('con_id');
     var contact = qp_get_selected_contact(con_id);
-    if(contact == null)
+    if (contact == null)
         return false;
     qp_set_contact_form(contact);
+}
+
+function qp_drd_contact_clear(event) {
+    event.stopPropagation();
+    $("input[name=qp_contact_id]").val('');
+    $("input[name=qp_contact_name]").val('');
+    $("input[name=qp_contact_rank]").val('');
+    $("input[name=qp_contact_phone]").val('');
+    $("input[name=qp_contact_email]").val('');
+    $('#qp_contact_name_drd').dropdown('hide');
 }
 
 function qp_get_selected_contact(con_id) {
@@ -1018,12 +1033,88 @@ function qp_get_selected_contact(con_id) {
     return contact;
 }
 
-function qp_set_contact_form(contact){
+function qp_set_contact_form(contact) {
     $("input[name=qp_contact_id]").val(contact.con_id);
     $("input[name=qp_contact_name]").val(contact.con_name);
     $("input[name=qp_contact_rank]").val(contact.con_rank);
     $("input[name=qp_contact_phone]").val(contact.con_phone);
     $("input[name=qp_contact_email]").val(contact.con_mail);
+}
+
+function qp_render_drd_sale() {
+    var drd_html = "";
+    if (sale_list.length > 0) {
+
+        var qp_sale_id = $("input[name=qp_sale_id]").val();
+
+        $.map(sale_list, function (sale, idx) {
+
+            var itm_active = "";
+            if (qp_sale_id == sale.id) {
+                itm_active = "active";
+            }
+
+            drd_html += '<a sale_id="' + sale.id + '" class="dropdown-item ' + itm_active + ' media pdl-5" href="#" onClick="qp_drd_sale_select(this, event)">';
+            drd_html += '<div style="width: 30px; height: 30px" class="mr-3">';
+
+            if (sale.avatar_base64 == '') {
+                drd_html += '<img src="' + deafult_profile + '" class="img-fluid img-thumbnail" alt="">';
+            } else {
+                drd_html += '<img src="' + sale.avatar_base64 + '" class="img-fluid img-thumbnail" alt="">';
+            }
+
+            drd_html += '</div>';
+            drd_html += '<div class="media-body" style="height: 30px; line-height: 5px">';
+            drd_html += '<h6 class="mt-0 mb-1">' + html_escape(sale.name) + '</h6>';
+            drd_html += '<small>' + html_escape(sale.rank) + '</small>';
+            drd_html += '</div>';
+            drd_html += '</a>';
+        });
+    } else {
+        drd_html = '<div style="margin: 10px 15px"><h5>Không có nhân viên phụ trách.</h5></div>';
+    }
+    drd_html += '<div class="dropdown-divider"></div>';
+    drd_html += '<div class="w-100 text-right">';
+    drd_html += '<button type="button" class="btn btn-link btn-sm text-primary text-right" onclick="qp_drd_sale_clear(event)">Xóa</button>';
+    drd_html += '</div>';
+
+    $("#qp_sale_name_drd_menu").empty();
+    $("#qp_sale_name_drd_menu").html(drd_html);
+}
+
+function qp_drd_sale_select(self, event) {
+    var sale_id = $(self).attr('sale_id');
+    var sale = qp_get_selected_sale(sale_id);
+    if (sale == null)
+        return false;
+    qp_set_sale_form(sale);
+}
+
+function qp_drd_sale_clear(event) {
+    event.stopPropagation();
+    $("input[name=qp_sale_id]").val('');
+    $("input[name=qp_sale_name]").val('');
+    $("input[name=qp_sale_rank]").val('');
+    $("input[name=qp_sale_phone]").val('');
+    $("input[name=qp_sale_email]").val('');
+    $('#qp_sale_name_drd').dropdown('hide');
+}
+
+function qp_get_selected_sale(sale_id) {
+    var sale = _.find(sale_list, function (o) {
+        return o.id == sale_id;
+    });
+    if (typeof sale === 'undefined')
+        return null;
+    return sale;
+}
+
+function qp_set_sale_form(sale) {
+    $("input[name=qp_sale_id]").val(sale.id);
+    $("input[name=qp_sale_name]").val(sale.name);
+    $("input[name=qp_sale_rank]").val(sale.rank);
+    $("input[name=qp_sale_phone]").val(sale.phone);
+    $("input[name=qp_sale_email]").val(sale.email);
 }
 
 function w_sleep_scrollbars(instance) {
@@ -1075,4 +1166,10 @@ $(document).ready(function () {
     $('#qp_contact_name_drd').on('show.bs.dropdown', function () {
         qp_render_drd_contact();
     });
+
+    if ($("#qp_sale_name").attr('select') == true) {
+        $('#qp_sale_name_drd').on('show.bs.dropdown', function () {
+            qp_render_drd_sale();
+        });
+    }
 });
