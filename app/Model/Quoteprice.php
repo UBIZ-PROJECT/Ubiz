@@ -5,14 +5,14 @@ namespace App\Model;
 use Mail;
 use App\User;
 use App\Jobs\SendQuotepriceEmail;
-use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Model\QuotepriceDetail;
 use \PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Shared\Font;
+use \PhpOffice\PhpSpreadsheet\Shared\Font;
+use \PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 
 class Quoteprice
 {
@@ -541,7 +541,7 @@ class Quoteprice
         DB::beginTransaction();
         try {
 
-            $file = $this->makeFilePDF($quoteprice, $quoteprices_detail, $extra_data);
+            $file = $this->makeQuotepriceFile($quoteprice, $quoteprices_detail, $extra_data);
             if ($file == false)
                 return false;
 
@@ -581,7 +581,7 @@ class Quoteprice
             $mail_data['cus_mail'] = $quoteprice->contact_email;
             $mail_data['sale_name'] = $quoteprice->sale_name;
             $mail_data['file_path'] = $file['file_path'];
-            $mail_data['file_name'] = $file['file_name'] . ".pdf";
+            $mail_data['file_name'] = $file['file_name'] . ".xlsx";
 
             $mail_conf = makeMailConf(
                 $curUser->email,
@@ -592,14 +592,13 @@ class Quoteprice
             dispatch(new SendQuotepriceEmail($mail_data, $mail_conf));
 
             DB::commit();
-            return $file['uniqid'];
         } catch (\Throwable $e) {
             DB::rollback();
             throw $e;
         }
     }
 
-    public function getPdfFile($qp_id, $uniqid)
+    public function getQuotepriceFile($qp_id, $uniqid)
     {
         try {
             $file = DB::table('quoteprice_file')
@@ -613,20 +612,20 @@ class Quoteprice
             if ($file == null)
                 return;
 
-            $is_exists = Storage::disk('quoteprices')->exists("$uniqid.pdf");
+            $is_exists = Storage::disk('quoteprices')->exists("$uniqid.xlsx");
             if ($is_exists == false)
                 return null;
 
             return [
                 'name' => $file->file_name,
-                'path' => Storage::disk('quoteprices')->path("$uniqid.pdf")
+                'path' => Storage::disk('quoteprices')->path("$uniqid.xlsx")
             ];
         } catch (\Throwable $e) {
             throw $e;
         }
     }
 
-    public function makeFilePDF($quoteprice, $quoteprices_detail, $extra_data)
+    public function makeQuotepriceFile($quoteprice, $quoteprices_detail, $extra_data)
     {
         try {
 			ini_set('memory_limit', -1);
@@ -643,10 +642,18 @@ class Quoteprice
 
             Font::setTrueTypeFontPath(env("MS_TTF_DIR"));
             $spreadsheet = IOFactory::load($tpl_file);
-//            $spreadsheet->getSecurity()->setLockStructure(true);
-//            $spreadsheet->getSecurity()->setWorkbookPassword("000000");
-//            $spreadsheet->getActiveSheet()->getProtection()->setPassword('000000');
-//            $spreadsheet->getActiveSheet()->getProtection()->setSheet(true);
+            $spreadsheet->getSecurity()->setLockStructure(true);
+            $spreadsheet->getSecurity()->setWorkbookPassword(env("MS_EXCEL_PW"));
+            $spreadsheet->getActiveSheet()->getProtection()->setPassword(env("MS_EXCEL_PW"));
+            $spreadsheet->getActiveSheet()->getProtection()->setFormatCells(false);
+            $spreadsheet->getActiveSheet()->getProtection()->setSheet(true);
+            $spreadsheet->getActiveSheet()->getPageSetup()->setPaperSize(PageSetup::PAPERSIZE_A4);
+            $spreadsheet->getActiveSheet()->getPageSetup()->setFitToWidth(1);
+            $spreadsheet->getActiveSheet()->getPageMargins()->setTop(1);
+            $spreadsheet->getActiveSheet()->getPageMargins()->setRight(0.75);
+            $spreadsheet->getActiveSheet()->getPageMargins()->setLeft(0.75);
+            $spreadsheet->getActiveSheet()->getPageMargins()->setBottom(1);
+
             switch ("$company") {
                 case"TK":
                     $this->writeQPTKExcelFile($spreadsheet, $quoteprice, $quoteprices_detail, $extra_data);
@@ -663,14 +670,10 @@ class Quoteprice
                 return fasle;
 
             $disk_path = Storage::disk('quoteprices')->path('');
-            $file_path = "$disk_path$uniqid.pdf";
+            $file_path = "$disk_path$uniqid.xlsx";
 
             $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
             $writer->save("$disk_path$uniqid.xlsx");
-
-            $command = "sudo sh /home/drive/script/xlsx2pdf.sh $disk_path$uniqid.xlsx /home/drive/quoteprices";
-            exec($command, $res);
-
             return [
                 'uniqid' => $uniqid,
                 'file_path' => $file_path,

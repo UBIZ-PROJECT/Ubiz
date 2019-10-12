@@ -141,21 +141,44 @@ class QuotepriceController extends Controller
         }
     }
 
-    public function pdf(Request $request, $qp_id, $uniqid)
+    public function preview(Request $request, $qp_id)
     {
         try {
+
+            $extra_data = $request->get('params', null);
+
             $qpModel = new Quoteprice();
             $qpData = $qpModel->getQuoteprice($qp_id);
-            if ($qpData == null) {
-                return response()->view('errors.404', [], 404);
+            if (empty($qpData) == true || $qpData == null) {
+                return response()->json(['success' => false, 'message' => __('Data is wrong.!')], 200);
             }
 
-            $file = $qpModel->getPdfFile($qp_id, $uniqid);
-            if ($file == null) {
-                return response()->view('errors.404', [], 404);
+            $qpDetailModel = new QuotepriceDetail();
+            $qpDetailData = $qpDetailModel->getQuotepriceDetailsByQpId($qp_id);
+
+            $user = new User();
+            $userData = $user->getCurrentUser();
+
+            $tmp_quoteprices_detail = [];
+            foreach ($qpDetailData as $idx => $item) {
+
+                if (array_key_exists($item->type, $tmp_quoteprices_detail) == false) {
+                    $tmp_quoteprices_detail[$item->type] = [];
+                }
+                $tmp_quoteprices_detail[$item->type][] = $item;
             }
 
-            return response()->file($file['path'], ['Content-Disposition' => 'filename="' . $file['name'] . '.pdf"']);
+            $company = presentValidator($extra_data['md_company']) == true ? ($extra_data['md_company'] == '1' ? 'tk' : 'ht') : 'tk';
+            $language = presentValidator($extra_data['md_language']) == true ? $extra_data['md_language'] : 'vn';
+
+            $view_name = "quoteprice_pdf_{$company}_{$language}";
+
+            return view($view_name, [
+                'user' => $userData,
+                'extra_data' => $extra_data,
+                'quoteprice' => $qpData,
+                'quoteprices_detail' => $tmp_quoteprices_detail
+            ]);
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -170,18 +193,18 @@ class QuotepriceController extends Controller
                 return response()->view('errors.404', [], 404);
             }
 
-            $is_exists = Storage::disk('quoteprices')->exists("$uniqid.pdf");
+            $is_exists = Storage::disk('quoteprices')->exists("$uniqid.xlsx");
             if ($is_exists == false) {
                 return response()->view('errors.404', [], 404);
             }
 
-            $file_path = Storage::disk('quoteprices')->path("$uniqid.pdf");
+            $file_path = Storage::disk('quoteprices')->path("$uniqid.xlsx");
 
             $headers = [
-                'Content-Type' => 'application/pdf',
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             ];
 
-            return response()->download($file_path, "$file_name.pdf", $headers);
+            return response()->download($file_path, "$file_name.xlsx", $headers);
         } catch (\Throwable $e) {
             throw $e;
         }

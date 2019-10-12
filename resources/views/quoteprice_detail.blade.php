@@ -105,6 +105,7 @@
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                             <a class="dropdown-item" href="#" onclick="qp_send()">{{ __("Send QP to customer") }}</a>
                                             <a class="dropdown-item" href="#" onclick="qp_download()">Tải xuống báo giá.</a>
+                                            <a class="dropdown-item" href="#" onclick="qp_preview()">Xem trước báo giá.</a>
                                         </div>
                                     </div>
                                 </div>
@@ -531,7 +532,30 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+                                <button type="button" id="preview-btn" class="btn btn-primary">Xem trước</button>
                                 <button type="button" id="confirm-btn" class="btn btn-primary">Gửi</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Quoteprices Preview Modal -->
+                <div class="modal fade" id="preview-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-xl" role="document">
+                        <div class="modal-content" style="height: calc(100vh - 60px);">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Báo giá</h5>
+                                <img name="ajax-loader" src="{{ asset('images/ajax-loader.gif') }}"
+                                     style="display: none; height: 28px; margin-left: 10px">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <img class="iframe-spinner" src="{{ asset('images/ajax-loader.gif') }}">
+                                <iframe src="" style="width: 100%; height: 100%; display: none"></iframe>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
                             </div>
                         </div>
                     </div>
