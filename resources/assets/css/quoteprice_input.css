@@ -85,3 +85,12 @@
   right: 15px;
   z-index: 999;
 }
+
+.quoteprice-input .iframe-spinner{
+  margin: 0 auto;
+  display: block;
+}
+
+.quoteprice-input .iframe-spinner.hide{
+  display: none;
+}

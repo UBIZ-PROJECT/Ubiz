@@ -1003,6 +1003,10 @@ function qp_send() {
         var qp_id = $("input[name=qp_id]").val();
         ubizapis('v1', '/quoteprices/' + qp_id + '/send', 'post', {'data': data}, null, qp_send_callback);
     });
+    $("#preview-btn").unbind('click');
+    $("#preview-btn").bind('click', function () {
+        qp_preview();
+    });
     $("#confirm-modal").modal('show');
 }
 
@@ -1013,8 +1017,6 @@ function qp_send_callback(response) {
             title: response.data.message,
             onClose: () => {
                 $("#confirm-modal").modal('hide');
-                var qp_id = $("input[name=qp_id]").val();
-                window.open('/quoteprices/' + qp_id + '/pdf/' + response.data.uniqid);
             }
         })
 
@@ -1051,6 +1053,10 @@ function qp_download() {
         var qp_id = $("input[name=qp_id]").val();
         ubizapis('v1', '/quoteprices/' + qp_id + '/download', 'post', {'data': data}, null, qp_download_callback);
     });
+    $("#preview-btn").unbind('click');
+    $("#preview-btn").bind('click', function () {
+        qp_preview();
+    });
     $("#confirm-modal").modal('show');
 }
 
@@ -1079,6 +1085,38 @@ function qp_download_callback(response) {
             title: response.data.message
         })
     }
+}
+
+function qp_preview() {
+    var md_company = $("#md_company").val();
+    var md_language = $("#md_language").val();
+    if (md_company == "" || md_language == "") {
+        swal.fire({
+            type: 'error',
+            title: "Xin vui lòng chọn [Công ty] và [Ngôn ngữ].",
+            onClose: () => {
+                return false;
+            }
+        })
+        return false;
+    }
+
+    var data = qp_get_bussiness_conditions(md_company, md_language);
+    data.md_company = md_company;
+    data.md_language = md_language;
+
+    var qp_id = $("input[name=qp_id]").val();
+    var iframe_url = "http://tkp.local/quoteprices/" + qp_id + "/preview?" + qs.stringify({'params': data});
+
+    var iframe = $("#preview-modal").find('iframe');
+    iframe.attr('src', iframe_url);
+    iframe.on('load', function() {
+        $(".iframe-spinner").addClass('hide');
+        iframe.show();
+    });
+    iframe.hide();
+    $(".iframe-spinner").removeClass('hide');
+    $("#preview-modal").modal('show');
 }
 
 function qp_create_order() {
@@ -1379,4 +1417,8 @@ $(document).ready(function () {
             qp_render_drd_sale();
         });
     }
+    $('#preview-modal').on('hidden.bs.modal', function (e) {
+        var iframe = $("#preview-modal").find('iframe');
+        iframe.attr('src', '');
+    })
 });
