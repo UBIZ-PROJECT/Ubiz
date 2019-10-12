@@ -15,9 +15,22 @@ class CreateMCurrencyTable extends Migration
     {
         Schema::create('m_currency', function (Blueprint $table) {
             $table->increments('cur_id');
-            $table->char('symbol', 3);
-            $table->string('cur_name', 50);
+            $table->string('cur_ctr_nm', 100);
+            $table->string('cur_ctr_cd_alpha_2', 2);
+            $table->string('cur_ctr_cd_alpha_3', 3);
+            $table->string('cur_ctr_cd_numeric', 3);
+            $table->string('cur_nm', 100);
+            $table->string('cur_cd_numeric_default', 5);
+            $table->string('cur_cd_alpha', 5);
+            $table->string('cur_cd_numeric', 3);
+            $table->string('cur_minor_units', 1);
+            $table->string('cur_symbol', 10);
+            $table->char('active_flg', 1)->default('1');
             $table->char('delete_flg', 1)->default('0');
+            $table->timestamp('inp_date')->useCurrent();
+            $table->integer('inp_user');
+            $table->timestamp('upd_date')->useCurrent();
+            $table->integer('upd_user');
         });
     }
 

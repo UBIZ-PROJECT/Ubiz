@@ -19,7 +19,7 @@ import logo_img from '../../images/logo.png';
 class LoginComponent extends React.Component {
     constructor(props) {
         super(props)
-        this.do_login_url = "http://ubiz.local/api/v1/auth/login";
+        this.do_login_url = "/api/v1/login";
         this.handleLoginClick = this.handleLoginClick.bind(this);
         this.handleEmailChange = this.handleEmailChange.bind(this);
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
@@ -54,12 +54,14 @@ class LoginComponent extends React.Component {
     handleLoginClick() {
         this.setState({linear_progress_show: true});
         axios.post(this.do_login_url, this.state)
-            .then(res => {
+            .then(response => {
                 this.setState({linear_progress_show: false});
-                if (res.data.success == true) {
+                if (response.data.success == true) {
                     window.location.href = '/';
                 } else {
-                    alert(res.data.message);
+                    swal(response.data.message, {
+                        icon: "error",
+                    });
                 }
             });
     }
@@ -99,7 +101,7 @@ class LoginComponent extends React.Component {
                                         <img className='img-logo' src={`.${logo_img}`}/>
                                     </div>
                                     <div className="col-md-9">
-                                        <label className="txt-logo">Ubiz</label>
+                                        <label className="txt-logo">TKP</label>
                                     </div>
                                 </div>
                                 <div className="row margin-bottom-15">

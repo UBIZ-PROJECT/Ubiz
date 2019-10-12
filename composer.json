@@ -7,9 +7,15 @@
     "require": {
         "php": ">=7.0.0",
         "barryvdh/laravel-cors": "^0.11.0",
+        "barryvdh/laravel-dompdf": "^0.8.4",
         "fideloper/proxy": "~3.3",
+        "intervention/image": "^2.4",
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
+        "maatwebsite/excel": "^3.1",
+        "mpdf/mpdf": "^8.0",
+        "simshaun/recurr": "^4.0",
+        "tecnickcom/tcpdf": "^6.3",
         "tymon/jwt-auth": "1.0.0-rc.2"
     },
     "require-dev": {
@@ -26,7 +32,8 @@
         ],
         "psr-4": {
             "App\\": "app/"
-        }
+        },
+      "files": ["app/Helper.php"]
     },
     "autoload-dev": {
         "psr-4": {

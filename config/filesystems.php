@@ -51,8 +51,33 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
+        ],
+
+        'drive' => [
+            'driver' => 'local',
+            'root' => getDrivePath()
+        ],
+
+        'images' => [
+            'driver' => 'local',
+            'root' => getDrivePath() . "/images"
+        ],
+
+        'quoteprices' => [
+            'driver' => 'local',
+            'root' => getDrivePath() . "/quoteprices"
+        ],
+
+        'marketing' => [
+            'driver' => 'local',
+            'root' => getDrivePath() . "/marketing"
+        ],
+
+        'event' => [
+            'driver' => 'local',
+            'root' => getDrivePath() . "/event"
         ],
 
         's3' => [

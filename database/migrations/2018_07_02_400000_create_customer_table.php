@@ -15,10 +15,13 @@ class CreateCustomerTable extends Migration
     {
         Schema::create('customer', function (Blueprint $table) {
             $table->increments('cus_id');
+			$table->string('cus_code',5);
+			$table->integer('user_id');
             $table->string('cus_name', 100);
+			$table->string('cus_avatar', 250);
             $table->char('cus_type', 2);
             $table->char('cus_phone', 15);
-            $table->char('cus_fax', 20);
+            $table->char('cus_fax', 20)->nullable();
             $table->string('cus_mail', 100);
             $table->char('delete_flg', 1)->default('0');
             $table->timestamp('inp_date');

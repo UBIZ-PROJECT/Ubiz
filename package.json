@@ -10,24 +10,44 @@
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.8.1",
     "axios": "^0.17",
     "babel-preset-react": "^6.23.0",
-    "bootstrap-sass": "^3.3.7",
+    "bootstrap": "^4.3.1",
     "cross-env": "^5.1",
+    "debounce": "^1.2.0",
+    "jodit": "^3.1.95",
     "jquery": "^3.2",
+    "jquery-tageditor": "^1.0.1",
     "laravel-mix": "^1.0",
     "lodash": "^4.17.4",
+    "moment-timezone": "^0.5.25",
+    "overlayscrollbars": "^1.7.0",
+    "popper.js": "^1.14.3",
     "prop-types": "^15.6.1",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-scrollbar": "^0.5.4",
-    "react-virtualized": "^9.19.0"
+    "react-virtualized": "^9.19.0",
+    "rrule": "^2.6.2",
+    "sweetalert": "^2.1.0",
+    "tinymce": "^5.0.3"
   },
   "dependencies": {
     "@material-ui/core": "^1.1.0",
     "@material-ui/icons": "^1.1.0",
+    "air-datepicker": "^2.2.3",
+    "animate.css": "^3.6.1",
+    "gijgo": "^1.9.7",
+    "i18next": "^11.3.6",
+    "material-design-icons": "^3.0.1",
     "moment": "^2.22.1",
+    "numeral": "^2.0.6",
     "office-ui-fabric-react": "^6.2.0",
-    "react-router": "^4.2.0"
+    "perfect-scrollbar": "^1.4.0",
+    "qs": "^6.5.2",
+    "react-router": "^4.2.0",
+    "sweetalert2": "^7.25.0",
+    "tiny-date-picker": "^3.2.5"
   }
 }

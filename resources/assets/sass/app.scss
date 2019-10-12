@@ -1,9 +1,15 @@
-// Fonts
-@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500");
 // Variables
 @import "variables";
 // Bootstrap
-@import "~bootstrap-sass/assets/stylesheets/bootstrap";
+@import "~bootstrap/scss/bootstrap.scss";
+@import "~tiny-date-picker/tiny-date-picker.css";
+@import "~animate.css/animate.min.css";
+@import "~overlayscrollbars/css/OverlayScrollbars.min.css";
+//Font-Awesome
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+@import "~@fortawesome/fontawesome-free/scss/regular";
+@import "~@fortawesome/fontawesome-free/scss/brands";
+@import "~@fortawesome/fontawesome-free/scss/solid";
 
 html {
   box-sizing: border-box;

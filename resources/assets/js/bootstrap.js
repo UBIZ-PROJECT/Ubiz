@@ -9,8 +9,15 @@ window._ = require('lodash');
 
 try {
     window.$ = window.jQuery = require('jquery');
-
-    require('bootstrap-sass');
+    window.Popper = require('popper.js').default;
+    window.OverlayScrollbars = require('overlayscrollbars');
+    window.debounce = require('debounce');
+    window.qs = require('qs');
+    window.swal = require('sweetalert2');
+    window.TinyDatePicker = require('tiny-date-picker');
+    window.moment = require('moment');
+    window.numeral = require('numeral');
+    require('bootstrap');
 } catch (e) {}
 
 /**

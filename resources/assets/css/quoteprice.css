@@ -1,0 +1,303 @@
+.pro-table, th, td {
+    border: 1px solid grey;
+    text-align: center;
+}
+
+.pro-table th {
+    background: #194078;
+    color: #D1D9E4;
+}
+
+.pro-table td {
+    padding: 10px;
+}
+
+.inp70 {
+    width: 70px;
+}
+
+.inp100 {
+    width: 100px;
+}
+
+.inp110 {
+    width: 110px;
+}
+
+.inp130 {
+    width: 130px;
+}
+
+.inp-specs {
+    width: 200px;
+    height: 100px;
+}
+
+.pro-table {
+    width: 800px;
+}
+
+#total-table td {
+    border: none;
+}
+
+.main-content .r-content .col-1 {
+    width: 150px;
+}
+
+.main-content .r-content .col-2 {
+    width: 100px;
+}
+
+.main-content .r-content .col-3 {
+    width: 100px;
+}
+
+.main-content .r-content .col-4 {
+    width: 180px;
+}
+
+.main-content .r-content .col-5 {
+    width: 180px;
+}
+
+.main-content .r-content .col-6 {
+    width: 120px;
+}
+
+.main-content .r-content .col-7 {
+    width: auto;
+}
+
+.badge {
+    font-size: 100% !important;
+}
+
+#sv-qp-code + .tag-editor {
+    background: #e9ecef;
+    min-width: 240px !important;
+    max-width: 350px !important;
+    max-height: 100px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    border-color: #e9ecef !important;
+    border-radius: 0.25rem !important;
+}
+
+#sv-qp-code + .tag-editor .tag-editor-tag {
+    background: #17a2b8;
+    color: white;
+}
+
+#sv-qp-code + .tag-editor .tag-editor-delete {
+    background: #17a2b8;
+    border-left: 1px solid white;
+}
+
+#sv-qp-code + .tag-editor .tag-editor-delete i::before {
+    color: white;
+}
+
+#sv-qp-code + .tag-editor .tag-editor-delete:hover i::before {
+    color: #d65454;
+}
+
+.so-drd {
+    background: #e9ecef;
+    border-color: #e9ecef;
+    min-width: 115px;
+    border-radius: 0.25rem;
+    height: 28px;
+    border: 1px solid #e9ecef;
+}
+
+.light-color {
+    color: #212529;
+    background-color: #e9ecef;
+    border-color: #e9ecef;
+}
+
+.custom-form-control {
+    padding: 0 0.75rem;
+    height: 28px;
+}
+
+/* surrounding tag container */
+.multiple-select {
+    list-style-type: none;
+    padding: 0 5px 0 0;
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid #eee;
+    cursor: text;
+    font: normal 14px sans-serif;
+    color: #555;
+    background: #fff;
+    line-height: 20px;
+    min-height: 28px;
+}
+
+/* core styles usually need no change */
+.multiple-select li {
+    display: block;
+    float: left;
+    overflow: hidden;
+    margin: 3px 0;
+}
+
+.multiple-select div {
+    float: left;
+    padding: 0 4px;
+}
+
+.multiple-select .placeholder {
+    padding: 0 8px;
+    color: #bbb;
+}
+
+.multiple-select .multiple-select-spacer {
+    padding: 0;
+    width: 8px;
+    overflow: hidden;
+    color: transparent;
+    background: none;
+}
+
+.multiple-select input {
+    vertical-align: inherit;
+    border: 0;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    cursor: text;
+    font-family: inherit;
+    font-weight: inherit;
+    font-size: inherit;
+    font-style: inherit;
+    box-shadow: none;
+    background: none;
+    color: #444;
+}
+
+/* hide original input field or textarea visually to allow tab navigation */
+.multiple-select-hidden-src {
+    position: absolute !important;
+    left: -99999px;
+}
+
+/* hide IE10 "clear field" X */
+.multiple-select ::-ms-clear {
+    display: none;
+}
+
+/* tag style */
+.multiple-select .multiple-select-tag {
+    padding-left: 5px;
+    color: #46799b;
+    background: #e0eaf1;
+    white-space: nowrap;
+    overflow: hidden;
+    cursor: pointer;
+    border-radius: 2px 0 0 2px;
+}
+
+/* delete icon */
+.multiple-select .multiple-select-delete {
+    background: #e0eaf1;
+    cursor: pointer;
+    border-radius: 0 2px 2px 0;
+    padding-left: 3px;
+    padding-right: 4px;
+}
+
+.multiple-select .multiple-select-delete i {
+    line-height: 18px;
+    display: inline-block;
+}
+
+.multiple-select .multiple-select-delete i:before {
+    font-size: 16px;
+    color: #8ba7ba;
+    content: "×";
+    font-style: normal;
+}
+
+.multiple-select .multiple-select-delete:hover i:before {
+    color: #d65454;
+}
+
+.multiple-select .multiple-select-tag.active + .multiple-select-delete, .multiple-select .multiple-select-tag.active + .multiple-select-delete i {
+    visibility: hidden;
+    cursor: text;
+}
+
+.multiple-select .multiple-select-tag.active {
+    background: none !important;
+}
+
+.cst-select.multiple-select {
+    cursor: pointer;
+    background: #e9ecef;
+    min-width: 240px !important;
+    max-width: 350px !important;
+    max-height: 100px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    border-color: #e9ecef !important;
+    border-radius: 0.25rem !important;
+}
+
+.cst-select.multiple-select .multiple-select-tag {
+    background: #17a2b8;
+    color: white;
+}
+
+.cst-select.multiple-select .multiple-select-delete {
+    background: #17a2b8;
+    border-left: 1px solid white;
+}
+
+.cst-select.multiple-select .multiple-select-delete i::before {
+    color: white;
+}
+
+.cst-select.multiple-select .multiple-select-delete:hover i::before {
+    color: #d65454;
+}
+
+.multiple-select-menu .dropdown-item .col-auto {
+    height: 25px;
+}
+
+.multiple-select-menu .dropdown-item input {
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.search-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+
+    background-color: transparent;
+
+    z-index: 13;
+    overflow-x: hidden;
+
+    -webkit-overflow-scrolling: touch;
+}
+
+.search-container.show{
+    display: flex;
+}
+
+.search-container.show .eyo{
+    display: block;
+}
