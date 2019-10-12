@@ -171,7 +171,7 @@ class QuotepriceController extends Controller
             $company = presentValidator($extra_data['md_company']) == true ? ($extra_data['md_company'] == '1' ? 'tk' : 'ht') : 'tk';
             $language = presentValidator($extra_data['md_language']) == true ? $extra_data['md_language'] : 'vn';
 
-            $view_name = "quoteprice_pdf_{$company}_{$language}";
+            $view_name = "quoteprice_preview_{$company}_{$language}";
 
             return view($view_name, [
                 'user' => $userData,

@@ -3,14 +3,14 @@
     height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
-    padding: 10px 150px;
+    padding: 10px 120px;
 }
 
 .qp-preview .company,
 .qp-preview .customer,
 .qp-preview .comfirm,
 .qp-preview .detail {
-    width: 100%;
+    width: 845px;
 }
 
 .qp-preview .company td {

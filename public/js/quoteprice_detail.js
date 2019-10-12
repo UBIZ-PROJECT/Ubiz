@@ -1078,7 +1078,7 @@ function qp_download_callback(response) {
     if (response.data.success == true) {
         $("#confirm-modal").modal('hide');
         var qp_id = $("input[name=qp_id]").val();
-        window.open('/quotepces/' + qp_id + '/download/' + response.data.uniqid + '/' + response.data.file_name);
+        window.open('/quoteprices/' + qp_id + '/download/' + response.data.uniqid + '/' + response.data.file_name);
     } else {
         swal.fire({
             type: 'error',
