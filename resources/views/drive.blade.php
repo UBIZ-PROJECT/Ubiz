@@ -5,64 +5,82 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/headbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/common.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{ asset('css/drive.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/drive.css') }}">
 @endsection
 @section('headbar')
-    @section('search')
-        @include('drive_search')
-    @endsection
-    @include('layouts/headbar')
+@section('search')
+    @include('drive_search')
+@endsection
+@include('layouts/headbar')
 @endsection
 @section('content')
     <div class="main-content">
         <div class="l-content">
-            <div class="zY">
-                <div class="yP" onclick="">Thêm mới</div>
+            <div class="zY dropdown">
+                <div id="dri-add-func" class="yP" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Thêm mới
+                </div>
+                <div class="dropdown-menu" aria-labelledby="dri-add-func">
+                    <a class="dropdown-item" href="#">
+                        <i class="fas fa-folder-plus"></i>Thư mục mới
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">
+                        <i class="fas fa-file-upload"></i>Tải tệp lên
+                    </a>
+                    <a class="dropdown-item" href="#">
+                        <i class="fas fa-upload"></i>Tải thư mục lên
+                    </a>
+                </div>
             </div>
             <div id="nicescroll-sidebar" class="zX nicescroll">
-                <nav role="navigation">
-                    <div class="kL"></div>
-                    <div class="sP">
-                        <div class="aW aT" id="li">
-                            <div class="mR">
-                                <div class="eT">
-                                    <div class="Vf"></div>
-                                    <div class="Vg">
-                                        <svg x="0px" y="0px" width="20px" height="20px"
-                                             viewBox="0 0 20 20" focusable="false">
-                                            <polygon points="5,8 10,13 15,8"></polygon>
-                                        </svg>
-                                    </div>
+                <div class="nav-bar">
+                    <div class="nav-item-root">
+                        <div class="nav-li pdr-30">
+                            <div class="row justify-content-start z-mgr z-mgl nav-item nav-selected">
+                                <div class="col-auto z-pdr">
+                                    <i class="nav-right nav-caret fas fa-caret-right"></i>
+                                    <i class="nav-down nav-caret fas fa-caret-down hidden-content"></i>
+                                    <img class="nav-caret nav-loading hidden-content"
+                                         src="{{ asset('/images/ajax-loader.gif') }}">
+                                </div>
+                                <div class="col-auto z-pdl z-pdr">
+                                    <svg width="24px" height="24px" viewBox="0 0 24 24" fill="#000000"
+                                         focusable="false">
+                                        <path d="M19 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H5v-1h14v1zm0-3H5V4h14v13zm-9.35-2h5.83l1.39-2.77h-5.81zm7.22-3.47L13.65 6h-2.9L14 11.53zm-5.26-2.04l-1.45-2.52-3.03 5.51L8.6 15z"></path>
+                                    </svg>
+                                </div>
+                                <div class="col-auto pdl-5 nav-label">
+                                    <span>Drive</span>
                                 </div>
                             </div>
-                            <div class="iU">
-                                <div class="wQ">
-                                    <div class="tA">
-                                        <div class="vD">
-                                            <div class="xT">
-                                                <div class="oQ">
-                                                    <svg width="24px" height="24px" viewBox="0 0 24 24">
-                                                        <path fill="none" d="M0 0h24v24H0V0zm0 0h24v24H0z"></path>
-                                                        <path d="M3 20.01c0 1.1.89 1.99 2 1.99h14c1.1 0 2-.9 2-1.99V18H3v2.01zM18 19c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm1-17H5c-1.1 0-2 .9-2 1.99V17h18V3.99C21 2.89 20.11 2 19 2zm-8.62 3h3.24l3.25 5.68h-3.24L10.38 5zm-3.52 6.16l3.11-5.44s1.62 2.85 1.62 2.84L8.49 14l-1.63-2.84zM15.51 14H9.3l1.62-2.84h6.21L15.51 14z"></path>
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                            <div class="xV">
-                                                <div class="oQ">
-                                                    <svg width="24px" height="24px" viewBox="0 0 24 24">
-                                                        <path fill="none" d="M0 0h24v24H0V0zm0 0h24v24H0z"></path>
-                                                        <path d="M3 20.01c0 1.1.89 1.99 2 1.99h14c1.1 0 2-.9 2-1.99V18H3v2.01zM18 19c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm1-17H5c-1.1 0-2 .9-2 1.99V17h18V3.99C21 2.89 20.11 2 19 2zm-8.62 3h3.24l3.25 5.68h-3.24L10.38 5zm-3.52 6.16l3.11-5.44s1.62 2.85 1.62 2.84L8.49 14l-1.63-2.84zM15.51 14H9.3l1.62-2.84h6.21L15.51 14z"></path>
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <span class="dG">Drive</span>
-                                </div>
-                            </div>
+                            <div class="nav-li"></div>
                         </div>
                     </div>
-                </nav>
+                    <div class="nav-item-child">
+                        <div class="nav-li pdr-30">
+                            <div class="row justify-content-start z-mgr z-mgl nav-item">
+                                <div class="col-auto z-pdr">
+                                    <div class="nav-level"></div>
+                                    <i class="nav-right nav-caret fas fa-caret-right"></i>
+                                    <i class="nav-down nav-caret fas fa-caret-down hidden-content"></i>
+                                    <img class="nav-caret nav-loading hidden-content"
+                                         src="{{ asset('/images/ajax-loader.gif') }}">
+                                </div>
+                                <div class="col-auto z-pdl z-pdr">
+                                    <svg width="24px" height="24px" viewBox="0 0 24 24" fill="#000000"
+                                         focusable="false">
+                                        <path d="M19 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H5v-1h14v1zm0-3H5V4h14v13zm-9.35-2h5.83l1.39-2.77h-5.81zm7.22-3.47L13.65 6h-2.9L14 11.53zm-5.26-2.04l-1.45-2.52-3.03 5.51L8.6 15z"></path>
+                                    </svg>
+                                </div>
+                                <div class="col-auto pdl-5 nav-label">
+                                    <span>Drive</span>
+                                </div>
+                            </div>
+                            <div class="nav-li"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="m-content"></div>
@@ -72,23 +90,30 @@
                     <div class="aeH">
                         <div class="aqK">
                             <div class="aqL">
-                                <nav aria-label="breadcrumb">
-                                    <ol class="breadcrumb z-mgb z-pdt z-pdb">
-                                        <li class="breadcrumb-item"><a href="#">Drive</a></li>
-                                        <li class="breadcrumb-item"><a href="#">Marketing</a></li>
-                                        <li class="breadcrumb-item active dropdown" aria-current="page">
-                                            <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <div class="row justify-content-start dri-breadcrumb">
+                                    <div class="col-auto dri-breadcrumb-item">
+                                        <a role="button" href="#">Drive</a>
+                                    </div>
+                                    <div class="col-auto dri-breadcrumb-item">
+                                        <i class="fas fa-angle-right"></i>
+                                    </div>
+                                    <div class="col-auto dri-breadcrumb-item">
+                                        <a role="button" href="#">ABC</a>
+                                    </div>
+                                    <div class="col-auto dri-breadcrumb-item">
+                                        <i class="fas fa-angle-right"></i>
+                                    </div>
+                                    <div class="col-auto dri-breadcrumb-item">
+                                        <div id="dri-breadcrumb-drd" class="dropdown">
+                                            <a id="dri-breadcrumb-func" href="#" role="button" data-toggle="dropdown"
+                                               aria-haspopup="true" aria-expanded="false">
                                                 Pictures
+                                                <i class="fas fa-caret-down"></i>
                                             </a>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#">Action</a>
-                                                <a class="dropdown-item" href="#">Another action</a>
-                                                <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item" href="#">Something else here</a>
-                                            </div>
-                                        </li>
-                                    </ol>
-                                </nav>
+                                            <div class="dropdown-menu" aria-labelledby="dri-breadcrumb-func"></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="aqJ">
                                 <div class="ar5">
@@ -125,13 +150,64 @@
                         <div class="row z-pdr">
                             <div class="col-12 z-pdr z-mgr">
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-12 pdt-10 pdb-10">
                                         Thư mục
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        Thư mục
+                                <div class="folder-list row justify-content-start">
+                                    <div class="col-auto">
+                                        <div class="folder">
+                                            <i class="fas fa-folder"></i>
+                                            <span>ABC</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="folder">
+                                            <i class="fas fa-folder"></i>
+                                            <span>ABC</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="folder">
+                                            <i class="fas fa-folder"></i>
+                                            <span>ABC</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="folder">
+                                            <i class="fas fa-folder"></i>
+                                            <span>ABC</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="folder">
+                                            <i class="fas fa-folder"></i>
+                                            <span>ABC</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="folder">
+                                            <i class="fas fa-folder"></i>
+                                            <span>ABC</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="folder">
+                                            <i class="fas fa-folder"></i>
+                                            <span>ABC</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="folder">
+                                            <i class="fas fa-folder"></i>
+                                            <span>ABC</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="folder">
+                                            <i class="fas fa-folder"></i>
+                                            <span>ABC</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -139,13 +215,21 @@
                         <div class="row z-pdr z-mgr">
                             <div class="col-12 z-pdr">
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-12 pdt-10 pdb-10">
                                         Tệp
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        Tệp
+                                <div class="file-list row justify-content-start">
+                                    <div class="col-auto">
+                                        <div class="file">
+                                            <div class="w-100 file-thumbnail">
+
+                                            </div>
+                                            <div class="w-100">
+                                                <i class="fas fa-folder"></i>
+                                                <span>ABC</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
