@@ -958,8 +958,9 @@ function ord_colect_data() {
     data.ord_tax = numeral($("input[name=ord_tax]").val()).value();
     data.ord_amount = numeral($("input[name=ord_amount]").val()).value();
     data.ord_amount_tax = numeral($("input[name=ord_amount_tax]").val()).value();
-    data.ord_paid = numeral($("input[name=ord_paid]").val()).value();
+    data.ord_rel_fee = numeral($("input[name=ord_relate_fee]").val()).value();
     data.ord_debt = numeral($("input[name=ord_debt]").val()).value();
+    data.ord_pay_met = $("textarea[name=ord_pay_met]").val();
     return data;
 }
 
@@ -1097,7 +1098,8 @@ function ord_contract_step(){
     }).then((result) => {
         if (result.value) {
             var ord_id = $("input[name=ord_id]").val();
-            ubizapis('v1', '/orders/' + ord_id + '/salestep', 'post', {'sale_step': '3'}, null, ord_contract_step_callback);
+            var ordt_ids = getSelectedPump();
+            ubizapis('v1', '/contracts/' + ord_id + '/create', 'post', {ordt_ids: ordt_ids}, null, ord_contract_step_callback);
         }
     })
 }
@@ -1108,7 +1110,7 @@ function ord_contract_step_callback(response) {
             type: 'success',
             title: response.data.message,
             onClose: () => {
-                window.location.reload();
+                window.location.href = window.location.origin + "/contract"
             }
         })
 
@@ -1154,6 +1156,23 @@ function ord_delivery_step_callback(response) {
             title: response.data.message
         })
     }
+}
+
+function getSelectedPump() {
+    var lstIds = [];
+    $(".sck").each(function(index, divContainer) {
+        var checkbox = $(divContainer).parent().find(".checkbox_field");
+        var container = null;
+
+        if (checkbox.attr("id").indexOf("pump") > -1) {
+            container = checkbox.closest(".row_container_pump");
+            lstIds.push(container.find(".dt-row").attr("dt_id"));
+        } else if (checkbox.attr("id").indexOf("acs") > -1) {
+            container = checkbox.closest(".row_container_acs");
+            lstIds.push(container.find(".dt-row").attr("dt_id"));
+        }
+    })
+    return lstIds;
 }
 
 $(document).ready(function () {
