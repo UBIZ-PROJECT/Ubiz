@@ -6,6 +6,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/headbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/common.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/drive.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('dist/bootstrap-fileinput/css/fileinput.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('dist/bootstrap-fileinput/css/fileinput-rtl.min.css') }}">
 @endsection
 @section('headbar')
 @section('search')
@@ -241,5 +243,10 @@
     </div>
 @endsection
 @section('end-javascript')
+    <script type="text/javascript" src="{{ asset('dist/bootstrap-fileinput/js/plugins/piexif.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('dist/bootstrap-fileinput/js/plugins/purify.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('dist/bootstrap-fileinput/js/plugins/sortable.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('dist/bootstrap-fileinput/js/fileinput.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('dist/bootstrap-fileinput/js/locales/vi.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/drive.js') }}"></script>
 @endsection
