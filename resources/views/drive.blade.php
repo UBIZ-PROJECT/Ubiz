@@ -43,12 +43,10 @@
                                 <div class="col-auto z-pdr">
                                     <i class="nav-right nav-caret fas fa-caret-right"></i>
                                     <i class="nav-down nav-caret fas fa-caret-down hidden-content"></i>
-                                    <img class="nav-caret nav-loading hidden-content"
-                                         src="{{ asset('/images/ajax-loader.gif') }}">
+                                    <img class="nav-caret nav-loading hidden-content" src="{{ asset('/images/ajax-loader.gif') }}">
                                 </div>
                                 <div class="col-auto z-pdl z-pdr">
-                                    <svg width="24px" height="24px" viewBox="0 0 24 24" fill="#000000"
-                                         focusable="false">
+                                    <svg width="24px" height="24px" viewBox="0 0 24 24" fill="#000000" focusable="false">
                                         <path d="M19 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H5v-1h14v1zm0-3H5V4h14v13zm-9.35-2h5.83l1.39-2.77h-5.81zm7.22-3.47L13.65 6h-2.9L14 11.53zm-5.26-2.04l-1.45-2.52-3.03 5.51L8.6 15z"></path>
                                     </svg>
                                 </div>
@@ -66,12 +64,10 @@
                                     <div class="nav-level"></div>
                                     <i class="nav-right nav-caret fas fa-caret-right"></i>
                                     <i class="nav-down nav-caret fas fa-caret-down hidden-content"></i>
-                                    <img class="nav-caret nav-loading hidden-content"
-                                         src="{{ asset('/images/ajax-loader.gif') }}">
+                                    <img class="nav-caret nav-loading hidden-content" src="{{ asset('/images/ajax-loader.gif') }}">
                                 </div>
                                 <div class="col-auto z-pdl z-pdr">
-                                    <svg width="24px" height="24px" viewBox="0 0 24 24" fill="#000000"
-                                         focusable="false">
+                                    <svg width="24px" height="24px" viewBox="0 0 24 24" fill="#000000" focusable="false">
                                         <path d="M19 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H5v-1h14v1zm0-3H5V4h14v13zm-9.35-2h5.83l1.39-2.77h-5.81zm7.22-3.47L13.65 6h-2.9L14 11.53zm-5.26-2.04l-1.45-2.52-3.03 5.51L8.6 15z"></path>
                                     </svg>
                                 </div>
@@ -107,7 +103,8 @@
                                     </div>
                                     <div class="col-auto dri-breadcrumb-item">
                                         <div id="dri-breadcrumb-drd" class="dropdown">
-                                            <a id="dri-breadcrumb-func" href="#" role="button" data-toggle="dropdown"
+                                            <a id="dri-breadcrumb-func" href="#"
+                                               role="button" data-toggle="dropdown"
                                                aria-haspopup="true" aria-expanded="false">
                                                 Pictures
                                                 <i class="fas fa-caret-down"></i>
@@ -148,7 +145,7 @@
                     </div>
                 </div>
                 <div class="jAQ">
-                    <div class="aqC nicescroll" id="nicescroll-oput">
+                    <div class="aqC nicescroll" id="nicescroll-oput" oncontextmenu="context_menu(this, event)">
                         <div class="row z-pdr">
                             <div class="col-12 z-pdr z-mgr">
                                 <div class="row">
@@ -157,55 +154,7 @@
                                     </div>
                                 </div>
                                 <div class="folder-list row justify-content-start">
-                                    <div class="col-auto">
-                                        <div class="folder">
-                                            <i class="fas fa-folder"></i>
-                                            <span>ABC</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <div class="folder">
-                                            <i class="fas fa-folder"></i>
-                                            <span>ABC</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <div class="folder">
-                                            <i class="fas fa-folder"></i>
-                                            <span>ABC</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <div class="folder">
-                                            <i class="fas fa-folder"></i>
-                                            <span>ABC</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <div class="folder">
-                                            <i class="fas fa-folder"></i>
-                                            <span>ABC</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <div class="folder">
-                                            <i class="fas fa-folder"></i>
-                                            <span>ABC</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <div class="folder">
-                                            <i class="fas fa-folder"></i>
-                                            <span>ABC</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <div class="folder">
-                                            <i class="fas fa-folder"></i>
-                                            <span>ABC</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-auto">
+                                    <div class="col-auto" oncontextmenu="context_menu(this, event)">
                                         <div class="folder">
                                             <i class="fas fa-folder"></i>
                                             <span>ABC</span>
@@ -224,10 +173,8 @@
                                 <div class="file-list row justify-content-start">
                                     <div class="col-auto">
                                         <div class="file">
-                                            <div class="w-100 file-thumbnail">
-
-                                            </div>
-                                            <div class="w-100">
+                                            <div class="w-100 file-thumbnail"></div>
+                                            <div class="w-100 file-detail">
                                                 <i class="fas fa-folder"></i>
                                                 <span>ABC</span>
                                             </div>

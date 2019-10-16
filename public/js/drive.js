@@ -13,6 +13,26 @@ function generate_breadcrumb_func() {
     return html;
 }
 
+function context_menu(self, event) {
+    event.preventDefault();
+    var drd_id = 'folder-context-menu';
+    if ($(self).find('div.dropdown').length == 0) {
+        add_dropdown_menu(self, drd_id);
+    }
+    $("#" + drd_id).trigger('click');
+}
+
+function add_dropdown_menu(self, drd_id) {
+    var html = "";
+    html += '<div class="dropdown"';
+    html += 'id="' + drd_id + '"';
+    html += 'role="button" data-toggle="dropdown"';
+    html += 'aria-haspopup="true" aria-expanded="false">';
+    html += '<div class="dropdown-menu" aria-labelledby="' + drd_id + '">a,b,c</div>';
+    html += '</div>';
+    $(self).append(html);
+}
+
 jQuery(document).ready(function () {
     $('#dri-breadcrumb-drd').on('show.bs.dropdown', function () {
         var breadcrumb_func = generate_breadcrumb_func();
