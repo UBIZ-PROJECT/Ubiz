@@ -24,14 +24,11 @@
                 </div>
                 <div class="dropdown-menu" aria-labelledby="dri-add-func">
                     <a class="dropdown-item" href="#">
-                        <i class="fas fa-folder-plus"></i>Thư mục mới
+                        <i class="fas fa-folder-plus"></i>Thư mục
                     </a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">
-                        <i class="fas fa-file-upload"></i>Tải tệp lên
-                    </a>
-                    <a class="dropdown-item" href="#">
-                        <i class="fas fa-upload"></i>Tải thư mục lên
+                    <a class="dropdown-item" href="#" onclick="fnc_open_upload_dialog()">
+                        <i class="fas fa-file-upload"></i>Tải lên
                     </a>
                 </div>
             </div>
@@ -145,7 +142,7 @@
                     </div>
                 </div>
                 <div class="jAQ">
-                    <div class="aqC nicescroll" id="nicescroll-oput" oncontextmenu="context_menu(this, event)">
+                    <div class="aqC nicescroll" id="nicescroll-oput" oncontextmenu="o_context_menu(this, event)">
                         <div class="row z-pdr">
                             <div class="col-12 z-pdr z-mgr">
                                 <div class="row">
@@ -193,7 +190,8 @@
     <script type="text/javascript" src="{{ asset('dist/bootstrap-fileinput/js/plugins/piexif.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('dist/bootstrap-fileinput/js/plugins/purify.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('dist/bootstrap-fileinput/js/plugins/sortable.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('dist/bootstrap-fileinput/js/fileinput.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('dist/bootstrap-fileinput/js/fileinput.js') }}"></script>
     <script type="text/javascript" src="{{ asset('dist/bootstrap-fileinput/js/locales/vi.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('dist/bootstrap-fileinput/themes/fas/theme.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/drive.js') }}"></script>
 @endsection
