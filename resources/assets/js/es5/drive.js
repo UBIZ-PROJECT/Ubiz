@@ -13,6 +13,15 @@ function generate_breadcrumb_func() {
     return html;
 }
 
+function o_context_menu(self, event) {
+    event.preventDefault();
+    var drd_id = 'output-context-menu';
+    if ($(self).find('div.dropdown').length == 0) {
+        add_dropdown_menu(self, drd_id);
+    }
+    $("#" + drd_id).trigger('click');
+}
+
 function context_menu(self, event) {
     event.preventDefault();
     var drd_id = 'folder-context-menu';
@@ -31,6 +40,36 @@ function add_dropdown_menu(self, drd_id) {
     html += '<div class="dropdown-menu" aria-labelledby="' + drd_id + '">a,b,c</div>';
     html += '</div>';
     $(self).append(html);
+}
+
+function fnc_init_upload_dialog() {
+    var modal_html = "";
+    modal_html += '<div class="modal fade" id="upload-modal" tabIndex="-1" role="dialog" aria-hidden="true">';
+    modal_html += '<div class="modal-dialog" role="document" style="max-width: unset; padding: 20px; margin: 0px; width: 100%; height: 100%">';
+    modal_html += '<div class="modal-content" style="width: 100%; height: 100%; padding: 10px">';
+    modal_html += '<div class="file-loading">';
+    modal_html += '<input id="drive-files" name="drive-files[]" type="file" multiple webkitdirectory>';
+    modal_html += '</div>';
+    modal_html += '<div id="errorBlock" class="help-block"></div>';
+    modal_html += '</div>';
+    modal_html += '</div>';
+    modal_html += '</div>';
+    $("body").append(modal_html);
+    $("#drive-files").fileinput({
+        theme: 'fas',
+        language: 'vi',
+        uploadUrl: 'abc',
+        hideThumbnailContent: true
+    });
+}
+
+function fnc_open_upload_dialog() {
+    var upload_modal = $("body").find('#upload-modal');
+    if (upload_modal.length == 0) {
+        fnc_init_upload_dialog();
+        upload_modal = $("body").find('#upload-modal');
+    }
+    upload_modal.modal('toggle');
 }
 
 jQuery(document).ready(function () {

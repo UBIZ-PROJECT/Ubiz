@@ -48,13 +48,19 @@ function fnc_init_upload_dialog() {
     modal_html += '<div class="modal-dialog" role="document" style="max-width: unset; padding: 20px; margin: 0px; width: 100%; height: 100%">';
     modal_html += '<div class="modal-content" style="width: 100%; height: 100%; padding: 10px">';
     modal_html += '<div class="file-loading">';
-    modal_html += '<input id="input-folder-2" name="input-folder-2[]" type="file" multiple >';
+    modal_html += '<input id="drive-files" name="drive-files[]" type="file" multiple webkitdirectory>';
     modal_html += '</div>';
     modal_html += '<div id="errorBlock" class="help-block"></div>';
     modal_html += '</div>';
     modal_html += '</div>';
     modal_html += '</div>';
     $("body").append(modal_html);
+    $("#drive-files").fileinput({
+        theme: 'fas',
+        language: 'vi',
+        uploadUrl: 'abc',
+        hideThumbnailContent: true
+    });
 }
 
 function fnc_open_upload_dialog() {

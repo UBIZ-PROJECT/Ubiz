@@ -196,3 +196,10 @@
     padding: 0px !important;
     padding-top: 25% !important;
 }
+
+.fileinput-remove-button,
+.fileinput-upload-button,
+.btn-file,
+.fileinput-cancel-button{
+    margin-left: 1px !important;
+}

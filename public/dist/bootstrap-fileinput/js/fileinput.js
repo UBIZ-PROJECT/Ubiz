@@ -1395,7 +1395,7 @@
                 '  </div>\n' +
                 '</div>';
             tClose = $h.closeButton('fileinput-remove');
-            tFileIcon = '<i class="glyphicon glyphicon-file"></i>';
+            tFileIcon = '<i class="fas fa-file"></i>';
             // noinspection HtmlUnknownAttribute
             tCaption = '<div class="file-caption form-control {class}" tabindex="500">\n' +
                 '  <span class="file-caption-icon"></span>\n' +
@@ -4269,8 +4269,8 @@
         },
         _initBrowse: function ($container) {
             var self = this, $el = self.$element;
-            self.$btnFile = $container.find('.btn-file').find("#btnFileBrowse");
-            self.$btnFolder = $container.find('.btn-file').find("#btnFolderBrowse");
+            self.$btnFile = $container.find("#btnFileBrowse");
+            self.$btnFolder = $container.find("#btnFolderBrowse");
             $el.appendTo($container).attr('tabindex', -1);
             $h.addCss($el, 'hidden-content');
         },
@@ -4559,6 +4559,8 @@
                 self.clear();
             }
             self.$captionContainer.focus();
+            self.$element.prop('webkitdirectory', false);
+            self.$element.trigger('click');
         },
         _folder_browse: function (e) {
             var self = this;
@@ -4569,6 +4571,8 @@
                 self.clear();
             }
             self.$captionContainer.focus();
+            self.$element.prop('webkitdirectory', true);
+            self.$element.trigger('click');
         },
         _change: function (e) {
             var self = this;
@@ -5423,22 +5427,22 @@
         defaultPreviewContent: null,
         customLayoutTags: {},
         customPreviewTags: {},
-        previewFileIcon: '<i class="glyphicon glyphicon-file"></i>',
+        previewFileIcon: '<i class="fas fa-file"></i>',
         previewFileIconClass: 'file-other-icon',
         previewFileIconSettings: {},
         previewFileExtSettings: {},
         buttonLabelClass: 'hidden-xs',
-        fileBrowseIcon: '<i class="glyphicon glyphicon-folder-open"></i>&nbsp;',
-        folderBrowseIcon: '<i class="glyphicon glyphicon-folder-open"></i>&nbsp;',
+        fileBrowseIcon: '<i class="fas fa-file"></i>&nbsp;',
+        folderBrowseIcon: '<i class="fas fa-folder-open"></i>&nbsp;',
         fileBrowseClass: 'btn btn-primary',
         folderBrowseClass: 'btn btn-primary',
-        removeIcon: '<i class="glyphicon glyphicon-trash"></i>',
+        removeIcon: '<i class="fas fa-trash"></i>',
         removeClass: 'btn btn-default btn-secondary',
-        cancelIcon: '<i class="glyphicon glyphicon-ban-circle"></i>',
+        cancelIcon: '<i class="fas fa-ban"></i>',
         cancelClass: 'btn btn-default btn-secondary',
-        pauseIcon: '<i class="glyphicon glyphicon-pause"></i>',
+        pauseIcon: '<i class="fas fa-pause"></i>',
         pauseClass: 'btn btn-default btn-secondary',
-        uploadIcon: '<i class="glyphicon glyphicon-upload"></i>',
+        uploadIcon: '<i class="fas fa-upload"></i>',
         uploadClass: 'btn btn-default btn-secondary',
         uploadUrl: null,
         uploadUrlThumb: null,
@@ -5487,7 +5491,7 @@
         maxFileCount: 0,
         validateInitialCount: false,
         msgValidationErrorClass: 'text-danger',
-        msgValidationErrorIcon: '<i class="glyphicon glyphicon-exclamation-sign"></i> ',
+        msgValidationErrorIcon: '<i class="fas fa-exclamation-circle"></i> ',
         msgErrorClass: 'file-error-message',
         progressThumbClass: 'progress-bar progress-bar-striped active',
         progressClass: 'progress-bar bg-success progress-bar-success progress-bar-striped active',
