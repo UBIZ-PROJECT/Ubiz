@@ -18,18 +18,9 @@
 @section('content')
     <div class="main-content">
         <div class="l-content">
-            <div class="zY dropdown">
-                <div id="dri-add-func" class="yP" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <div class="zY add-new">
+                <div class="yP" onclick="fnc_open_create_drd_menu(this)">
                     Thêm mới
-                </div>
-                <div class="dropdown-menu" aria-labelledby="dri-add-func">
-                    <a class="dropdown-item" href="#">
-                        <i class="fas fa-folder-plus"></i>Thư mục
-                    </a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#" onclick="fnc_open_upload_dialog()">
-                        <i class="fas fa-upload"></i>Tải lên
-                    </a>
                 </div>
             </div>
             <div id="nicescroll-sidebar" class="zX nicescroll">
@@ -43,9 +34,7 @@
                                     <img class="nav-caret nav-loading hidden-content" src="{{ asset('/images/ajax-loader.gif') }}">
                                 </div>
                                 <div class="col-auto z-pdl z-pdr">
-                                    <svg width="24px" height="24px" viewBox="0 0 24 24" fill="#000000" focusable="false">
-                                        <path d="M19 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H5v-1h14v1zm0-3H5V4h14v13zm-9.35-2h5.83l1.39-2.77h-5.81zm7.22-3.47L13.65 6h-2.9L14 11.53zm-5.26-2.04l-1.45-2.52-3.03 5.51L8.6 15z"></path>
-                                    </svg>
+                                    <i class="far fa-hdd"></i>
                                 </div>
                                 <div class="col-auto pdl-5 nav-label">
                                     <span>Drive</span>
@@ -54,27 +43,7 @@
                             <div class="nav-li"></div>
                         </div>
                     </div>
-                    <div class="nav-item-child">
-                        <div class="nav-li pdr-30">
-                            <div class="row justify-content-start z-mgr z-mgl nav-item">
-                                <div class="col-auto z-pdr">
-                                    <div class="nav-level"></div>
-                                    <i class="nav-right nav-caret fas fa-caret-right"></i>
-                                    <i class="nav-down nav-caret fas fa-caret-down hidden-content"></i>
-                                    <img class="nav-caret nav-loading hidden-content" src="{{ asset('/images/ajax-loader.gif') }}">
-                                </div>
-                                <div class="col-auto z-pdl z-pdr">
-                                    <svg width="24px" height="24px" viewBox="0 0 24 24" fill="#000000" focusable="false">
-                                        <path d="M19 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H5v-1h14v1zm0-3H5V4h14v13zm-9.35-2h5.83l1.39-2.77h-5.81zm7.22-3.47L13.65 6h-2.9L14 11.53zm-5.26-2.04l-1.45-2.52-3.03 5.51L8.6 15z"></path>
-                                    </svg>
-                                </div>
-                                <div class="col-auto pdl-5 nav-label">
-                                    <span>Drive</span>
-                                </div>
-                            </div>
-                            <div class="nav-li"></div>
-                        </div>
-                    </div>
+                    <div class="nav-item-child"></div>
                 </div>
             </div>
         </div>
@@ -85,31 +54,7 @@
                     <div class="aeH">
                         <div class="aqK">
                             <div class="aqL">
-                                <div class="row justify-content-start dri-breadcrumb">
-                                    <div class="col-auto dri-breadcrumb-item">
-                                        <a role="button" href="#">Drive</a>
-                                    </div>
-                                    <div class="col-auto dri-breadcrumb-item">
-                                        <i class="fas fa-angle-right"></i>
-                                    </div>
-                                    <div class="col-auto dri-breadcrumb-item">
-                                        <a role="button" href="#">ABC</a>
-                                    </div>
-                                    <div class="col-auto dri-breadcrumb-item">
-                                        <i class="fas fa-angle-right"></i>
-                                    </div>
-                                    <div class="col-auto dri-breadcrumb-item">
-                                        <div id="dri-breadcrumb-drd" class="dropdown">
-                                            <a id="dri-breadcrumb-func" href="#"
-                                               role="button" data-toggle="dropdown"
-                                               aria-haspopup="true" aria-expanded="false">
-                                                Pictures
-                                                <i class="fas fa-caret-down"></i>
-                                            </a>
-                                            <div class="dropdown-menu" aria-labelledby="dri-breadcrumb-func"></div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <div id="dri-breadcrumb" class="row justify-content-start dri-breadcrumb"></div>
                             </div>
                             <div class="aqJ">
                                 <div class="ar5">
@@ -143,48 +88,23 @@
                 </div>
                 <div class="jAQ">
                     <div class="aqC nicescroll" id="nicescroll-oput">
-                        <div class="row z-pdr z-mgr">
+                        <div id="folder-container" class="row z-pdr z-mgr" style="visibility: hidden">
                             <div class="col-12 z-pdr z-mgr">
                                 <div class="row z-mgr">
-                                    <div class="col-12 pdt-10 pdb-10">
-                                        Thư mục
-                                    </div>
+                                    <div class="col-12 pdt-10 pdb-10">Thư mục</div>
                                 </div>
-                                <div class="folder-list row justify-content-start z-mgr">
-                                    <div class="col-auto">
-                                        <div class="folder">
-                                            <i class="fa-icon fas fa-folder"></i>
-                                            <span>ABC</span>
-                                            <button class="ellipsis" onclick="fnc_open_folder_drd_menu(this)">
-                                                <i class="fas fa-ellipsis-v"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+                                <div class="folder-list row justify-content-start z-mgr"></div>
                             </div>
                         </div>
-                        <div class="row z-pdr z-mgr">
+                        <div id="file-container" class="row z-pdr z-mgr" style="visibility: hidden">
                             <div class="col-12 z-pdr z-mgr">
                                 <div class="row z-mgr">
-                                    <div class="col-12 pdt-10 pdb-10">
-                                        Tệp
-                                    </div>
+                                    <div class="col-12 pdt-10 pdb-10">Tệp</div>
                                 </div>
-                                <div class="file-list row justify-content-start z-mgr">
-                                    <div class="col-auto">
-                                        <div class="file">
-                                            <div class="w-100 file-thumbnail"></div>
-                                            <div class="w-100 file-detail">
-                                                <i class="fa-icon fas fa-folder"></i>
-                                                <span>ABC</span>
-                                                <button class="ellipsis"><i class="fas fa-ellipsis-v"></i></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <div class="file-list row justify-content-start z-mgr"></div>
                             </div>
                         </div>
-                        <div class="bg-drive-container"></div>
+                        <div class="bg-drive-container" onclick="fnc_drive_container_click()"></div>
                     </div>
                 </div>
             </div>
