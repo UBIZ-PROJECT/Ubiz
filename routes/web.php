@@ -47,6 +47,5 @@ Route::middleware(['api', 'cors'])->group(function () {
         Route::get('report/{type}/export', ['as'=>'export', 'uses'=>'Web\ReportController@exportExcel']);
 
         Route::get('drive', ['as' => 'api-get-drives', 'uses' => 'Web\DriveController@index']);
-        Route::get('drive/{uniqid}', ['as' => 'api-get-report', 'uses' => 'Web\DriveController@index']);
     });
 });

@@ -13,25 +13,18 @@ function generate_breadcrumb_func() {
     return html;
 }
 
-function o_context_menu(self, event) {
-    event.preventDefault();
-    var drd_id = 'output-context-menu';
-    if ($(self).find('div.dropdown').length == 0) {
-        add_dropdown_menu(self, drd_id);
-    }
-    $("#" + drd_id).trigger('click');
-}
-
-function context_menu(self, event) {
-    event.preventDefault();
+function fnc_open_folder_drd_menu(self) {
     var drd_id = 'folder-context-menu';
-    if ($(self).find('div.dropdown').length == 0) {
-        add_dropdown_menu(self, drd_id);
+    var el = $(self).closest('div.col-auto');
+    if (el.find('div.dropdown').length == 0) {
+        fnc_add_folder_drd_menu(el, drd_id);
     }
-    $("#" + drd_id).trigger('click');
+    setTimeout(function(){
+        $("#" + drd_id).dropdown('toggle');
+    }, 10);
 }
 
-function add_dropdown_menu(self, drd_id) {
+function fnc_add_folder_drd_menu(self, drd_id) {
     var html = "";
     html += '<div class="dropdown"';
     html += 'id="' + drd_id + '"';
@@ -55,11 +48,21 @@ function fnc_init_upload_dialog() {
     modal_html += '</div>';
     modal_html += '</div>';
     $("body").append(modal_html);
+}
+
+function fnc_init_upload_plugin(uploadUrl) {
+    $('#drive-files').fileinput('destroy');
     $("#drive-files").fileinput({
         theme: 'fas',
         language: 'vi',
-        uploadUrl: 'abc',
-        hideThumbnailContent: true
+        uploadUrl: uploadUrl,
+        hideThumbnailContent: true,
+        minFileCount: 1,
+        maxFileCount: 50,
+        uploadExtraData: {
+            img_key: "1000",
+            img_keywords: "happy, places",
+        }
     });
 }
 
@@ -69,6 +72,12 @@ function fnc_open_upload_dialog() {
         fnc_init_upload_dialog();
         upload_modal = $("body").find('#upload-modal');
     }
+    var uniqid = window.location.hash.slice(1);
+    if(uniqid == ""){
+        uniqid = "#";
+    }
+    var uploadUrl = "drive/" + uniqid + "/upload";
+    fnc_init_upload_plugin(uploadUrl);
     upload_modal.modal('toggle');
 }
 

@@ -28,7 +28,7 @@
                     </a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="#" onclick="fnc_open_upload_dialog()">
-                        <i class="fas fa-file-upload"></i>Tải lên
+                        <i class="fas fa-upload"></i>Tải lên
                     </a>
                 </div>
             </div>
@@ -142,44 +142,49 @@
                     </div>
                 </div>
                 <div class="jAQ">
-                    <div class="aqC nicescroll" id="nicescroll-oput" oncontextmenu="o_context_menu(this, event)">
-                        <div class="row z-pdr">
+                    <div class="aqC nicescroll" id="nicescroll-oput">
+                        <div class="row z-pdr z-mgr">
                             <div class="col-12 z-pdr z-mgr">
-                                <div class="row">
+                                <div class="row z-mgr">
                                     <div class="col-12 pdt-10 pdb-10">
                                         Thư mục
                                     </div>
                                 </div>
-                                <div class="folder-list row justify-content-start">
-                                    <div class="col-auto" oncontextmenu="context_menu(this, event)">
+                                <div class="folder-list row justify-content-start z-mgr">
+                                    <div class="col-auto">
                                         <div class="folder">
-                                            <i class="fas fa-folder"></i>
+                                            <i class="fa-icon fas fa-folder"></i>
                                             <span>ABC</span>
+                                            <button class="ellipsis" onclick="fnc_open_folder_drd_menu(this)">
+                                                <i class="fas fa-ellipsis-v"></i>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row z-pdr z-mgr">
-                            <div class="col-12 z-pdr">
-                                <div class="row">
+                            <div class="col-12 z-pdr z-mgr">
+                                <div class="row z-mgr">
                                     <div class="col-12 pdt-10 pdb-10">
                                         Tệp
                                     </div>
                                 </div>
-                                <div class="file-list row justify-content-start">
+                                <div class="file-list row justify-content-start z-mgr">
                                     <div class="col-auto">
                                         <div class="file">
                                             <div class="w-100 file-thumbnail"></div>
                                             <div class="w-100 file-detail">
-                                                <i class="fas fa-folder"></i>
+                                                <i class="fa-icon fas fa-folder"></i>
                                                 <span>ABC</span>
+                                                <button class="ellipsis"><i class="fas fa-ellipsis-v"></i></button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="bg-drive-container"></div>
                     </div>
                 </div>
             </div>

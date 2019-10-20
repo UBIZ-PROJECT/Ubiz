@@ -124,7 +124,8 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::post('report/export-rep', ['as'=>'export-rep', 'uses'=>'Api\ReportController@exportRep']);
         Route::post('report/import-rep', ['as'=>'import-rep', 'uses'=>'Api\ReportController@importRep']);
 
-        Route::get('drive', ['as' => 'api-get-drives', 'uses' => 'Api\DriveController@getData']);
-        Route::get('drive/{uniqid}', ['as' => 'api-get-report', 'uses' => 'Api\DriveController@getData']);
+        Route::get('drive/{uniqid}', ['as' => 'api-get-drives', 'uses' => 'Api\DriveController@getFiles']);
+        Route::post('drive/{uniqid}/upload', ['as' => 'api-upload-drives', 'uses' => 'Api\DriveController@uploadFiles']);
+        Route::post('drive/{uniqid}/download', ['as' => 'api-download-drives', 'uses' => 'Api\DriveController@downloadFiles']);
     });
 });

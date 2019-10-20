@@ -5263,14 +5263,14 @@
             $cont.off().remove();
             return $el;
         },
-        refresh: function (options) {
+        refresh: function (options, refreshMode) {
             var self = this, $el = self.$element;
             if (typeof options !== 'object' || $h.isEmpty(options)) {
                 options = self.options;
             } else {
                 options = $.extend(true, {}, self.options, options);
             }
-            self._init(options, true);
+            self._init(options, refreshMode);
             self._listen();
             return $el;
         },
@@ -5367,7 +5367,7 @@
         autoOrientImageInitial: true,
         required: false,
         rtl: false,
-        hideThumbnailContent: false,
+        hideThumbnailContent: true,
         encodeUrl: true,
         generateFileId: null,
         previewClass: '',
