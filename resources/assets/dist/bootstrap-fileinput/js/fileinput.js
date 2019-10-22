@@ -3280,6 +3280,7 @@
             };
             formdata.append(self.uploadFileAttr, fileObj.file, fileName);
             self._setUploadData(formdata, {fileId: id});
+            self._setUploadData(formdata, {filePath: fileObj.relativePath});
             self._ajaxSubmit(fnBefore, fnSuccess, fnComplete, fnError, formdata, id, i);
         },
         _uploadBatch: function () {
@@ -5356,7 +5357,7 @@
         showCancel: null,
         showPause: null,
         showClose: false,
-        showUploadedThumbs: true,
+        showUploadedThumbs: false,
         showConsoleLogs: true,
         browseOnZoneClick: false,
         autoReplace: false,

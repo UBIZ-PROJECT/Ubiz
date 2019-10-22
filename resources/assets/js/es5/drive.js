@@ -507,7 +507,7 @@ function fnc_add_folder_drd_menu(self, drd_id) {
 
 function fnc_init_upload_dialog() {
     var modal_html = "";
-    modal_html += '<div class="modal fade" id="upload-modal" tabIndex="-1" role="dialog" aria-hidden="true">';
+    modal_html += '<div class="modal fade" id="upload-modal" data-backdrop="static" data-keyboard="false" tabIndex="-1" role="dialog" aria-hidden="true">';
     modal_html += '<div class="modal-dialog" role="document" style="max-width: unset; padding: 20px; margin: 0px; width: 100%; height: 100%">';
     modal_html += '<div class="modal-content" style="width: 100%; height: 100%; padding: 10px">';
     modal_html += '<div class="file-loading">';
@@ -529,7 +529,7 @@ function fnc_init_upload_plugin(uploadUrl) {
         uploadUrl: uploadUrl,
         hideThumbnailContent: true,
         minFileCount: 1,
-        maxFileCount: 20
+        maxFileCount: 50
     });
 }
 
