@@ -59,6 +59,16 @@
                             <div class="aqJ">
                                 <div class="ar5">
                                 <span class="Di">
+                                    <div class="amD utooltip selected-function" title="Xóa" style="display: none">
+                                        <button class="i-btn">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </div>
+                                    <div class="amD utooltip selected-function" title="Tác vụ khác" style="display: none">
+                                        <button class="i-btn">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                    </div>
                                     <div class="amH" style="user-select: none">
                                         <span class="Dj">
                                             <span class="ts">Tên</span>
@@ -75,10 +85,6 @@
                                                 <path d="M40 24l-2.82-2.82L26 32.34V8h-4v24.34L10.84 21.16 8 24l16 16 16-16z"></path>
                                             </svg>
                                         </div>
-                                    </div>
-                                    <div class="amD utooltip" title="Cài đặt">
-                                        <span class="amF">&nbsp;</span>
-                                        <img class="amG" src="./images/cleardot.gif" alt="">
                                     </div>
                                 </span>
                                 </div>
@@ -105,6 +111,9 @@
                             </div>
                         </div>
                         <div class="bg-drive-container" onclick="fnc_drive_container_click()"></div>
+                        <div class="drive-ajax-loading" style="display: none">
+                            <img src="{{ asset('/images/ajax-loader.gif') }}">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -112,6 +121,7 @@
     </div>
 @endsection
 @section('end-javascript')
+    <script type="text/javascript" src="{{ asset('dist/cryptovjs3.1.2/rollups/md5.js') }}"></script>
     <script type="text/javascript" src="{{ asset('dist/bootstrap-fileinput/js/plugins/piexif.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('dist/bootstrap-fileinput/js/plugins/purify.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('dist/bootstrap-fileinput/js/plugins/sortable.min.js') }}"></script>

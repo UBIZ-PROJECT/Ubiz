@@ -3405,7 +3405,8 @@
             var ctr = 0;
             $.each(self.fileManager.stack, function (key, data) {
                 if (!$h.isEmpty(data.file)) {
-                    formdata.append(self.uploadFileAttr, data.file, (data.nameFmt || ('untitled_' + ctr)));
+                    formdata.append(self.uploadFileAttr, data.file, (data.relativePath || ('untitled_' + ctr)));
+                    formdata.append('relativePath[]', data.relativePath);
                 }
                 ctr++;
             });

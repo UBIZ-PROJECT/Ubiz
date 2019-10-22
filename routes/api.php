@@ -126,6 +126,7 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
 
         Route::get('drive/{uniqid}', ['as' => 'api-get-drives', 'uses' => 'Api\DriveController@getFiles']);
         Route::post('drive/{uniqid}/upload', ['as' => 'api-upload-drives', 'uses' => 'Api\DriveController@uploadFiles']);
+        Route::post('drive/{uniqid}/delete', ['as' => 'api-delete-drives', 'uses' => 'Api\DriveController@deleteFiles']);
         Route::post('drive/{uniqid}/download', ['as' => 'api-download-drives', 'uses' => 'Api\DriveController@downloadFiles']);
     });
 });
