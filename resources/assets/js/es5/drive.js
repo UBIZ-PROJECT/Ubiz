@@ -572,6 +572,9 @@ function fnc_get_drive_callback(res) {
 
 jQuery(document).ready(function () {
     fnc_set_scrollbars("nicescroll-oput");
-    var dri_uniq = md5_hash_generator('root');
-    fnc_get_drive(dri_uniq);
+    var uniqid = window.location.hash.slice(1);
+    if (uniqid == "") {
+        uniqid = md5_hash_generator('root');
+    }
+    fnc_get_drive(uniqid);
 });

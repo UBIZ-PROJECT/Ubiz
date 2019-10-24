@@ -25,7 +25,9 @@ class Drive
                 return null;
 
             $data = [];
-            $data['breadcrum'] = $this->generateBreadCrum($f_data->dri_path_uniq, $f_data->dri_path_name);
+
+            $parents = $this->getAllParents($uniqid);
+            $data['breadcrum'] = $this->generateBreadCrum($parents);
 
             $c_data = DB::table('drives')
                 ->select('*')
@@ -46,30 +48,73 @@ class Drive
                 }
             }
             return $data;
+
         } catch (\Throwable $e) {
             throw $e;
         }
     }
 
-    private function generateBreadCrum($dri_path_uniq, $dri_path_name)
+    public function uploadFiles($uniqid, $upload_data)
+    {
+        try {
+            $upload_files = $upload_data['upload-files'];
+            $relative_paths = $upload_data['relative-paths'];
+            $parents = $this->getAllParents($uniqid);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    private function getAllParents($uniqid)
+    {
+        try {
+            $sql = "SELECT T2.*, T1.lvl
+                    FROM (
+                        SELECT
+                            @r AS _dri_uniq,
+                            ( SELECT @r := dri_funiq FROM drives WHERE dri_uniq = _dri_uniq ) AS dri_funiq,
+                            @l := @l + 1 AS lvl
+                        FROM
+                            ( SELECT @r := :uniqid, @l := 0 ) vars, drives d
+                        WHERE delete_flg = '0'
+                    ) T1
+                    JOIN drives T2
+                    ON T1._dri_uniq = T2.dri_uniq
+                    ORDER BY T1.lvl DESC;";
+
+            $results = DB::select(DB::raw($sql), array(
+                'uniqid' => $uniqid,
+            ));
+            return $results;
+
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    private function generateUniqId()
+    {
+        try {
+            return md5(uniqid());
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    private function generateBreadCrum($parents)
     {
         try {
 
             $breadcrum = [];
-            $path_uniq = explode("/", $dri_path_uniq);
-            $path_name = explode("/", $dri_path_name);
-
             $is_root = true;
             $is_last = false;
-            for ($i = 0; $i < sizeof($path_uniq); $i++) {
 
-                $dri_uniq = $path_uniq[$i];
-                $dri_name = "Nout found";
-                if (requiredValidator($path_name[$i]) == true) {
-                    $dri_name = $path_name[$i];
-                }
+            foreach ($parents as $key => $item) {
 
-                if ($i == sizeof($path_uniq) - 1)
+                $dri_uniq = $item->dri_uniq;
+                $dri_name = $item->dri_name;
+
+                if ($key == sizeof($parents) - 1)
                     $is_last = true;
 
                 $breadcrum[] = [
