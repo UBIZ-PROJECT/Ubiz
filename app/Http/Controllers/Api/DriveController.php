@@ -14,13 +14,40 @@ class DriveController extends Controller
         try {
 
             $drive = new Drive();
-            $driveData = $drive->getData($uniqid);
-
-            if ($driveData == null) {
+            $validateResult = $drive->validateDriUniq($uniqid);
+            if ($validateResult == false) {
                 $res['success'] = false;
                 $res['message'] = __('Data is not exists.');
                 return $res;
             }
+
+            //get data
+            $driveData = $drive->getData($uniqid);
+
+            return response()->json([
+                'data' => $driveData,
+                'success' => true,
+                'message' => __('Successfully processed.')
+            ], 200);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function getDetail($uniqid, Request $request)
+    {
+        try {
+
+            $drive = new Drive();
+            $validateResult = $drive->validateDriUniq($uniqid);
+            if ($validateResult == false) {
+                $res['success'] = false;
+                $res['message'] = __('Data is not exists.');
+                return $res;
+            }
+
+            //get data
+            $driveData = $drive->getDetail($uniqid);
 
             return response()->json([
                 'data' => $driveData,
@@ -35,6 +62,14 @@ class DriveController extends Controller
     public function uploadFiles($uniqid, Request $request)
     {
         try {
+
+            $drive = new Drive();
+            $validateResult = $drive->validateDriUniq($uniqid);
+            if ($validateResult == false) {
+                $res['success'] = false;
+                $res['message'] = __('Data is not exists.');
+                return $res;
+            }
 
             if (!$request->hasFile('upload-files')
                 || !$request->has('file-ids')
@@ -58,7 +93,6 @@ class DriveController extends Controller
                 return $res;
             }
 
-            $drive = new Drive();
             $drive->uploadFiles($uniqid, $upload_data);
 
             return response()->json([
@@ -75,6 +109,105 @@ class DriveController extends Controller
         try {
             $drive = new Drive();
             return response()->json([
+                'success' => true,
+                'message' => __('Successfully processed.')
+            ], 200);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function addNewFolder($uniqid, Request $request)
+    {
+        try {
+
+            $drive = new Drive();
+            $validateResult = $drive->validateDriUniq($uniqid);
+            if ($validateResult == false) {
+                $res['success'] = false;
+                $res['message'] = __('Data is not exists.');
+                return $res;
+            }
+
+            $folder_name = $request->get('folder-name', null);
+            if ($folder_name == null) {
+                $res['success'] = false;
+                $res['message'] = __('Please enter folder name.');
+                return $res;
+            }
+
+            if (preg_replace('/\s+/', '', $folder_name) == '') {
+                $res['success'] = false;
+                $res['message'] = __('Please enter folder name.');
+                return $res;
+            }
+
+            //upload files
+            $drive->addNewFolder($uniqid, $folder_name);
+
+            return response()->json([
+                'success' => true,
+                'message' => __('Successfully processed.')
+            ], 200);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function changeName($uniqid, Request $request)
+    {
+        try {
+
+            $drive = new Drive();
+            $validateResult = $drive->validateDriUniq($uniqid);
+            if ($validateResult == false) {
+                $res['success'] = false;
+                $res['message'] = __('Data is not exists.');
+                return $res;
+            }
+
+            $new_name = $request->get('new-name', null);
+            if ($new_name == null) {
+                $res['success'] = false;
+                $res['message'] = __('Please enter new name.');
+                return $res;
+            }
+
+            if (preg_replace('/\s+/', '', $new_name) == '') {
+                $res['success'] = false;
+                $res['message'] = __('Please enter new name.');
+                return $res;
+            }
+
+            //upload files
+            $drive->changeName($uniqid, $new_name);
+
+            return response()->json([
+                'success' => true,
+                'message' => __('Successfully processed.')
+            ], 200);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function deleteFiles($uniqid, Request $request)
+    {
+        try {
+
+            $drive = new Drive();
+            $validateResult = $drive->validateDriUniq($uniqid);
+            if ($validateResult == false) {
+                $res['success'] = false;
+                $res['message'] = __('Data is not exists.');
+                return $res;
+            }
+
+            //delete files
+            $f_uniqid = $drive->deleteFiles($uniqid);
+
+            return response()->json([
+                'uniqid' => $f_uniqid,
                 'success' => true,
                 'message' => __('Successfully processed.')
             ], 200);

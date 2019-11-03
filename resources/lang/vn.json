@@ -303,6 +303,7 @@
   "Not Between": "Ngoài khoảng",
   "Role": "Vai trò",
   "User is not exists.": "Xin vui lòng nhập [Nhân viên].",
-		"Are you sure you want to update repository?" : "Bạn có chắc chắn muốn cập nhật lại kho?",
-  "Invalid file." : "File không hợp lệ."
+  "Are you sure you want to update repository?": "Bạn có chắc chắn muốn cập nhật lại kho?",
+  "Invalid file.": "File không hợp lệ.",
+  "Please enter new name.": "Xin vui lòng nhập tên."
 }

@@ -18,8 +18,8 @@
 @section('content')
     <div class="main-content">
         <div class="l-content">
-            <div class="zY add-new">
-                <div class="yP" onclick="fnc_open_create_drd_menu(this)">
+            <div class="zY add-new col-auto">
+                <div class="yP" onclick="fnc_add_new_click(this)">
                     Thêm mới
                 </div>
             </div>

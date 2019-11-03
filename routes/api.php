@@ -125,8 +125,11 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::post('report/import-rep', ['as'=>'import-rep', 'uses'=>'Api\ReportController@importRep']);
 
         Route::get('drive/{uniqid}', ['as' => 'api-get-drives', 'uses' => 'Api\DriveController@getFiles']);
+        Route::get('drive/{uniqid}/detail', ['as' => 'api-get-detail', 'uses' => 'Api\DriveController@getDetail']);
         Route::post('drive/{uniqid}/upload', ['as' => 'api-upload-drives', 'uses' => 'Api\DriveController@uploadFiles']);
-        Route::post('drive/{uniqid}/delete', ['as' => 'api-delete-drives', 'uses' => 'Api\DriveController@deleteFiles']);
+        Route::delete('drive/{uniqid}/delete', ['as' => 'api-delete-drives', 'uses' => 'Api\DriveController@deleteFiles']);
         Route::post('drive/{uniqid}/download', ['as' => 'api-download-drives', 'uses' => 'Api\DriveController@downloadFiles']);
+        Route::post('drive/{uniqid}/add-new-folder', ['as' => 'api-add-new-folder', 'uses' => 'Api\DriveController@addNewFolder']);
+        Route::post('drive/{uniqid}/change-name', ['as' => 'api-change-name', 'uses' => 'Api\DriveController@changeName']);
     });
 });

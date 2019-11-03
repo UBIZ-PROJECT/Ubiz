@@ -5308,6 +5308,10 @@
                 config: self.initialPreviewConfig,
                 tags: self.initialPreviewThumbTags
             };
+        },
+        getContainer: function () {
+            var self = this;
+            return self.$container;
         }
     };
 
@@ -5355,7 +5359,7 @@
         showRemove: true,
         showUpload: true,
         showUploadStats: true,
-        showCancel: null,
+        showCancel: false,
         showPause: null,
         showClose: false,
         showUploadedThumbs: false,

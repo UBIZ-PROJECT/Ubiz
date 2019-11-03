@@ -75,11 +75,11 @@
     padding-left: 15px;
 }
 
-.dri-breadcrumb .dri-breadcrumb-item a {
-    padding: 5px;
-    text-decoration: none;
-    cursor: pointer;
+.dri-breadcrumb .dri-breadcrumb-item button {
     border-radius: 5px;
+    outline: unset;
+    background-color: unset;
+    border: none;
 }
 
 .dri-breadcrumb .dri-breadcrumb-item i {
@@ -87,7 +87,7 @@
     padding-left: 5px;
 }
 
-.dri-breadcrumb .dri-breadcrumb-item a:hover {
+.dri-breadcrumb .dri-breadcrumb-item button:hover {
     background-color: #e9ecef;
 }
 
