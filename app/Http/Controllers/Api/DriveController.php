@@ -59,6 +59,31 @@ class DriveController extends Controller
         }
     }
 
+    public function getChildren($uniqid, Request $request)
+    {
+        try {
+
+            $drive = new Drive();
+            $validateResult = $drive->validateDriUniq($uniqid);
+            if ($validateResult == false) {
+                $res['success'] = false;
+                $res['message'] = __('Data is not exists.');
+                return $res;
+            }
+
+            //get data
+            $data = $drive->getChildren($uniqid);
+
+            return response()->json([
+                'data' => $data,
+                'success' => true,
+                'message' => __('Successfully processed.')
+            ], 200);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
     public function uploadFiles($uniqid, Request $request)
     {
         try {
@@ -154,6 +179,67 @@ class DriveController extends Controller
         }
     }
 
+    public function doCopy($uniqid, Request $request)
+    {
+        try {
+
+            $drive = new Drive();
+            $validateResult = $drive->validateDriUniq($uniqid);
+            if ($validateResult == false) {
+                $res['success'] = false;
+                $res['message'] = __('Data is not exists.');
+                return $res;
+            }
+
+            //make a copy
+            $drive->doCopy($uniqid);
+
+            return response()->json([
+                'success' => true,
+                'message' => __('Successfully processed.')
+            ], 200);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function moveTo($uniqid, Request $request)
+    {
+        try {
+
+            $drive = new Drive();
+            $validateResult = $drive->validateDriUniq($uniqid);
+            if ($validateResult == false) {
+                $res['success'] = false;
+                $res['message'] = __('Data is not exists.');
+                return $res;
+            }
+
+            $target_uniqid = $request->get('target-uniqid', null);
+            if ($target_uniqid == null) {
+                $res['success'] = false;
+                $res['message'] = __('Please enter new name.');
+                return $res;
+            }
+            $validateResult = $drive->validateDriUniq($target_uniqid);
+            if ($validateResult == false) {
+                $res['success'] = false;
+                $res['message'] = __('Data is not exists.');
+                return $res;
+            }
+
+            //move to
+            $drive->moveTo($uniqid, $target_uniqid);
+
+            return response()->json([
+                'success' => true,
+                'message' => __('Successfully processed.')
+            ], 200);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
     public function changeName($uniqid, Request $request)
     {
         try {
@@ -179,8 +265,39 @@ class DriveController extends Controller
                 return $res;
             }
 
-            //upload files
+            //change name
             $drive->changeName($uniqid, $new_name);
+
+            return response()->json([
+                'success' => true,
+                'message' => __('Successfully processed.')
+            ], 200);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function changeColor($uniqid, Request $request)
+    {
+        try {
+
+            $drive = new Drive();
+            $validateResult = $drive->validateDriUniq($uniqid);
+            if ($validateResult == false) {
+                $res['success'] = false;
+                $res['message'] = __('Data is not exists.');
+                return $res;
+            }
+
+            $color = $request->get('color', null);
+            if ($color == null) {
+                $res['success'] = false;
+                $res['message'] = __('Please selecte color.!');
+                return $res;
+            }
+
+            //change color
+            $drive->changeColor($uniqid, $color);
 
             return response()->json([
                 'success' => true,

@@ -259,6 +259,103 @@ class Drive
         }
     }
 
+    public function changeColor($uniqid, $color)
+    {
+        DB::beginTransaction();
+        try {
+
+            $user_id = Auth::user()->id;
+
+            $data = [];
+            $data['dri_color'] = $color;
+            $data['upd_user'] = $user_id;
+
+            DB::table('drives')
+                ->where([
+                    ['dri_uniq', '=', $uniqid],
+                    ['delete_flg', '=', '0']
+                ])
+                ->update($data);
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    public function doCopy($uniqid)
+    {
+        DB::beginTransaction();
+        try {
+
+            $user_id = Auth::user()->id;
+
+            $source_data = DB::table('drives')
+                ->select('*')
+                ->where([
+                    ['dri_uniq', '=', $uniqid],
+                    ['delete_flg', '=', '0']
+                ])
+                ->first();
+
+            $target_data = (array)$source_data;
+
+            unset($target_data['dri_id']);
+            unset($target_data['inp_date']);
+            unset($target_data['upd_date']);
+
+            $target_data['dri_uniq'] = $this->generateUniqId();
+            $target_data['dri_name'] = "Bản sao của " . $target_data['dri_name'];
+            $target_data['dri_owner'] = $user_id;
+            $target_data['inp_user'] = $user_id;
+            $target_data['upd_user'] = $user_id;
+
+            DB::table('drives')->insert($target_data);
+
+            $target_file = $target_data['dri_uniq'];
+            if ($target_data['dri_ext'] != '' && $target_data['dri_ext'] != null) {
+                $target_file .= "." . $target_data['dri_ext'];
+            }
+
+            $source_file = $source_data->dri_uniq;
+            if ($source_data->dri_ext != '' && $source_data->dri_ext != null) {
+                $source_file .= "." . $source_data->dri_ext;
+            }
+
+            Storage::disk('marketing')->copy($source_file, $target_file);
+
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    public function moveTo($uniqid, $target_uniqid)
+    {
+        DB::beginTransaction();
+        try {
+
+            $user_id = Auth::user()->id;
+
+            $data = [];
+            $data['dri_funiq'] = $target_uniqid;
+            $data['upd_user'] = $user_id;
+
+            DB::table('drives')
+                ->where([
+                    ['dri_uniq', '=', $uniqid],
+                    ['delete_flg', '=', '0']
+                ])
+                ->update($data);
+
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
     public function deleteFiles($uniqid)
     {
         DB::beginTransaction();
@@ -285,13 +382,13 @@ class Drive
 
             if ($data->dri_type == '0') {
 
-                $childrens = $this->getAllChildrens($uniqid);
+                $children = $this->getAllChildren($uniqid);
 
-                //delete childrens
-                $this->deleteAllChildrens($uniqid);
+                //delete children
+                $this->deleteAllChildren($uniqid);
 
                 //delete file
-                foreach ($childrens as $child) {
+                foreach ($children as $child) {
                     if ($child->dri_type == '0')
                         continue;
 
@@ -318,6 +415,22 @@ class Drive
                 'dri-size' => $dri_size,
                 'dri-size-type' => $dri_size_type + 1
             ];
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    private function getChildren($uniqid)
+    {
+        try {
+            $data = DB::table('drives')
+                ->select('*')
+                ->where([
+                    ['dri_funiq', '=', $uniqid],
+                    ['delete_flg', '=', '0']
+                ])
+            return $data;
+
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -350,7 +463,7 @@ class Drive
         }
     }
 
-    private function getAllChildrens($uniqid)
+    private function getAllChildren($uniqid)
     {
         try {
             $sql = "SELECT *
@@ -377,7 +490,7 @@ class Drive
         }
     }
 
-    private function deleteAllChildrens($uniqid)
+    private function deleteAllChildren($uniqid)
     {
         try {
 

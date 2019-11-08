@@ -75,7 +75,8 @@ function fnc_render_folder(folder) {
     var html = "";
     html += '<div class="col-auto">';
     html += '<div uniqid="' + folder.dri_uniq + '" class="folder" ondblclick="fnc_folder_double_click(this, event)" onclick="fnc_folder_click(this, event)">';
-    html += '<i class="fa-icon fas fa-folder"></i>';
+    html += '<i class="fa-icon fas fa-folder" style="color: ' + folder.dri_color + '"></i>';
+    html += '<input type="hidden" id="dri-color-' + folder.dri_uniq + '" value="' + folder.dri_color + '">';
     html += '<span>';
     html += folder.dri_name;
     html += '</span>';
@@ -107,9 +108,10 @@ function fnc_render_file(file) {
     var html = "";
     html += '<div class="col-auto">';
     html += '<div uniqid="' + file.dri_uniq + '" class="file" onclick="fnc_file_click(this)">';
+    html += '<input type="hidden" id="dri-color-' + file.dri_uniq + '" value="' + file.dri_color + '">';
     html += '<div class="w-100 file-thumbnail"></div>';
     html += '<div class="w-100 file-detail">';
-    html += fnc_get_filetype_font_icon(file.dri_ext);
+    html += fnc_get_filetype_font_icon(file.dri_ext, file.dri_color);
     html += '<span>';
     html += file.dri_name;
     html += '</span>';
@@ -122,33 +124,33 @@ function fnc_render_file(file) {
     return html;
 }
 
-function fnc_get_filetype_font_icon(file_type) {
+function fnc_get_filetype_font_icon(file_type, color) {
     switch (file_type) {
         case 'xls':
         case 'xlsx':
-            return '<i class="fa-icon far fa-file-excel"></i>';
+            return '<i class="fa-icon far fa-file-excel" style="color: ' + color + '"></i>';
             break;
         case 'doc':
         case 'docx':
-            return '<i class="fa-icon far fa-file-word"></i>';
+            return '<i class="fa-icon far fa-file-word" style="color: ' + color + '"></i>';
             break;
         case 'ppt':
         case 'pptx':
-            return '<i class="fa-icon far fa-file-powerpoint"></i>';
+            return '<i class="fa-icon far fa-file-powerpoint" style="color: ' + color + '"></i>';
             break;
         case 'htm':
         case 'html':
-            return '<i class="fa-icon fas fa-file-code"></i>';
+            return '<i class="fa-icon fas fa-file-code" style="color: ' + color + '"></i>';
             break;
         case 'pdf':
-            return '<i class="fa-icon far fa-file-pdf"></i>';
+            return '<i class="fa-icon far fa-file-pdf" style="color: ' + color + '"></i>';
             break;
         case 'csv':
-            return '<i class="fa-icon fas fa-file-csv"></i>';
+            return '<i class="fa-icon fas fa-file-csv" style="color: ' + color + '"></i>';
             break;
         case 'rar':
         case 'zip':
-            return '<i class="fa-icon far fa-file-archive"></i>';
+            return '<i class="fa-icon far fa-file-archive" style="color: ' + color + '"></i>';
             break;
         case '3gp':
         case 'aa':
@@ -193,7 +195,7 @@ function fnc_get_filetype_font_icon(file_type) {
         case 'wv':
         case 'webm':
         case '8svx':
-            return '<i class="fa-icon fas fa-file-audio"></i>';
+            return '<i class="fa-icon fas fa-file-audio" style="color: ' + color + '"></i>';
             break;
         case 'flv':
         case 'vob':
@@ -236,7 +238,7 @@ function fnc_get_filetype_font_icon(file_type) {
         case 'f4p':
         case 'f4a':
         case 'f4b':
-            return '<i class="fa-icon far fa-file-video"></i>';
+            return '<i class="fa-icon far fa-file-video" style="color: ' + color + '"></i>';
             break;
         case 'jpg':
         case 'png':
@@ -252,10 +254,10 @@ function fnc_get_filetype_font_icon(file_type) {
         case 'svg':
         case 'ai':
         case 'eps':
-            return '<i class="fa-icon far fa-file-image"></i>';
+            return '<i class="fa-icon far fa-file-image" style="color: ' + color + '"></i>';
             break;
         default:
-            return '<i class="fa-icon fa fa-file-alt"></i>';
+            return '<i class="fa-icon fa fa-file-alt" style="color: ' + color + '"></i>';
     }
 }
 
@@ -424,8 +426,13 @@ function fnc_init_drd_menu(self, drd_id, drd_type, uniqid) {
 
             html += '<button class="dropdown-item" uniqid="' + uniqid + '" onclick="fnc_move_to(this)"><i class="fas fa-file-export"></i>Di chuyển tới</button>';
             html += '<button class="dropdown-item" uniqid="' + uniqid + '" onclick="fnc_change_name(this)"><i class="fas fa-pencil-alt"></i>Đổi tên</button>';
-            html += '<button class="dropdown-item" uniqid="' + uniqid + '" onclick="fnc_change_color(this)"><i class="fas fa-palette"></i>Thay đổi màu</button>';
+            html += '<button class="dropdown-item" uniqid="' + uniqid + '" onclick="fnc_change_color(this, event)"><i class="fas fa-palette"></i>Thay đổi màu</button>';
             html += '<div class="dropdown-divider"></div>';
+            html += '<div class="dropdown-item collapse multi-collapse" id="change-color-' + uniqid + '">';
+            html += '<div class="dropdown-divider"></div>';
+            html += '<div class="card card-body z-pdr pdl-5 pdt-5 pdb-5" style="border: none;"></div>';
+            html += '<div class="dropdown-divider"></div>';
+            html += '</div>';
             html += '<button class="dropdown-item" uniqid="' + uniqid + '" onclick="fnc_detail(this)"><i class="fas fa-info-circle"></i>Chi tiết</button>';
             // file drd
             if (drd_type == 1) {
@@ -708,6 +715,241 @@ function fnc_delete_callback(res) {
             title: res.data.message,
             onClose: () => {
                 fnc_get_drive(res.data.uniqid);
+            }
+        });
+    } else {
+        console.log(res);
+        swal.fire({
+            type: 'error',
+            title: res.data.message
+        });
+    }
+}
+
+function fnc_change_color(self, event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    var drd_colors = [];
+    drd_colors.push('#ac725e');
+    drd_colors.push('#d06b64');
+    drd_colors.push('#f83a22');
+    drd_colors.push('#fa573c');
+    drd_colors.push('#ff7537');
+    drd_colors.push('#ffad46');
+    drd_colors.push('#42d692');
+    drd_colors.push('#16a765');
+    drd_colors.push('#7bd148');
+    drd_colors.push('#b3dc6c');
+    drd_colors.push('#fbe983');
+    drd_colors.push('#fad165');
+    drd_colors.push('#92e1c0');
+    drd_colors.push('#9fe1e7');
+    drd_colors.push('#9fc6e7');
+    drd_colors.push('#4986e7');
+    drd_colors.push('#9a9cff');
+    drd_colors.push('#b99aff');
+    drd_colors.push('#8f8f8f');
+    drd_colors.push('#cabdbf');
+    drd_colors.push('#cca6ac');
+    drd_colors.push('#f691b2');
+    drd_colors.push('#cd74e6');
+    drd_colors.push('#a47ae2');
+
+    var uniqid = $(self).attr('uniqid');
+    if ($("#change-color-" + uniqid).find('card-body').find('div.drd-color').length == 0) {
+        var dri_color = $("#dri-color-" + uniqid).val();
+        var html = "";
+        html += '<div class="drd-color row justify-content-start z-mgr z-mgl">';
+        var fa_icon = "";
+        $.each(drd_colors, function (idx, drd_color) {
+            fa_icon = "fa-square";
+            if (dri_color == drd_color) {
+                fa_icon = "fa-check-square selected";
+            }
+            html += '<div class="col-auto z-mgr z-mgl z-mgb pdl-5 pdr-5 pdb-5"><i uniqid="' + uniqid + '" color="' + drd_color + '" onclick="fnc_color_selected(this, event)" class="fas ' + fa_icon + ' z-mgr z-mgl font-size-24" style="cursor: pointer; color: ' + drd_color + '"></i></div>';
+        });
+        html += '</div>';
+
+        $("#change-color-" + uniqid).find('.card-body').empty();
+        $("#change-color-" + uniqid).find('.card-body').html(html);
+    }
+
+    setTimeout(function () {
+        $("#change-color-" + uniqid).collapse('toggle');
+    }, 5);
+}
+
+function fnc_color_selected(self, event) {
+
+    event.preventDefault();
+    event.stopPropagation();
+    if ($(self).hasClass('selected')) {
+        return false;
+    }
+
+    swal({
+        title: i18next.t('Do you want to change the color.?'),
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: i18next.t('No'),
+        confirmButtonText: i18next.t('Yes'),
+        reverseButtons: true
+    }).then((result) => {
+        if (result.value) {
+            var uniqid = $(self).attr('uniqid');
+            var color = $(self).attr('color');
+            ubizapis('v1', 'drive/' + uniqid + '/change-color', 'post', {'color': color}, null, function (res) {
+
+                if (res.data.success == true) {
+                    swal.fire({
+                        type: 'success',
+                        title: res.data.message,
+                        onClose: () => {
+                            var drd_selected_color = $("#change-color-" + uniqid).find('.card-body').find('i.selected');
+                            drd_selected_color.removeClass('fa-check-square');
+                            drd_selected_color.removeClass('selected');
+                            drd_selected_color.addClass('fa-square');
+
+                            $(self).removeClass('fa-square');
+                            $(self).addClass('fa-check-square');
+                            $(self).addClass('selected');
+                            $("#folder-container").find('div[uniqid=' + uniqid + ']').find('i.fa-icon').css('color', color);
+                            $("#folder-container").find('div[uniqid=' + uniqid + ']').find('input[id=dri-color-' + uniqid + ']').val(color);
+                            $("#file-container").find('div[uniqid=' + uniqid + ']').find('i.fa-icon').css('color', color);
+                            $("#file-container").find('div[uniqid=' + uniqid + ']').find('input[id=dri-color-' + uniqid + ']').val(color);
+                        }
+                    });
+                } else {
+                    console.log(res);
+                    swal.fire({
+                        type: 'error',
+                        title: res.data.message
+                    });
+                }
+
+            });
+        }
+    });
+
+}
+
+function fnc_copy(self) {
+    swal({
+        title: i18next.t('Do you want to make a copy.?'),
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: i18next.t('No'),
+        confirmButtonText: i18next.t('Yes'),
+        reverseButtons: true
+    }).then((result) => {
+        if (result.value) {
+            var uniqid = $(self).attr('uniqid');
+            var uniqid = $(self).attr('uniqid');
+            var color = $(self).attr('color');
+            ubizapis('v1', 'drive/' + uniqid + '/do-copy', 'post', null, null, function (res) {
+
+                if (res.data.success == true) {
+                    swal.fire({
+                        type: 'success',
+                        title: res.data.message,
+                        onClose: () => {
+                            fnc_reload_drive();
+                        }
+                    });
+                } else {
+                    console.log(res);
+                    swal.fire({
+                        type: 'error',
+                        title: res.data.message
+                    });
+                }
+
+            });
+        }
+    });
+}
+
+function fnc_move_to(self) {
+    var uniqid = $(self).attr('uniqid');
+    var modal_id = 'move-to-modal';
+    var move_to_modal = $("body").find('#' + modal_id);
+    if (move_to_modal.length == 0) {
+        fnc_init_move_to_modal(modal_id);
+        move_to_modal = $("body").find('#' + modal_id);
+    }
+    move_to_modal.attr('uniqid', uniqid);
+    ubizapis('v1', '/drive/' + uniqid + '/children', 'get', null, null, function (res) {
+
+        if (res.data.success == true) {
+            var data = res.data.data;
+            setTimeout(function () {
+                move_to_modal.modal('toggle');
+            }, 5);
+        } else {
+            swal.fire({
+                type: 'error',
+                title: res.data.message
+            });
+        }
+    });
+
+
+}
+
+function fnc_init_move_to_modal(modal_id) {
+    var modal_html = "";
+    modal_html += '<div class="modal fade" uniqid="" id="' + modal_id + '" tabIndex="-1" role="dialog" aria-hidden="true">';
+    modal_html += '<div class="modal-dialog" role="document">';
+    modal_html += '<div class="modal-content">';
+    modal_html += '<div class="modal-header">';
+    modal_html += '<h5 class="modal-title">Đổi tên</h5>';
+    modal_html += '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
+    modal_html += '<span aria-hidden="true">&times;</span>';
+    modal_html += '</button>';
+    modal_html += '</div>';
+    modal_html += '<div class="modal-body">';
+
+    modal_html += '</div>';
+    modal_html += '<div class="modal-footer">';
+    modal_html += '<button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>';
+    modal_html += '<button type="button" class="btn btn-primary" onclick="fnc_execute_move_to(\'' + modal_id + '\')">Di chuyển</button>';
+    modal_html += '</div>';
+    modal_html += '</div>';
+    modal_html += '</div>';
+    modal_html += '</div>';
+    $("body").append(modal_html);
+}
+
+function fnc_execute_move_to(modal_id) {
+    swal({
+        title: i18next.t('Are you sure want to move data.?'),
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: i18next.t('No'),
+        confirmButtonText: i18next.t('Yes'),
+        reverseButtons: true
+    }).then((result) => {
+        if (result.value) {
+            var uniqid = $("#" + modal_id).attr('uniqid');
+            ubizapis('v1', 'drive/' + uniqid + '/move-to', 'post', {'target-uniqid': uniqid}, null, fnc_execute_move_to_callback);
+        }
+    });
+}
+
+function fnc_execute_move_to_callback(res) {
+    if (res.data.success == true) {
+        swal.fire({
+            type: 'success',
+            title: res.data.message,
+            onClose: () => {
+                fnc_reload_drive();
             }
         });
     } else {

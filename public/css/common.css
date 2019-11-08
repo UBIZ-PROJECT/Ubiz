@@ -859,8 +859,7 @@
     background-size: 20px;
 }
 
-
-.main-content .r-content .dlF{
+.main-content .r-content .dlF {
     display: inline-block;
     height: 20px;
     margin: 0;
@@ -1181,7 +1180,7 @@
     border-width: 0;
 }
 
-.root_textfield.rootIsUnderlined .fieldGroup svg{
+.root_textfield.rootIsUnderlined .fieldGroup svg {
     margin-top: 5px;
     cursor: pointer;
 }
@@ -2793,7 +2792,7 @@ input[type=number]::-webkit-outer-spin-button {
     text-decoration: none !important;
 }
 
-.light-color{
+.light-color {
     color: #212529;
     background-color: #e9ecef;
     border-color: #e9ecef;
@@ -2803,11 +2802,15 @@ input[type=number]::-webkit-outer-spin-button {
     text-transform: capitalize !important;
 }
 
-.event-form-control{
+.event-form-control {
     padding: 0.175rem 0.1rem !important;
     height: calc(1.6em + 0.15rem + 2px) !important;
 }
 
-.margin-bottom-10{
+.margin-bottom-10 {
     margin-bottom: 10px;
+}
+
+.font-size-24 {
+    font-size: 24px !important;
 }
