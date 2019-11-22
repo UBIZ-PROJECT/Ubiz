@@ -863,6 +863,7 @@ function qp_colect_data() {
     data.qp_exp_date = $("input[name=qp_exp_date]").val();
     data.qp_note = $("textarea[name=qp_note]").val();
     data.cad_id = $("select[name=qp_cad_id]").val();
+    data.sale_id = $("input[name=qp_sale_id]").val();
     data.contact_id = $("input[name=qp_contact_id]").val();
     data.contact_name = $("input[name=qp_contact_name]").val();
     data.contact_rank = $("input[name=qp_contact_rank]").val();
@@ -1002,6 +1003,10 @@ function qp_send() {
         var qp_id = $("input[name=qp_id]").val();
         ubizapis('v1', '/quoteprices/' + qp_id + '/send', 'post', {'data': data}, null, qp_send_callback);
     });
+    $("#preview-btn").unbind('click');
+    $("#preview-btn").bind('click', function () {
+        qp_preview();
+    });
     $("#confirm-modal").modal('show');
 }
 
@@ -1012,8 +1017,6 @@ function qp_send_callback(response) {
             title: response.data.message,
             onClose: () => {
                 $("#confirm-modal").modal('hide');
-                var qp_id = $("input[name=qp_id]").val();
-                window.open('/quoteprices/' + qp_id + '/pdf/' + response.data.uniqid);
             }
         })
 
@@ -1050,6 +1053,10 @@ function qp_download() {
         var qp_id = $("input[name=qp_id]").val();
         ubizapis('v1', '/quoteprices/' + qp_id + '/download', 'post', {'data': data}, null, qp_download_callback);
     });
+    $("#preview-btn").unbind('click');
+    $("#preview-btn").bind('click', function () {
+        qp_preview();
+    });
     $("#confirm-modal").modal('show');
 }
 
@@ -1078,6 +1085,38 @@ function qp_download_callback(response) {
             title: response.data.message
         })
     }
+}
+
+function qp_preview() {
+    var md_company = $("#md_company").val();
+    var md_language = $("#md_language").val();
+    if (md_company == "" || md_language == "") {
+        swal.fire({
+            type: 'error',
+            title: "Xin vui lòng chọn [Công ty] và [Ngôn ngữ].",
+            onClose: () => {
+                return false;
+            }
+        })
+        return false;
+    }
+
+    var data = qp_get_bussiness_conditions(md_company, md_language);
+    data.md_company = md_company;
+    data.md_language = md_language;
+
+    var qp_id = $("input[name=qp_id]").val();
+    var iframe_url = "http://tkp.local/quoteprices/" + qp_id + "/preview?" + qs.stringify({'params': data});
+
+    var iframe = $("#preview-modal").find('iframe');
+    iframe.attr('src', iframe_url);
+    iframe.on('load', function() {
+        $(".iframe-spinner").addClass('hide');
+        iframe.show();
+    });
+    iframe.hide();
+    $(".iframe-spinner").removeClass('hide');
+    $("#preview-modal").modal('show');
 }
 
 function qp_create_order() {
@@ -1149,6 +1188,10 @@ function qp_render_drd_contact() {
     } else {
         drd_html = '<div style="margin: 10px 15px"><h5>Không có người liên hệ.</h5></div>';
     }
+    drd_html += '<div class="dropdown-divider"></div>';
+    drd_html += '<div class="w-100 text-right">';
+    drd_html += '<button type="button" class="btn btn-link btn-sm text-primary text-right" onclick="qp_drd_contact_clear(event)">Xóa</button>';
+    drd_html += '</div>';
 
     $("#qp_contact_name_drd_menu").empty();
     $("#qp_contact_name_drd_menu").html(drd_html);
@@ -1160,6 +1203,16 @@ function qp_drd_contact_select(self, event) {
     if (contact == null)
         return false;
     qp_set_contact_form(contact);
+}
+
+function qp_drd_contact_clear(event) {
+    event.stopPropagation();
+    $("input[name=qp_contact_id]").val('');
+    $("input[name=qp_contact_name]").val('');
+    $("input[name=qp_contact_rank]").val('');
+    $("input[name=qp_contact_phone]").val('');
+    $("input[name=qp_contact_email]").val('');
+    $('#qp_contact_name_drd').dropdown('hide');
 }
 
 function qp_get_selected_contact(con_id) {
@@ -1177,6 +1230,82 @@ function qp_set_contact_form(contact) {
     $("input[name=qp_contact_rank]").val(contact.con_rank);
     $("input[name=qp_contact_phone]").val(contact.con_phone);
     $("input[name=qp_contact_email]").val(contact.con_mail);
+}
+
+function qp_render_drd_sale() {
+    var drd_html = "";
+    if (sale_list.length > 0) {
+
+        var qp_sale_id = $("input[name=qp_sale_id]").val();
+
+        $.map(sale_list, function (sale, idx) {
+
+            var itm_active = "";
+            if (qp_sale_id == sale.id) {
+                itm_active = "active";
+            }
+
+            drd_html += '<a sale_id="' + sale.id + '" class="dropdown-item ' + itm_active + ' media pdl-5" href="#" onClick="qp_drd_sale_select(this, event)">';
+            drd_html += '<div style="width: 30px; height: 30px" class="mr-3">';
+
+            if (sale.avatar_base64 == '') {
+                drd_html += '<img src="' + deafult_profile + '" class="img-fluid img-thumbnail" alt="">';
+            } else {
+                drd_html += '<img src="' + sale.avatar_base64 + '" class="img-fluid img-thumbnail" alt="">';
+            }
+
+            drd_html += '</div>';
+            drd_html += '<div class="media-body" style="height: 30px; line-height: 5px">';
+            drd_html += '<h6 class="mt-0 mb-1">' + html_escape(sale.name) + '</h6>';
+            drd_html += '<small>' + html_escape(sale.rank) + '</small>';
+            drd_html += '</div>';
+            drd_html += '</a>';
+        });
+    } else {
+        drd_html = '<div style="margin: 10px 15px"><h5>Không có nhân viên phụ trách.</h5></div>';
+    }
+    drd_html += '<div class="dropdown-divider"></div>';
+    drd_html += '<div class="w-100 text-right">';
+    drd_html += '<button type="button" class="btn btn-link btn-sm text-primary text-right" onclick="qp_drd_sale_clear(event)">Xóa</button>';
+    drd_html += '</div>';
+
+    $("#qp_sale_name_drd_menu").empty();
+    $("#qp_sale_name_drd_menu").html(drd_html);
+}
+
+function qp_drd_sale_select(self, event) {
+    var sale_id = $(self).attr('sale_id');
+    var sale = qp_get_selected_sale(sale_id);
+    if (sale == null)
+        return false;
+    qp_set_sale_form(sale);
+}
+
+function qp_drd_sale_clear(event) {
+    event.stopPropagation();
+    $("input[name=qp_sale_id]").val('');
+    $("input[name=qp_sale_name]").val('');
+    $("input[name=qp_sale_rank]").val('');
+    $("input[name=qp_sale_phone]").val('');
+    $("input[name=qp_sale_email]").val('');
+    $('#qp_sale_name_drd').dropdown('hide');
+}
+
+function qp_get_selected_sale(sale_id) {
+    var sale = _.find(sale_list, function (o) {
+        return o.id == sale_id;
+    });
+    if (typeof sale === 'undefined')
+        return null;
+    return sale;
+}
+
+function qp_set_sale_form(sale) {
+    $("input[name=qp_sale_id]").val(sale.id);
+    $("input[name=qp_sale_name]").val(sale.name);
+    $("input[name=qp_sale_rank]").val(sale.rank);
+    $("input[name=qp_sale_phone]").val(sale.phone);
+    $("input[name=qp_sale_email]").val(sale.email);
 }
 
 function w_sleep_scrollbars(instance) {
@@ -1283,4 +1412,13 @@ $(document).ready(function () {
     $('#qp_contact_name_drd').on('show.bs.dropdown', function () {
         qp_render_drd_contact();
     });
+    if ($("#qp_sale_name").attr('select') == true) {
+        $('#qp_sale_name_drd').on('show.bs.dropdown', function () {
+            qp_render_drd_sale();
+        });
+    }
+    $('#preview-modal').on('hidden.bs.modal', function (e) {
+        var iframe = $("#preview-modal").find('iframe');
+        iframe.attr('src', '');
+    })
 });

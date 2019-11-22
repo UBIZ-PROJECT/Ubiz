@@ -30,7 +30,7 @@ Route::middleware(['api', 'cors'])->group(function () {
         Route::get('orders/{ord_id}', ['as' => 'orders-detail', 'uses' => 'Web\OrderController@detail'])->where('ord_id', '[0-9]+');
         Route::get('quoteprices', ['as' => 'quoteprices', 'uses' => 'Web\QuotepriceController@index']);
         Route::get('quoteprices/{qp_id}', ['as' => 'quoteprices-detai', 'uses' => 'Web\QuotepriceController@detail'])->where('qp_id', '[0-9]+');
-        Route::get('quoteprices/{qp_id}/pdf/{uniqid}', ['as' => 'quoteprices-pdf', 'uses' => 'Web\QuotepriceController@pdf'])->where('qp_id', '[0-9]+');
+        Route::get('quoteprices/{qp_id}/preview', ['as' => 'quoteprices-pdf', 'uses' => 'Web\QuotepriceController@preview'])->where('qp_id', '[0-9]+');
         Route::get('quoteprices/{qp_id}/download/{uniqid}/{file_name}', ['as' => 'quoteprices-pdf', 'uses' => 'Web\QuotepriceController@download'])->where('qp_id', '[0-9]+');
         Route::get('quoteprices/{cus_id}/create', ['as' => 'quoteprices-create', 'uses' => 'Web\QuotepriceController@create'])->where('cus_id', '[0-9]+');
         Route::get('events', ['as' => 'events', 'uses' => 'Web\EventController@index']);
@@ -43,8 +43,8 @@ Route::middleware(['api', 'cors'])->group(function () {
         Route::get('quoteprices/{qp_id}/history/{his_qp_id}', ['as' => 'quoteprices-history-detai', 'uses' => 'Web\QuotepriceHistoryController@detail'])->where(['qp_id' => '[0-9]+', 'his_qp_id' => '[0-9]+']);
 
         Route::get('report', ['as'=>'report', 'uses'=>'Web\ReportController@index']);
-        Route::get('report/{type}', ['as'=>'report', 'uses'=>'Web\ReportController@index']);
-        Route::get('report/{type}/export', ['as'=>'report', 'uses'=>'Web\ReportController@exportExcel']);
+        Route::get('report/{type}', ['as'=>'report_with_type', 'uses'=>'Web\ReportController@index']);
+        Route::get('report/{type}/export', ['as'=>'export', 'uses'=>'Web\ReportController@exportExcel']);
 
         Route::get('drive', ['as' => 'api-get-drives', 'uses' => 'Web\DriveController@index']);
         Route::get('drive/{uniqid}', ['as' => 'api-get-report', 'uses' => 'Web\DriveController@index']);

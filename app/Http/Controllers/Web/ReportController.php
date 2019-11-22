@@ -43,6 +43,7 @@ class ReportController extends Controller
             $report = $reportModel->getReportData(0, '', $request);
             $report->sum = $sum;
             $paging['page'] = 0;
+            $report->status = $request->status;
             
 			return view($viewName, [
                 'report' => $report,
@@ -64,5 +65,4 @@ class ReportController extends Controller
                 return Excel::download(new ReportRepositoryExport($request), 'reportRepository.xlsx');
         }
     }
-
 }

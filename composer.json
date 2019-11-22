@@ -13,7 +13,9 @@
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
         "maatwebsite/excel": "^3.1",
+        "mpdf/mpdf": "^8.0",
         "simshaun/recurr": "^4.0",
+        "tecnickcom/tcpdf": "^6.3",
         "tymon/jwt-auth": "1.0.0-rc.2"
     },
     "require-dev": {

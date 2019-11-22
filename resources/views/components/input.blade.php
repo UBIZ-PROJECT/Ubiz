@@ -17,6 +17,10 @@ $is_select = false;
 if(isset($select)){
     $is_select = $select;
 }
+$html_readonly = "";
+if(isset($readonly)){
+    $html_readonly = "readonly";
+}
 $lbl_style = "";
 if(isset($lbl_width)){
     $lbl_style = "width : " . $lbl_width. "px";
@@ -64,11 +68,16 @@ switch ($type) {
     <div class="wrapper">
         <label for="{{$control_id}}" class="ms-Label root-56 lbl-primary" style="{{$lbl_style}}">{{$label}}:</label>
         <div class="fieldGroup">
-            <input is-change="false" onchange="{{ $html_onchange }}" onfocus="{{ $html_i_focus }}" placeholder="{{$html_placeholder}}" onblur="{{ $html_i_blur }}" spellcheck="false" type="text" {{ $html_max_length }} {{$html_control_type}} id="{{$control_id}}" name="{{$control_id}}" value="{{ $html_value }}" class="input_field {{ $html_class }}">
+            <input is-change="false" {{ $html_readonly }} select="{{ $is_select == true ? true : false }}" onchange="{{ $html_onchange }}" onfocus="{{ $html_i_focus }}" placeholder="{{$html_placeholder}}" onblur="{{ $html_i_blur }}" spellcheck="false" type="text" {{ $html_max_length }} {{$html_control_type}} id="{{$control_id}}" name="{{$control_id}}" value="{{ $html_value }}" class="input_field {{ $html_class }}">
             <input type="hidden" name="{{$control_id}}_old" value="{{ $html_value }}">
             @if($is_select == true)
                 <div class="dropdown" id="{{$control_id}}_drd">
-                    <svg focusable="false" role="button" id="{{$control_id}}_select" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" height="24px" viewBox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg">
+                    <svg focusable="false" role="button"
+                         id="{{$control_id}}_select"
+                         data-toggle="dropdown" aria-haspopup="true"
+                         aria-expanded="false" height="24px"
+                         viewBox="0 0 24 24" width="24px"
+                         xmlns="http://www.w3.org/2000/svg">
                         <path d="M7 10l5 5 5-5z"></path>
                         <path d="M0 0h24v24H0z" fill="none"></path>
                     </svg>

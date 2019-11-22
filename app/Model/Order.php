@@ -663,7 +663,51 @@ class Order
         $params[] = Auth::user()->id;
         $where_raw .= ' AND order.owner_id = ? ';
 
-        if ($search != '') {
+        //advance search
+        if (is_array($search) == true) {
+            foreach ($search as $item) {
+                $search_name = '';
+                switch ($item['search_name']) {
+                    case 'ord-no'://ord-no
+                        $search_name = 'order.ord_no';
+                        break;
+                    case 'ord-date'://ord-date
+                        $search_name = 'order.ord_date';
+                        break;
+                    case 'ord-exp-date'://ord-exp-date
+                        $search_name = 'order.ord_exp_date';
+                        break;
+                    case 'sale-id'://sale-id
+                        $search_name = 'order.sale_id';
+                        break;
+                    case 'cus-id'://cus-id
+                        $search_name = 'order.cus_id';
+                        break;
+                    case 'ord-amount-tax'://ord-amount-tax
+                        $search_name = 'order.ord_amount_tax';
+                        break;
+                    case 'ord-note'://ord-note
+                        $search_name = 'order.ord_note';
+                        break;
+                    case 'sale-step'://sale-step
+                        $search_name = 'order.sale_step';
+                        break;
+                }
+
+                if ($search_name == '')
+                    continue;
+
+                $search_cond = buildSearchCond($search_name, $item['search_value'], $item['search_operator']);
+                if (sizeof($search_cond) == 0)
+                    continue;
+
+                $params = array_merge($params, $search_cond['params']);
+                $where_raw .= " AND " . $search_cond['where_raw'];
+            }
+        }
+
+        //fuzzy search
+        if (is_string($search) && $search != '') {
             $search_val = "%" . $search . "%";
             $where_raw .= " AND ( ";
             $where_raw .= " order.ord_no like ? ";
@@ -684,12 +728,6 @@ class Order
                     $params[] = $search;
 
                     $where_raw .= " OR order.ord_amount_tax = ? ";
-                    $params[] = str_replace(',', '', $search);
-
-                    $where_raw .= " OR order.ord_paid = ? ";
-                    $params[] = str_replace(',', '', $search);
-
-                    $where_raw .= " OR order.ord_debt = ? ";
                     $params[] = str_replace(',', '', $search);
                 }
             }

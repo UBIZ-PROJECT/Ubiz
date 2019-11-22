@@ -1245,6 +1245,10 @@
     outline: 0;
 }
 
+.input_field:read-only {
+    cursor: default;
+}
+
 .dropdown_field {
     background-color: transparent;
     color: #333333;
@@ -1670,6 +1674,46 @@ input[type="text"][disabled], input[disabled], select[disabled], fieldset[disabl
 
 .pdr-80 {
     padding-right: 80px !important;
+}
+
+.pdb-5 {
+    padding-bottom: 5px;
+}
+
+.pdb-7 {
+    padding-bottom: 7px;
+}
+
+.pdb-10 {
+    padding-bottom: 10px;
+}
+
+.pdb-20 {
+    padding-bottom: 20px;
+}
+
+.pdb-30 {
+    padding-top: 30px;
+}
+
+.pdb-40 {
+    padding-bottom: 40px;
+}
+
+.pdb-50 {
+    padding-bottom: 50px;
+}
+
+.pdb-60 {
+    padding-bottom: 60px;
+}
+
+.pdb-70 {
+    padding-bottom: 70px;
+}
+
+.pdb-80 {
+    padding-bottom: 80px;
 }
 
 .suc {

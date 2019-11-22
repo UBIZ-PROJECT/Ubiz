@@ -6,6 +6,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/headbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/common.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/quoteprice.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('dist/tageditor/jquery.tag-editor.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('dist/air-datepicker/css/datepicker.min.css') }}">
 @endsection
 @section('headbar')
 @section('search')
@@ -361,7 +363,7 @@
                                         </div>
                                         <div class="tcB col-7">
                                             <div class="cbo">
-                                                <div class="nCj" title="{{$quoteprice->sale_step}}">
+                                                <div class="nCj"">
                                                     @include('components.badge_sale_step', ['sale_step'=>$quoteprice->sale_step])
                                                 </div>
                                             </div>
@@ -441,5 +443,8 @@
     </div>
 @endsection
 @section('end-javascript')
+    <script type="text/javascript" src="{{ asset('dist/air-datepicker/js/datepicker.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('dist/tageditor/jquery.tag-editor.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('dist/tageditor/jquery.caret.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/quoteprice.js') }}"></script>
 @endsection

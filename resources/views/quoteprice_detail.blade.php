@@ -135,24 +135,34 @@
                                         @include('components.input',['control_id'=>'qp_exp_date', 'value'=> date('Y/m/d', strtotime($quoteprice->qp_exp_date)), 'width'=> '150', 'lbl_width'=>'70', 'label'=>__('QP Exp Date'), 'class'=>'datepicker z-pdl z-pdr', 'i_focus'=>'', 'i_blur'=>'', 'onchange'=>"qp_exp_date_change(this)"])
                                     </div>
                                 </div>
+                                @if($user->role == 2)
+                                    <div class="row">
+                                        <div class="col-md-auto">
+                                            <input type="hidden" id="qp_sale_id" name="qp_sale_id" value="{{ $quoteprice->sale_id }}">
+                                            @include('components.input',['control_id'=>'qp_sale_name', 'readonly'=>true, 'select'=>true, 'value'=> $quoteprice->sale_name, 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Sale person'), 'i_focus'=>'', 'i_blur'=>''])
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="row">
+                                        <div class="col-md-auto">
+                                            <input type="hidden" id="qp_sale_id" name="qp_sale_id" value="{{ $quoteprice->sale_id }}">
+                                            @include('components.input',['control_id'=>'qp_sale_name', 'value'=> $quoteprice->sale_name, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Sale person'), 'i_focus'=>'', 'i_blur'=>''])
+                                        </div>
+                                    </div>
+                                @endif
                                 <div class="row">
                                     <div class="col-md-auto">
-                                        @include('components.input',['control_id'=>'sale_name', 'value'=> $quoteprice->sale_name, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Sale person'), 'i_focus'=>'', 'i_blur'=>''])
+                                        @include('components.input',['control_id'=>'qp_sale_rank', 'value'=> $quoteprice->sale_rank, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Duty'), 'i_focus'=>'', 'i_blur'=>''])
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-auto">
-                                        @include('components.input',['control_id'=>'sale_rank', 'value'=> $quoteprice->sale_rank, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Duty'), 'i_focus'=>'', 'i_blur'=>''])
+                                        @include('components.input',['control_id'=>'qp_sale_phone', 'value'=> $quoteprice->sale_phone, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Phone'), 'i_focus'=>'', 'i_blur'=>''])
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-auto">
-                                        @include('components.input',['control_id'=>'sale_phone', 'value'=> $quoteprice->sale_phone, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Phone'), 'i_focus'=>'', 'i_blur'=>''])
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-auto">
-                                        @include('components.input',['control_id'=>'sale_email', 'value'=> $quoteprice->sale_email, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Email'), 'i_focus'=>'', 'i_blur'=>''])
+                                        @include('components.input',['control_id'=>'qp_sale_email', 'value'=> $quoteprice->sale_email, 'type'=>'disabled', 'width'=> '300', 'lbl_width'=>'60', 'label'=>__('Email'), 'i_focus'=>'', 'i_blur'=>''])
                                     </div>
                                 </div>
                             </div>
@@ -184,7 +194,7 @@
                                         <div class="row">
                                             <div class="col-md-auto">
                                                 <input type="hidden" id="qp_contact_id" name="qp_contact_id" value="{{ $quoteprice->contact_id }}">
-                                                @include('components.input',['control_id'=>'qp_contact_name', 'value'=> $quoteprice->contact_name, 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Contact person'), 'select'=>true, 'i_focus'=>'', 'i_blur'=>''])
+                                                @include('components.input',['control_id'=>'qp_contact_name', 'value'=> $quoteprice->contact_name, 'width'=> '300', 'lbl_width'=>'90', 'label'=>__('Contact person'), 'readonly'=>true, 'select'=>true, 'i_focus'=>'', 'i_blur'=>''])
                                             </div>
                                             <div class="col-md-auto">
                                                 @include('components.input',['control_id'=>'qp_contact_rank', 'value'=> $quoteprice->contact_rank, 'width'=> '300', 'lbl_width'=>'70', 'label'=>__('Duty'), 'i_focus'=>'', 'i_blur'=>''])
@@ -521,7 +531,30 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+                                <button type="button" id="preview-btn" class="btn btn-info">Xem trước</button>
                                 <button type="button" id="confirm-btn" class="btn btn-primary">Gửi</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Quoteprices Preview Modal -->
+                <div class="modal fade" id="preview-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-xl" role="document">
+                        <div class="modal-content" style="height: calc(100vh - 60px);">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Báo giá > Bản xem trước</h5>
+                                <img name="ajax-loader" src="{{ asset('images/ajax-loader.gif') }}"
+                                     style="display: none; height: 28px; margin-left: 10px">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <img class="iframe-spinner" src="{{ asset('images/ajax-loader.gif') }}">
+                                <iframe src="" style="width: 100%; height: 100%; display: none"></iframe>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
                             </div>
                         </div>
                     </div>
@@ -533,6 +566,7 @@
 @section('end-javascript')
     <script type="text/javascript" src="{{ asset('js/quoteprice_detail.js') }}"></script>
     <script>
+        var sale_list = {!! json_encode($sales) !!};
         var con_list = {!! json_encode($contacts) !!};
     </script>
 @endsection

@@ -34,6 +34,8 @@ class OrderController extends Controller
     {
         try {
 
+            checkUserRight(11, 9);
+
             $qp = new Quoteprice();
             $qpData = $qp->getQuoteprice($qp_id);
             if (empty($qpData) == true || $qpData == null) {

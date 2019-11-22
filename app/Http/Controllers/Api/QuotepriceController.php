@@ -15,6 +15,9 @@ class QuotepriceController extends Controller
     public function getQuoteprices(Request $request)
     {
         try {
+
+            checkUserRight(11, 2);
+
             $qpModel = new Quoteprice();
             list($page, $sort, $search) = $this->getRequestData($request);
             $qpData = $qpModel->getQuoteprices($page, $sort, $search);
@@ -34,6 +37,8 @@ class QuotepriceController extends Controller
     public function createQuoteprice($cus_id, Request $request)
     {
         try {
+
+            checkUserRight(11, 4);
 
             $data = $request->get('data', null);
             if (empty($data) == true || $data == null) {
@@ -71,6 +76,8 @@ class QuotepriceController extends Controller
     {
         try {
 
+            checkUserRight(11, 6);
+
             $data = $request->get('data', null);
             if (empty($data) == true || $data == null) {
                 return response()->json(['success' => false, 'message' => __('Data is wrong.!')], 200);
@@ -95,6 +102,8 @@ class QuotepriceController extends Controller
     {
         try {
 
+            checkUserRight(11, 5);
+
             if (empty($ord_ids) || $ord_ids == '') {
                 return response()->json(['success' => false, 'message' => __('Successfully processed.')], 200);
             }
@@ -111,6 +120,8 @@ class QuotepriceController extends Controller
     public function sendQuoteprice($qp_id, Request $request)
     {
         try {
+
+            checkUserRight(11, 8);
 
             $extra_data = $request->get('data', null);
 
@@ -136,12 +147,9 @@ class QuotepriceController extends Controller
             }
 
             //send quoteprice
-            $uniqid = $qpModel->sendQuoteprice($qpData, $qpDetailData, $extra_data);
-            if ($uniqid == false) {
-                return response()->json(['success' => false, 'message' => __('Send quoteprices fail.')], 200);
-            }
+            $qpModel->sendQuoteprice($qpData, $qpDetailData, $extra_data);
 
-            return response()->json(['uniqid' => $uniqid, 'success' => true, 'message' => __('Successfully processed.')], 200);
+            return response()->json(['success' => true, 'message' => __('Successfully processed.')], 200);
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -162,20 +170,8 @@ class QuotepriceController extends Controller
             $qpDetailModel = new QuotepriceDetail();
             $qpDetailData = $qpDetailModel->getQuotepriceDetailsByQpId($qp_id);
 
-            $user = new User();
-            $userData = $user->getCurrentUser();
-
-            $tmp_quoteprices_detail = [];
-            foreach ($qpDetailData as $idx => $item) {
-
-                if (array_key_exists($item->type, $tmp_quoteprices_detail) == false) {
-                    $tmp_quoteprices_detail[$item->type] = [];
-                }
-                $tmp_quoteprices_detail[$item->type][] = $item;
-            }
-
             //send quoteprice
-            $file = $qpModel->makeFilePDF($qpData, $qpDetailData, $extra_data);
+            $file = $qpModel->makeQuotepriceFile($qpData, $qpDetailData, $extra_data);
             if ($file == false) {
                 return response()->json(['success' => false, 'message' => __('Download quoteprices fail.')], 200);
             }
