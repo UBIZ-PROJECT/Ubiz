@@ -236,60 +236,64 @@
                                 @php $idx = 0; @endphp
                                 @foreach($orderDetail as $item)
                                     @if($item->type == '1')
-                                        <div class="dt-row" dt_id="{{ $item->ordt_id }}">
-                                            <div class="row dt-row-head zero-mgl zero-mgr" onclick="my_collapse(this)">
-                                                <div class="col text-left">
-                                                    <label class="lbl-primary z-mgb">No.{{ ++$idx }}</label>
+                                        <div class="row_container_pump">
+                                            {{--<input type="checkbox" class="suc" style="display: inline-block" name="cb_{{$item->ordt_id}}"/>--}}
+                                            @include('components.checkbox',['control_id'=>'cb_row_pump_'. $idx, 'width'=>'4%', 'value'=>'0', 'checked' => false, 'type'=>'1'])
+                                            <div class="dt-row" style="display: inline-block; width: 95%;" dt_id="{{ $item->ordt_id }}">
+                                                <div class="row dt-row-head zero-mgl zero-mgr" onclick="my_collapse(this)">
+                                                    <div class="col text-left">
+                                                        <label class="lbl-primary z-mgb">No.{{ ++$idx }}</label>
+                                                    </div>
+                                                    <div class="col text-right">
+                                                        <i class="fas fa-caret-down"></i>
+                                                    </div>
                                                 </div>
-                                                <div class="col text-right">
-                                                    <i class="fas fa-caret-down"></i>
-                                                </div>
-                                            </div>
-                                            <div class="row dt-row-body zero-mgl zero-mgr collapse hide">
-                                                <div class="col-md-auto">
-                                                    <label class="lbl-primary">{{ __('Specification') }}:</label>
-                                                    <textarea name="dt_prod_specs_mce" id="dt_prod_specs_mce_{{ $idx }}">{{ $item->prod_specs_mce }}</textarea>
-                                                </div>
-                                                <div class="col-md-auto">
-                                                    @include('components.input',['value'=>$item->prod_model, 'control_id'=>'dt_prod_model','width'=> '250', 'lbl_width'=>'70', 'label'=>__('Model'), 'i_focus'=>'', 'i_blur'=>''])
-                                                    <div class="textarea  root_textarea rootIsUnderlined dt_prod_series_container"
-                                                         style="width: 250px">
-                                                        <label for="dt_prod_series" class="ms-Label root-56 lbl-primary ">
-                                                            {{ __('Series') }}
-                                                        </label>
-                                                        <div class="wrapper">
-                                                            <div class="fieldGroup_area">
-                                                            <textarea style="height: 100px;width: 250px; resize: none"
-                                                                      is-change="false" placeholder=""
-                                                                      id="dt_prod_series_{{ $idx }}" name="dt_prod_series"
-                                                                      class="input-textarea ">{{ $item->prod_series }}</textarea>
-                                                                <textarea style="display: none"
-                                                                          name="dt_prod_series_old"></textarea>
+                                                <div class="row dt-row-body zero-mgl zero-mgr collapse hide">
+                                                    <div class="col-md-auto">
+                                                        <label class="lbl-primary">{{ __('Specification') }}:</label>
+                                                        <textarea name="dt_prod_specs_mce" id="dt_prod_specs_mce_{{ $idx }}">{{ $item->prod_specs_mce }}</textarea>
+                                                    </div>
+                                                    <div class="col-md-auto">
+                                                        @include('components.input',['value'=>$item->prod_model, 'control_id'=>'dt_prod_model','width'=> '250', 'lbl_width'=>'70', 'label'=>__('Model'), 'i_focus'=>'', 'i_blur'=>''])
+                                                        <div class="textarea  root_textarea rootIsUnderlined dt_prod_series_container"
+                                                             style="width: 250px">
+                                                            <label for="dt_prod_series" class="ms-Label root-56 lbl-primary ">
+                                                                {{ __('Series') }}
+                                                            </label>
+                                                            <div class="wrapper">
+                                                                <div class="fieldGroup_area">
+                                                                <textarea style="height: 100px;width: 250px; resize: none"
+                                                                          is-change="false" placeholder=""
+                                                                          id="dt_prod_series_{{ $idx }}" name="dt_prod_series"
+                                                                          class="input-textarea ">{{ $item->prod_series }}</textarea>
+                                                                    <textarea style="display: none"
+                                                                              name="dt_prod_series_old"></textarea>
+                                                                </div>
                                                             </div>
                                                         </div>
+                                                        @include('components.textarea',['value'=>$item->note, 'width'=>'250', 'height'=>'100', 'control_id'=>'dt_note', 'resize'=>'none', 'label'=>__('Note')])
                                                     </div>
-                                                    @include('components.textarea',['value'=>$item->note, 'width'=>'250', 'height'=>'100', 'control_id'=>'dt_note', 'resize'=>'none', 'label'=>__('Note')])
-                                                </div>
-                                                <div class="col-md-auto">
-                                                    @include('components.input',['value'=>$item->unit, 'control_id'=>'dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit'), 'class'=> 'text-right', 'i_focus'=>'', 'i_blur'=>''])
-                                                    @include('components.number',['value'=>number_format($item->quantity), 'onchange'=>'dt_quantity_change(this)', 'control_id'=>'dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity'), 'class'=> 'text-right'])
-                                                    @include('components.textarea',['value'=>$item->delivery_time, 'control_id'=>'dt_delivery_time', 'width'=>'250', 'height'=>'50', 'resize'=>'none', 'class'=> 'margin-bottom-15', 'label'=>__('Delivery time')])
-                                                    @include('components.dropdown',['value'=>$item->status, 'control_id'=>'dt_status', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Status') ,'data'=> $statusList])
-                                                    @include('components.money',['value'=> number_format($item->price), 'onchange'=>'dt_price_change(this)', 'control_id'=>'dt_price', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price'), 'class'=> 'text-right'])
-                                                    @include('components.money',['value'=>number_format($item->amount), 'onchange'=>'dt_amount_change(this)', 'control_id'=>'dt_amount', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Amount'), 'class'=> 'text-right'])
-                                                </div>
-                                                <div class="col-md-auto z-pdr text-center">
-                                                    <i onclick="prod_row_copy(this)"
-                                                       class="material-icons text-primary i-btn"
-                                                       title="{{ __("Copy") }}">
-                                                        copyright
-                                                    </i>
-                                                    <br>
-                                                    <i onclick="prod_row_del(this)"
-                                                       class="material-icons text-danger i-btn"
-                                                       title="{{ __("Delete") }}">
-                                                        delete
-                                                    </i>
+                                                    <div class="col-md-auto">
+                                                        @include('components.input',['value'=>$item->unit, 'control_id'=>'dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit'), 'class'=> 'text-right', 'i_focus'=>'', 'i_blur'=>''])
+                                                        @include('components.number',['value'=>number_format($item->quantity), 'onchange'=>'dt_quantity_change(this)', 'control_id'=>'dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity'), 'class'=> 'text-right'])
+                                                        @include('components.textarea',['value'=>$item->delivery_time, 'control_id'=>'dt_delivery_time', 'width'=>'250', 'height'=>'50', 'resize'=>'none', 'class'=> 'margin-bottom-15', 'label'=>__('Delivery time')])
+                                                        @include('components.dropdown',['value'=>$item->status, 'control_id'=>'dt_status', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Status') ,'data'=> $statusList])
+                                                        @include('components.money',['value'=> number_format($item->price), 'onchange'=>'dt_price_change(this)', 'control_id'=>'dt_price', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price'), 'class'=> 'text-right'])
+                                                        @include('components.money',['value'=>number_format($item->amount), 'onchange'=>'dt_amount_change(this)', 'control_id'=>'dt_amount', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Amount'), 'class'=> 'text-right'])
+                                                    </div>
+                                                    <div class="col-md-auto z-pdr text-center">
+                                                        <i onclick="prod_row_copy(this)"
+                                                           class="material-icons text-primary i-btn"
+                                                           title="{{ __("Copy") }}">
+                                                            copyright
+                                                        </i>
+                                                        <br>
+                                                        <i onclick="prod_row_del(this)"
+                                                           class="material-icons text-danger i-btn"
+                                                           title="{{ __("Delete") }}">
+                                                            delete
+                                                        </i>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -360,43 +364,47 @@
                                 @php $idx = 0; @endphp
                                 @foreach($orderDetail as $item)
                                     @if($item->type == '2')
-                                        <div class="dt-row" dt_id="{{ $item->ordt_id }}">
-                                            <div class="row dt-row-head zero-mgl zero-mgr" onclick="my_collapse(this)">
-                                                <div class="col text-left">
-                                                    <label class="lbl-primary z-mgb">No.{{ ++$idx }}</label>
+                                        <div class="row_container_acs">
+                                            @include('components.checkbox',['control_id'=>'cb_row_acs'. $idx, 'width'=>'4%', 'value'=>'0', 'checked' => false, 'type'=>'1'])
+
+                                            <div class="dt-row" style="display: inline-block; width: 95%" dt_id="{{ $item->ordt_id }}">
+                                                <div class="row dt-row-head zero-mgl zero-mgr" onclick="my_collapse(this)">
+                                                    <div class="col text-left">
+                                                        <label class="lbl-primary z-mgb">No.{{ ++$idx }}</label>
+                                                    </div>
+                                                    <div class="col text-right">
+                                                        <i class="fas fa-caret-down"></i>
+                                                    </div>
                                                 </div>
-                                                <div class="col text-right">
-                                                    <i class="fas fa-caret-down"></i>
-                                                </div>
-                                            </div>
-                                            <div class="row dt-row-body zero-mgl zero-mgr collapse hide">
-                                                <div class="col-md-auto">
-                                                    @include('components.input',['value'=>$item->acce_code, 'control_id'=>'dt_acce_code','width'=> '250', 'lbl_width'=>'70', 'label'=>__('Code'), 'i_focus'=>'', 'i_blur'=>''])
-                                                    @include('components.input',['value'=>$item->acce_name, 'control_id'=>'dt_acce_name','width'=> '250', 'lbl_width'=>'70', 'label'=>__('Name'), 'i_focus'=>'', 'i_blur'=>''])
-                                                    @include('components.textarea',['value'=>$item->note, 'control_id'=>'dt_note', 'width'=>'300', 'height'=>'73', 'resize'=>'none', 'label'=>__('Note'), 'lable_class'=>'hidden-content'])
-                                                </div>
-                                                <div class="col-md-auto">
-                                                    @include('components.input',['value'=>$item->unit, 'control_id'=>'dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit'), 'class'=> 'text-right', 'i_focus'=>'', 'i_blur'=>''])
-                                                    @include('components.number',['value'=>number_format($item->quantity), 'onchange'=>'dt_quantity_change(this)', 'control_id'=>'dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity'), 'class'=> 'text-right'])
-                                                    @include('components.textarea',['value'=>$item->delivery_time, 'control_id'=>'dt_delivery_time', 'width'=>'250', 'height'=>'50', 'resize'=>'none', 'class'=> 'margin-bottom-15', 'label'=>__('Delivery time')])
-                                                </div>
-                                                <div class="col-md-auto">
-                                                    @include('components.dropdown',['value'=>$item->status, 'control_id'=>'dt_status', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Status') ,'data'=> $statusList])
-                                                    @include('components.money',['value'=> number_format($item->price), 'onchange'=>'dt_price_change(this)', 'control_id'=>'dt_price', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price'), 'class'=> 'text-right'])
-                                                    @include('components.money',['value'=>number_format($item->amount), 'onchange'=>'dt_amount_change(this)', 'control_id'=>'dt_amount', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Amount'), 'class'=> 'text-right'])
-                                                </div>
-                                                <div class="col-md-auto z-pdr text-center">
-                                                    <i onclick="acce_row_copy(this)"
-                                                       class="material-icons text-primary i-btn"
-                                                       title="{{ __("Copy") }}">
-                                                        copyright
-                                                    </i>
-                                                    <br>
-                                                    <i onclick="acce_row_del(this)"
-                                                       class="material-icons text-danger i-btn"
-                                                       title="{{ __("Delete") }}">
-                                                        delete
-                                                    </i>
+                                                <div class="row dt-row-body zero-mgl zero-mgr collapse hide">
+                                                    <div class="col-md-auto">
+                                                        @include('components.input',['value'=>$item->acce_code, 'control_id'=>'dt_acce_code','width'=> '250', 'lbl_width'=>'70', 'label'=>__('Code'), 'i_focus'=>'', 'i_blur'=>''])
+                                                        @include('components.input',['value'=>$item->acce_name, 'control_id'=>'dt_acce_name','width'=> '250', 'lbl_width'=>'70', 'label'=>__('Name'), 'i_focus'=>'', 'i_blur'=>''])
+                                                        @include('components.textarea',['value'=>$item->note, 'control_id'=>'dt_note', 'width'=>'300', 'height'=>'73', 'resize'=>'none', 'label'=>__('Note'), 'lable_class'=>'hidden-content'])
+                                                    </div>
+                                                    <div class="col-md-auto">
+                                                        @include('components.input',['value'=>$item->unit, 'control_id'=>'dt_unit', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Unit'), 'class'=> 'text-right', 'i_focus'=>'', 'i_blur'=>''])
+                                                        @include('components.number',['value'=>number_format($item->quantity), 'onchange'=>'dt_quantity_change(this)', 'control_id'=>'dt_quantity', 'width'=> '170', 'lbl_width'=>'70', 'label'=>__('Quantity'), 'class'=> 'text-right'])
+                                                        @include('components.textarea',['value'=>$item->delivery_time, 'control_id'=>'dt_delivery_time', 'width'=>'250', 'height'=>'50', 'resize'=>'none', 'class'=> 'margin-bottom-15', 'label'=>__('Delivery time')])
+                                                    </div>
+                                                    <div class="col-md-auto">
+                                                        @include('components.dropdown',['value'=>$item->status, 'control_id'=>'dt_status', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Status') ,'data'=> $statusList])
+                                                        @include('components.money',['value'=> number_format($item->price), 'onchange'=>'dt_price_change(this)', 'control_id'=>'dt_price', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Price'), 'class'=> 'text-right'])
+                                                        @include('components.money',['value'=>number_format($item->amount), 'onchange'=>'dt_amount_change(this)', 'control_id'=>'dt_amount', 'width'=> '250', 'lbl_width'=>'70', 'label'=>__('Amount'), 'class'=> 'text-right'])
+                                                    </div>
+                                                    <div class="col-md-auto z-pdr text-center">
+                                                        <i onclick="acce_row_copy(this)"
+                                                           class="material-icons text-primary i-btn"
+                                                           title="{{ __("Copy") }}">
+                                                            copyright
+                                                        </i>
+                                                        <br>
+                                                        <i onclick="acce_row_del(this)"
+                                                           class="material-icons text-danger i-btn"
+                                                           title="{{ __("Delete") }}">
+                                                            delete
+                                                        </i>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -412,7 +420,7 @@
                                                 <i class="fas fa-caret-down"></i>
                                             </div>
                                         </div>
-                                        <div class="row dt-row-body zero-mgl zero-mgr collapse hide">
+                                        <div class="row dt-row-body zero-mgl0 zero-mgr collapse hide">
                                             <div class="col-md-auto">
                                                 @include('components.input',['value'=>'', 'control_id'=>'dt_acce_code','width'=> '250', 'lbl_width'=>'70', 'label'=>__('Code'), 'i_focus'=>'', 'i_blur'=>''])
                                                 @include('components.input',['value'=>'', 'control_id'=>'dt_acce_name','width'=> '250', 'lbl_width'=>'70', 'label'=>__('Name'), 'i_focus'=>'', 'i_blur'=>''])
@@ -495,16 +503,16 @@
                                         </div>
                                     </div>
                                     {{--<div class="row justify-content-end z-pdl z-pdr z-mgr z-mgl">--}}
-                                        {{--<div class="col-md-auto text-right z-mgr z-mgl pdt-5">--}}
-                                            {{--<span>{{ __('Debt') }}</span>--}}
-                                        {{--</div>--}}
-                                        {{--<div class="col-md-auto z-pdr z-pdl" style="width: 150px">--}}
-                                            {{--<input type="text" name="ord_debt" readonly class="w-100 text-right" value="{{ number_format($order->ord_debt) }}">--}}
-                                            {{--<input type="hidden" value="{{ number_format($order->ord_debt) }}" name="ord_debt_old">--}}
-                                        {{--</div>--}}
-                                        {{--<div class="col-md-auto z-mgr z-mgl">--}}
-                                            {{--<span>VND</span>--}}
-                                        {{--</div>--}}
+                                    {{--<div class="col-md-auto text-right z-mgr z-mgl pdt-5">--}}
+                                    {{--<span>{{ __('Debt') }}</span>--}}
+                                    {{--</div>--}}
+                                    {{--<div class="col-md-auto z-pdr z-pdl" style="width: 150px">--}}
+                                    {{--<input type="text" name="ord_debt" readonly class="w-100 text-right" value="{{ number_format($order->ord_debt) }}">--}}
+                                    {{--<input type="hidden" value="{{ number_format($order->ord_debt) }}" name="ord_debt_old">--}}
+                                    {{--</div>--}}
+                                    {{--<div class="col-md-auto z-mgr z-mgl">--}}
+                                    {{--<span>VND</span>--}}
+                                    {{--</div>--}}
                                     {{--</div>--}}
                                 </div>
                             </div>

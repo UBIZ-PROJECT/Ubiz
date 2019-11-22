@@ -126,5 +126,9 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
 
         Route::get('drive', ['as' => 'api-get-drives', 'uses' => 'Api\DriveController@getData']);
         Route::get('drive/{uniqid}', ['as' => 'api-get-report', 'uses' => 'Api\DriveController@getData']);
+      
+        Route::get('contracts', ['as' => 'api-get-contracts', 'uses' => 'Api\ContractController@getContracts']);
+        Route::post('contracts/{ctr_id}/create', ['as' => 'api-create-contract', 'uses' => 'Api\ContractController@createContract'])->where('ctr_id', '[0-9]+');
+        Route::post('contracts/{ctr_id}/update', ['as' => 'api-update-contract', 'uses' => 'Api\ContractController@updateContract'])->where('ctr_id', '[0-9]+');
+        Route::delete('contracts/{ctr_ids}/delete', ['as' => 'api-delete-contracts', 'uses' => 'Api\ContractController@deleteContracts'])->where('ctr_ids', '^([0-9]+,)+[0-9]+|[0-9]+');
     });
-});

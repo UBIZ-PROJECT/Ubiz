@@ -304,5 +304,6 @@
   "Role": "Vai trò",
   "User is not exists.": "Xin vui lòng nhập [Nhân viên].",
 		"Are you sure you want to update repository?" : "Bạn có chắc chắn muốn cập nhật lại kho?",
-  "Invalid file." : "File không hợp lệ."
+  "Invalid file." : "File không hợp lệ.",
+  "Contract No":"Mã Hợp Đồng"
 }
