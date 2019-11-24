@@ -59,6 +59,35 @@ class DriveController extends Controller
         }
     }
 
+    public function getSibling($uniqid, Request $request)
+    {
+        try {
+
+            $drive = new Drive();
+            $validateResult = $drive->validateDriUniq($uniqid);
+            if ($validateResult == false) {
+                $res['success'] = false;
+                $res['message'] = __('Data is not exists.');
+                return $res;
+            }
+
+            //get data
+            $detail = $drive->getDetail($uniqid);
+            $parent = $drive->getDetail($detail->dri_funiq);
+            $sibling = $drive->getChildren($parent->dri_uniq);
+
+            return response()->json([
+                'detail' => $detail,
+                'parent' => $parent,
+                'sibling' => $sibling,
+                'success' => true,
+                'message' => __('Successfully processed.')
+            ], 200);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
     public function getChildren($uniqid, Request $request)
     {
         try {
@@ -72,10 +101,13 @@ class DriveController extends Controller
             }
 
             //get data
-            $data = $drive->getChildren($uniqid);
+            $detail = $drive->getDetail($uniqid);
+            $sibling = $drive->getChildren($detail->dri_uniq);
 
             return response()->json([
-                'data' => $data,
+                'detail' => $detail,
+                'parent' => $detail,
+                'sibling' => $sibling,
                 'success' => true,
                 'message' => __('Successfully processed.')
             ], 200);

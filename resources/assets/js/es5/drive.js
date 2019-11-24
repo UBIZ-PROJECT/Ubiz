@@ -124,33 +124,35 @@ function fnc_render_file(file) {
     return html;
 }
 
-function fnc_get_filetype_font_icon(file_type, color) {
+function fnc_get_filetype_font_icon(file_type, color, class_name) {
+    if (!class_name)
+        class_name = '';
     switch (file_type) {
         case 'xls':
         case 'xlsx':
-            return '<i class="fa-icon far fa-file-excel" style="color: ' + color + '"></i>';
+            return '<i class="fa-icon far fa-file-excel ' + class_name + '" style="color: ' + color + '"></i>';
             break;
         case 'doc':
         case 'docx':
-            return '<i class="fa-icon far fa-file-word" style="color: ' + color + '"></i>';
+            return '<i class="fa-icon far fa-file-word ' + class_name + '" style="color: ' + color + '"></i>';
             break;
         case 'ppt':
         case 'pptx':
-            return '<i class="fa-icon far fa-file-powerpoint" style="color: ' + color + '"></i>';
+            return '<i class="fa-icon far fa-file-powerpoint ' + class_name + '" style="color: ' + color + '"></i>';
             break;
         case 'htm':
         case 'html':
-            return '<i class="fa-icon fas fa-file-code" style="color: ' + color + '"></i>';
+            return '<i class="fa-icon fas fa-file-code ' + class_name + '" style="color: ' + color + '"></i>';
             break;
         case 'pdf':
-            return '<i class="fa-icon far fa-file-pdf" style="color: ' + color + '"></i>';
+            return '<i class="fa-icon far fa-file-pdf ' + class_name + '" style="color: ' + color + '"></i>';
             break;
         case 'csv':
-            return '<i class="fa-icon fas fa-file-csv" style="color: ' + color + '"></i>';
+            return '<i class="fa-icon fas fa-file-csv ' + class_name + '" style="color: ' + color + '"></i>';
             break;
         case 'rar':
         case 'zip':
-            return '<i class="fa-icon far fa-file-archive" style="color: ' + color + '"></i>';
+            return '<i class="fa-icon far fa-file-archive ' + class_name + '" style="color: ' + color + '"></i>';
             break;
         case '3gp':
         case 'aa':
@@ -195,7 +197,7 @@ function fnc_get_filetype_font_icon(file_type, color) {
         case 'wv':
         case 'webm':
         case '8svx':
-            return '<i class="fa-icon fas fa-file-audio" style="color: ' + color + '"></i>';
+            return '<i class="fa-icon fas fa-file-audio ' + class_name + '" style="color: ' + color + '"></i>';
             break;
         case 'flv':
         case 'vob':
@@ -238,7 +240,7 @@ function fnc_get_filetype_font_icon(file_type, color) {
         case 'f4p':
         case 'f4a':
         case 'f4b':
-            return '<i class="fa-icon far fa-file-video" style="color: ' + color + '"></i>';
+            return '<i class="fa-icon far fa-file-video ' + class_name + '" style="color: ' + color + '"></i>';
             break;
         case 'jpg':
         case 'png':
@@ -254,10 +256,10 @@ function fnc_get_filetype_font_icon(file_type, color) {
         case 'svg':
         case 'ai':
         case 'eps':
-            return '<i class="fa-icon far fa-file-image" style="color: ' + color + '"></i>';
+            return '<i class="fa-icon far fa-file-image ' + class_name + '" style="color: ' + color + '"></i>';
             break;
         default:
-            return '<i class="fa-icon fa fa-file-alt" style="color: ' + color + '"></i>';
+            return '<i class="fa-icon fa fa-file-alt ' + class_name + '" style="color: ' + color + '"></i>';
     }
 }
 
@@ -875,21 +877,12 @@ function fnc_copy(self) {
 }
 
 function fnc_move_to(self) {
-    var uniqid = $(self).attr('uniqid');
-    var modal_id = 'move-to-modal';
-    var move_to_modal = $("body").find('#' + modal_id);
-    if (move_to_modal.length == 0) {
-        fnc_init_move_to_modal(modal_id);
-        move_to_modal = $("body").find('#' + modal_id);
-    }
-    move_to_modal.attr('uniqid', uniqid);
-    ubizapis('v1', '/drive/' + uniqid + '/children', 'get', null, null, function (res) {
+
+    var source_uniqid = $(self).attr('uniqid');
+    ubizapis('v1', '/drive/' + source_uniqid + '/sibling', 'get', null, null, function (res) {
 
         if (res.data.success == true) {
-            var data = res.data.data;
-            setTimeout(function () {
-                move_to_modal.modal('toggle');
-            }, 5);
+            fnc_move_to_render_modal(res, source_uniqid);
         } else {
             swal.fire({
                 type: 'error',
@@ -897,27 +890,97 @@ function fnc_move_to(self) {
             });
         }
     });
+}
 
+function fnc_move_to_render_modal(res, source_uniqid) {
+
+    var detail_data = res.data.detail;
+    var parent_data = res.data.parent;
+    var sibling_data = res.data.sibling;
+
+    var modal_id = 'move-to-modal';
+    var move_to_modal = $("body").find('#' + modal_id);
+
+    if (move_to_modal.length == 0) {
+        fnc_init_move_to_modal(modal_id);
+        move_to_modal = $("body").find('#' + modal_id);
+    }
+
+    if (source_uniqid) {
+        move_to_modal.attr('uniqid', source_uniqid);
+        move_to_modal.attr('funiqid', detail_data.dri_funiq);
+    }
+    source_uniqid = move_to_modal.attr('uniqid');
+    source_funiqid = move_to_modal.attr('funiqid');
+
+    move_to_modal.find('.modal-title').text(parent_data.dri_name);
+    if (parent_data.dri_funiq == '' || parent_data.dri_funiq == null) {
+        move_to_modal.find('.modal-header').find('.i-btn').addClass('hidden-content');
+    } else {
+        move_to_modal.find('.modal-header').find('.i-btn').removeClass('hidden-content');
+    }
+    move_to_modal.find('.modal-header').find('.btn-go-back').attr('uniqid', parent_data.dri_funiq);
+    move_to_modal.find('.modal-footer').find('.btn-move-to').attr('uniqid', parent_data.dri_uniq);
+
+    var html = "";
+    if (sibling_data.length > 0) {
+        html += '<ul class="list-group list-group-flush move-to">';
+        $.each(sibling_data, function (idx, item) {
+
+            var disabled = '';
+            if (item.dri_type == '1' || source_uniqid == item.dri_uniq) {
+                disabled = 'disabled';
+            }
+
+            html += '<li uniqid="' + item.dri_uniq + '" funiqid="' + item.dri_funiq + '" onclick="fnc_move_item_select(this, event)" ondblclick="fnc_move_to_go(this, event)" class="list-group-item list-group-item-action ' + disabled + ' d-flex justify-content-between align-items-center z-pdt z-pdb pdl-10 pdr-10">';
+            html += '<div class="d-flex d-first">';
+            if (item.dri_type == '0') {
+                html += '<i class="fa-icon fas fa-folder font-size-20" style="color: ' + item.dri_color + '"></i>';
+            } else {
+                html += fnc_get_filetype_font_icon(item.dri_ext, item.dri_color, 'font-size-20');
+            }
+            html += '<span>' + item.dri_name + '</span>';
+            html += '</div>';
+            if (item.dri_type == '0' && source_uniqid != item.dri_uniq) {
+                html += '<span class="badge">';
+                html += '<button uniqid="' + item.dri_uniq + '" onclick="fnc_move_to_go(this, event)" type="button" class="m-btn z-pd" aria-label="Next">';
+                html += '<i class="fas fa-chevron-circle-right text-primary font-size-20"></i>';
+                html += '</button>';
+                html += '</span>';
+            }
+            html += '</li>';
+        });
+        html += '</ul>';
+    }
+
+    move_to_modal.find('.modal-body').empty();
+    move_to_modal.find('.modal-body').html(html);
+    if (move_to_modal.hasClass('show') == false) {
+        setTimeout(function () {
+            move_to_modal.modal('toggle');
+        }, 5);
+    }
 
 }
 
 function fnc_init_move_to_modal(modal_id) {
     var modal_html = "";
-    modal_html += '<div class="modal fade" uniqid="" id="' + modal_id + '" tabIndex="-1" role="dialog" aria-hidden="true">';
-    modal_html += '<div class="modal-dialog" role="document">';
+    modal_html += '<div class="modal fade" uniqid="" funiqid="" id="' + modal_id + '" tabIndex="-1" role="dialog" aria-hidden="true">';
+    modal_html += '<div class="modal-dialog modal-dialog-scrollable" role="document">';
     modal_html += '<div class="modal-content">';
     modal_html += '<div class="modal-header">';
-    modal_html += '<h5 class="modal-title">Đổi tên</h5>';
+    modal_html += '<button type="button" uniqid="" onclick="fnc_move_to_back(this, event)" class="i-btn btn-go-back" aria-label="Back">';
+    modal_html += '<i class="fas fa-arrow-circle-left text-primary"></i>';
+    modal_html += '</button>';
+    modal_html += '<h5 class="modal-title"></h5>';
     modal_html += '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
     modal_html += '<span aria-hidden="true">&times;</span>';
     modal_html += '</button>';
     modal_html += '</div>';
-    modal_html += '<div class="modal-body">';
-
-    modal_html += '</div>';
+    modal_html += '<div class="modal-body" style="max-height: 600px"></div>';
     modal_html += '<div class="modal-footer">';
     modal_html += '<button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>';
-    modal_html += '<button type="button" class="btn btn-primary" onclick="fnc_execute_move_to(\'' + modal_id + '\')">Di chuyển</button>';
+    modal_html += '<button type="button" uniqid="" class="btn btn-primary btn-move-to disabled" onclick="fnc_execute_move_to(\'' + modal_id + '\', event)">Di chuyển</button>';
     modal_html += '</div>';
     modal_html += '</div>';
     modal_html += '</div>';
@@ -925,7 +988,11 @@ function fnc_init_move_to_modal(modal_id) {
     $("body").append(modal_html);
 }
 
-function fnc_execute_move_to(modal_id) {
+function fnc_execute_move_to(modal_id, event) {
+
+    event.preventDefault();
+    event.stopPropagation();
+
     swal({
         title: i18next.t('Are you sure want to move data.?'),
         type: 'question',
@@ -937,8 +1004,13 @@ function fnc_execute_move_to(modal_id) {
         reverseButtons: true
     }).then((result) => {
         if (result.value) {
+
             var uniqid = $("#" + modal_id).attr('uniqid');
-            ubizapis('v1', 'drive/' + uniqid + '/move-to', 'post', {'target-uniqid': uniqid}, null, fnc_execute_move_to_callback);
+            var target_uniqid = $("#" + modal_id).find('.modal-footer').find('.btn-move-to').attr('uniqid');
+            if (uniqid == '' || target_uniqid == '')
+                return fasle;
+
+            ubizapis('v1', 'drive/' + uniqid + '/move-to', 'post', {'target-uniqid': target_uniqid}, null, fnc_execute_move_to_callback);
         }
     });
 }
@@ -959,6 +1031,84 @@ function fnc_execute_move_to_callback(res) {
             title: res.data.message
         });
     }
+}
+
+function fnc_move_item_select(self, event) {
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    var modal = $("#move-to-modal");
+    var self_uniqid = $(self).attr('uniqid');
+    var self_funiqid = $(self).attr('funiqid');
+    var parent_funiqid = modal.attr('funiqid');
+
+    if ($(self).hasClass('active')) {
+        $(self).removeClass('active');
+        modal.find('.modal-footer').find('.btn-move-to').text('Di chuyển');
+        modal.find('.modal-footer').find('.btn-move-to').attr('uniqid', '');
+        if (self_funiqid == parent_funiqid) {
+            modal.find('.modal-footer').find('.btn-move-to').addClass('disabled');
+        } else {
+            modal.find('.modal-footer').find('.btn-move-to').removeClass('disabled');
+        }
+    } else {
+        modal.find('.modal-footer').find('.btn-move-to').removeClass('disabled');
+        modal.find('.modal-footer').find('.btn-move-to').text('Di chuyển tới đây');
+        modal.find('.modal-footer').find('.btn-move-to').attr('uniqid', self_uniqid);
+        $(self).addClass('active');
+    }
+}
+
+function fnc_move_to_go(self, event) {
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    var move_to_modal = $("#move-to-modal");
+    move_to_modal.find('.list-group').find('li.active').removeClass('active');
+    move_to_modal.find('.modal-footer').find('.btn-move-to').text('Di chuyển');
+    $(self).addClass('active');
+
+    var uniqid = $(self).attr('uniqid');
+    ubizapis('v1', '/drive/' + uniqid + '/children', 'get', null, null, function (res) {
+
+        if (res.data.success == true) {
+            fnc_move_to_render_modal(res);
+            move_to_modal.find('.modal-footer').find('.btn-move-to').removeClass('disabled');
+        } else {
+            swal.fire({
+                type: 'error',
+                title: res.data.message
+            });
+        }
+    });
+}
+
+function fnc_move_to_back(self, event) {
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    var self_uniqid = $(self).attr('uniqid');
+    if (self_uniqid == "")
+        return false;
+
+    var move_to_modal = $("#move-to-modal");
+    move_to_modal.find('.modal-footer').find('.btn-move-to').html('Di chuyển');
+
+    ubizapis('v1', '/drive/' + self_uniqid + '/children', 'get', null, null, function (res) {
+
+        if (res.data.success == true) {
+            fnc_move_to_render_modal(res);
+            move_to_modal.find('.modal-footer').find('.btn-move-to').removeClass('disabled');
+        } else {
+            swal.fire({
+                type: 'error',
+                title: res.data.message
+            });
+        }
+    });
 }
 
 function fnc_init_drive() {

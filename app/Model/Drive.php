@@ -420,7 +420,7 @@ class Drive
         }
     }
 
-    private function getChildren($uniqid)
+    public function getChildren($uniqid)
     {
         try {
             $data = DB::table('drives')
@@ -429,6 +429,9 @@ class Drive
                     ['dri_funiq', '=', $uniqid],
                     ['delete_flg', '=', '0']
                 ])
+                ->orderBy('dri_type', 'asc')
+                ->orderBy('dri_name', 'asc')
+                ->get();
             return $data;
 
         } catch (\Throwable $e) {
@@ -451,7 +454,7 @@ class Drive
                     ) T1
                     JOIN drives T2
                     ON T1._dri_uniq = T2.dri_uniq
-                    ORDER BY T1.lvl DESC;";
+                    ORDER BY T2.dri_name ASC, T1.lvl DESC;";
 
             $results = DB::select(DB::raw($sql), array(
                 'uniqid' => $uniqid,
@@ -478,7 +481,8 @@ class Drive
                           FROM `drives`
                           JOIN (SELECT @dri_uniq := :uniqid) T1
                        ) T2
-                    ));";
+                    )
+                    ORDER BY dri_name ASC);";
 
             $results = DB::select(DB::raw($sql), array(
                 'uniqid' => $uniqid,
