@@ -1075,7 +1075,11 @@ function fnc_move_to_go(self, event) {
 
         if (res.data.success == true) {
             fnc_move_to_render_modal(res);
-            move_to_modal.find('.modal-footer').find('.btn-move-to').removeClass('disabled');
+            if (res.data.parent.dri_uniq == move_to_modal.attr('funiqid')) {
+                move_to_modal.find('.modal-footer').find('.btn-move-to').addClass('disabled');
+            } else {
+                move_to_modal.find('.modal-footer').find('.btn-move-to').removeClass('disabled');
+            }
         } else {
             swal.fire({
                 type: 'error',
@@ -1101,7 +1105,11 @@ function fnc_move_to_back(self, event) {
 
         if (res.data.success == true) {
             fnc_move_to_render_modal(res);
-            move_to_modal.find('.modal-footer').find('.btn-move-to').removeClass('disabled');
+            if (res.data.parent.dri_uniq == move_to_modal.attr('funiqid')) {
+                move_to_modal.find('.modal-footer').find('.btn-move-to').addClass('disabled');
+            } else {
+                move_to_modal.find('.modal-footer').find('.btn-move-to').removeClass('disabled');
+            }
         } else {
             swal.fire({
                 type: 'error',
