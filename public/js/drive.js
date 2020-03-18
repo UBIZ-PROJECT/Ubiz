@@ -323,6 +323,8 @@ function fnc_select_breadcrumb_item(self, uniqid) {
 function fnc_render_nav_child(nav_items) {
     var nav_html = "";
     _.forEach(nav_items, function (item) {
+        if(item.dri_type == '1')
+            return;
         nav_html += fnc_render_nav_child_item(item);
     });
     return nav_html;
@@ -330,7 +332,7 @@ function fnc_render_nav_child(nav_items) {
 
 function fnc_render_nav_child_item(item) {
     var html = "";
-    html += '<div uniqid="' + item.dri_uniq + '" class="nav-li pdr-30">';
+    html += '<div uniqid="' + item.dri_uniq + '" onclick="fnc_nav_item_click(this, event)" class="nav-li pdr-30">';
     html += '<div class="row justify-content-start z-mgr z-mgl nav-item">';
     html += '<div class="col-auto z-pdr">';
     html += '<div class="nav-level"></div>';
@@ -338,7 +340,7 @@ function fnc_render_nav_child_item(item) {
     html += '<i class="nav-down nav-caret fas fa-caret-down hidden-content"></i>';
     html += '<img class="nav-caret nav-loading hidden-content" src="/images/ajax-loader.gif">';
     html += '</div>';
-    html += '<div class="col-auto z-pdl z-pdr"><i class="far fa-hdd"></i></div>';
+    html += '<div class="col-auto z-pdl z-pdr"><i class="fas fa-folder"></i></div>';
     html += '<div class="col-auto pdl-5 nav-label"><span>' + item.dri_name + '</span></div>';
     html += '</div>';
     html += '<div class="nav-li"></div>';
@@ -836,6 +838,26 @@ function fnc_color_selected(self, event) {
         }
     });
 
+}
+
+function fnc_nav_item_click(self, event){
+    var uniqid = $(self).attr('uniqid');
+    if (uniqid == "") {
+        uniqid = md5_hash_generator('root');
+    }
+    ubizapis('v1', '/drive/' + uniqid + '/children', 'get', null, null, fnc_nav_item_click_callback);
+}
+
+function fnc_nav_item_click_callback(res){
+    if (res.data.success == true) {
+        var nav_html = fnc_render_nav_child(res.data.sibling);
+        console.log(nav_html);
+    } else {
+        swal.fire({
+            type: 'error',
+            title: res.data.message
+        });
+    }
 }
 
 function fnc_copy(self) {

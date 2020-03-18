@@ -26,7 +26,7 @@
             <div id="nicescroll-sidebar" class="zX nicescroll">
                 <div class="nav-bar">
                     <div class="nav-item-root">
-                        <div class="nav-li pdr-30">
+                        <div uniqid="" onclick="fnc_nav_item_click(this, event)" class="nav-li pdr-30">
                             <div class="row justify-content-start z-mgr z-mgl nav-item nav-selected">
                                 <div class="col-auto z-pdr">
                                     <i class="nav-right nav-caret fas fa-caret-right"></i>
