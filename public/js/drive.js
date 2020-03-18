@@ -1039,23 +1039,29 @@ function fnc_move_item_select(self, event) {
     event.stopPropagation();
 
     var modal = $("#move-to-modal");
-    var self_uniqid = $(self).attr('uniqid');
-    var self_funiqid = $(self).attr('funiqid');
-    var parent_funiqid = modal.attr('funiqid');
+    var to_uniqid = $(self).attr('uniqid');
+    var to_funiqid = $(self).attr('funiqid');
+    var from_funiqid = modal.attr('funiqid');
 
     if ($(self).hasClass('active')) {
         $(self).removeClass('active');
         modal.find('.modal-footer').find('.btn-move-to').text('Di chuyển');
         modal.find('.modal-footer').find('.btn-move-to').attr('uniqid', '');
-        if (self_funiqid == parent_funiqid) {
+        if (to_funiqid == from_funiqid) {
             modal.find('.modal-footer').find('.btn-move-to').addClass('disabled');
         } else {
             modal.find('.modal-footer').find('.btn-move-to').removeClass('disabled');
         }
     } else {
+        modal.find('.modal-body').find('ul.list-group').find('li.list-group-item').removeClass('active');
         modal.find('.modal-footer').find('.btn-move-to').removeClass('disabled');
-        modal.find('.modal-footer').find('.btn-move-to').text('Di chuyển tới đây');
-        modal.find('.modal-footer').find('.btn-move-to').attr('uniqid', self_uniqid);
+        if (to_uniqid == from_funiqid) {
+            modal.find('.modal-footer').find('.btn-move-to').addClass('disabled');
+        } else {
+            modal.find('.modal-footer').find('.btn-move-to').removeClass('disabled');
+            modal.find('.modal-footer').find('.btn-move-to').text('Di chuyển tới đây');
+            modal.find('.modal-footer').find('.btn-move-to').attr('uniqid', to_uniqid);
+        }
         $(self).addClass('active');
     }
 }
