@@ -21,7 +21,7 @@ class Event
                             OR ( date(`m_event`.`end`) > ? AND date(`m_event`.`end`) < ? )
                         )';
 
-            if ($view == 'timeGridDay') {
+            if ($view == 'timeGridDay' || $view == 'timeGridWeek') {
                 $whereRaw = '`m_event`.`delete_flg` = ?
                             AND (
                                 ( date(`m_event`.`start`) >= ? AND date(`m_event`.`start`) <= ? )

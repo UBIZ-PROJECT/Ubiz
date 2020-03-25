@@ -47,5 +47,10 @@ Route::middleware(['api', 'cors'])->group(function () {
         Route::get('report/{type}/export', ['as'=>'export', 'uses'=>'Web\ReportController@exportExcel']);
 
         Route::get('drive', ['as' => 'api-get-drives', 'uses' => 'Web\DriveController@index']);
+        Route::get('drive/{uniqid}', ['as' => 'api-get-report', 'uses' => 'Web\DriveController@index']);
+
+        Route::get('contracts', ['as' => 'contract', 'uses'=> 'Web\ContractController@contracts']);
+        Route::get('contracts/{ctr_id}', ['as' => 'contract-detail', 'uses'=> 'Web\ContractController@detail']);
+        Route::get('contracts/{ctr_id}/{type}/export', ['as' => 'export-contract', 'uses' => 'Web\ContractController@exportContract'])->where('ord_id', '[0-9]+');
     });
 });

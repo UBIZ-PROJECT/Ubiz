@@ -34,44 +34,44 @@
   color: rgba(255, 255, 255, 0.3);
 }
 
-.order-input .dt-row {
+.contract-detail .dt-row {
   padding: 0px 15px;
   padding-left: 0px;
   margin-top: 5px;
 }
 
-.order-input .dt-row .row {
+.contract-detail .dt-row .row {
   background-color: #e8f0fe;
 }
 
-.order-input .dt-row .dt-row-head {
+.contract-detail .dt-row .dt-row-head {
   padding: 3px 0px;
 }
 
-.order-input .dt-row .dt-row-body {
+.contract-detail .dt-row .dt-row-body {
   padding: 5px 0px;
   border-top: 1px solid #a6a6a6;
 }
 
-.order-input .dt-row .root-56 {
+.contract-detail .dt-row .root-56 {
   padding-top: 2px !important;
   padding-bottom: 2px !important;
   height: 22px;
 }
 
-.order-input .dt-row .fieldGroup {
+.contract-detail .dt-row .fieldGroup {
   height: 22px !important;
 }
 
-.order-input .dt-row .tox-tbtn {
+.contract-detail .dt-row .tox-tbtn {
   height: 25px;
 }
 
-.order-input .dt-row i.i-btn {
+.contract-detail .dt-row i.i-btn {
   cursor: pointer;
 }
 
-.order-input .total-info input {
+.contract-detail .total-info input {
   border-top: none;
   border-right: none;
   border-left: none;
@@ -80,13 +80,13 @@
   color: black !important;
 }
 
-.order-input .add-btn {
+.contract-detail .add-btn {
   position: fixed;
   right: 28px;
   z-index: 999;
 }
 
-.order-input .tag-editor {
+.contract-detail .tag-editor {
   list-style-type: none;
   padding: 0 5px 0 0;
   margin: 0;
@@ -103,16 +103,62 @@
   height: 100px;
 }
 
-.order-input .tag-editor .tag-editor-tag {
+.contract-detail .tag-editor .tag-editor-tag {
   color: #263238;
   background: #f57c00;
 }
 
-.order-input .tag-editor .tag-editor-delete {
+.contract-detail .tag-editor .tag-editor-delete {
   border-left: 1px solid #ffffff;
   background: #f57c00;
 }
 
-.order-input .tag-editor .tag-editor-delete i:before {
+.contract-detail .tag-editor .tag-editor-delete i:before {
   color: red;
 }
+
+.contract-detail #tab-ord-inp-content .dt-row .dt-row-body{
+  pointer-events: none;
+
+  /* for "disabled" effect */
+  opacity: 0.5;
+  background: #CCC;
+}
+
+.dropbtn {
+  background-color: #3498DB;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.dropbtn:hover, .dropbtn:focus {
+  background-color: #2980B9;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  overflow: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  top: 20px;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown a:hover {background-color: #ddd;}
