@@ -102,7 +102,7 @@ class User extends Authenticatable implements JWTSubject
             foreach ($users as &$user) {
                 $user->avatar = readImage($user->avatar, 'usr');
                 if ($user->avatar == '' || $user->avatar == null) {
-                    $data->avatar_base64 = '';
+                    $user->avatar_base64 = '';
                     $user->avatar = readImage("no_avatar.png", 'gen');
                     continue;
                 }
