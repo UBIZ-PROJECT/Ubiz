@@ -74,7 +74,7 @@ function fnc_render_folder_list(folder_list) {
 function fnc_render_folder(folder) {
     var html = "";
     html += '<div class="col-auto">';
-    html += '<div uniqid="' + folder.dri_uniq + '" class="folder" ondblclick="fnc_folder_double_click(this, event)" onclick="fnc_folder_click(this, event)">';
+    html += '<div uniqid="' + folder.dri_uniq + '" class="folder" ondblclick="fnc_folder_double_click(this, event)">';
     html += '<i class="fa-icon fas fa-folder" style="color: ' + folder.dri_color + '"></i>';
     html += '<input type="hidden" id="dri-color-' + folder.dri_uniq + '" value="' + folder.dri_color + '">';
     html += '<span>';
@@ -107,7 +107,7 @@ function fnc_render_file_list(file_list) {
 function fnc_render_file(file) {
     var html = "";
     html += '<div class="col-auto">';
-    html += '<div uniqid="' + file.dri_uniq + '" class="file" onclick="fnc_file_click(this)">';
+    html += '<div uniqid="' + file.dri_uniq + '" class="file">';
     html += '<input type="hidden" id="dri-color-' + file.dri_uniq + '" value="' + file.dri_color + '">';
     html += '<div class="w-100 file-thumbnail"></div>';
     html += '<div class="w-100 file-detail">';
@@ -435,14 +435,14 @@ function fnc_init_drd_menu(self, drd_id, drd_type, uniqid) {
             html += '<div class="dropdown-item collapse multi-collapse" id="change-color-' + uniqid + '">';
             html += '<div class="dropdown-divider"></div>';
             html += '<div class="card card-body z-pdr pdl-5 pdt-5 pdb-5" style="border: none;"></div>';
-            html += '<div class="dropdown-divider"></div>';
+            // html += '<div class="dropdown-divider"></div>';
             html += '</div>';
-            html += '<button class="dropdown-item" uniqid="' + uniqid + '" onclick="fnc_detail(this)"><i class="fas fa-info-circle"></i>Chi tiết</button>';
+            // html += '<button class="dropdown-item" uniqid="' + uniqid + '" onclick="fnc_detail(this)"><i class="fas fa-info-circle"></i>Chi tiết</button>';
             // file drd
             if (drd_type == 1) {
                 html += '<button class="dropdown-item" uniqid="' + uniqid + '" onclick="fnc_copy(this)"><i class="fas fa-copy"></i>Tạo bản sao</button>';
+                html += '<button class="dropdown-item" uniqid="' + uniqid + '" onclick="fnc_download(this)"><i class="fas fa-download"></i>Tải xuống</button>';
             }
-            html += '<button class="dropdown-item" uniqid="' + uniqid + '" onclick="fnc_download(this)"><i class="fas fa-download"></i>Tải xuống</button>';
             html += '<div class="dropdown-divider"></div>';
             html += '<button class="dropdown-item" uniqid="' + uniqid + '" onclick="fnc_delete(this)"><i class="fas fa-trash-alt"></i>Xóa</button>';
         } else if (drd_type == 3 || drd_type == 4) {
@@ -873,7 +873,6 @@ function fnc_copy(self) {
     }).then((result) => {
         if (result.value) {
             var uniqid = $(self).attr('uniqid');
-            var uniqid = $(self).attr('uniqid');
             var color = $(self).attr('color');
             ubizapis('v1', 'drive/' + uniqid + '/do-copy', 'post', null, null, function (res) {
 
@@ -896,6 +895,15 @@ function fnc_copy(self) {
             });
         }
     });
+}
+
+function fnc_download(self) {
+    var uniqid = $(self).attr('uniqid');
+    var color = $(self).attr('color');
+    var protocol = window.location.protocol;
+    var hostname = window.location.hostname;
+    var download_url = protocol + "//" + hostname + "/api/v1/" + 'drive/' + uniqid + '/download';
+    window.open(download_url);
 }
 
 function fnc_move_to(self) {
@@ -1148,6 +1156,10 @@ function fnc_move_to_back(self, event) {
 }
 
 function fnc_init_drive() {
+    $('body').on('dragover dragenter drop', function(event) {
+        event.preventDefault();
+        return false;
+    });
     var uniqid = window.location.hash.slice(1);
     if (uniqid == "") {
         uniqid = md5_hash_generator('root');

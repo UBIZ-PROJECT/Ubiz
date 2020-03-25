@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 use App\Model\Drive;
 
@@ -164,11 +165,35 @@ class DriveController extends Controller
     public function downloadFiles($uniqid, Request $request)
     {
         try {
+
             $drive = new Drive();
-            return response()->json([
-                'success' => true,
-                'message' => __('Successfully processed.')
-            ], 200);
+
+            $validateResult = $drive->validateDriUniq($uniqid);
+            if ($validateResult == false) {
+                abort('404');
+            }
+
+            $data = $drive->getDetail($uniqid);
+            if ($data->dri_type == '0') {
+                abort('404');
+            }
+
+            //download_file
+            $download_file = $data->dri_uniq . "." . $data->dri_ext;
+            return response()->stream(function() use ($download_file) {
+                $stream = Storage::disk('marketing')->readStream($download_file);
+                fpassthru($stream);
+                if (is_resource($stream)) {
+                    fclose($stream);
+                }
+            }, 200, [
+                'Cache-Control'         => 'must-revalidate, post-check=0, pre-check=0',
+                'Content-Type'          => Storage::disk('marketing')->mimeType($download_file),
+                'Content-Length'        => Storage::disk('marketing')->size($download_file),
+                'Content-Disposition'   => 'attachment; filename="' . basename($data->dri_name) . '"',
+                'Pragma'                => 'public',
+            ]);
+
         } catch (\Throwable $e) {
             throw $e;
         }

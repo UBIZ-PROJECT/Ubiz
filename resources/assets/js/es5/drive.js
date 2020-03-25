@@ -74,7 +74,7 @@ function fnc_render_folder_list(folder_list) {
 function fnc_render_folder(folder) {
     var html = "";
     html += '<div class="col-auto">';
-    html += '<div uniqid="' + folder.dri_uniq + '" class="folder" ondblclick="fnc_folder_double_click(this, event)" onclick="fnc_folder_click(this, event)">';
+    html += '<div uniqid="' + folder.dri_uniq + '" class="folder" ondblclick="fnc_folder_double_click(this, event)">';
     html += '<i class="fa-icon fas fa-folder" style="color: ' + folder.dri_color + '"></i>';
     html += '<input type="hidden" id="dri-color-' + folder.dri_uniq + '" value="' + folder.dri_color + '">';
     html += '<span>';
@@ -107,7 +107,7 @@ function fnc_render_file_list(file_list) {
 function fnc_render_file(file) {
     var html = "";
     html += '<div class="col-auto">';
-    html += '<div uniqid="' + file.dri_uniq + '" class="file" onclick="fnc_file_click(this)">';
+    html += '<div uniqid="' + file.dri_uniq + '" class="file">';
     html += '<input type="hidden" id="dri-color-' + file.dri_uniq + '" value="' + file.dri_color + '">';
     html += '<div class="w-100 file-thumbnail"></div>';
     html += '<div class="w-100 file-detail">';
@@ -323,6 +323,8 @@ function fnc_select_breadcrumb_item(self, uniqid) {
 function fnc_render_nav_child(nav_items) {
     var nav_html = "";
     _.forEach(nav_items, function (item) {
+        if(item.dri_type == '1')
+            return;
         nav_html += fnc_render_nav_child_item(item);
     });
     return nav_html;
@@ -330,7 +332,7 @@ function fnc_render_nav_child(nav_items) {
 
 function fnc_render_nav_child_item(item) {
     var html = "";
-    html += '<div uniqid="' + item.dri_uniq + '" class="nav-li pdr-30">';
+    html += '<div uniqid="' + item.dri_uniq + '" onclick="fnc_nav_item_click(this, event)" class="nav-li pdr-30">';
     html += '<div class="row justify-content-start z-mgr z-mgl nav-item">';
     html += '<div class="col-auto z-pdr">';
     html += '<div class="nav-level"></div>';
@@ -338,7 +340,7 @@ function fnc_render_nav_child_item(item) {
     html += '<i class="nav-down nav-caret fas fa-caret-down hidden-content"></i>';
     html += '<img class="nav-caret nav-loading hidden-content" src="/images/ajax-loader.gif">';
     html += '</div>';
-    html += '<div class="col-auto z-pdl z-pdr"><i class="far fa-hdd"></i></div>';
+    html += '<div class="col-auto z-pdl z-pdr"><i class="fas fa-folder"></i></div>';
     html += '<div class="col-auto pdl-5 nav-label"><span>' + item.dri_name + '</span></div>';
     html += '</div>';
     html += '<div class="nav-li"></div>';
@@ -433,14 +435,14 @@ function fnc_init_drd_menu(self, drd_id, drd_type, uniqid) {
             html += '<div class="dropdown-item collapse multi-collapse" id="change-color-' + uniqid + '">';
             html += '<div class="dropdown-divider"></div>';
             html += '<div class="card card-body z-pdr pdl-5 pdt-5 pdb-5" style="border: none;"></div>';
-            html += '<div class="dropdown-divider"></div>';
+            // html += '<div class="dropdown-divider"></div>';
             html += '</div>';
-            html += '<button class="dropdown-item" uniqid="' + uniqid + '" onclick="fnc_detail(this)"><i class="fas fa-info-circle"></i>Chi tiết</button>';
+            // html += '<button class="dropdown-item" uniqid="' + uniqid + '" onclick="fnc_detail(this)"><i class="fas fa-info-circle"></i>Chi tiết</button>';
             // file drd
             if (drd_type == 1) {
                 html += '<button class="dropdown-item" uniqid="' + uniqid + '" onclick="fnc_copy(this)"><i class="fas fa-copy"></i>Tạo bản sao</button>';
+                html += '<button class="dropdown-item" uniqid="' + uniqid + '" onclick="fnc_download(this)"><i class="fas fa-download"></i>Tải xuống</button>';
             }
-            html += '<button class="dropdown-item" uniqid="' + uniqid + '" onclick="fnc_download(this)"><i class="fas fa-download"></i>Tải xuống</button>';
             html += '<div class="dropdown-divider"></div>';
             html += '<button class="dropdown-item" uniqid="' + uniqid + '" onclick="fnc_delete(this)"><i class="fas fa-trash-alt"></i>Xóa</button>';
         } else if (drd_type == 3 || drd_type == 4) {
@@ -838,6 +840,26 @@ function fnc_color_selected(self, event) {
 
 }
 
+function fnc_nav_item_click(self, event){
+    var uniqid = $(self).attr('uniqid');
+    if (uniqid == "") {
+        uniqid = md5_hash_generator('root');
+    }
+    ubizapis('v1', '/drive/' + uniqid + '/children', 'get', null, null, fnc_nav_item_click_callback);
+}
+
+function fnc_nav_item_click_callback(res){
+    if (res.data.success == true) {
+        var nav_html = fnc_render_nav_child(res.data.sibling);
+        console.log(nav_html);
+    } else {
+        swal.fire({
+            type: 'error',
+            title: res.data.message
+        });
+    }
+}
+
 function fnc_copy(self) {
     swal({
         title: i18next.t('Do you want to make a copy.?'),
@@ -850,7 +872,6 @@ function fnc_copy(self) {
         reverseButtons: true
     }).then((result) => {
         if (result.value) {
-            var uniqid = $(self).attr('uniqid');
             var uniqid = $(self).attr('uniqid');
             var color = $(self).attr('color');
             ubizapis('v1', 'drive/' + uniqid + '/do-copy', 'post', null, null, function (res) {
@@ -874,6 +895,15 @@ function fnc_copy(self) {
             });
         }
     });
+}
+
+function fnc_download(self) {
+    var uniqid = $(self).attr('uniqid');
+    var color = $(self).attr('color');
+    var protocol = window.location.protocol;
+    var hostname = window.location.hostname;
+    var download_url = protocol + "//" + hostname + "/api/v1/" + 'drive/' + uniqid + '/download';
+    window.open(download_url);
 }
 
 function fnc_move_to(self) {
@@ -1039,23 +1069,29 @@ function fnc_move_item_select(self, event) {
     event.stopPropagation();
 
     var modal = $("#move-to-modal");
-    var self_uniqid = $(self).attr('uniqid');
-    var self_funiqid = $(self).attr('funiqid');
-    var parent_funiqid = modal.attr('funiqid');
+    var to_uniqid = $(self).attr('uniqid');
+    var to_funiqid = $(self).attr('funiqid');
+    var from_funiqid = modal.attr('funiqid');
 
     if ($(self).hasClass('active')) {
         $(self).removeClass('active');
         modal.find('.modal-footer').find('.btn-move-to').text('Di chuyển');
         modal.find('.modal-footer').find('.btn-move-to').attr('uniqid', '');
-        if (self_funiqid == parent_funiqid) {
+        if (to_funiqid == from_funiqid) {
             modal.find('.modal-footer').find('.btn-move-to').addClass('disabled');
         } else {
             modal.find('.modal-footer').find('.btn-move-to').removeClass('disabled');
         }
     } else {
+        modal.find('.modal-body').find('ul.list-group').find('li.list-group-item').removeClass('active');
         modal.find('.modal-footer').find('.btn-move-to').removeClass('disabled');
-        modal.find('.modal-footer').find('.btn-move-to').text('Di chuyển tới đây');
-        modal.find('.modal-footer').find('.btn-move-to').attr('uniqid', self_uniqid);
+        if (to_uniqid == from_funiqid) {
+            modal.find('.modal-footer').find('.btn-move-to').addClass('disabled');
+        } else {
+            modal.find('.modal-footer').find('.btn-move-to').removeClass('disabled');
+            modal.find('.modal-footer').find('.btn-move-to').text('Di chuyển tới đây');
+            modal.find('.modal-footer').find('.btn-move-to').attr('uniqid', to_uniqid);
+        }
         $(self).addClass('active');
     }
 }
@@ -1120,6 +1156,10 @@ function fnc_move_to_back(self, event) {
 }
 
 function fnc_init_drive() {
+    $('body').on('dragover dragenter drop', function(event) {
+        event.preventDefault();
+        return false;
+    });
     var uniqid = window.location.hash.slice(1);
     if (uniqid == "") {
         uniqid = md5_hash_generator('root');

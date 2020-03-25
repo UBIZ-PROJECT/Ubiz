@@ -130,7 +130,7 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::get('drive/{uniqid}/sibling', ['as' => 'api-get-sibling', 'uses' => 'Api\DriveController@getSibling']);
         Route::post('drive/{uniqid}/upload', ['as' => 'api-upload-drives', 'uses' => 'Api\DriveController@uploadFiles']);
         Route::delete('drive/{uniqid}/delete', ['as' => 'api-delete-drives', 'uses' => 'Api\DriveController@deleteFiles']);
-        Route::post('drive/{uniqid}/download', ['as' => 'api-download-drives', 'uses' => 'Api\DriveController@downloadFiles']);
+        Route::get('drive/{uniqid}/download', ['as' => 'api-download-drives', 'uses' => 'Api\DriveController@downloadFiles']);
         Route::post('drive/{uniqid}/add-new-folder', ['as' => 'api-add-new-folder', 'uses' => 'Api\DriveController@addNewFolder']);
         Route::post('drive/{uniqid}/change-name', ['as' => 'api-change-name', 'uses' => 'Api\DriveController@changeName']);
         Route::post('drive/{uniqid}/change-color', ['as' => 'api-change-color', 'uses' => 'Api\DriveController@changeColor']);
