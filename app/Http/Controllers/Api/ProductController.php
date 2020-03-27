@@ -164,7 +164,8 @@ class ProductController extends Controller
         }
         $search = [];
         if ($request->has('search')) {
-            $search = json_decode($request->search, true);
+//            print_r($request->search); exit;
+            $search = $request->search;
         }
         return array($page, $sort, $search);
     }
