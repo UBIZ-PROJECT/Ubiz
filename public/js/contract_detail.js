@@ -135,7 +135,7 @@ function _s(selector) {
 }
 
 function show_contract_type() {
-    document.getElementById("dropDownList").classList.toggle("show");
+    $("#dropDownList").toggle("show");
 }
 
 $(document).ready(function () {
