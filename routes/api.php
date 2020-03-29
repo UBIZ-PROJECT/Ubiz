@@ -124,7 +124,23 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::post('report/export-rep', ['as'=>'export-rep', 'uses'=>'Api\ReportController@exportRep']);
         Route::post('report/import-rep', ['as'=>'import-rep', 'uses'=>'Api\ReportController@importRep']);
 
-        Route::get('drive', ['as' => 'api-get-drives', 'uses' => 'Api\DriveController@getData']);
-        Route::get('drive/{uniqid}', ['as' => 'api-get-report', 'uses' => 'Api\DriveController@getData']);
+        Route::get('drive/{uniqid}', ['as' => 'api-get-drives', 'uses' => 'Api\DriveController@getFiles']);
+        Route::get('drive/{uniqid}/detail', ['as' => 'api-get-detail', 'uses' => 'Api\DriveController@getDetail']);
+        Route::get('drive/{uniqid}/children', ['as' => 'api-get-children', 'uses' => 'Api\DriveController@getChildren']);
+        Route::get('drive/{uniqid}/sibling', ['as' => 'api-get-sibling', 'uses' => 'Api\DriveController@getSibling']);
+        Route::post('drive/{uniqid}/upload', ['as' => 'api-upload-drives', 'uses' => 'Api\DriveController@uploadFiles']);
+        Route::delete('drive/{uniqid}/delete', ['as' => 'api-delete-drives', 'uses' => 'Api\DriveController@deleteFiles']);
+        Route::get('drive/{uniqid}/download', ['as' => 'api-download-drives', 'uses' => 'Api\DriveController@downloadFiles']);
+        Route::post('drive/{uniqid}/add-new-folder', ['as' => 'api-add-new-folder', 'uses' => 'Api\DriveController@addNewFolder']);
+        Route::post('drive/{uniqid}/change-name', ['as' => 'api-change-name', 'uses' => 'Api\DriveController@changeName']);
+        Route::post('drive/{uniqid}/change-color', ['as' => 'api-change-color', 'uses' => 'Api\DriveController@changeColor']);
+        Route::post('drive/{uniqid}/do-copy', ['as' => 'api-copy', 'uses' => 'Api\DriveController@doCopy']);
+        Route::post('drive/{uniqid}/move-to', ['as' => 'api-move-to', 'uses' => 'Api\DriveController@moveTo']);
+        Route::get('contracts', ['as' => 'api-get-contracts', 'uses' => 'Api\ContractController@getContracts']);
+        
+        Route::post('contracts/{ctr_id}/create', ['as' => 'api-create-contract', 'uses' => 'Api\ContractController@createContract'])->where('ctr_id', '[0-9]+');
+        Route::post('contracts/{ctr_id}/update', ['as' => 'api-update-contract', 'uses' => 'Api\ContractController@updateContract'])->where('ctr_id', '[0-9]+');
+        Route::delete('contracts/{ctr_ids}/delete', ['as' => 'api-delete-contracts', 'uses' => 'Api\ContractController@deleteContracts'])->where('ctr_ids', '^([0-9]+,)+[0-9]+|[0-9]+');
+
     });
 });

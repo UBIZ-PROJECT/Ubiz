@@ -26,6 +26,19 @@ class OrderDetail
         }
     }
 
+    public function getMultiOrderDetailByOrdIds($ordt_ids = []) {
+        try {
+            $data = DB::table('order_detail')
+                ->select('order_detail.*')
+                ->whereIn("ordt_id", $ordt_ids)
+                ->where('order_detail.delete_flg', '0')
+                ->get();
+            return $data;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
     public function deleteOrderDetailsByIds($ordt_ids = [])
     {
         try {
