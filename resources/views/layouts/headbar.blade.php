@@ -141,6 +141,18 @@
                                             </a>
                                         </li>
                                         <li class="who">
+                                            <a class="ruo" role="button" href="/contracts">
+                                                <div class="pto">
+                                                    <img src="{{asset('images/app_bg.png')}}">
+                                                    <div class="zro">
+                                                        <div class="rco">
+                                                            <div class="kko">{{ __("Contract") }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="who">
                                             <a class="ruo" role="button" href="/orders">
                                                 <div class="pto">
                                                     <img src="{{asset('images/app_bg.png')}}">
