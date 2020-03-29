@@ -22,7 +22,7 @@ class ContractExport
     private $exportFileName = "";
     public function __construct()
     {
-        $this->FILE_PATH = dirname(__FILE__) . "\\Template\\";
+        $this->FILE_PATH = dirname(__FILE__) . "/Template/";
     }
 
     public function execute($data, $fileName, $type) {
