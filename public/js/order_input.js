@@ -1110,7 +1110,7 @@ function ord_contract_step_callback(response) {
             type: 'success',
             title: response.data.message,
             onClose: () => {
-                window.location.href = window.location.origin + "/contract"
+                window.location.href = window.location.origin + "/contracts"
             }
         })
 
