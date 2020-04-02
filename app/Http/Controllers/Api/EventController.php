@@ -91,7 +91,7 @@ class EventController extends Controller
     public function updateEvent($id, Request $request)
     {
         try {
-
+            checkUserRight(10, 4);
             $data = $request->all();
 
             $evModel = new Event();
@@ -115,7 +115,7 @@ class EventController extends Controller
     public function insertEvent(Request $request)
     {
         try {
-
+            checkUserRight(10, 2);
             $data = $request->all();
 
             $evModel = new Event();
@@ -139,7 +139,7 @@ class EventController extends Controller
     public function deleteEvent($id, Request $request)
     {
         try {
-
+            checkUserRight(10, 3);
             $evModel = new Event();
             $res = $evModel->deleteValidation($id);
             if ($res['success'] == false) {
@@ -157,7 +157,7 @@ class EventController extends Controller
     public function exportEvent(Request $request)
     {
         try {
-
+            checkUserRight(10, 1);
             $start = $request->get('start', null);
             $end = $request->get('end', null);
             $tag = $request->get('tag', []);
