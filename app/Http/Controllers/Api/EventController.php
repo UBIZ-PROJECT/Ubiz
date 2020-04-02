@@ -16,7 +16,7 @@ class EventController extends Controller
     public function getEvents(Request $request)
     {
         try {
-
+            checkUserRight(10, 1);
             $start = $request->get('start', null);
             $end = $request->get('end', null);
             $tag = $request->get('tag', []);
@@ -52,7 +52,7 @@ class EventController extends Controller
     public function getEvent($id, Request $request)
     {
         try {
-
+            checkUserRight(10, 1);
             if (requiredValidator($id) == false || numericValidator($id) == false) {
                 $res['success'] = false;
                 $message[] = __('Data is wrong');
