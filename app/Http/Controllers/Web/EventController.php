@@ -14,6 +14,9 @@ class EventController extends Controller
     public function index(Request $request)
     {
         try {
+
+            checkUserRight(10, 1);
+
             $event = new Event();
             $tags = $event->getTags();
             return view('event', ['tags' => $tags]);
@@ -25,6 +28,9 @@ class EventController extends Controller
     public function detail(Request $request, $id)
     {
         try {
+
+            checkUserRight(10, 1);
+
             $event = new Event();
             $eventData = $event->getEvent($id);
 
@@ -46,7 +52,7 @@ class EventController extends Controller
     public function downloadEvent(Request $request, $uniqid, $file_name)
     {
         try {
-
+            checkUserRight(10, 1);
             $is_exists = Storage::disk('event')->exists("$uniqid.xlsx");
             if ($is_exists == false) {
                 return response()->view('errors.404', [], 404);
