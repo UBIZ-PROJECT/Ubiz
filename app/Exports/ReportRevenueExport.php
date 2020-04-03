@@ -25,6 +25,7 @@ class ReportRevenueExport implements FromCollection, WithHeadings, WithEvents, S
     {
         $reportModel = new Report();
         $report = $reportModel->getReportData(0, '', $this->request);
+        $reportExportData = [];
 
         foreach ($report as $row) {
             $reportExportData[] = array(
