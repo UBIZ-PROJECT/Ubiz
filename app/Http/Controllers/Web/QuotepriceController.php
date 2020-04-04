@@ -76,7 +76,7 @@ class QuotepriceController extends Controller
             $contactData = $cusModel->getCustomerContact($qpData->cus_id);
 
             $comModel = new Company();
-            $comData = $comModel->getAllCompany();
+            $comData = $comModel->findAll();
 
             $languages = [
                 'en' => 'Tiếng Anh',
