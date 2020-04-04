@@ -456,6 +456,27 @@ function getDrivePath()
     }
 }
 
+function getDBEnv($key, $default = null)
+{
+    try {
+        $APPLICATION_ENV = getenv('APPLICATION_ENV');
+        switch ($APPLICATION_ENV) {
+            case 'production':
+                $key = "PRD_" . $key;
+                break;
+            case 'staging':
+                $key = "STG_" . $key;
+                break;
+            case 'development':
+                $key = "DEV_" . $key;
+                break;
+        }
+        return env($key, $default);
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
 function makeDir($path)
 {
     try {
