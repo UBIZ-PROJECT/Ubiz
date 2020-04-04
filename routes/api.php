@@ -51,12 +51,11 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::post('currency/{id}/update', ['as' => 'update-currency', 'uses' => 'Api\CurrencyController@updatedCurrency']);
         Route::put('currency', ['as' => 'insert-currency', 'uses' => 'Api\CurrencyController@insertCurrency']);
 
-        Route::get('company', ['as' => 'get-company', 'uses' => 'Api\CompanyController@getCompany']);
-        Route::get('companies', ['as' => 'get-all-company', 'uses' => 'Api\CompanyController@getAllCompany']);
-        Route::get('company/{id}', ['as' => 'get-company', 'uses' => 'Api\CompanyController@getCompanyById']);
-        Route::delete('company/{ids}/delete', ['as' => 'delete-company', 'uses' => 'Api\CompanyController@deleteCompany']);
-        Route::post('company/{id}/update', ['as' => 'update-company', 'uses' => 'Api\CompanyController@updatedCompany']);
-        Route::put('company', ['as' => 'insert-company', 'uses' => 'Api\CompanyController@insertCompany']);
+        Route::get('company', ['as' => 'company-search', 'uses' => 'Api\CompanyController@search']);
+        Route::get('company/{id}', ['as' => 'company-detail', 'uses' => 'Api\CompanyController@detail']);
+        Route::put('company', ['as' => 'company-insert', 'uses' => 'Api\CompanyController@insert']);
+        Route::delete('company/{ids}/delete', ['as' => 'company-delete', 'uses' => 'Api\CompanyController@delete']);
+        Route::post('company/{id}/update', ['as' => 'company-update', 'uses' => 'Api\CompanyController@update']);
 
         Route::get('products', ['as' => 'api-product', 'uses' => 'Api\ProductController@getProduct']);
         Route::get('products/detail', ['as' => 'api-product-detail', 'uses' => 'Api\ProductController@getEachProductPaging']);

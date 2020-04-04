@@ -365,22 +365,22 @@
                             </div>
                             <div class="col-sm-10 col-md-10 col-xl-10 z-pdl">
                                 <div class="row z-mgl z-mgr">
-                                    @include('components.input',['control_id'=>'txt_com_nm', 'width'=> '500', 'lbl_width'=> '70', 'label'=>__('Company')])
-                                    @include('components.input',['control_id'=>'txt_com_nm_shot', 'width'=> '500', 'lbl_width'=> '100', 'label'=>__('Company Shot')])
+                                    @include('components.input',['control_id'=>'txt_com_nm', 'i_focus'=>'', 'i_blur'=>'', 'width'=> '500', 'lbl_width'=> '70', 'label'=>__('Company')])
+                                    @include('components.input',['control_id'=>'txt_com_nm_shot', 'i_focus'=>'', 'i_blur'=>'', 'width'=> '500', 'lbl_width'=> '100', 'label'=>__('Company Shot')])
                                 </div>
                                 <div class="row z-mgl z-mgr">
-                                    @include('components.input',['control_id'=>'txt_com_address', 'width'=> '700', 'lbl_width'=> '70', 'label'=>__('Address')])
+                                    @include('components.input',['control_id'=>'txt_com_address', 'i_focus'=>'', 'i_blur'=>'', 'width'=> '700', 'lbl_width'=> '70', 'label'=>__('Address')])
                                 </div>
                                 <div class="row z-mgl z-mgr">
                                     <div class="col-sm-5 col-md-5 col-xl-5 z-pdl">
-                                        @include('components.input',['control_id'=>'txt_com_phone', 'lbl_width'=> '70', 'label'=>__('Phone')])
-                                        @include('components.input',['control_id'=>'txt_com_hotline', 'lbl_width'=> '70', 'label'=>__('Hotline')])
-                                        @include('components.input',['control_id'=>'txt_com_web', 'lbl_width'=> '70', 'label'=>__('Website')])
+                                        @include('components.input',['control_id'=>'txt_com_phone', 'i_focus'=>'', 'i_blur'=>'', 'lbl_width'=> '70', 'label'=>__('Phone')])
+                                        @include('components.input',['control_id'=>'txt_com_hotline', 'i_focus'=>'', 'i_blur'=>'', 'lbl_width'=> '70', 'label'=>__('Hotline')])
+                                        @include('components.input',['control_id'=>'txt_com_web', 'i_focus'=>'', 'i_blur'=>'', 'lbl_width'=> '70', 'label'=>__('Website')])
                                     </div>
                                     <div class="col-sm-7 col-md-7 col-xl-7">
-                                        @include('components.input',['control_id'=>'txt_com_fax', 'lbl_width'=> '90', 'label'=>__('Fax')])
-                                        @include('components.input',['control_id'=>'txt_com_mst', 'lbl_width'=> '90', 'label'=>__('Tax code')])
-                                        @include('components.input',['control_id'=>'txt_com_email', 'lbl_width'=> '90', 'label'=>__('Email')])
+                                        @include('components.input',['control_id'=>'txt_com_fax', 'i_focus'=>'', 'i_blur'=>'', 'lbl_width'=> '90', 'label'=>__('Fax')])
+                                        @include('components.input',['control_id'=>'txt_com_mst', 'i_focus'=>'', 'i_blur'=>'', 'lbl_width'=> '90', 'label'=>__('Tax code')])
+                                        @include('components.input',['control_id'=>'txt_com_email', 'i_focus'=>'', 'i_blur'=>'', 'lbl_width'=> '90', 'label'=>__('Email')])
                                     </div>
                                 </div>
                             </div>
