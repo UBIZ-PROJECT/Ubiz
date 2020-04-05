@@ -11,8 +11,9 @@ class DepartmentsController extends Controller
     public function index(Request $request)
     {
         try {
+            checkUserRight(2,1);
             $department = new Department();
-            $departments = $department->getDepartments();
+            $departments = $department->search();
             $paging = $department->getPagingInfo();
             $paging['page'] = 0;
             return view('departments', ['departments' => $departments, 'paging' => $paging]);

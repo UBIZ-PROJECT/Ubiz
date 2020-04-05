@@ -15,7 +15,7 @@ class UsersController extends Controller
             $user = new User();
             $users = $user->getUsers();
             $paging = $user->getPagingInfo();
-            $departments = $user->getDepartments();
+            $departments = $user->search();
             $comapnies = $user->getCompanies();
             $paging['page'] = 0;
             return view('users', [
