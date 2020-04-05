@@ -10,14 +10,14 @@ use App\Model\Department;
 
 class DepartmentsController extends Controller
 {
-    public function getDepartments(Request $request)
+    public function search(Request $request)
     {
         try {
-
+            checkUserRight(2,1);
             list($page, $sort, $search) = $this->getRequestData($request);
 
             $department = new Department();
-            $departments = $department->getDepartments($page, $sort, $search);
+            $departments = $department->search($page, $sort, $search);
             $paging = $department->getPagingInfo($search);
             $paging['page'] = $page;
         } catch (\Throwable $e) {
@@ -26,9 +26,10 @@ class DepartmentsController extends Controller
         return response()->json(['departments' => $departments, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed.")], 200);
     }
 
-    public function getDepartment($id, Request $request)
+    public function detail($id, Request $request)
     {
         try {
+            checkUserRight(2,1);
             $department = new Department();
             if ($request->has('pos')) {
                 list ($page, $sort, $search) = $this->getRequestData($request);
@@ -42,36 +43,39 @@ class DepartmentsController extends Controller
         }
     }
 
-    public function updateDepartment($id, Request $request)
+    public function update($id, Request $request)
     {
         try {
+            checkUserRight(2,4);
             $department = new Department();
             list($page, $sort, $search, $Department_data) = $this->getRequestData($request);
-            $department->updateDepartment($id, $Department_data);
+            $department->update($id, $Department_data);
         } catch (\Throwable $e) {
             throw $e;
         }
         return response()->json(['success' => true, 'message' => __("Successfully processed.")], 200);
     }
 
-    public function insertDepartment(Request $request)
+    public function insert(Request $request)
     {
         try {
+            checkUserRight(2,2);
             $department = new Department();
             list($page, $sort, $search, $Department_data) = $this->getRequestData($request);
-            $department->insertDepartment($Department_data);
+            $department->insert($Department_data);
         } catch (\Throwable $e) {
             throw $e;
         }
         return response()->json(['success' => true, 'message' => __("Successfully processed.")], 200);
     }
 
-    public function deleteDepartments($ids, Request $request)
+    public function delete($ids, Request $request)
     {
         try {
+            checkUserRight(2,3);
             $department = new Department();
-            $department->deleteDepartments($ids);
-            $departments = $department->getDepartments();
+            $department->delete($ids);
+            $departments = $department->search();
             $paging = $department->getPagingInfo();
             $paging['page'] = 0;
         } catch (\Throwable $e) {
