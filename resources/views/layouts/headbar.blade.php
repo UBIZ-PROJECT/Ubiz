@@ -211,7 +211,7 @@
                                             <div class="jno">
                                                 <a href="#">{{ __("Privacy") }}</a>
                                             </div>
-                                            <button type="button" class="btn btn-primary btn-sm ">{{ __("Account") }}</button>
+                                            <a type="button" class="btn btn-primary btn-sm " href="/myaccount">{{ __("Account") }}</a>
                                         </div>
                                     </div>
                                     <div class="tno">

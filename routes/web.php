@@ -20,6 +20,7 @@ Route::middleware(['api', 'cors'])->group(function () {
         Route::get('products', ['as' => 'products', 'uses' => 'Web\AccessoryController@accessories']);
         Route::get('products/{brd_id}', ['as' => 'products', 'uses' => 'Web\ProductController@productByBrand'])->where('brd_id', '[0-9]+');
         Route::get('brands', ['as' => 'brands', 'uses' => 'Web\BrandController@brands']);
+        Route::get('myaccount', ['as' => 'myaccount', 'uses' => 'Web\MyAccountController@index']);
         Route::get('setting/users', ['as' => 'users', 'uses' => 'Web\UsersController@index']);
         Route::get('setting/currency', ['as' => 'currency', 'uses' => 'Web\CurrencyController@index']);
         Route::get('setting/company', ['as' => 'company', 'uses' => 'Web\CompanyController@index']);

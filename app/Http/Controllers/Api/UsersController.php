@@ -3,21 +3,20 @@
 namespace App\Http\Controllers\Api;
 
 use App;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-use App\User;
-
 class UsersController extends Controller
 {
-    public function getUsers(Request $request)
+    public function search(Request $request)
     {
         try {
             checkUserRight('3', '1');
             list($page, $sort, $search) = $this->getRequestData($request);
 
             $user = new User();
-            $users = $user->getUsers($page, $sort, $search);
+            $users = $user->search($page, $sort, $search);
             $paging = $user->getPagingInfo($search);
             $paging['page'] = $page;
         } catch (\Throwable $e) {
@@ -26,9 +25,10 @@ class UsersController extends Controller
         return response()->json(['users' => $users, 'paging' => $paging, 'success' => true, 'message' => ''], 200);
     }
 
-    public function getUser($id, Request $request)
+    public function detail($id, Request $request)
     {
         try {
+            checkUserRight('3', '1');
             $user = new User();
             if ($request->has('pos')) {
                 list ($page, $sort, $search) = $this->getRequestData($request);
@@ -42,46 +42,74 @@ class UsersController extends Controller
         return response()->json(['user' => $data, 'message' => __("Successfully processed.")], 200);
     }
 
-    public function updateUser($id, Request $request)
+    public function update($id, Request $request)
     {
         try {
+            checkUserRight('3', '4');
             $user = new User();
-            list($page, $sort, $search, $user_data) = $this->getRequestData($request);
-            if ($user_data['keep_info'] == "true") {
-                $this->insertUserByUpdateKeepInfo($id, $user_data);
-                $this->deleteUsers($id, $request);
+            list($page, $sort, $search, $data) = $this->getRequestData($request);
+            if ($data['keep_info'] == "true") {
+                $userData = get_object_vars($user->getUserOnlyById($id));
+                if(isset($data['code'])){
+                    $userData['code'] = $data['code'];
+                }
+                if(isset($data['name'])){
+                    $userData['name'] = $data['name'];
+                }
+                if(isset($data['rank'])){
+                    $userData['rank'] = $data['rank'];
+                }
+                if(isset($data['phone'])){
+                    $userData['phone'] = $data['phone'];
+                }
+                if(isset($data['email'])){
+                    $userData['email'] = $data['email'];
+                }
+                if(isset($data['com_id'])){
+                    $userData['com_id'] = $data['com_id'];
+                }
+                if(isset($data['dep_id'])){
+                    $userData['dep_id'] = $data['dep_id'];
+                }
+                if(isset($data['join_date'])){
+                    $userData['join_date'] = $data['join_date'];
+                }
+                if(isset($data['salary'])){
+                    $userData['salary'] = $data['salary'];
+                }
+                if(isset($data['address'])){
+                    $userData['address'] = $data['address'];
+                }
+                if(isset($data['bhxh'])){
+                    $userData['bhxh'] = $data['bhxh'];
+                }
+                if(isset($data['bhyt'])){
+                    $userData['bhyt'] = $data['bhyt'];
+                }
+                if(isset($data['avatar'])){
+                    $userData['tmp_avatar'] = $data['avatar'];
+                }
+                unset($userData['id']);
+                $user->keepInfo($userData);
+                $user->deleteUser($id);
             } else {
-                $validator = $user->validateData($user_data);
+                $validator = $user->validateData($data);
                 if ($validator['success'] == false) {
                     return response()->json(['success' => false, 'message' => $validator['message']], 200);
                 }
-                unset($user_data['keep_info']);
-                $user->updateUser($id, $user_data);
+                unset($data['keep_info']);
+                $user->updateUser($id, $data);
             }
-
-
             return response()->json(['success' => true, 'message' => __("Successfully processed.")], 200);
         } catch (\Throwable $e) {
             throw $e;
         }
     }
 
-    public function insertUserByUpdateKeepInfo($id, $data) {
-        try {
-            $user = new User();
-            $userData = $user->getUserById($id);
-            $data['avatar'] = $userData->temp_avatar;
-            $data['app_pass'] = $userData->app_pass;
-            unset($data['keep_info']);
-            $user->insertUser($data);
-        } catch(\Throwable $e) {
-            throw $e;
-        }
-    }
-
-    public function insertUser(Request $request)
+    public function insert(Request $request)
     {
         try {
+            checkUserRight('3', '2');
             $user = new User();
             list($page, $sort, $search, $user_data) = $this->getRequestData($request);
             $validator = $user->validateData($user_data);
@@ -95,12 +123,13 @@ class UsersController extends Controller
         return response()->json(['success' => true, 'message' => __("Successfully processed.")], 200);
     }
 
-    public function deleteUsers($ids, Request $request)
+    public function delete($ids, Request $request)
     {
         try {
+            checkUserRight('3', '3');
             $user = new User();
-            $user->deleteUsers($ids);
-            $users = $user->getUsers(0);
+            $user->deleteUser($ids);
+            $users = $user->search(0);
             $paging = $user->getPagingInfo();
             $paging['page'] = 0;
         } catch (\Throwable $e) {
