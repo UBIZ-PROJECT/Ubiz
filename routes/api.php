@@ -18,11 +18,14 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
     Route::middleware(['jwt'])->group(function () {
         Route::get('logout', ['as' => 'api-logout', 'uses' => 'Api\AuthController@logout']);
 
-        Route::get('users', ['as' => 'get-users', 'uses' => 'Api\UsersController@getUsers']);
-        Route::get('users/{id}', ['as' => 'get-user', 'uses' => 'Api\UsersController@getUser']);
-        Route::post('users/{id}/update', ['as' => 'update-user', 'uses' => 'Api\UsersController@updateUser']);
-        Route::put('users', ['as' => 'insert-user', 'uses' => 'Api\UsersController@insertUser']);
-        Route::delete('users/{ids}/delete', ['as' => 'delete-users', 'uses' => 'Api\UsersController@deleteUsers']);
+        Route::get('users', ['as' => 'users-search', 'uses' => 'Api\UsersController@search']);
+        Route::get('users/{id}', ['as' => 'user-detail', 'uses' => 'Api\UsersController@detail']);
+        Route::post('users/{id}/update', ['as' => 'user-update', 'uses' => 'Api\UsersController@update']);
+        Route::put('users', ['as' => 'insert-user', 'uses' => 'Api\UsersController@insert']);
+        Route::delete('users/{ids}/delete', ['as' => 'delete-users', 'uses' => 'Api\UsersController@delete']);
+
+        Route::post('myaccount/{id}/update', ['as' => 'myaccount-update', 'uses' => 'Api\MyAccountController@update']);
+        Route::post('myaccount/{id}/passwd', ['as' => 'myaccount-update', 'uses' => 'Api\MyAccountController@passwd']);
 
         Route::get('departments', ['as' => 'departments-search', 'uses' => 'Api\DepartmentsController@search']);
         Route::get('departments/{id}', ['as' => 'department-detail', 'uses' => 'Api\DepartmentsController@detail']);

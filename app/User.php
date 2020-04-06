@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -130,7 +131,7 @@ class User extends Authenticatable implements JWTSubject
             foreach ($users as &$user) {
 
                 if ($user->avatar == '' || $user->avatar == null) {
-                    $data->avatar_base64 = '';
+                    $user->avatar_base64 = '';
                     continue;
                 }
                 $user->avatar_base64 = readImage($user->avatar, 'usr');
@@ -141,7 +142,7 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
-    public function deleteUsers($ids = '')
+    public function deleteUser($ids = '')
     {
         DB::beginTransaction();
         try {
@@ -180,12 +181,33 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
+    public function updatePasswd($id, $passwd)
+    {
+        DB::beginTransaction();
+        try {
+            DB::table('users')
+                ->where([
+                    ['id', '=', $id],
+                    ['delete_flg', '=', '0']
+                ])
+                ->update([
+                    'password' => Hash::make($passwd)
+                ]);
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
     public function insertUser($data = [])
     {
         DB::beginTransaction();
         try {
 
             $id = DB::table('users')->max('id') + 1;
+            $data['id'] = $id;
+            $data['f_id'] = $id;
             if (!gettype($data['avatar'])) {
                 $avatar = $data['avatar'];
                 $path = $avatar->path();
@@ -194,9 +216,18 @@ class User extends Authenticatable implements JWTSubject
                 resizeImage($path, $avatar, 200, 200, 'usr');
                 $data['avatar'] = $avatar;
             }
-            $data['password'] = bcrypt('123456');
-            $data['inp_user'] = '1';
-            $data['upd_user'] = '1';
+            $passwd = str_random(env('PASSWD_LENGTH', 8));
+            $data['password'] = Hash::make($passwd);
+            $data['inp_user'] = Auth::user()->id;
+            $data['upd_user'] = Auth::user()->id;
+
+            $mail_conf = makeMailConf(
+                env('MAIL_USERNAME'),
+                env('MAIL_PASSWORD'),
+                env('MAIL_USERNAME'),
+                'TKP-TEAM'
+            );
+            dispatch(new SendEventEmail($data, $mail_conf));
 
             DB::table('users')->insert($data);
             DB::commit();
@@ -206,7 +237,32 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
-    public function getUsers($page = 0, $sort = '', $search = [])
+    public function keepInfo($data = [])
+    {
+        DB::beginTransaction();
+        try {
+
+            $id = DB::table('users')->max('id') + 1;
+            $data['id'] = $id;
+            if (isset($data['tmp_avatar'])) {
+                $avatar = $data['tmp_avatar'];
+                $path = $avatar->path();
+                $extension = $avatar->extension();
+                $avatar = $id . "." . $extension;
+                resizeImage($path, $avatar, 200, 200, 'usr');
+                $data['avatar'] = $avatar;
+                unset($data['tmp_avatar']);
+            }
+
+            DB::table('users')->insert($data);
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
+        }
+    }
+
+    public function search($page = 0, $sort = '', $search = [])
     {
         try {
 
@@ -270,6 +326,20 @@ class User extends Authenticatable implements JWTSubject
                 $user->temp_avatar = $user->avatar;
                 $user->avatar = readImage($user->avatar, 'usr');
             }
+            return $user;
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function getUserOnlyById($id = '')
+    {
+        try {
+
+            $user = DB::table('users')
+                ->select('*')
+                ->where([['users.delete_flg', '=', '0'], ['users.id', '=', $id]])
+                ->first();
             return $user;
         } catch (\Throwable $e) {
             throw $e;

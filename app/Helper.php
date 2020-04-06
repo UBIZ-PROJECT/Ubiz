@@ -165,6 +165,9 @@ function checkUserRight($scr_id, $fnc_id)
         $user = new User();
         $data = $user->getAuthUser();
 
+        if ($user->admin == '1')
+            return true;
+
         if ($data == null)
             return false;
 
@@ -319,6 +322,51 @@ function numericValidator($data)
     ];
     $validator = Validator::make($credentials, $rules);
     if ($validator->fails()) {
+        return false;
+    }
+    return true;
+}
+
+function alphaNumValidator($data)
+{
+    $credential_name = "name";
+    $credential_data = $data;
+    $rules = [
+        $credential_name => "alpha_num"
+    ];
+    $credentials = [
+        $credential_name => $credential_data
+    ];
+    $validator = Validator::make($credentials, $rules);
+    if ($validator->fails()) {
+        return false;
+    }
+    return true;
+}
+
+function sizeValidator($data, $value)
+{
+    $credential_name = "name";
+    $credential_data = $data;
+    $rules = [
+        $credential_name => "size:$value"
+    ];
+    $credentials = [
+        $credential_name => $credential_data
+    ];
+    $validator = Validator::make($credentials, $rules);
+    if ($validator->fails()) {
+        return false;
+    }
+    return true;
+}
+
+function newPasswdValidator($data)
+{
+    if (!requiredValidator($data)
+        || !alphaNumValidator($data)
+        || !sizeValidator($data, env('PASSWD_LENGTH', 8))
+    ) {
         return false;
     }
     return true;

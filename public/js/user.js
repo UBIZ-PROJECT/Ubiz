@@ -46,7 +46,7 @@
             ubizapis('v1', '/users', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
         w_save: function () {
-            var html = "<input type='checkbox' id='keep_info'> Giữ lại thông tin cho đơn hàng.";
+            var html = "<span style='display: none'><input type='checkbox' id='keep_info'> Giữ lại thông tin cho đơn hàng.</span>";
             swal({
                 title: i18next.t('Do you want to save the data.?'),
                 type: 'question',
