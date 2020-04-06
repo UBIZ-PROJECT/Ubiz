@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Jobs\SendUserRegistEmail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Validator;
@@ -208,7 +209,7 @@ class User extends Authenticatable implements JWTSubject
             $id = DB::table('users')->max('id') + 1;
             $data['id'] = $id;
             $data['f_id'] = $id;
-            if (!gettype($data['avatar'])) {
+            if (isset($data['avatar'])) {
                 $avatar = $data['avatar'];
                 $path = $avatar->path();
                 $extension = $avatar->extension();
@@ -221,18 +222,34 @@ class User extends Authenticatable implements JWTSubject
             $data['inp_user'] = Auth::user()->id;
             $data['upd_user'] = Auth::user()->id;
 
+            $this->insertMailQueue($id);
+
             $mail_conf = makeMailConf(
                 env('MAIL_USERNAME'),
                 env('MAIL_PASSWORD'),
                 env('MAIL_USERNAME'),
                 'TKP-TEAM'
             );
-            dispatch(new SendEventEmail($data, $mail_conf));
+            dispatch(new SendUserRegistEmail($data, $mail_conf));
 
             DB::table('users')->insert($data);
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollback();
+            throw $e;
+        }
+    }
+
+    public function insertMailQueue($id)
+    {
+        try {
+            $data = [
+                'user_id' => $id,
+                'send' => '0'
+            ];
+
+            DB::table('users_regist_mail')->insert($data);
+        } catch (\Throwable $e) {
             throw $e;
         }
     }
