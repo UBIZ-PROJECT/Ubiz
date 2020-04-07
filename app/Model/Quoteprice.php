@@ -16,7 +16,7 @@ use \PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 
 class Quoteprice
 {
-    public function getQuoteprices($page = 0, $sort = '', $search = '')
+    public function search($page = 0, $sort = '', $search = '')
     {
         try {
             list($where_raw, $params) = $this->makeWhereRaw($search);
@@ -146,7 +146,7 @@ class Quoteprice
 
             //delete quoteprices detail
             $quotepriceDetail = new QuotepriceDetail();
-            $quotepriceDetail->deleteQuotepriceDetailsByOrdIds($qp_ids);
+            $quotepriceDetail->deleteQuotepriceDetailsByQpIds($qp_ids);
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollback();

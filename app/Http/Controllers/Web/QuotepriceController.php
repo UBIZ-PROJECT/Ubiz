@@ -22,7 +22,7 @@ class QuotepriceController extends Controller
             checkUserRight(11, 1);
 
             $qpModel = new Quoteprice();
-            $qpData = $qpModel->getQuoteprices();
+            $qpData = $qpModel->search();
             $pagingData = $qpModel->getPagingInfo();
             $pagingData['page'] = 0;
 
@@ -144,7 +144,7 @@ class QuotepriceController extends Controller
     public function preview(Request $request, $qp_id)
     {
         try {
-
+            checkUserRight(11, 1);
             $extra_data = $request->get('params', null);
 
             $qpModel = new Quoteprice();
@@ -187,6 +187,7 @@ class QuotepriceController extends Controller
     public function download(Request $request, $qp_id, $uniqid, $file_name)
     {
         try {
+            checkUserRight(11, 1);
             $qpModel = new Quoteprice();
             $qpData = $qpModel->getQuoteprice($qp_id);
             if ($qpData == null) {

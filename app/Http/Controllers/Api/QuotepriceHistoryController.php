@@ -11,12 +11,12 @@ use App\Model\QuotepriceHistory;
 
 class QuotepriceHistoryController extends Controller
 {
-    public function getQuoteprices(Request $request, $qp_id)
+    public function search(Request $request, $qp_id)
     {
         try {
             $qpModel = new QuotepriceHistory();
             list($page, $sort, $search) = $this->getRequestData($request);
-            $qpData = $qpModel->getQuoteprices($qp_id, $page, $sort, $search);
+            $qpData = $qpModel->search($qp_id, $page, $sort, $search);
             $pagingData = $qpModel->getPagingInfo($qp_id, $search);
             $pagingData['page'] = $page;
             return response()->json([

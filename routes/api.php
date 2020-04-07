@@ -66,13 +66,13 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::put('products/{id}/updatePaging', ['as' => 'product-update', 'uses' => 'Api\ProductController@updateProductPaging']);
         Route::delete('products/{ids}/delete', ['as' => 'product-delete', 'uses' => 'Api\ProductController@deleteProduct']);
 
-        Route::get('quoteprices', ['as' => 'api-get-quoteprices', 'uses' => 'Api\QuotepriceController@getQuoteprices']);
-        Route::post('quoteprices/{cus_id}/create', ['as' => 'api-create-quoteprice', 'uses' => 'Api\QuotepriceController@createQuoteprice'])->where('cus_id', '[0-9]+');
-        Route::post('quoteprices/{qp_id}/update', ['as' => 'api-update-quoteprice', 'uses' => 'Api\QuotepriceController@updateQuoteprice'])->where('qp_id', '[0-9]+');
-        Route::post('quoteprices/{qp_id}/send', ['as' => 'api-send-quoteprice', 'uses' => 'Api\QuotepriceController@sendQuoteprice'])->where('qp_id', '[0-9]+');
-        Route::post('quoteprices/{qp_id}/download', ['as' => 'api-download-quoteprice', 'uses' => 'Api\QuotepriceController@downloadQuoteprice'])->where('qp_id', '[0-9]+');
-        Route::delete('quoteprices/{qp_ids}/delete', ['as' => 'api-delete-quoteprices', 'uses' => 'Api\QuotepriceController@deleteQuoteprices'])->where('qp_ids', '^([0-9]+,)+[0-9]+|[0-9]+');
-        Route::get('quoteprices/{qp_id}/history', ['as' => 'quoteprices-history', 'uses' => 'Api\QuotepriceHistoryController@getQuoteprices'])->where('qp_id', '[0-9]+');
+        Route::get('quoteprices', ['as' => 'quoteprices-search', 'uses' => 'Api\QuotepriceController@search']);
+        Route::post('quoteprices/{cus_id}/create', ['as' => 'api-create-quoteprice', 'uses' => 'Api\QuotepriceController@create'])->where('cus_id', '[0-9]+');
+        Route::post('quoteprices/{qp_id}/update', ['as' => 'api-update-quoteprice', 'uses' => 'Api\QuotepriceController@update'])->where('qp_id', '[0-9]+');
+        Route::post('quoteprices/{qp_id}/send', ['as' => 'api-send-quoteprice', 'uses' => 'Api\QuotepriceController@send'])->where('qp_id', '[0-9]+');
+        Route::post('quoteprices/{qp_id}/download', ['as' => 'api-download-quoteprice', 'uses' => 'Api\QuotepriceController@download'])->where('qp_id', '[0-9]+');
+        Route::delete('quoteprices/{qp_ids}/delete', ['as' => 'api-delete-quoteprices', 'uses' => 'Api\QuotepriceController@delete'])->where('qp_ids', '^([0-9]+,)+[0-9]+|[0-9]+');
+        Route::get('quoteprices/{qp_id}/history', ['as' => 'quoteprices-history', 'uses' => 'Api\QuotepriceHistoryController@search'])->where('qp_id', '[0-9]+');
         Route::get('quoteprices/{qp_id}/history/{his_qp_id}', ['as' => 'quoteprices-history-detai', 'uses' => 'Api\QuotepriceHistoryController@detail'])->where(['qp_id' => '[0-9]+', 'his_qp_id' => '[0-9]+']);
 
         Route::get('orders', ['as' => 'api-get-orders', 'uses' => 'Api\OrderController@getOrders']);
