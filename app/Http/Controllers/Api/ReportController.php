@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Imports\ReportRepositoryExImport;
 use App\Imports\ReportRepositoryImImport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Auth;
 
 use App\Model\Report;
 
@@ -46,7 +47,7 @@ class ReportController extends Controller
             }
             $paging['page'] = $page;
 
-            return response()->json(['report' => $report, 'report_sum' => $sum, 'total_start_time_cnt' => $totalStartTimeCnt, 'total_end_time_cnt' => $totalEndTimeCnt, 'total_qp_amount' => $totalQPAmount??0, 'total_ord_amount' => $totalOrdAmount??0,'paging' => $paging, 'type' => $request->type, 'success' => true, 'message' => ''], 200);
+            return response()->json(['report' => $report, 'permission' => Auth::user()->admin, 'report_sum' => $sum, 'total_start_time_cnt' => $totalStartTimeCnt, 'total_end_time_cnt' => $totalEndTimeCnt, 'total_qp_amount' => $totalQPAmount??0, 'total_ord_amount' => $totalOrdAmount??0,'paging' => $paging, 'type' => $request->type, 'success' => true, 'message' => ''], 200);
         } catch (\Throwable $e) {
             throw $e;
         }

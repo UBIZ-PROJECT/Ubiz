@@ -9,6 +9,7 @@ use App\Exports\ReportRepositoryExport;
 use App\Exports\ReportRevenueExport;
 use App\Exports\ReportQuotePriceExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
@@ -47,7 +48,8 @@ class ReportController extends Controller
             
 			return view($viewName, [
                 'report' => $report,
-                'paging' => $paging
+                'paging' => $paging,
+                'permission' => Auth::user()->admin
             ]);
 		} catch (\Throwable $e) {
             throw $e;

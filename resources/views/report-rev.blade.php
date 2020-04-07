@@ -56,7 +56,11 @@
                             </tr>
                             <tr>
                                 <td style="padding: 10px">@include('components.input',['control_id'=>'report_to_date', 'value'=> date('Y/m/d'), 'width'=> '150', 'lbl_width'=>'70', 'label'=>'Đến ngày', 'class'=>'datepicker z-pdl z-pdr', 'i_focus'=>'', 'i_blur'=>'', 'onchange'=>"qp_date_change(this)"])</td>
-                                <td style="padding: 10px">@include('components.input',['control_id'=>'sale_name', 'value'=> '', 'width'=> '250', 'lbl_width'=>'70', 'label'=>'Nhân viên', 'length'=>'100'])</td>
+                                <td style="padding: 10px">
+                                    @if($permission)
+                                        @include('components.input',['control_id'=>'sale_name', 'value'=> '', 'width'=> '250', 'lbl_width'=>'70', 'label'=>'Nhân viên', 'length'=>'100'])
+                                    @endif
+                                </td>
                                 <td><span class="btn btn-info" id="statis-button" onclick="jQuery.UbizOIWidget.w_statis()"> Thống kê </span></td>
                                 <td><span class="btn btn-info export" style="margin-left: 20px" id="rev-export-button" onclick="jQuery.UbizOIWidget.w_export('revenue')"> Xuất excel </span></td>
                             </tr>
@@ -79,6 +83,9 @@
                                 <div class="col-6" role="presentation"></div>
                                 <div class="col-7" role="presentation"></div>
                                 <div class="col-8" role="presentation"></div>
+                                @if($permission)
+                                <div class="col-9" role="presentation"></div>
+                                @endif
                             </div>
                             <div class="hdG">
                                 <div class="dcB col-1" role="presentation">
@@ -282,6 +289,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                @if($permission)
                                 <div class="dcB col-9" role="presentation">
                                     <div class="dWB" role="button" sort-name="sale_name" order-by=""
                                          onclick="jQuery.UbizOIWidget.w_sort(this)">
@@ -307,6 +315,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                @endif
                             </div>
                         </div>
                         <input type="hidden" id="pageno" name="pageno" value="0">
@@ -373,6 +382,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @if($permission)
                                         <div class="tcB col-9">
                                             <div class="cbo">
                                                 <div class="nCj" title="{{$row->sale_name}}">
@@ -380,6 +390,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @endif
                                     </div>
                                 @endforeach
                             </div>
