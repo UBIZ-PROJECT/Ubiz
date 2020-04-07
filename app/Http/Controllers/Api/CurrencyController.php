@@ -10,24 +10,14 @@ use App\User;
 
 class CurrencyController extends Controller
 {
-    public function getAllCurrency(Request $request)
+    public function search(Request $request)
     {
         try {
-            $currency = new Currency();
-            $data = $currency->getAllCurrency();
-        } catch (\Throwable $e) {
-            throw $e;
-        }
-        return response()->json(['currency' => $data, 'success' => true, 'message' => __("Successfully processed.")], 200);
-    }
-
-    public function getCurrency(Request $request)
-    {
-        try {
+            checkUserRight(4,1);
             list($page, $sort, $search) = $this->getRequestData($request);
 
             $currency = new Currency();
-            $currencies = $currency->getCurrency($page, $sort, $search);
+            $currencies = $currency->search($page, $sort, $search);
             $paging = $currency->getPagingInfo($search);
             $paging['page'] = $page;
         } catch (\Throwable $e) {
@@ -36,9 +26,10 @@ class CurrencyController extends Controller
         return response()->json(['currency' => $currencies, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed.")], 200);
     }
 
-    public function getCurrencyById($id, Request $request)
+    public function detail($id, Request $request)
     {
         try {
+            checkUserRight(4,1);
             $currency = new Currency();
             if ($request->has('pos')) {
                 list ($page, $sort, $search) = $this->getRequestData($request);
@@ -52,37 +43,40 @@ class CurrencyController extends Controller
         return response()->json(['currency' => $data, 'success' => true, 'message' => __("Successfully processed.")], 200);
     }
 
-    public function insertCurrency(Request $request)
+    public function insert(Request $request)
     {
         try {
+            checkUserRight(4,2);
             list($page, $sort, $search, $insert_data) = $this->getRequestData($request);
             $currency = new Currency();
-            $currency->insertCurrency($insert_data);
+            $currency->insert($insert_data);
         } catch (\Throwable $e) {
             throw $e;
         }
         return response()->json(['success' => true, 'message' => 'Insert success'], 200);
     }
 
-    public function updatedCurrency($id, Request $request)
+    public function update($id, Request $request)
     {
         try {
+            checkUserRight(4,4);
             list($page, $sort, $search, $update_data) = $this->getRequestData($request);
             $currency = new Currency();
-            $currency->updateCurrency($update_data);
+            $currency->update($update_data);
         } catch (\Throwable $e) {
             throw $e;
         }
         return response()->json(['success' => true, 'message' => __("Successfully processed.")], 200);
     }
 
-    public function deleteCurrency($ids, Request $request)
+    public function delete($ids, Request $request)
     {
         try {
+            checkUserRight(4,3);
             $currency = new Currency();
             $id = explode(',', $ids);
-            $currency->deleteCurrency($id);
-            $currencies = $currency->getCurrency();
+            $currency->delete($id);
+            $currencies = $currency->search();
             $paging = $currency->getPagingInfo();
             $paging['page'] = 0;
         } catch (\Throwable $e) {
