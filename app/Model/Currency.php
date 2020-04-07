@@ -6,19 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 class Currency
 {
-    public function getAllCurrency()
-    {
-        $currency = DB::table('m_currency')
-            ->where([
-                ['cur_active_flg', '=', '1'],
-                ['delete_flg', '=', '0']
-            ])
-            ->orderBy('cur_id', 'asc')
-            ->get();
-        return $currency;
-    }
-
-    public function getCurrency($page = 0, $sort = '', $search = '')
+    public function search($page = 0, $sort = '', $search = '')
     {
         try {
             list($where_raw, $params) = $this->makeWhereRaw($search);
@@ -141,7 +129,7 @@ class Currency
         return [$field_name, $order_by];
     }
 
-    public function insertCurrency($param)
+    public function insert($param)
     {
         DB::beginTransaction();
         try {
@@ -153,7 +141,7 @@ class Currency
         }
     }
 
-    public function updateCurrency($param)
+    public function update($param)
     {
         DB::beginTransaction();
         try {
@@ -167,7 +155,7 @@ class Currency
         }
     }
 
-    public function deleteCurrency($ids)
+    public function delete($ids)
     {
         DB::beginTransaction();
         try {
