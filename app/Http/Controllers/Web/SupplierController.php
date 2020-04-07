@@ -15,13 +15,15 @@ use Illuminate\Http\Request;
 
 class SupplierController extends Controller
 {
-    public function suppliers(Request $request) {
+    public function suppliers(Request $request)
+    {
         try {
+            checkUserRight(6, 1);
             $supplier = new Supplier();
             $data = $supplier->getSupplierPaging(0);
             $paging = $supplier->getPagingInfo();
             $paging['page'] = '0';
-            return view('supplier',['data'=>$data,'paging' => $paging]);
+            return view('supplier', ['data' => $data, 'paging' => $paging]);
         } catch (\Throwable $e) {
             throw $e;
         }

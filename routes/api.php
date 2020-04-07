@@ -33,12 +33,12 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::put('departments', ['as' => 'department-insert', 'uses' => 'Api\DepartmentsController@insert']);
         Route::delete('departments/{ids}/delete', ['as' => 'departments-delete', 'uses' => 'Api\DepartmentsController@delete']);
 
-        Route::get('suppliers', ['as' => 'api-suppliers', 'uses' => 'Api\SupplierController@getSuppliers']);
-        Route::post('suppliers/insert', ['as' => 'suppliers-insert', 'uses' => 'Api\SupplierController@insertSupplier']);
-        Route::put('suppliers/{id}/update', ['as' => 'suppliers-update', 'uses' => 'Api\SupplierController@updateSupplierById']);
-        Route::put('suppliers/{id}/updatePaging', ['as' => 'suppliers-update', 'uses' => 'Api\SupplierController@updateSupplierByPaging']);
-        Route::delete('suppliers/{ids}/delete', ['as' => 'suppliers-delete', 'uses' => 'Api\SupplierController@deleteSuppliersById']);
-        Route::get('suppliers/{id}', ['as' => 'suppliers-detail', 'uses' => 'Api\SupplierController@getSupplierById']);
+        Route::get('suppliers', ['as' => 'api-suppliers', 'uses' => 'Api\SupplierController@search']);
+        Route::post('suppliers/insert', ['as' => 'suppliers-insert', 'uses' => 'Api\SupplierController@insert']);
+        Route::put('suppliers/{id}/update', ['as' => 'suppliers-update', 'uses' => 'Api\SupplierController@update']);
+        Route::put('suppliers/{id}/updatePaging', ['as' => 'suppliers-update', 'uses' => 'Api\SupplierController@updateByPaging']);
+        Route::delete('suppliers/{ids}/delete', ['as' => 'suppliers-delete', 'uses' => 'Api\SupplierController@delete']);
+        Route::get('suppliers/{id}', ['as' => 'suppliers-detail', 'uses' => 'Api\SupplierController@detail']);
 
         Route::get('customers/generate-cus-code', ['as' => 'generate-cus-code', 'uses' => 'Api\CustomerController@generateCusCode']);
         Route::get('customers', ['as' => 'customers-search', 'uses' => 'Api\CustomerController@search']);
