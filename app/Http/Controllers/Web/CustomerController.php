@@ -13,10 +13,11 @@ class CustomerController extends Controller
     public function index(Request $request)
     {
 		try {
+		    checkUserRight(5,1);
 			$customer = new Customer();
             $customerType = new CustomerType();
 
-            $customerList = $customer->getCustomers();
+            $customerList = $customer->search();
 
             $customerTypeList = $customerType->getAllTypes();
 

@@ -64,7 +64,7 @@ class Customer
         }
     }
 
-    public function deleteCustomer($ids = '')
+    public function delete($ids = '')
     {
         DB::beginTransaction();
         try {
@@ -98,7 +98,7 @@ class Customer
         }
     }
 
-    public function getCustomers($page = 0, $sort = '', $search = '')
+    public function search($page = 0, $sort = '', $search = '')
     {
         try {
             list($where_raw, $params) = $this->makeWhereRaw($search);
@@ -221,7 +221,7 @@ class Customer
         ];
     }
 
-    public function insertCustomer($data)
+    public function insert($data)
     {
         DB::beginTransaction();
         try {
@@ -282,7 +282,7 @@ class Customer
         }
     }
 
-    public function updateCustomer($cus_id, $data)
+    public function update($cus_id, $data)
     {
         DB::beginTransaction();
         try {

@@ -41,11 +41,11 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::get('suppliers/{id}', ['as' => 'suppliers-detail', 'uses' => 'Api\SupplierController@getSupplierById']);
 
         Route::get('customers/generate-cus-code', ['as' => 'generate-cus-code', 'uses' => 'Api\CustomerController@generateCusCode']);
-        Route::get('customers', ['as' => 'get-customers', 'uses' => 'Api\CustomerController@getCustomers']);
-        Route::get('customers/{cus_id}', ['as' => 'get-customer', 'uses' => 'Api\CustomerController@getCustomer']);
-        Route::put('customers', ['as' => 'insert-customer', 'uses' => 'Api\CustomerController@insertCustomer']);
-        Route::post('customers/{cus_id}/update', ['as' => 'update-currency', 'uses' => 'Api\CustomerController@updateCustomer']);
-        Route::delete('customers/{cus_ids}/delete', ['as' => 'delete-currency', 'uses' => 'Api\CustomerController@deleteCustomer']);
+        Route::get('customers', ['as' => 'customers-search', 'uses' => 'Api\CustomerController@search']);
+        Route::get('customers/{cus_id}', ['as' => 'customers-detail', 'uses' => 'Api\CustomerController@detail']);
+        Route::put('customers', ['as' => 'customers-insert', 'uses' => 'Api\CustomerController@insert']);
+        Route::post('customers/{cus_id}/update', ['as' => 'customers-update', 'uses' => 'Api\CustomerController@update']);
+        Route::delete('customers/{cus_ids}/delete', ['as' => 'customers-delete', 'uses' => 'Api\CustomerController@delete']);
 
         Route::get('currency', ['as' => 'currency-search', 'uses' => 'Api\CurrencyController@search']);
         Route::get('currency/{id}', ['as' => 'currency-detail', 'uses' => 'Api\CurrencyController@detail']);
