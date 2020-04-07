@@ -112,7 +112,7 @@ class Supplier implements JWTSubject
         return $data;
     }
 
-    public function insertSupplier($param) {
+    public function insert($param) {
         DB::beginTransaction();
         $sup_ava = '';
         if (!empty($param['extension'])) {
@@ -174,7 +174,7 @@ class Supplier implements JWTSubject
         }
     }
 
-    public function deleteSuppliersById($listId) {
+    public function delete($listId) {
         DB::beginTransaction();
         try {
             DB::table('suppliers')->whereIn('sup_id', $listId)
@@ -206,7 +206,7 @@ class Supplier implements JWTSubject
         }
     }
 
-    public function updateSupplierById($supplier) {
+    public function update($supplier) {
         DB::beginTransaction();
         try {
             $sup_ava = $supplier['sup_avatar'];
