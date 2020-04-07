@@ -103,7 +103,7 @@ class QuotepriceController extends Controller
     {
         try {
 
-            checkUserRight(11, 4);
+            checkUserRight(5, 5);
 
             $cus = new Customer();
             $cusData = $cus->getCustomerById($cus_id);
