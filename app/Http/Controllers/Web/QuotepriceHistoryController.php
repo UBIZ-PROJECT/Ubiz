@@ -18,7 +18,7 @@ class QuotepriceHistoryController extends Controller
     {
         try {
             $qpModel = new QuotepriceHistory();
-            $qpData = $qpModel->getQuoteprices($qp_id);
+            $qpData = $qpModel->search($qp_id);
             $pagingData = $qpModel->getPagingInfo($qp_id);
             $pagingData['page'] = 0;
             return view('his_quoteprice', ['qp_id' => $qp_id, 'quoteprices' => $qpData, 'paging' => $pagingData]);
