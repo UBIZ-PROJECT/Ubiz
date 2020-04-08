@@ -19,6 +19,7 @@ class ContractController
     public function contracts()
     {
         try {
+            checkUserRight(13, 1);
             $contract = new Contract();
             $contractData = $contract->getContracts();
             $pagingData = $contract->getPagingInfo();
@@ -31,6 +32,7 @@ class ContractController
 
     public function detail($ctr_id)
     {
+        checkUserRight(13, 1);
         $contract = new Contract();
         $contractData = $contract->getContract($ctr_id);
 
@@ -49,7 +51,8 @@ class ContractController
         ]);
     }
 
-    public function exportContract($ctr_id,$type) {
+    public function export($ctr_id,$type) {
+        checkUserRight(13, 1);
         $contract = new Contract();
         $contractData = $contract->getContract($ctr_id);
         $contractDetail = new ContractDetail();

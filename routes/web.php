@@ -52,6 +52,6 @@ Route::middleware(['api', 'cors'])->group(function () {
 
         Route::get('contracts', ['as' => 'contract', 'uses'=> 'Web\ContractController@contracts']);
         Route::get('contracts/{ctr_id}', ['as' => 'contract-detail', 'uses'=> 'Web\ContractController@detail']);
-        Route::get('contracts/{ctr_id}/{type}/export', ['as' => 'export-contract', 'uses' => 'Web\ContractController@exportContract'])->where('ord_id', '[0-9]+');
+        Route::get('contracts/{ctr_id}/{type}/export', ['as' => 'export-contract', 'uses' => 'Web\ContractController@export'])->where('ord_id', '[0-9]+');
     });
 });
