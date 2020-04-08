@@ -105,7 +105,7 @@
                                             </a>
                                         </li>
                                         <li class="who">
-                                            <a class="ruo" role="button" href="/products">
+                                            <a class="ruo" role="button" href="/brands">
                                                 <div class="pto">
                                                     <img src="{{asset('images/app_bg.png')}}">
                                                     <div class="zro">
