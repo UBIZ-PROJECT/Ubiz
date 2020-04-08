@@ -37,6 +37,7 @@ class ContractController extends Controller
     public function createContract($ord_id, Request $request)
     {
         try {
+            checkUserRight(12, 8);
             $ordt_ids = $request->get("ordt_ids");
             $order = new Order();
             $orderData = $order->getOrder($ord_id);

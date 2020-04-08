@@ -9,12 +9,13 @@ use App\Model\OrderHistory;
 
 class OrderHistoryController extends Controller
 {
-    public function getOrders(Request $request, $ord_id)
+    public function search(Request $request, $ord_id)
     {
         try {
+            checkUserRight(12, 1);
             $order = new OrderHistory();
             list($page, $sort, $search) = $this->getRequestData($request);
-            $orderData = $order->getOrders($ord_id, $page, $sort, $search);
+            $orderData = $order->search($ord_id, $page, $sort, $search);
             $pagingData = $order->getPagingInfo($ord_id, $search);
             $pagingData['page'] = $page;
             return response()->json([

@@ -75,12 +75,12 @@ Route::prefix("/v1")->middleware(['api', 'cors'])->group(function () {
         Route::get('quoteprices/{qp_id}/history', ['as' => 'quoteprices-history', 'uses' => 'Api\QuotepriceHistoryController@search'])->where('qp_id', '[0-9]+');
         Route::get('quoteprices/{qp_id}/history/{his_qp_id}', ['as' => 'quoteprices-history-detai', 'uses' => 'Api\QuotepriceHistoryController@detail'])->where(['qp_id' => '[0-9]+', 'his_qp_id' => '[0-9]+']);
 
-        Route::get('orders', ['as' => 'api-get-orders', 'uses' => 'Api\OrderController@getOrders']);
-        Route::post('orders/{qp_id}/create', ['as' => 'api-create-order', 'uses' => 'Api\OrderController@createOrder'])->where('qp_id', '[0-9]+');
-        Route::post('orders/{ord_id}/update', ['as' => 'api-update-order', 'uses' => 'Api\OrderController@updateOrder'])->where('ord_id', '[0-9]+');
-        Route::post('orders/{ord_id}/salestep', ['as' => 'api-update-salestep', 'uses' => 'Api\OrderController@updateSaleStep'])->where('ord_id', '[0-9]+');
-        Route::delete('orders/{ord_ids}/delete', ['as' => 'api-delete-orders', 'uses' => 'Api\OrderController@deleteOrders'])->where('ord_ids', '^([0-9]+,)+[0-9]+|[0-9]+');
-        Route::get('orders/{ord_id}/history', ['as' => 'orders-history', 'uses' => 'Api\OrderHistoryController@getOrders'])->where('ord_id', '[0-9]+');
+        Route::get('orders', ['as' => 'api-get-orders', 'uses' => 'Api\OrderController@search']);
+        Route::post('orders/{qp_id}/create', ['as' => 'api-create-order', 'uses' => 'Api\OrderController@create'])->where('qp_id', '[0-9]+');
+        Route::post('orders/{ord_id}/update', ['as' => 'api-update-order', 'uses' => 'Api\OrderController@update'])->where('ord_id', '[0-9]+');
+        Route::post('orders/{ord_id}/delivery', ['as' => 'api-update-delivery', 'uses' => 'Api\OrderController@delivery'])->where('ord_id', '[0-9]+');
+        Route::delete('orders/{ord_ids}/delete', ['as' => 'api-delete-orders', 'uses' => 'Api\OrderController@delete'])->where('ord_ids', '^([0-9]+,)+[0-9]+|[0-9]+');
+        Route::get('orders/{ord_id}/history', ['as' => 'orders-history', 'uses' => 'Api\OrderHistoryController@search'])->where('ord_id', '[0-9]+');
         Route::get('orders/{ord_id}/history/{his_ord_id}', ['as' => 'orders-history-detail', 'uses' => 'Api\OrderHistoryController@detail'])->where(['ord_id' => '[0-9]+', 'his_ord_id' => '[0-9]+']);
 
         Route::post('permission', ['as' => 'set-permission', 'uses' => 'Api\PermissionController@setPermissions']);

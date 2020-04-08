@@ -12,7 +12,7 @@ use App\Model\OrderDetailHistory;
 
 class OrderHistory
 {
-    public function getOrders($ord_id, $page = 0, $sort = '', $search = '')
+    public function search($ord_id, $page = 0, $sort = '', $search = '')
     {
         try {
             list($where_raw, $params) = $this->makeWhereRaw($ord_id, $search);
