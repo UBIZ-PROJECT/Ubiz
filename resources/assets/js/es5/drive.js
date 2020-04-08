@@ -696,7 +696,7 @@ function fnc_execute_change_name_callback(res) {
 
 function fnc_delete(self) {
     swal({
-        title: i18next.t('Do you want to delete the data.?'),
+        title: i18next.t('Do you want to delete the data?'),
         type: 'question',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
