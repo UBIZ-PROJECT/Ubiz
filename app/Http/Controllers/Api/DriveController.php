@@ -13,7 +13,7 @@ class DriveController extends Controller
     public function getFiles($uniqid, Request $request)
     {
         try {
-
+            checkUserRight(15, 1);
             $drive = new Drive();
             $validateResult = $drive->validateDriUniq($uniqid);
             if ($validateResult == false) {
@@ -38,7 +38,7 @@ class DriveController extends Controller
     public function getDetail($uniqid, Request $request)
     {
         try {
-
+            checkUserRight(15, 1);
             $drive = new Drive();
             $validateResult = $drive->validateDriUniq($uniqid);
             if ($validateResult == false) {
@@ -63,7 +63,7 @@ class DriveController extends Controller
     public function getSibling($uniqid, Request $request)
     {
         try {
-
+            checkUserRight(15, 1);
             $drive = new Drive();
             $validateResult = $drive->validateDriUniq($uniqid);
             if ($validateResult == false) {
@@ -92,7 +92,7 @@ class DriveController extends Controller
     public function getChildren($uniqid, Request $request)
     {
         try {
-
+            checkUserRight(15, 1);
             $drive = new Drive();
             $validateResult = $drive->validateDriUniq($uniqid);
             if ($validateResult == false) {
@@ -120,7 +120,7 @@ class DriveController extends Controller
     public function uploadFiles($uniqid, Request $request)
     {
         try {
-
+            checkUserRight(15, 2);
             $drive = new Drive();
             $validateResult = $drive->validateDriUniq($uniqid);
             if ($validateResult == false) {
@@ -165,7 +165,7 @@ class DriveController extends Controller
     public function downloadFiles($uniqid, Request $request)
     {
         try {
-
+            checkUserRight(15, 1);
             $drive = new Drive();
 
             $validateResult = $drive->validateDriUniq($uniqid);
@@ -202,7 +202,7 @@ class DriveController extends Controller
     public function addNewFolder($uniqid, Request $request)
     {
         try {
-
+            checkUserRight(15, 2);
             $drive = new Drive();
             $validateResult = $drive->validateDriUniq($uniqid);
             if ($validateResult == false) {
@@ -239,7 +239,7 @@ class DriveController extends Controller
     public function doCopy($uniqid, Request $request)
     {
         try {
-
+            checkUserRight(15, 2);
             $drive = new Drive();
             $validateResult = $drive->validateDriUniq($uniqid);
             if ($validateResult == false) {
@@ -263,7 +263,7 @@ class DriveController extends Controller
     public function moveTo($uniqid, Request $request)
     {
         try {
-
+            checkUserRight(15, 4);
             $drive = new Drive();
             $validateResult = $drive->validateDriUniq($uniqid);
             if ($validateResult == false) {
@@ -300,7 +300,7 @@ class DriveController extends Controller
     public function changeName($uniqid, Request $request)
     {
         try {
-
+            checkUserRight(15, 4);
             $drive = new Drive();
             $validateResult = $drive->validateDriUniq($uniqid);
             if ($validateResult == false) {
@@ -337,7 +337,7 @@ class DriveController extends Controller
     public function changeColor($uniqid, Request $request)
     {
         try {
-
+            checkUserRight(15, 4);
             $drive = new Drive();
             $validateResult = $drive->validateDriUniq($uniqid);
             if ($validateResult == false) {
@@ -368,7 +368,7 @@ class DriveController extends Controller
     public function deleteFiles($uniqid, Request $request)
     {
         try {
-
+            checkUserRight(15, 3);
             $drive = new Drive();
             $validateResult = $drive->validateDriUniq($uniqid);
             if ($validateResult == false) {
