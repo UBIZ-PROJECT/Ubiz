@@ -13,7 +13,7 @@ class PermissionController extends Controller
     public function setPermissions(Request $request)
     {
         try {
-
+            checkUserRight(16, 4);
             $data = $request->json()->all();
 
             $pmModel = new Permission();
@@ -34,7 +34,7 @@ class PermissionController extends Controller
     public function getDepPermissions($dep_id, $scr_id, Request $request)
     {
         try {
-
+            checkUserRight(16, 1);
             if (empty($dep_id) || empty($scr_id)) {
                 return response()->json(['success' => false, 'message' => __('Please choose department and screen.')], 200);
             }
@@ -50,7 +50,7 @@ class PermissionController extends Controller
     public function getUsrPermissions($dep_id, $scr_id, $usr_id, Request $request)
     {
         try {
-
+            checkUserRight(16, 1);
             if (empty($dep_id) || empty($scr_id) || empty($usr_id)) {
                 return response()->json(['success' => false, 'message' => __('Please choose user and screen.')], 200);
             }

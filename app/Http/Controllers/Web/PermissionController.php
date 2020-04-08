@@ -12,6 +12,7 @@ class PermissionController extends Controller
     public function index(Request $request)
     {
         try {
+            checkUserRight(16, 1);
             $permission = new Permission();
             $departments = $permission->getAllDepartment();
             $screens = $permission->getAllScreen();

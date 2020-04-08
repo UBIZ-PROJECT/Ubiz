@@ -188,6 +188,18 @@
                                                 </div>
                                             </a>
                                         </li>
+                                        <li class="who">
+                                            <a class="ruo" role="button" href="/setting/permission">
+                                                <div class="pto">
+                                                    <img src="{{asset('images/app_bg.png')}}">
+                                                    <div class="zro">
+                                                        <div class="rco">
+                                                            <div class="kko">{{ __("Permission") }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
