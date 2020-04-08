@@ -313,6 +313,7 @@
   "Download file only.!": "Chỉ hỗ trợ tải tập tin.!",
   "Are you sure want to move data.?": "Bạn có chắc chắn muốn di chuyển dữ liệu.?",
   "Password is not right.\nPlease retry.": "Mật khẩu chưa đúng.\nVui lòng thử lại.",
+  "Contract is existed.\nYou can not create it.!": "Hợp đồng đã đuọc tạo.\nBạn không thể tạo tiếp.",
   "Change password": "Thay đổi mật khẩu",
   "Current Password": "Mật khẩu hiện tại",
   "New Password": "Mật khẩu mới",

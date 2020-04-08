@@ -1135,7 +1135,7 @@ function ord_delivery_step(){
     }).then((result) => {
         if (result.value) {
             var ord_id = $("input[name=ord_id]").val();
-            ubizapis('v1', '/orders/' + ord_id + '/salestep', 'post', {'sale_step': '4'}, null, ord_delivery_step_callback);
+            ubizapis('v1', '/orders/' + ord_id + '/delivery', 'post', {'sale_step': '4'}, null, ord_delivery_step_callback);
         }
     })
 }

@@ -16,8 +16,9 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         try {
+            checkUserRight(12, 1);
             $order = new Order();
-            $orderData = $order->getOrders();
+            $orderData = $order->search();
             $pagingData = $order->getPagingInfo();
             $pagingData['page'] = 0;
 

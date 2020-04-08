@@ -12,7 +12,7 @@ use App\Model\OrderDetail;
 
 class Order
 {
-    public function getOrders($page = 0, $sort = '', $search = '')
+    public function search($page = 0, $sort = '', $search = '')
     {
         try {
             list($where_raw, $params) = $this->makeWhereRaw($search);
@@ -219,7 +219,7 @@ class Order
             //update orders
             $order = $data['order'];
             $order['imp_step'] = $imp_step;
-            $this->updateOrder($order);
+            $this->update($order);
 
             $orderDetail = new OrderDetail();
             //insert order detail
@@ -244,7 +244,7 @@ class Order
         }
     }
 
-    public function transactionUpdateSaleStep($ord_id, $qp_id, $sale_step)
+    public function transactionDelivery($ord_id, $qp_id, $sale_step)
     {
         DB::beginTransaction();
         try {
@@ -353,7 +353,7 @@ class Order
             $order['ord_id'] = $ord_id;
             $order['imp_step'] = $imp_step;
             $order['upd_user'] = Auth::user()->id;
-            $this->updateOrder($order);
+            $this->update($order);
 
             $qpModel = new Quoteprice();
             $qpUpdateData = [
@@ -640,7 +640,7 @@ class Order
         }
     }
 
-    public function updateOrder($order)
+    public function update($order)
     {
         try {
             $ord_id = $order['ord_id'];
