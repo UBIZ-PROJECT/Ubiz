@@ -18,6 +18,7 @@ class BrandController extends Controller
 {
     public function getBrand(Request $req) {
         try {
+            checkUserRight(7, 1);
             list($page, $sort,$search) = $this->getPageSortSearch($req);
             $brand = new Brand();
             $data = $brand->getBrandPaging($page, $sort,$search);
@@ -31,6 +32,7 @@ class BrandController extends Controller
 
     public function getEachBrandPaging(Request $req) {
         try {
+            checkUserRight(7, 1);
             $brd_id = '0';
             if ($req->has('brd_id')) {
                 $brd_id = $req->brd_id;
@@ -53,6 +55,7 @@ class BrandController extends Controller
 
     private function productByBrand($brd_id) {
         try {
+            checkUserRight(7, 1);
             $search['brd_id'] = $brd_id;
             $product = new Product();
             $data = $product->getProductPaging(0,'',$search);
@@ -67,6 +70,7 @@ class BrandController extends Controller
 
     private function accessoryByBrand($brd_id) {
         try {
+            checkUserRight(7, 1);
             $search['brd_id'] = $brd_id;
             $accessory = new Accessory();
             $data = $accessory->getAccessoryPaging(0,'',$search);
@@ -81,6 +85,7 @@ class BrandController extends Controller
 
     public function insertBrand(Request $request) {
         try {
+            checkUserRight(7, 2);
             $message = __("Successfully processed.");
             if ($request->has("brand")) {
                 list($page, $sort, $search) = $this->getPageSortSearch($request);
@@ -103,6 +108,7 @@ class BrandController extends Controller
 
     public function updateBrand($id, Request $request) {
         try {
+            checkUserRight(7, 4);
             $message = __("Successfully processed.");
             if ($request->has("brand")) {
                 list($page, $sort, $search) = $this->getPageSortSearch($request);
@@ -126,6 +132,7 @@ class BrandController extends Controller
 
     public function updateBrandPaging($id, Request $request) {
         try {
+            checkUserRight(7, 4);
             $message = __("Successfully processed.");
             if ($request->has("brand")) {
                 list($page, $sort, $search) = $this->getPageSortSearch($request);
@@ -145,6 +152,7 @@ class BrandController extends Controller
 
     public function deleteBrand($ids, Request $request) {
         try {
+            checkUserRight(7, 3);
             $message = __("Successfully processed.");
             list($page, $sort, $search) = $this->getPageSortSearch($request);
             $brand = new Brand();
@@ -169,6 +177,7 @@ class BrandController extends Controller
     }
 
     public function uploadFile(Request $request) {
+        checkUserRight(7, 2);
         $files = $request->file('file');
         $prdUpload = new ProductUpload($files->getClientOriginalExtension());
         $file = [];
