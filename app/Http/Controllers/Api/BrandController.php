@@ -197,7 +197,7 @@ class BrandController extends Controller
         }
         $search = [];
         if ($request->has('search')) {
-            $search = json_decode($request->search, true);
+            $search = $request->search;
         }
         return array($page, $sort, $search);
     }
