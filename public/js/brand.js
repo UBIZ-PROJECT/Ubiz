@@ -434,6 +434,7 @@ var lst_image_delete = [];
         w_refresh_output_page: function () {
             var params = {};
             params.page = jQuery.UbizOIWidget.page;
+            params.search = [];
             params.search['type'] = "0";
             ubizapis('v1', '/brands', 'get', null, params, jQuery.UbizOIWidget.w_render_data_to_ouput_page);
         },
@@ -504,9 +505,16 @@ var lst_image_delete = [];
             var brands = response.data.brand;
             var html ='';
             for(var i = 0; i < brands.length; i++) {
-                html +='<div class="brd-box" onclick="jQuery.UbizOIWidget.w_go_to_input_page('+ brands[i].brd_id +')">';
-                html +='<img src="'+brands[i].brdImage["src"]+'" class="brd-img rounded mx-auto d-block">';
-                html +='<div class="brd-name">'+brands[i].brd_name+'</div></div>';
+                html += '<div class="brd-box" >';
+                html += '<img onclick="jQuery.UbizOIWidget.w_go_to_input_page('+ brands[i].brd_id +')" src="'+brands[i].brdImage["src"]+'" class="brd-img rounded mx-auto d-block">';
+                html += '<div class="brd-name">'+brands[i].brd_name+'</div>';
+                html += '<div class="cbo fa">\n';
+                html += '<div class="jgQ" onclick="jQuery.UbizOIWidgetPrd.w_c_checkbox_delete_click(this)">\n';
+                html += '<input type="checkbox" class="ckb-i" value="'+ brands[i].brd_id +'" style="display: none"/>\n';
+                html += '<div class="asU ckb-c"></div>\n';
+                html += '</div>\n';
+                html += '</div></div>';
+
             }
 
 
@@ -1373,6 +1381,25 @@ var lst_image_delete = [];
                 jQuery.UbizOIWidgetPrd.i_page.find('.ckb-i').prop('checked', false);
             }
         },
+
+        w_c_checkbox_delete_click: function (self) {
+            if (jQuery(self).find('.ckb-c').hasClass('asU')) {
+                jQuery(self).find('.ckb-c').removeClass('asU');
+                jQuery(self).find('.ckb-c').addClass('asC');
+                jQuery(self).find('.ckb-i').prop('checked', true);
+                jQuery(self).parent().removeClass("fa");
+                jQuery(self).parent().addClass("ba");
+            } else {
+                jQuery(self).find('.ckb-c').removeClass('asC');
+                jQuery(self).find('.ckb-c').addClass('asU');
+                jQuery(self).find('.ckb-i').prop('checked', false);
+                jQuery(self).parent().removeClass("ba");
+                jQuery(self).parent().addClass("fa");
+
+            }
+            jQuery.UbizOIWidgetPrd.w_reset_f_checkbox_status();
+        },
+
         w_c_checkbox_click: function (self) {
             if (jQuery(self).find('.ckb-c').hasClass('asU')) {
                 jQuery(self).find('.ckb-c').removeClass('asU');
@@ -1506,7 +1533,7 @@ function initProduct(data, page) {
         html+= '                                                        <div class="asU ckb-c"></div>';
         html+= '                                                    </div>';
         html+= '                                                    <div class="nCT" title="'+prd.id+'">';
-        html+= '                                                        <span>'+prd.id+'</span>';
+        html+= '                                                        <span>'+(i+1)+'</span>';
         html+= '                                                    </div>';
         html+= '                                                </div>';
         html+= '                                            </div>';
