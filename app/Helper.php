@@ -65,7 +65,7 @@ function resizeImageToHeight($img, $target_img, $new_img_height, $img_type)
     }
 }
 
-function resizeImageToWidth($img, $target_img, $new_img_height, $img_type = '')
+function resizeImageToWidth($img, $target_img, $new_img_width, $img_type = '')
 {
     try {
 
@@ -85,7 +85,7 @@ function resizeImageToWidth($img, $target_img, $new_img_height, $img_type = '')
     }
 }
 
-function scaleImage($img, $scale, $img_type)
+function scaleImage($img, $scale, $img_type, $target_img)
 {
     try {
 
@@ -158,48 +158,65 @@ function readJsonBasedLanguage()
     }
 }
 
-function checkUserRight($scr_id, $fnc_id)
+function checkUserRight($scr_id, $fnc_id, $boolean = false)
 {
     try {
 
         $user = new User();
-        $data = $user->getAuthUser();
 
-        if ($data == null)
-            return false;
+        if ($user->admin != '1') {
 
-        $user_permission = DB::table('m_permission_user')
-            ->select('usr_allow')
-            ->where([
-                ['dep_id', '=', $data->dep_id],
-                ['scr_id', '=', $scr_id],
-                ['fnc_id', '=', $fnc_id],
-                ['usr_id', '=', $data->id],
-                ['delete_flg', '=', '0']
-            ])
-            ->first();
+            $data = $user->getAuthUser();
+            if ($data == null) {
+                if ($boolean == true)
+                    return false;
+                else
+                    abort(403);
+            }
 
-        $usr_allow = $user_permission == null ? null : $user_permission->usr_allow;
+            $user_permission = DB::table('m_permission_user')
+                ->select('usr_allow')
+                ->where([
+                    ['dep_id', '=', $data->dep_id],
+                    ['scr_id', '=', $scr_id],
+                    ['fnc_id', '=', $fnc_id],
+                    ['usr_id', '=', $data->id],
+                    ['delete_flg', '=', '0']
+                ])
+                ->first();
 
-        $dep_permission = DB::table('m_permission_department')
-            ->select('dep_allow')
-            ->where([
-                ['dep_id', '=', $data->dep_id],
-                ['scr_id', '=', $scr_id],
-                ['fnc_id', '=', $fnc_id],
-                ['delete_flg', '=', '0']
-            ])
-            ->first();
+            $usr_allow = $user_permission == null ? null : $user_permission->usr_allow;
 
-        $dep_allow = $dep_permission == null ? null : $dep_permission->dep_allow;
+            $dep_permission = DB::table('m_permission_department')
+                ->select('dep_allow')
+                ->where([
+                    ['dep_id', '=', $data->dep_id],
+                    ['scr_id', '=', $scr_id],
+                    ['fnc_id', '=', $fnc_id],
+                    ['delete_flg', '=', '0']
+                ])
+                ->first();
 
-        if ($usr_allow == null && ($dep_allow == null || $dep_allow == '0')) {
-            abort(403);
+            $dep_allow = $dep_permission == null ? null : $dep_permission->dep_allow;
+
+            if ($usr_allow == null && ($dep_allow == null || $dep_allow == '0')) {
+                if ($boolean == true)
+                    return false;
+                else
+                    abort(403);
+            }
+
+            if ($usr_allow == '0') {
+                if ($boolean == true)
+                    return false;
+                else
+                    abort(403);
+            }
         }
 
-        if ($usr_allow == '0') {
-            abort(403);
-        }
+        if ($boolean == true)
+            return true;
+
     } catch (\Throwable $e) {
         throw $e;
     }
@@ -319,6 +336,51 @@ function numericValidator($data)
     ];
     $validator = Validator::make($credentials, $rules);
     if ($validator->fails()) {
+        return false;
+    }
+    return true;
+}
+
+function alphaNumValidator($data)
+{
+    $credential_name = "name";
+    $credential_data = $data;
+    $rules = [
+        $credential_name => "alpha_num"
+    ];
+    $credentials = [
+        $credential_name => $credential_data
+    ];
+    $validator = Validator::make($credentials, $rules);
+    if ($validator->fails()) {
+        return false;
+    }
+    return true;
+}
+
+function sizeValidator($data, $value)
+{
+    $credential_name = "name";
+    $credential_data = $data;
+    $rules = [
+        $credential_name => "size:$value"
+    ];
+    $credentials = [
+        $credential_name => $credential_data
+    ];
+    $validator = Validator::make($credentials, $rules);
+    if ($validator->fails()) {
+        return false;
+    }
+    return true;
+}
+
+function newPasswdValidator($data)
+{
+    if (!requiredValidator($data)
+        || !alphaNumValidator($data)
+        || !sizeValidator($data, env('PASSWD_LENGTH', 8))
+    ) {
         return false;
     }
     return true;
@@ -451,6 +513,27 @@ function getDrivePath()
 {
     try {
         return env('DRIVE_PATH', '/home/drive');
+    } catch (\Throwable $e) {
+        throw $e;
+    }
+}
+
+function getDBEnv($key, $default = null)
+{
+    try {
+        $APPLICATION_ENV = getenv('APPLICATION_ENV');
+        switch ($APPLICATION_ENV) {
+            case 'production':
+                $key = "PRD_" . $key;
+                break;
+            case 'staging':
+                $key = "STG_" . $key;
+                break;
+            case 'development':
+                $key = "DEV_" . $key;
+                break;
+        }
+        return env($key, $default);
     } catch (\Throwable $e) {
         throw $e;
     }

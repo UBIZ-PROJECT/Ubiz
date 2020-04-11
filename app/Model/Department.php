@@ -5,6 +5,7 @@ namespace App\Model;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class Department
 {
@@ -24,7 +25,7 @@ class Department
         }
     }
 
-    public function deleteDepartments($ids = '')
+    public function delete($ids = '')
     {
         DB::beginTransaction();
         try {
@@ -39,10 +40,11 @@ class Department
         }
     }
 
-    public function updateDepartment($id, $data = [])
+    public function update($id, $data = [])
     {
         DB::beginTransaction();
         try {
+            $data['upd_user'] = Auth::user()->id;
             DB::table('m_department')
                 ->where([['id', '=', $id], ['delete_flg', '=', '0']])
                 ->update($data);
@@ -53,10 +55,13 @@ class Department
         }
     }
 
-    public function insertDepartment($data = [])
+    public function insert($data = [])
     {
         DB::beginTransaction();
         try {
+
+            $data['inp_user'] = Auth::user()->id;
+            $data['upd_user'] = Auth::user()->id;
             DB::table('m_department')->insert($data);
             DB::commit();
         } catch (\Throwable $e) {
@@ -65,7 +70,7 @@ class Department
         }
     }
 
-    public function getDepartments($page = 0, $sort = '', $search = '')
+    public function search($page = 0, $sort = '', $search = '')
     {
         try {
 

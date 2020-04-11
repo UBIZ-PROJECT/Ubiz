@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 class Company
 {
 
-    public function getAllCompany()
+    public function findAll()
     {
         $companies = DB::table('m_company')
             ->where([
@@ -26,7 +26,7 @@ class Company
         return $companies;
     }
 
-    public function getCompany($page = 0, $sort = '', $search = [])
+    public function search($page = 0, $sort = '', $search = [])
     {
         try {
             list($where_raw, $params) = $this->makeWhereRaw($search);
@@ -53,7 +53,7 @@ class Company
         return $companies;
     }
 
-    public function getCompanyById($id)
+    public function detail($id)
     {
         try {
             $company = DB::table('m_company')
@@ -221,7 +221,7 @@ class Company
         return [$field_name, $order_by];
     }
 
-    public function insertCompany($param)
+    public function insert($param)
     {
         DB::beginTransaction();
         try {
@@ -272,7 +272,7 @@ class Company
         }
     }
 
-    public function deleteCompany($ids)
+    public function delete($ids)
     {
         DB::beginTransaction();
         try {

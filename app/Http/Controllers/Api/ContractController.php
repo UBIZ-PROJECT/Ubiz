@@ -15,7 +15,7 @@ use App\Model\QuotepriceDetail;
 
 class ContractController extends Controller
 {
-    public function getContracts(Request $request)
+    public function search(Request $request)
     {
         try {
             $contract = new Contract();
@@ -34,9 +34,10 @@ class ContractController extends Controller
         }
     }
 
-    public function createContract($ord_id, Request $request)
+    public function create($ord_id, Request $request)
     {
         try {
+            checkUserRight(12, 8);
             $ordt_ids = $request->get("ordt_ids");
             $order = new Order();
             $orderData = $order->getOrder($ord_id);
@@ -63,9 +64,10 @@ class ContractController extends Controller
         }
     }
 
-    public function updateContract($ctr_id, Request $request)
+    public function update($ctr_id, Request $request)
     {
         try {
+            checkUserRight(13, 4);
             $data = $request->get('data', null);
             if (empty($data) == true || $data == null) {
                 return response()->json(['success' => false, 'message' => __('Data is wrong.!')], 200);
@@ -91,9 +93,10 @@ class ContractController extends Controller
         }
     }
 
-    public function deleteContracts($ctr_ids, Request $request)
+    public function delete($ctr_ids, Request $request)
     {
         try {
+            checkUserRight(13, 3);
             if (empty($ctr_ids) || $ctr_ids == '') {
                 return response()->json(['success' => false, 'message' => __('Successfully processed.')], 200);
             }

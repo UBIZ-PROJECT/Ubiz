@@ -16,17 +16,33 @@ body {
 }
 
 .brd-image {
-    width: 100px;
-    height: 100px;
+    width: 70px;
+    height: 70px;
 }
 
 .product-content #table-content .tcB .cbo {
-    height: 110px;
+    height: 80px;
 }
 
 .product-content #table-content .tcB .cbo .nCj {
     position: relative;
     top: 30px;
+}
+
+.table-scroll {
+    overflow-y: auto;
+}
+
+.max-height-overflow-y-450 {
+    height: 450px !important;
+}
+
+.max-height-overflow-y-350 {
+    height: 350px !important;
+}
+
+.max-height-overflow-y-500 {
+    height: 500px !important;
 }
 
 .product-content #table-content .tcB .cbo .nCT, .product-content #table-content .tcB .cbo .jgQ {
@@ -81,6 +97,7 @@ body {
 .r-content #o-put .brd-content {
     width: 97%;
     height: 100%;
+    min-height: 300px;
 }
 
 .r-content #o-put .brd-content .brd-box {
@@ -162,6 +179,34 @@ body {
     background-position: center;
     background-size: contain;
     margin-top: 10px;
+}
+
+.r-content #o-put .brd-content .brd-box:hover .fa {
+    display: block;
+    opacity: 0.27;
+    border: none;
+}
+
+.r-content #o-put .brd-content .brd-box .ba {
+    font-size: 20px;
+    margin-top: 5px;
+    position: absolute;
+    top: -11px;
+    right: 26px;
+}
+
+.r-content #o-put .brd-content .brd-box .fa {
+    font-size: 20px;
+    margin-top: 5px;
+    position: absolute;
+    top: -11px;
+    right: 26px;
+    display: none;
+}
+
+.r-content #o-put .brd-content .brd-box .fa:hover {
+    opacity: 0.9;
+    border: none;
 }
 
 .r-content #o-put .brd-content .brd-box .brd-name {
@@ -327,7 +372,7 @@ body {
     width: 100px;
     height: 50px;
     position: absolute;
-    top: 73%;
+    top: 71%;
     text-align: center;
     display: none;
     color: white;
@@ -344,7 +389,7 @@ body {
     width: 100px;
     height: 30px;
     position: absolute;
-    top: 47%;
+    top: 59%;
     text-align: center;
     display: none;
     color: white;
@@ -370,8 +415,8 @@ body {
 }
 
 .prd-image {
-    width: 100px;
-    height: 100px;
+    width: 70px;
+    height: 70px;
 }
 
 .input-hidden {

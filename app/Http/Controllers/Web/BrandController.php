@@ -18,6 +18,7 @@ class BrandController extends Controller
 {
     public function brands() {
         try {
+            checkUserRight(7, 1);
             $search = array();
             $search['type'] = "0";
             $brand = new Brand();

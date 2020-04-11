@@ -827,6 +827,22 @@
     background-size: 20px;
 }
 
+.main-content .r-content .arP {
+    display: inline-block;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+    -webkit-transition: opacity .15s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transition: opacity .15s cubic-bezier(0.4, 0.0, 0.2, 1);
+    width: 20px;
+    opacity: .54;
+    vertical-align: middle;
+    background-image: url(../images/key.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 20px;
+}
+
 .main-content .r-content .arF {
     display: inline-block;
     height: 20px;

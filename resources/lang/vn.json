@@ -92,6 +92,7 @@
   "Company search": "Tìm kiếm công ty",
   "Hotline": "Hotline",
   "Permission Setting": "Thiết lập phân quyền",
+  "Permission": "Phân quyền",
   "Screen": "Màn hình",
   "Function": "Chức năng",
   "Please choose department or user.": "Xin hãy chọn phòng ban hoặc nhân viên.",
@@ -305,11 +306,17 @@
   "User is not exists.": "Xin vui lòng nhập [Nhân viên].",
   "Are you sure you want to update repository?": "Bạn có chắc chắn muốn cập nhật lại kho?",
   "Invalid file.": "File không hợp lệ.",
-		"Contract No":"Mã Hợp Đồng",  
-		"Please enter new name.": "Xin vui lòng nhập tên.",
+  "Contract No": "Mã Hợp Đồng",
+  "Please enter new name.": "Xin vui lòng nhập tên.",
   "Do you want to change the color.?": "Bạn có muốn thay đổi màu không?",
   "Please selecte color.!": "Xin vui lòng chọn màu.!",
   "Do you want to make a copy.?": "Ban muốn tạo bản sao.?",
   "Download file only.!": "Chỉ hỗ trợ tải tập tin.!",
-  "Are you sure want to move data.?": "Bạn có chắc chắn muốn di chuyển dữ liệu.?"
+  "Are you sure want to move data.?": "Bạn có chắc chắn muốn di chuyển dữ liệu.?",
+  "Password is not right.\nPlease retry.": "Mật khẩu chưa đúng.\nVui lòng thử lại.",
+  "Contract is existed.\nYou can not create it.!": "Hợp đồng đã đuọc tạo.\nBạn không thể tạo tiếp.",
+  "Change password": "Thay đổi mật khẩu",
+  "Current Password": "Mật khẩu hiện tại",
+  "New Password": "Mật khẩu mới",
+  "Verify Password": "Xác nhận mật khẩu"
 }

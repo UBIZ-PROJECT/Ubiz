@@ -16,8 +16,9 @@ use App\Model\Brand;
 
 class AccessoryController extends Controller
 {
-    public function accessories() {
+    public function index() {
         try {
+            checkUserRight(7, 1);
             $brand = new Brand();
             $acs = new Accessory();
             $user = new User();

@@ -12,8 +12,9 @@ class CurrencyController extends Controller
     public function index(Request $request)
     {
         try {
+            checkUserRight(4,1);
             $currency = new Currency();
-            $currencies = $currency->getCurrency();
+            $currencies = $currency->search();
             $paging = $currency->getPagingInfo();
             $paging['page'] = 0;
             return view('currency', ['currencies' => $currencies, 'paging' => $paging]);

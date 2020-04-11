@@ -227,6 +227,9 @@ class Report implements JWTSubject
         try {
             $rows_per_page = env('ROWS_PER_PAGE', 10);
             list($field_name, $order_by) = $this->makeOrderBy($sort, 'ord_id');
+
+            $whereUser = Auth::user()->admin ? '1=1' : 'users.id = ' . Auth::id();
+
             $data = DB::table('order')
                 ->leftjoin('users', 'order.sale_id', '=', 'users.id')
                 ->leftjoin('customer', 'order.cus_id', '=', 'customer.cus_id')
@@ -237,6 +240,7 @@ class Report implements JWTSubject
                 ->where('order.delete_flg', '0')
                 ->where('order.sale_step', '4')
                 ->whereRaw('order.ord_date between ? AND ?', [$orderFromDate, $orderToDate])
+                ->whereRaw($whereUser)
                 ->when($customerName, function ($query) use ($customerName) {
                     if ($customerName) {
                         return $query->where('cus_name', $customerName);
@@ -264,6 +268,9 @@ class Report implements JWTSubject
         try {
             $rows_per_page = env('ROWS_PER_PAGE', 10);
             list($field_name, $order_by) = $this->makeOrderBy($sort, 'qp_id');
+
+            $whereUser = Auth::user()->admin ? '1=1' : 'users.id = ' . Auth::id();
+
             $data = DB::table('quoteprice')
                 ->leftjoin('users', 'quoteprice.sale_id', '=', 'users.id')
                 ->leftjoin('customer', 'quoteprice.cus_id', '=', 'customer.cus_id')
@@ -275,6 +282,7 @@ class Report implements JWTSubject
                 ->selectRaw('DATE_FORMAT(quoteprice.qp_exp_date, "%Y/%m/%d") as qp_exp_date')
                 ->where('quoteprice.delete_flg', '0')
                 ->whereRaw('quoteprice.qp_date between ? AND ?', [$qpFromDate, $qpToDate])
+                ->whereRaw($whereUser)
                 ->when($customerName, function ($query) use ($customerName) {
                     if ($customerName) {
                         return $query->where('cus_name', $customerName);
@@ -372,12 +380,15 @@ class Report implements JWTSubject
     public function countOrders($orderFromDate, $orderToDate, $customerName, $saleName)
     {
         try {
+            $whereUser = Auth::user()->admin ? '1=1' : 'users.id = ' . Auth::id();
+
             $count = DB::table('order')
                 ->leftjoin('users', 'order.sale_id', '=', 'users.id')
                 ->leftjoin('customer', 'order.cus_id', '=', 'customer.cus_id')
                 ->where('order.delete_flg', '0')
                 ->where('order.sale_step', '4')
                 ->whereRaw('order.ord_date between ? AND ?', [$orderFromDate, $orderToDate])
+                ->whereRaw($whereUser)
                 ->when($customerName, function ($query) use ($customerName) {
                     if ($customerName) {
                         return $query->where('cus_name', $customerName);
@@ -399,12 +410,15 @@ class Report implements JWTSubject
     public function sumOrders($orderFromDate, $orderToDate, $customerName, $saleName)
     {
         try {
+            $whereUser = Auth::user()->admin ? '1=1' : 'users.id = ' . Auth::id();
+
             $sum = DB::table('order')
                 ->leftjoin('users', 'order.sale_id', '=', 'users.id')
                 ->leftjoin('customer', 'order.cus_id', '=', 'customer.cus_id')
                 ->where('order.delete_flg', '0')
                 ->where('order.sale_step', '4')
                 ->whereRaw('order.ord_date between ? AND ?', [$orderFromDate, $orderToDate])
+                ->whereRaw($whereUser)
                 ->when($customerName, function ($query) use ($customerName) {
                     if ($customerName) {
                         return $query->where('cus_name', $customerName);
@@ -427,11 +441,14 @@ class Report implements JWTSubject
     public function countQPs($qpFromDate, $qpToDate, $customerName, $saleName)
     {
         try {
+            $whereUser = Auth::user()->admin ? '1=1' : 'users.id = ' . Auth::id();
+
             $count = DB::table('quoteprice')
                 ->leftjoin('users', 'quoteprice.sale_id', '=', 'users.id')
                 ->leftjoin('customer', 'quoteprice.cus_id', '=', 'customer.cus_id')
                 ->where('quoteprice.delete_flg', '0')
                 ->whereRaw('quoteprice.qp_date between ? AND ?', [$qpFromDate, $qpToDate])
+                ->whereRaw($whereUser)
                 ->when($customerName, function ($query) use ($customerName) {
                     if ($customerName) {
                         return $query->where('cus_name', $customerName);
@@ -453,11 +470,14 @@ class Report implements JWTSubject
     public function sumQPs($qpFromDate, $qpToDate, $customerName, $saleName)
     {
         try {
+            $whereUser = Auth::user()->admin ? '1=1' : 'users.id = ' . Auth::id();
+
             $sum = DB::table('quoteprice')
                 ->leftjoin('users', 'quoteprice.sale_id', '=', 'users.id')
                 ->leftjoin('customer', 'quoteprice.cus_id', '=', 'customer.cus_id')
                 ->where('quoteprice.delete_flg', '0')
                 ->whereRaw('quoteprice.qp_date between ? AND ?', [$qpFromDate, $qpToDate])
+                ->whereRaw($whereUser)
                 ->when($customerName, function ($query) use ($customerName) {
                     if ($customerName) {
                         return $query->where('cus_name', $customerName);

@@ -13,8 +13,9 @@ class OrderHistoryController extends Controller
     public function index(Request $request, $ord_id)
     {
         try {
+            checkUserRight(12, 1);
             $order = new OrderHistory();
-            $orderData = $order->getOrders($ord_id);
+            $orderData = $order->search($ord_id);
             $pagingData = $order->getPagingInfo($ord_id);
             $pagingData['page'] = 0;
             return view('his_order', ['ord_id' => $ord_id, 'orders' => $orderData, 'paging' => $pagingData]);
@@ -25,6 +26,7 @@ class OrderHistoryController extends Controller
 
     public function detail(Request $request, $ord_id, $his_ord_id)
     {
+        checkUserRight(12, 1);
         $order = new OrderHistory();
         $orderData = $order->getOrder($ord_id, $his_ord_id);
 

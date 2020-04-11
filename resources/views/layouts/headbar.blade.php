@@ -105,7 +105,7 @@
                                             </a>
                                         </li>
                                         <li class="who">
-                                            <a class="ruo" role="button" href="/products">
+                                            <a class="ruo" role="button" href="/brands">
                                                 <div class="pto">
                                                     <img src="{{asset('images/app_bg.png')}}">
                                                     <div class="zro">
@@ -188,6 +188,18 @@
                                                 </div>
                                             </a>
                                         </li>
+                                        <li class="who">
+                                            <a class="ruo" role="button" href="/setting/permission">
+                                                <div class="pto">
+                                                    <img src="{{asset('images/app_bg.png')}}">
+                                                    <div class="zro">
+                                                        <div class="rco">
+                                                            <div class="kko">{{ __("Permission") }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -211,7 +223,7 @@
                                             <div class="jno">
                                                 <a href="#">{{ __("Privacy") }}</a>
                                             </div>
-                                            <button type="button" class="btn btn-primary btn-sm ">{{ __("Account") }}</button>
+                                            <a type="button" class="btn btn-primary btn-sm " href="/myaccount">{{ __("Account") }}</a>
                                         </div>
                                     </div>
                                     <div class="tno">

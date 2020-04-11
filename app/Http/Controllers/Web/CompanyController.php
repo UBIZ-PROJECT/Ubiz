@@ -12,8 +12,9 @@ class CompanyController extends Controller
     public function index(Request $request)
     {
         try {
+            checkUserRight(1, 1);
             $company = new Company();
-            $companies = $company->getCompany();
+            $companies = $company->search();
             $paging = $company->getPagingInfo();
             $paging['page'] = 0;
             return view('company', ['companies' => $companies, 'paging' => $paging]);

@@ -13,7 +13,7 @@ use App\Model\QuotepriceDetailHistory;
 
 class QuotepriceHistory
 {
-    public function getQuoteprices($qp_id, $page = 0, $sort = '', $search = '')
+    public function search($qp_id, $page = 0, $sort = '', $search = '')
     {
         try {
             list($where_raw, $params) = $this->makeWhereRaw($qp_id, $search);

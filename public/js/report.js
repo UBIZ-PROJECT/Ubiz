@@ -170,7 +170,9 @@
                         cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_name, 6));
                         cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_phone, 7));
                         cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_email, 8));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].sale_name, 9));
+                        if(response.data.permission == '1') {
+                            cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].sale_name, 9));
+                        }
 
                         rows.push(jQuery.UbizOIWidget.w_make_row_html(report[i].ord_id, cols));
                     } else if (response.data.type == "quoteprice") {
@@ -186,7 +188,9 @@
                         cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_name, 6));
                         cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_phone, 7));
                         cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].contact_email, 8));
-                        cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].sale_name, 9));
+                        if(response.data.permission == '1') {
+                            cols.push(jQuery.UbizOIWidget.w_make_col_html(report[i].sale_name, 9));
+                        }
 
                         rows.push(jQuery.UbizOIWidget.w_make_row_html(report[i].qp_id, cols));
                     } else {

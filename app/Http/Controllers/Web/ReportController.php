@@ -9,12 +9,14 @@ use App\Exports\ReportRepositoryExport;
 use App\Exports\ReportRevenueExport;
 use App\Exports\ReportQuotePriceExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
     public function index(Request $request)
     {
 		try {
+		    checkUserRight(14, 1);
             $reportModel = new Report();
             $sum = 0;
 
@@ -47,7 +49,8 @@ class ReportController extends Controller
             
 			return view($viewName, [
                 'report' => $report,
-                'paging' => $paging
+                'paging' => $paging,
+                'permission' => Auth::user()->admin
             ]);
 		} catch (\Throwable $e) {
             throw $e;
@@ -56,6 +59,7 @@ class ReportController extends Controller
 
     public function exportExcel($type, Request $request)
     {
+        checkUserRight(14, 1);
         switch ($type) {
             case "revenue":
                 return Excel::download(new ReportRevenueExport($request), 'reportRevenue.xlsx');

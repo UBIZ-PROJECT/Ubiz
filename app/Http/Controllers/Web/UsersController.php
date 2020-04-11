@@ -13,7 +13,7 @@ class UsersController extends Controller
         try {
             checkUserRight('3', '1');
             $user = new User();
-            $users = $user->getUsers();
+            $users = $user->search();
             $paging = $user->getPagingInfo();
             $departments = $user->getDepartments();
             $comapnies = $user->getCompanies();
@@ -23,6 +23,23 @@ class UsersController extends Controller
                 'paging' => $paging,
                 'departments' => $departments,
                 "companies" => $comapnies
+            ]);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function detail(Request $request)
+    {
+        try {
+            $user = new User();
+            $account = $user->getCurrentUser();
+            $companies = $user->getCompanies();
+            $departments = $user->getDepartments();
+            return view('account', [
+                'account' => $account,
+                'companies' => $companies,
+                'departments' => $departments
             ]);
         } catch (\Throwable $e) {
             throw $e;

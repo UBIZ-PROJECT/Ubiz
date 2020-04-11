@@ -11,12 +11,13 @@ use App\Model\QuotepriceDetail;
 
 class OrderController extends Controller
 {
-    public function getOrders(Request $request)
+    public function search(Request $request)
     {
         try {
+            checkUserRight(12, 1);
             $order = new Order();
             list($page, $sort, $search) = $this->getRequestData($request);
-            $orderData = $order->getOrders($page, $sort, $search);
+            $orderData = $order->search($page, $sort, $search);
             $pagingData = $order->getPagingInfo($search);
             $pagingData['page'] = $page;
             return response()->json([
@@ -30,11 +31,11 @@ class OrderController extends Controller
         }
     }
 
-    public function createOrder($qp_id, Request $request)
+    public function create($qp_id, Request $request)
     {
         try {
 
-            checkUserRight(11, 9);
+            checkUserRight(11, 7);
 
             $qp = new Quoteprice();
             $qpData = $qp->getQuoteprice($qp_id);
@@ -60,10 +61,10 @@ class OrderController extends Controller
         }
     }
 
-    public function updateOrder($ord_id, Request $request)
+    public function update($ord_id, Request $request)
     {
         try {
-
+            checkUserRight(12, 4);
             $data = $request->get('data', null);
             if (empty($data) == true || $data == null) {
                 return response()->json(['success' => false, 'message' => __('Data is wrong.!')], 200);
@@ -89,10 +90,10 @@ class OrderController extends Controller
         }
     }
 
-    public function updateSaleStep($ord_id, Request $request)
+    public function delivery($ord_id, Request $request)
     {
         try {
-
+            checkUserRight(12, 4);
             $sale_step = $request->get('sale_step', null);
             if (empty($sale_step) == true || $sale_step == null) {
                 return response()->json(['success' => false, 'message' => __('Data is wrong.!')], 200);
@@ -104,7 +105,7 @@ class OrderController extends Controller
                 return response()->json(['success' => false, 'message' => __("Order doesn't existed.!")], 200);
             }
 
-            $order->transactionUpdateSaleStep($ord_id, $orderData->qp_id, $sale_step);
+            $order->transactionDelivery($ord_id, $orderData->qp_id, $sale_step);
 
             return response()->json(['success' => true, 'message' => __('Successfully processed.')], 200);
         } catch (\Throwable $e) {
@@ -112,10 +113,10 @@ class OrderController extends Controller
         }
     }
 
-    public function deleteOrders($ord_ids, Request $request)
+    public function delete($ord_ids, Request $request)
     {
         try {
-
+            checkUserRight(12, 3);
             if (empty($ord_ids) || $ord_ids == '') {
                 return response()->json(['success' => false, 'message' => __('Data is wrong')], 200);
             }

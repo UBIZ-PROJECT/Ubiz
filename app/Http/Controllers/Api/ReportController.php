@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Imports\ReportRepositoryExImport;
 use App\Imports\ReportRepositoryImImport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Auth;
 
 use App\Model\Report;
 
@@ -15,6 +16,7 @@ class ReportController extends Controller
     public function getReport(Request $request)
     {
         try {
+            checkUserRight(14, 1);
             list($page, $sort) = $this->getRequestData($request);
             $reportModel = new Report();
             $report = $reportModel->getReportData($page, $sort, $request);
@@ -46,7 +48,7 @@ class ReportController extends Controller
             }
             $paging['page'] = $page;
 
-            return response()->json(['report' => $report, 'report_sum' => $sum, 'total_start_time_cnt' => $totalStartTimeCnt, 'total_end_time_cnt' => $totalEndTimeCnt, 'total_qp_amount' => $totalQPAmount??0, 'total_ord_amount' => $totalOrdAmount??0,'paging' => $paging, 'type' => $request->type, 'success' => true, 'message' => ''], 200);
+            return response()->json(['report' => $report, 'permission' => Auth::user()->admin, 'report_sum' => $sum, 'total_start_time_cnt' => $totalStartTimeCnt, 'total_end_time_cnt' => $totalEndTimeCnt, 'total_qp_amount' => $totalQPAmount??0, 'total_ord_amount' => $totalOrdAmount??0,'paging' => $paging, 'type' => $request->type, 'success' => true, 'message' => ''], 200);
         } catch (\Throwable $e) {
             throw $e;
         }
@@ -70,6 +72,8 @@ class ReportController extends Controller
     public function exportRep(Request $request)
     {
         // $file = $request->fileExportRep;
+        checkUserRight(8, 4);
+        checkUserRight(9, 4);
 		$tmpPath = $request->file('fileExportRep')->store('temp');
 		$path = storage_path('app') . '/' . $tmpPath;
         Excel::import(new ReportRepositoryExImport($request), $path);
@@ -79,6 +83,8 @@ class ReportController extends Controller
 
     public function importRep(Request $request)
     {
+        checkUserRight(8, 4);
+        checkUserRight(9, 4);
         // $file = $request->fileImportRep;
 		$tmpPath = $request->file('fileImportRep')->store('temp');
 		$path = storage_path('app') . '/' . $tmpPath;

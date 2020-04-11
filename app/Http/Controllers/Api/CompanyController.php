@@ -10,24 +10,15 @@ use App\User;
 
 class CompanyController extends Controller
 {
-    public function getAllCompany(Request $request)
-    {
-        try {
-            $company = new Company();
-            $data = $company->getAllCompany();
-        } catch (\Throwable $e) {
-            throw $e;
-        }
-        return response()->json(['company' => $data, 'success' => true, 'message' => __('Successfully processed.')], 200);
-    }
 
-    public function getCompany(Request $request)
+    public function search(Request $request)
     {
         try {
+            checkUserRight(1, 1);
             list($page, $sort, $search) = $this->getRequestData($request);
 
             $company = new Company();
-            $currencies = $company->getCompany($page, $sort, $search);
+            $currencies = $company->search($page, $sort, $search);
             $paging = $company->getPagingInfo($search);
             $paging['page'] = $page;
         } catch (\Throwable $e) {
@@ -36,15 +27,16 @@ class CompanyController extends Controller
         return response()->json(['company' => $currencies, 'paging' => $paging, 'success' => true, 'message' => __('Successfully processed.')], 200);
     }
 
-    public function getCompanyById($id, Request $request)
+    public function detail($id, Request $request)
     {
         try {
+            checkUserRight(1, 1);
             $company = new Company();
             if ($request->has('pos')) {
                 list ($page, $sort, $search) = $this->getRequestData($request);
                 $data = $company->getCompanyByPos($request->pos, $sort, $search);
             } else {
-                $data = $company->getCompanyById($id);
+                $data = $company->detail($id);
             }
         } catch (\Throwable $e) {
             throw $e;
@@ -52,21 +44,23 @@ class CompanyController extends Controller
         return response()->json(['company' => $data, 'success' => true, 'message' => __('Successfully processed.')], 200);
     }
 
-    public function insertCompany(Request $request)
+    public function insert(Request $request)
     {
         try {
+            checkUserRight(1, 2);
             list($page, $sort, $search, $insert_data) = $this->getRequestData($request);
             $company = new Company();
-            $company->insertCompany($insert_data);
+            $company->insert($insert_data);
         } catch (\Throwable $e) {
             throw $e;
         }
         return response()->json(['success' => true, 'message' => __('Successfully processed.')], 200);
     }
 
-    public function updatedCompany($id, Request $request)
+    public function update($id, Request $request)
     {
         try {
+            checkUserRight(1, 4);
             list($page, $sort, $search, $update_data) = $this->getRequestData($request);
             $company = new Company();
             $company->updateCompany($update_data);
@@ -76,19 +70,20 @@ class CompanyController extends Controller
         return response()->json(['success' => true, 'message' => __('Successfully processed.')], 200);
     }
 
-    public function deleteCompany($ids, Request $request)
+    public function delete($ids, Request $request)
     {
         try {
+            checkUserRight(1, 3);
             $company = new Company();
             $id = explode(',', $ids);
-            $company->deleteCompany($id);
-            $currencies = $company->getCompany();
+            $company->delete($id);
+            $companies = $company->search();
             $paging = $company->getPagingInfo();
             $paging['page'] = 0;
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['company' => $currencies, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed.")], 200);
+        return response()->json(['company' => $companies, 'paging' => $paging, 'success' => true, 'message' => __("Successfully processed.")], 200);
     }
 
     public function getRequestData(Request $request)

@@ -12,15 +12,15 @@ use App\Model\QuotepriceDetail;
 
 class QuotepriceController extends Controller
 {
-    public function getQuoteprices(Request $request)
+    public function search(Request $request)
     {
         try {
 
-            checkUserRight(11, 2);
+            checkUserRight(11, 1);
 
             $qpModel = new Quoteprice();
             list($page, $sort, $search) = $this->getRequestData($request);
-            $qpData = $qpModel->getQuoteprices($page, $sort, $search);
+            $qpData = $qpModel->search($page, $sort, $search);
             $pagingData = $qpModel->getPagingInfo($search);
             $pagingData['page'] = $page;
             return response()->json([
@@ -34,11 +34,11 @@ class QuotepriceController extends Controller
         }
     }
 
-    public function createQuoteprice($cus_id, Request $request)
+    public function create($cus_id, Request $request)
     {
         try {
 
-            checkUserRight(11, 4);
+            checkUserRight(11, 2);
 
             $data = $request->get('data', null);
             if (empty($data) == true || $data == null) {
@@ -72,11 +72,11 @@ class QuotepriceController extends Controller
         }
     }
 
-    public function updateQuoteprice($ord_id, Request $request)
+    public function update($ord_id, Request $request)
     {
         try {
 
-            checkUserRight(11, 6);
+            checkUserRight(11, 4);
 
             $data = $request->get('data', null);
             if (empty($data) == true || $data == null) {
@@ -98,11 +98,11 @@ class QuotepriceController extends Controller
         }
     }
 
-    public function deleteQuoteprices($ord_ids, Request $request)
+    public function delete($ord_ids, Request $request)
     {
         try {
 
-            checkUserRight(11, 5);
+            checkUserRight(11, 3);
 
             if (empty($ord_ids) || $ord_ids == '') {
                 return response()->json(['success' => false, 'message' => __('Successfully processed.')], 200);
@@ -117,11 +117,11 @@ class QuotepriceController extends Controller
         }
     }
 
-    public function sendQuoteprice($qp_id, Request $request)
+    public function send($qp_id, Request $request)
     {
         try {
 
-            checkUserRight(11, 8);
+            checkUserRight(11, 6);
 
             $extra_data = $request->get('data', null);
 
@@ -155,10 +155,10 @@ class QuotepriceController extends Controller
         }
     }
 
-    public function downloadQuoteprice($qp_id, Request $request)
+    public function download($qp_id, Request $request)
     {
         try {
-
+            checkUserRight(11, 1);
             $extra_data = $request->get('data', null);
 
             $qpModel = new Quoteprice();

@@ -9,12 +9,13 @@ use App\Model\Customer;
 
 class CustomerController extends Controller
 {
-    public function getCustomers(Request $request)
+    public function search(Request $request)
     {
         try {
+            checkUserRight(5, 1);
             list($page, $sort, $search) = $this->getRequestData($request);
             $customer = new Customer();
-            $customers = $customer->getCustomers($page, $sort, $search);
+            $customers = $customer->search($page, $sort, $search);
             $paging = $customer->getPagingInfo();
             $paging['page'] = $page;
             foreach ($customers as $key => $item) {
@@ -27,10 +28,10 @@ class CustomerController extends Controller
         return response()->json(['customers' => $customers, 'paging' => $paging, 'success' => true, 'message' => ''], 200);
     }
 
-    public function getCustomer($cus_id, Request $request)
+    public function detail($cus_id, Request $request)
     {
         try {
-
+            checkUserRight(5, 1);
             $cusModel = new Customer();
 
             if ($request->has('pos')) {
@@ -59,10 +60,10 @@ class CustomerController extends Controller
         }
     }
 
-    public function insertCustomer(Request $request)
+    public function insert(Request $request)
     {
         try {
-
+            checkUserRight(5, 2);
             $data = $request->get('data', null);
             if (empty($data) == true || $data == null) {
                 return response()->json(['success' => false, 'message' => __('Data is wrong.!')], 200);
@@ -75,7 +76,7 @@ class CustomerController extends Controller
             }
 
             $map_data = $this->mapData($data);
-            $cusModel->insertCustomer($map_data);
+            $cusModel->insert($map_data);
 
             return response()->json(['success' => true, 'message' => __('Successfully processed.')], 200);
 
@@ -84,10 +85,10 @@ class CustomerController extends Controller
         }
     }
 
-    public function updateCustomer($cus_id, Request $request)
+    public function update($cus_id, Request $request)
     {
         try {
-
+            checkUserRight(5, 4);
             $data = $request->get('data', null);
             if (empty($data) == true || $data == null) {
                 return response()->json(['success' => false, 'message' => __('Data is wrong.!')], 200);
@@ -105,7 +106,7 @@ class CustomerController extends Controller
             }
 
             $map_data = $this->mapData($data);
-            $cusModel->updateCustomer($cus_id, $map_data);
+            $cusModel->update($cus_id, $map_data);
 
             return response()->json(['success' => true, 'message' => __('Successfully processed.')], 200);
 
@@ -114,11 +115,12 @@ class CustomerController extends Controller
         }
     }
 
-    public function deleteCustomer($cus_ids, Request $request)
+    public function delete($cus_ids, Request $request)
     {
         try {
+            checkUserRight(5, 3);
             $cusModel = new Customer();
-            $cusModel->deleteCustomer($cus_ids);
+            $cusModel->delete($cus_ids);
             return response()->json(['success' => true, 'message' => __('Successfully processed.')], 200);
         } catch (\Throwable $e) {
             throw $e;
@@ -128,6 +130,7 @@ class CustomerController extends Controller
     public function generateCusCode(Request $request)
     {
         try {
+            checkUserRight(5, 2);
             $customer = new Customer();
             $cus_code = $customer->generateCusCode();
             return response()->json(['cus_code' => $cus_code, 'success' => true, 'message' => __('Successfully processed.')], 200);

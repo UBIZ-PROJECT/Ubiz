@@ -38,6 +38,7 @@ class ReportQuotePriceExport
     {
         $reportModel = new Report();
         $report = $reportModel->getReportData(0, '', $this->request);
+        $reportExportData = [];
 
         foreach ($report as $row) {
             $reportExportData[] = array(

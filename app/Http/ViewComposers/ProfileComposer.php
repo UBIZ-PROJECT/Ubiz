@@ -23,7 +23,7 @@ class ProfileComposer
         $this->user = $user->getAuthUser();
 
         $company = new Company();
-        $this->company = $company->getCompanyById($this->user->com_id);
+        $this->company = $company->detail($this->user->com_id);
     }
 
     /**
