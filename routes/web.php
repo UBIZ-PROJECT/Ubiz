@@ -17,7 +17,7 @@ Route::middleware(['api', 'cors'])->group(function () {
         Route::get('login', ['as' => 'login', 'uses' => 'Web\UsersController@login']);
         Route::get('suppliers', ['as' => 'supplier', 'uses' => 'Web\SupplierController@suppliers']);
         Route::get('customers', ['as' => 'customer', 'uses' => 'Web\CustomerController@index']);
-        Route::get('products', ['as' => 'products', 'uses' => 'Web\AccessoryController@accessories']);
+        Route::get('products', ['as' => 'products', 'uses' => 'Web\AccessoryController@index']);
         Route::get('products/{brd_id}', ['as' => 'products', 'uses' => 'Web\ProductController@productByBrand'])->where('brd_id', '[0-9]+');
         Route::get('brands', ['as' => 'brands', 'uses' => 'Web\BrandController@brands']);
         Route::get('myaccount', ['as' => 'myaccount', 'uses' => 'Web\MyAccountController@index']);
@@ -26,7 +26,6 @@ Route::middleware(['api', 'cors'])->group(function () {
         Route::get('setting/company', ['as' => 'company', 'uses' => 'Web\CompanyController@index']);
         Route::get('setting/departments', ['as' => 'company', 'uses' => 'Web\DepartmentsController@index']);
         Route::get('setting/permission', ['as' => 'permission', 'uses' => 'Web\PermissionController@index']);
-        Route::get('products', ['as' => 'supplier', 'uses' => 'Web\AccessoryController@accessories']);
         Route::get('orders', ['as' => 'orders', 'uses' => 'Web\OrderController@index']);
         Route::get('orders/{ord_id}', ['as' => 'orders-detail', 'uses' => 'Web\OrderController@detail'])->where('ord_id', '[0-9]+');
         Route::get('quoteprices', ['as' => 'quoteprices', 'uses' => 'Web\QuotepriceController@index']);
