@@ -14,9 +14,6 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/event.css') }}">
 @endsection
 @section('headbar')
-    @section('headbar-icon')
-        <i class="fas fa-calendar-day fa-2x"></i>
-    @endsection
     @include('layouts/headbar')
 @endsection
 @section('content')
