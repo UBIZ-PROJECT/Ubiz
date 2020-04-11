@@ -8,11 +8,6 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/permission.css') }}">
 @endsection
 @section('headbar')
-@section('headbar-icon')
-    <i class="material-icons cl-header">
-        security
-    </i>
-@endsection
 @include('layouts/headbar')
 @endsection
 @section('content')

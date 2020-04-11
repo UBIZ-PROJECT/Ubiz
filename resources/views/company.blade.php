@@ -10,11 +10,6 @@
 @section('headbar')
 @section('search')
     @include('company_search')
-@section('headbar-icon')
-    <i class="material-icons cl-header">
-        home
-    </i>
-@endsection
 @endsection
 @include('layouts/headbar')
 @endsection
