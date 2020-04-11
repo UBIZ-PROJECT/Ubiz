@@ -16,6 +16,7 @@ class ReportController extends Controller
     public function getReport(Request $request)
     {
         try {
+            checkUserRight(14, 1);
             list($page, $sort) = $this->getRequestData($request);
             $reportModel = new Report();
             $report = $reportModel->getReportData($page, $sort, $request);
@@ -71,6 +72,8 @@ class ReportController extends Controller
     public function exportRep(Request $request)
     {
         // $file = $request->fileExportRep;
+        checkUserRight(8, 4);
+        checkUserRight(9, 4);
 		$tmpPath = $request->file('fileExportRep')->store('temp');
 		$path = storage_path('app') . '/' . $tmpPath;
         Excel::import(new ReportRepositoryExImport($request), $path);
@@ -80,6 +83,8 @@ class ReportController extends Controller
 
     public function importRep(Request $request)
     {
+        checkUserRight(8, 4);
+        checkUserRight(9, 4);
         // $file = $request->fileImportRep;
 		$tmpPath = $request->file('fileImportRep')->store('temp');
 		$path = storage_path('app') . '/' . $tmpPath;

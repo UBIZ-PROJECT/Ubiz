@@ -16,6 +16,7 @@ class ReportController extends Controller
     public function index(Request $request)
     {
 		try {
+		    checkUserRight(14, 1);
             $reportModel = new Report();
             $sum = 0;
 
@@ -58,6 +59,7 @@ class ReportController extends Controller
 
     public function exportExcel($type, Request $request)
     {
+        checkUserRight(14, 1);
         switch ($type) {
             case "revenue":
                 return Excel::download(new ReportRevenueExport($request), 'reportRevenue.xlsx');
