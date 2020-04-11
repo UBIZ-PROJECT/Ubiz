@@ -16,6 +16,7 @@ class AccessoryController extends Controller
 {
     public function getAccessory(Request $req) {
         try {
+            checkUserRight(9, 1);
             list($page, $sort,$search) = $this->getPageSortSearch($req);
             $acs = new Accessory();
             $data = $acs->getAccessoryPaging($page, $sort,$search);
@@ -30,6 +31,7 @@ class AccessoryController extends Controller
 
     public function getEachAccessoryPaging(Request $req) {
         try {
+            checkUserRight(9, 1);
             list($page, $sort,$search) = $this->getPageSortSearch($req);
             $acs = new Accessory();
             $data = $acs->getEachAccessoryPaging($page, $sort,$search);
@@ -45,6 +47,7 @@ class AccessoryController extends Controller
 
     public function getAccessoryType() {
         try {
+            checkUserRight(9, 1);
             $acs = new Accessory();
             $productType = $acs->getAllAccessoryType();
         } catch (\Throwable $e) {
@@ -55,6 +58,7 @@ class AccessoryController extends Controller
 
     public function insertAccessory(Request $request) {
         try {
+            checkUserRight(9, 2);
             $message = __("Successfully processed.");
             if ($request->has("accessory")) { //accessory
                 list($page, $sort, $search) = $this->getPageSortSearch($request);
@@ -85,6 +89,7 @@ class AccessoryController extends Controller
 
     public function updateAccessory($id, Request $request) {
         try {
+            checkUserRight(9, 4);
             $message = __("Successfully processed.");
             if ($request->has("accessory")) {
                 list($page, $sort, $search) = $this->getPageSortSearch($request);
@@ -113,6 +118,7 @@ class AccessoryController extends Controller
 
     public function updateAccessoryPaging($id, Request $request) {
         try {
+            checkUserRight(9, 4);
             $message = __("Successfully processed.");
             if ($request->has("accessory")) {
                 list($page, $sort, $search) = $this->getPageSortSearch($request);
@@ -137,6 +143,7 @@ class AccessoryController extends Controller
 
     public function deleteAccessory($ids, Request $request) {
         try {
+            checkUserRight(9, 3);
             $message = __("Successfully processed.");
             list($page, $sort, $search) = $this->getPageSortSearch($request);
             $acs = new Accessory();
