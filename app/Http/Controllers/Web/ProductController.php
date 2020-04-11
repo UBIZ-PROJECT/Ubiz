@@ -7,19 +7,22 @@
  */
 
 namespace App\Http\Controllers\Web;
+
 use App\Http\Controllers\Controller;
 use App\Model\Product;
 
 class ProductController extends Controller
 {
-    public function products() {
+    public function products()
+    {
         try {
+            checkUserRight(8, 1);
             $product = new Product();
-            $data = $product->getProductPaging(0, '',array("type_id"=>"1"));
+            $data = $product->getProductPaging(0, '', array("type_id" => "1"));
             $paging = $product->getPagingInfo();
             $productType = $product->getAllProductType();
             $paging['page'] = '0';
-            return view('product',['data'=>$data,'paging' => $paging,'product_type'=>$productType]);
+            return view('product', ['data' => $data, 'paging' => $paging, 'product_type' => $productType]);
         } catch (\Throwable $e) {
             throw $e;
         }

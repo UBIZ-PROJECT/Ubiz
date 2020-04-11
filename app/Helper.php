@@ -65,7 +65,7 @@ function resizeImageToHeight($img, $target_img, $new_img_height, $img_type)
     }
 }
 
-function resizeImageToWidth($img, $target_img, $new_img_height, $img_type = '')
+function resizeImageToWidth($img, $target_img, $new_img_width, $img_type = '')
 {
     try {
 
@@ -85,7 +85,7 @@ function resizeImageToWidth($img, $target_img, $new_img_height, $img_type = '')
     }
 }
 
-function scaleImage($img, $scale, $img_type)
+function scaleImage($img, $scale, $img_type, $target_img)
 {
     try {
 
@@ -158,51 +158,65 @@ function readJsonBasedLanguage()
     }
 }
 
-function checkUserRight($scr_id, $fnc_id)
+function checkUserRight($scr_id, $fnc_id, $boolean = false)
 {
     try {
 
         $user = new User();
-        $data = $user->getAuthUser();
 
-        if ($user->admin == '1')
+        if ($user->admin != '1') {
+
+            $data = $user->getAuthUser();
+            if ($data == null) {
+                if ($boolean == true)
+                    return false;
+                else
+                    abort(403);
+            }
+
+            $user_permission = DB::table('m_permission_user')
+                ->select('usr_allow')
+                ->where([
+                    ['dep_id', '=', $data->dep_id],
+                    ['scr_id', '=', $scr_id],
+                    ['fnc_id', '=', $fnc_id],
+                    ['usr_id', '=', $data->id],
+                    ['delete_flg', '=', '0']
+                ])
+                ->first();
+
+            $usr_allow = $user_permission == null ? null : $user_permission->usr_allow;
+
+            $dep_permission = DB::table('m_permission_department')
+                ->select('dep_allow')
+                ->where([
+                    ['dep_id', '=', $data->dep_id],
+                    ['scr_id', '=', $scr_id],
+                    ['fnc_id', '=', $fnc_id],
+                    ['delete_flg', '=', '0']
+                ])
+                ->first();
+
+            $dep_allow = $dep_permission == null ? null : $dep_permission->dep_allow;
+
+            if ($usr_allow == null && ($dep_allow == null || $dep_allow == '0')) {
+                if ($boolean == true)
+                    return false;
+                else
+                    abort(403);
+            }
+
+            if ($usr_allow == '0') {
+                if ($boolean == true)
+                    return false;
+                else
+                    abort(403);
+            }
+        }
+
+        if ($boolean == true)
             return true;
 
-        if ($data == null)
-            return false;
-
-        $user_permission = DB::table('m_permission_user')
-            ->select('usr_allow')
-            ->where([
-                ['dep_id', '=', $data->dep_id],
-                ['scr_id', '=', $scr_id],
-                ['fnc_id', '=', $fnc_id],
-                ['usr_id', '=', $data->id],
-                ['delete_flg', '=', '0']
-            ])
-            ->first();
-
-        $usr_allow = $user_permission == null ? null : $user_permission->usr_allow;
-
-        $dep_permission = DB::table('m_permission_department')
-            ->select('dep_allow')
-            ->where([
-                ['dep_id', '=', $data->dep_id],
-                ['scr_id', '=', $scr_id],
-                ['fnc_id', '=', $fnc_id],
-                ['delete_flg', '=', '0']
-            ])
-            ->first();
-
-        $dep_allow = $dep_permission == null ? null : $dep_permission->dep_allow;
-
-        if ($usr_allow == null && ($dep_allow == null || $dep_allow == '0')) {
-            abort(403);
-        }
-
-        if ($usr_allow == '0') {
-            abort(403);
-        }
     } catch (\Throwable $e) {
         throw $e;
     }

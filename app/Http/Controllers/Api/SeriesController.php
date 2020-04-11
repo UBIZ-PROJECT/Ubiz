@@ -17,6 +17,7 @@ class SeriesController extends Controller
 {
     public function getSeries(Request $req) {
         try {
+            checkUserRight(8, 1);
             list($page, $sort,$search) = $this->getPageSortSearch($req);
             $prd_id = 0;
             if ($req->has("prd_id")) {
@@ -38,6 +39,7 @@ class SeriesController extends Controller
     }
 
     public function insertSeries(Request $req) {
+        checkUserRight(8, 2);
         $params = json_decode($req['series'], true);
 //        print_r($params); exit;
         list($page, $sort, $search) = $this->getPageSortSearch($req);
@@ -50,6 +52,7 @@ class SeriesController extends Controller
     }
 
     public function updateSeries(Request $req, $id) {
+        checkUserRight(8, 4);
         $params = json_decode($req['series'], true);
 
         if (empty($params['prd_series_id'])) {
@@ -64,6 +67,7 @@ class SeriesController extends Controller
     }
 
     public function deleteSeries($ids) {
+        checkUserRight(8, 3);
         $series = new Series();
         $series->deleteSeries($ids);
         return response()->json(['message' => ''], 200);

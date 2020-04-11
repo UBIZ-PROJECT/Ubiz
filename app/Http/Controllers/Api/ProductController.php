@@ -16,6 +16,7 @@ class ProductController extends Controller
 {
     public function getProduct(Request $req) {
         try {
+            checkUserRight(8, 1);
             list($page, $sort,$search) = $this->getPageSortSearch($req);
             $product = new Product();
             $data = $product->getProductPaging($page, $sort,$search);
@@ -30,6 +31,7 @@ class ProductController extends Controller
 
     public function getEachProductPaging(Request $req) {
         try {
+            checkUserRight(8, 1);
             list($page, $sort,$search) = $this->getPageSortSearch($req);
             $product = new Product();
             $data = $product->getEachProductPaging($page, $sort,$search);
@@ -55,6 +57,7 @@ class ProductController extends Controller
 
     public function insertProduct(Request $request) {
         try {
+            checkUserRight(8, 2);
             $message = __("Successfully processed.");
             if ($request->has("product")) {
                 list($page, $sort, $search) = $this->getPageSortSearch($request);
@@ -85,6 +88,7 @@ class ProductController extends Controller
 
     public function updateProduct($id, Request $request) {
         try {
+            checkUserRight(8, 4);
             $message = __("Successfully processed.");
             if ($request->has("product")) {
                 list($page, $sort, $search) = $this->getPageSortSearch($request);
@@ -113,6 +117,7 @@ class ProductController extends Controller
 
     public function updateProductPaging($id, Request $request) {
         try {
+            checkUserRight(8, 4);
             $message = __("Successfully processed.");
             if ($request->has("product")) {
                 list($page, $sort, $search) = $this->getPageSortSearch($request);
@@ -137,6 +142,7 @@ class ProductController extends Controller
 
     public function deleteProduct($ids, Request $request) {
         try {
+            checkUserRight(8, 3);
             $message = __("Successfully processed.");
             list($page, $sort, $search) = $this->getPageSortSearch($request);
             $product = new Product();
