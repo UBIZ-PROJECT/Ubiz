@@ -14,23 +14,26 @@ use App\Model\Accessory;
 use App\Model\Brand;
 use App\Model\Product;
 use Illuminate\Http\Request;
+
 class BrandController extends Controller
 {
-    public function getBrand(Request $req) {
+    public function getBrand(Request $req)
+    {
         try {
             checkUserRight(7, 1);
-            list($page, $sort,$search) = $this->getPageSortSearch($req);
+            list($page, $sort, $search) = $this->getPageSortSearch($req);
             $brand = new Brand();
-            $data = $brand->getBrandPaging($page, $sort,$search);
-            $paging = $brand->getPagingInfo($sort,$search);
+            $data = $brand->getBrandPaging($page, $sort, $search);
+            $paging = $brand->getPagingInfo($sort, $search);
             $paging['page'] = $page;
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['brand' => $data,'paging' => $paging,'success' => true, 'message' => '', 'search'=>$search], 200);
+        return response()->json(['brand' => $data, 'paging' => $paging, 'success' => true, 'message' => '', 'search' => $search], 200);
     }
 
-    public function getEachBrandPaging(Request $req) {
+    public function getEachBrandPaging(Request $req)
+    {
         try {
             checkUserRight(7, 1);
             $brd_id = '0';
@@ -50,16 +53,28 @@ class BrandController extends Controller
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['brand' => $data, 'paging' => $paging, 'product'=>$data_prd, 'paging_prd'=>$paging_prd ,'success' => true, 'message' => ''], 200);
+        return response()->json(['brand' => $data, 'paging' => $paging, 'product' => $data_prd, 'paging_prd' => $paging_prd, 'success' => true, 'message' => ''], 200);
     }
 
-    private function productByBrand($brd_id) {
+    private function productByBrand($brd_id)
+    {
         try {
-            checkUserRight(7, 1);
+
+            if (!checkUserRight(8, 1, true)) {
+                return array(
+                    [],
+                    [
+                        'page' => 0,
+                        'rows_num' => 0,
+                        'rows_per_page' => env('ROWS_PER_PAGE', 10)
+                    ]
+                );
+            }
+
             $search['brd_id'] = $brd_id;
             $product = new Product();
-            $data = $product->getProductPaging(0,'',$search);
-            $paging = $product->getPagingInfo('',$search);
+            $data = $product->getProductPaging(0, '', $search);
+            $paging = $product->getPagingInfo('', $search);
 //            $productType = $product->getAllProductType();
             $paging['page'] = '0';
             return array($data, $paging);
@@ -68,13 +83,23 @@ class BrandController extends Controller
         }
     }
 
-    private function accessoryByBrand($brd_id) {
+    private function accessoryByBrand($brd_id)
+    {
         try {
-            checkUserRight(7, 1);
+            if (!checkUserRight(9, 1, true)) {
+                return array(
+                    [],
+                    [
+                        'page' => 0,
+                        'rows_num' => 0,
+                        'rows_per_page' => env('ROWS_PER_PAGE', 10)
+                    ]
+                );
+            }
             $search['brd_id'] = $brd_id;
             $accessory = new Accessory();
-            $data = $accessory->getAccessoryPaging(0,'',$search);
-            $paging = $accessory->getPagingInfo('',$search);
+            $data = $accessory->getAccessoryPaging(0, '', $search);
+            $paging = $accessory->getPagingInfo('', $search);
 //            $productType = $product->getAllProductType();
             $paging['page'] = '0';
             return array($data, $paging);
@@ -83,7 +108,8 @@ class BrandController extends Controller
         }
     }
 
-    public function insertBrand(Request $request) {
+    public function insertBrand(Request $request)
+    {
         try {
             checkUserRight(7, 2);
             $message = __("Successfully processed.");
@@ -94,19 +120,20 @@ class BrandController extends Controller
                 $this->getReqImages($params, $request);
                 $brand = new Brand();
                 $brand->insertBrand($params);
-                $data = $brand->getBrandPaging($page, $sort,$search);
-                $paging = $brand->getPagingInfo($sort,$search);
+                $data = $brand->getBrandPaging($page, $sort, $search);
+                $paging = $brand->getPagingInfo($sort, $search);
                 $paging['page'] = $page;
             } else {
                 $message = '';
             }
-        } catch(\Throwable $e) {
+        } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['brand' => $data, 'paging' => $paging,'success' => true, 'message' => $message, 'search'=>$search,'method'=>'insert'], 200);
+        return response()->json(['brand' => $data, 'paging' => $paging, 'success' => true, 'message' => $message, 'search' => $search, 'method' => 'insert'], 200);
     }
 
-    public function updateBrand($id, Request $request) {
+    public function updateBrand($id, Request $request)
+    {
         try {
             checkUserRight(7, 4);
             $message = __("Successfully processed.");
@@ -118,19 +145,20 @@ class BrandController extends Controller
                 $this->getReqImages($params, $request);
                 $brand = new Brand();
                 $brand->updateBrand($params);
-                $data = $brand->getBrandPaging($page, $sort,$search);
-                $paging = $brand->getPagingInfo($sort,$search);
+                $data = $brand->getBrandPaging($page, $sort, $search);
+                $paging = $brand->getPagingInfo($sort, $search);
                 $paging['page'] = $page;
             } else {
                 $message = '';
             }
-        } catch(\Throwable $e) {
+        } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['brand' => $data, 'paging' => $paging,'success' => true, 'message' => $message, 'search'=>$search,'method'=>'update'], 200);
+        return response()->json(['brand' => $data, 'paging' => $paging, 'success' => true, 'message' => $message, 'search' => $search, 'method' => 'update'], 200);
     }
 
-    public function updateBrandPaging($id, Request $request) {
+    public function updateBrandPaging($id, Request $request)
+    {
         try {
             checkUserRight(7, 4);
             $message = __("Successfully processed.");
@@ -144,57 +172,61 @@ class BrandController extends Controller
             } else {
                 $message = '';
             }
-        } catch(\Throwable $e) {
+        } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['success' => true, 'message' => $message, 'search'=>$search], 200);
+        return response()->json(['success' => true, 'message' => $message, 'search' => $search], 200);
     }
 
-    public function deleteBrand($ids, Request $request) {
+    public function deleteBrand($ids, Request $request)
+    {
         try {
             checkUserRight(7, 3);
             $message = __("Successfully processed.");
             list($page, $sort, $search) = $this->getPageSortSearch($request);
             $brand = new Brand();
-            $ids = json_decode($ids,true);
+            $ids = json_decode($ids, true);
             $brand->deleteBrand($ids);
-            $data = $brand->getBrandPaging($page,$sort,$search);
-            $paging = $brand->getPagingInfo($sort,$search);
+            $data = $brand->getBrandPaging($page, $sort, $search);
+            $paging = $brand->getPagingInfo($sort, $search);
             $paging['page'] = $page;
         } catch (\Throwable $e) {
             throw $e;
         }
-        return response()->json(['brand' => $data ,'paging' => $paging,'success' => true, 'message' => $message, 'search'=>$search,'method'=>'delete'], 200);
+        return response()->json(['brand' => $data, 'paging' => $paging, 'success' => true, 'message' => $message, 'search' => $search, 'method' => 'delete'], 200);
     }
 
-    private function getReqImages(&$params, $request) {
+    private function getReqImages(&$params, $request)
+    {
         if (!empty($request->file('image-upload'))) {
-            foreach ($request->file('image-upload') as $index=>$imageUpload) {
+            foreach ($request->file('image-upload') as $index => $imageUpload) {
                 $params['images']['insert'][$index]['extension'] = $imageUpload->getClientOriginalExtension();
                 $params['images']['insert'][$index]['temp_name'] = $imageUpload->getRealPath();
             }
         }
     }
 
-    public function uploadFile(Request $request) {
+    public function uploadFile(Request $request)
+    {
         checkUserRight(7, 2);
         $files = $request->file('file');
         $prdUpload = new ProductUpload($files->getClientOriginalExtension());
         $file = [];
-        $file['file'] = ["name"=>$files->getClientOriginalName(),
-            "tmp_name"=>$files->getRealPath(),
-            "size"=>$files->getSize()];
+        $file['file'] = ["name" => $files->getClientOriginalName(),
+            "tmp_name" => $files->getRealPath(),
+            "size" => $files->getSize()];
         $message = $prdUpload->uploadFile($file, "file");
         if (empty($message)) {
-            return response()->json(['message'=>$message, "success"=>false], 500);
+            return response()->json(['message' => $message, "success" => false], 500);
         }
         $prdUpload->analyzeFile();
         $listPathFiles = $prdUpload->getAllFilePathAfterExtract();
         $prdUpload->saveToDatabase($listPathFiles, array("pump", "accessory"));
-        return response()->json(['message'=>"Upload file successfully!", "success"=>true], 200);
+        return response()->json(['message' => "Upload file successfully!", "success" => true], 200);
     }
 
-    private function getPageSortSearch($request) {
+    private function getPageSortSearch($request)
+    {
         $page = 0;
         if ($request->has('page')) {
             $page = $request->page;
