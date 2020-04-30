@@ -19,7 +19,7 @@
     "debounce": "^1.2.0",
     "fine-uploader": "^5.16.2",
     "jodit": "^3.1.95",
-    "jquery": "^3.2",
+    "jquery": "^3.5",
     "jquery-tageditor": "^1.0.1",
     "laravel-mix": "^5.0.0",
     "lodash": "^4.17.15",
