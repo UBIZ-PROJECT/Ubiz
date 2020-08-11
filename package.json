@@ -33,7 +33,7 @@
     "react-virtualized": "^9.19.0",
     "rrule": "^2.6.2",
     "sweetalert": "^2.1.0",
-    "tinymce": "^5.0.3"
+    "tinymce": "^5.4.0"
   },
   "dependencies": {
     "@material-ui/core": "^1.1.0",
