@@ -31,7 +31,7 @@
     "react-dom": "^16.4.1",
     "react-scrollbar": "^0.5.4",
     "react-virtualized": "^9.19.0",
-    "rrule": "^2.6.2",
+    "rrule": "^2.7.1",
     "sweetalert": "^2.1.0",
     "tinymce": "^5.0.3"
   },
